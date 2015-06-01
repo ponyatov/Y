@@ -1,4 +1,4 @@
 #Y object system
 
-save system.image
+dump system.log
 end
