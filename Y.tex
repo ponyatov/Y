@@ -1,0 +1,41 @@
+\input{../texheader/header}
+\input{../texheader/cyr}
+\input{../texheader/comp}
+
+\author{Dmitry Ponyatov \email{dponyatov@gmail.com}}
+\title{Язык Ы}
+
+\begin{document}
+\input{../texheader/title}
+
+\tableofcontents
+
+\secdown\secdown
+
+\secrel{Задачи разработки}
+
+\begin{itemize}[nosep]
+  \item чтобы никто не догадался
+  \item по мотивам SmallTalk: динамический язык сверх-высокого уровня
+  \item эксперименты с программированием трансляторов, компиляторов и DSL
+\end{itemize}
+
+\secrel{Синтаксис}\secdown
+
+\secrel{Комментарии}
+
+Любой текст после символа \# до конца строки игнорируется.
+Выбор символа определен необходимостью его использования в начале файла
+скриптов под UNIX в виде \verb|#!/usr/bin/Y|.
+
+\secup
+
+\secrel{Реализация}
+
+\begin{itemize}[nosep]
+  \item \file{Makefile}
+  \item \file{Y.py}
+  \item \file{system.Y}
+\end{itemize}
+
+\end{document}
