@@ -1,3 +1,3 @@
 # ALYEH platform
-## ALYEH:Y dynamic language
+## ALYEH:dYnamic language
 Динамический язык программирования Ы (чтобы никто не догадался)
