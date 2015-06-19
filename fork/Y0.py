@@ -17,11 +17,11 @@ class YFile:
         return self.Handler.read()
 
 import ply.lex as lex
-tokens = ('COMMENT', 'ID', 'N', 'SEMICOLON', 'LCURL', 'RCURL')
+tokens = ('COMMENT', 'ID', 'N', 'COLON', 'LCURL', 'RCURL')
 t_ignore = '\r \t'
 t_COMMENT = r'(//|\#).*'
 t_ID = r'[A-Za-z]\w*\*{0,1}'
-t_SEMICOLON = r';'
+t_COLON = r';'
 t_LCURL = r'\{'
 t_RCURL = r'\}'
 def t_N(t):
@@ -37,40 +37,42 @@ def t_error(t):
 lex.lex()
 
 import ply.yacc as yacc
+from Node import *
 def p_main(p):
-    '''main : expr
+    '''main :
             | main expr'''
+    if len(p)==1:
+        p[0]=Node('main',[])
+    else:
+#         if p[1] is None:
+#             p[0]=Node('main',[])
+        p[0]=p[1].add_parts([p[2]])
 def p_expr(p):
-    '''expr : COMMENT 
+    '''expr : comment
+            | COLON
+            | id
             | N
             | LCURL
-            | RCURL
-            | SEMICOLON '''
-    print p[0],p[1]
-    p[0]=p[1]
-def p_ID(p):
-    '''expr : ID'''
-    print p[0],p[1]
-    p[0]=('ID',p[1])
+            | RCURL'''
+    p[0]=Node('expr',[p[1]])
+def p_cast(p):
+    '''cast : id id'''
+    p[0]=Node('CAST',[p[1],p[2]])
+def p_comment(p):
+    '''comment : COMMENT'''
+    p[0]=Node('COMMENT',[p[1]],True)
+def p_id(p):
+    '''id : ID'''
+    p[0]=Node('ID',[p[1]],True)
 def p_error(p):
      print >> sys.stderr, p
      sys.stderr.flush()
      sys.stdout.flush()
-yacc.yacc()
+Yparser=yacc.yacc()
+print Yparser.parse(YFile('Y.Y').read())
 
-class YLexer:
-    def __init__(self, Y):
-        if type(Y) == type(''):
-            self.YFile = YFile(Y)
-        else:
-            raise Y
-    def go(self):
-#         x= yacc.parse(self.YFile.read())
-#         print x
-        lex.input(self.YFile.read())
-        while True:
-            tok = lex.token()
-            if not tok: break
-            print tok
-
-YLexer('Y.Y').go()
+# lex.input(self.YFile.read())
+#     while True:
+#         tok = lex.token()
+#         if not tok: break
+#         print tok
