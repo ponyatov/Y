@@ -17,7 +17,6 @@ class YFile:
         return self.Handler.read()
 
 import ply.lex as lex
-
 tokens = ('COMMENT', 'ID', 'N', 'SEMICOLON', 'LCURL', 'RCURL')
 t_ignore = '\r \t'
 t_COMMENT = r'(//|\#).*'
@@ -31,11 +30,29 @@ def t_N(t):
     return t
 def t_newline(t):
     r'\n+'
-#     t.lineno += len(t.value)
+    t.lineno += len(t.value)
 def t_error(t):
     print >> sys.stderr, 'Y_error:', t
     t.lexer.skip(1)
 lex.lex()
+
+import ply.yacc as yacc
+def p_main(p):
+    '''main : main expr
+            | expr '''
+def p_expr(p):
+    '''expr : COMMENT 
+            | ID
+            | N
+            | LCURL
+            | RCURL
+            | SEMICOLON '''
+    print p
+def p_error(p):
+     print >> sys.stderr, p
+     sys.stderr.flush()
+     sys.stdout.flush()
+yacc.yacc()
 
 class YLexer:
     def __init__(self, Y):
@@ -44,12 +61,12 @@ class YLexer:
         else:
             raise Y
     def go(self):
-        lex.input(self.YFile.read())
-        while True:
-            tok = lex.token()
-            if tok:
-                print tok
-            else:
-                break
+        yacc.parse(self.YFile.read())
+#         lex.input(self.YFile.read())
+#         while True:
+#             tok = lex.token()
+#             if not tok: break
+#             print tok
+#         yacc.parse()
 
 YLexer('Y.Y').go()
