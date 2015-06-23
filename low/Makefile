@@ -1,7 +1,6 @@
 
-.PHONY: go
-go: Y.exe test.Y
-	Y.exe < test.Y > test.log  
+.PHONY: all
+all: Y.exe  
 
 Y.exe: lex.yy.c
 	$(CXX) $(CXXFLAGS) -o $@ $< 
