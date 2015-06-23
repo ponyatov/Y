@@ -1,3 +1,4 @@
+CXX=clang++
 
 .PHONY: all
 all: Y.exe  
