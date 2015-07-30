@@ -1,12 +1,13 @@
 %{
-#include "parser.tab.hpp"
 #include "h.h"
 %}
 
 %option noyywrap
 
 %%
-\r		{}
-\n		{ return EOL; }
-.		{ yylval.c=yytext; return CHAR; }
+\r			{}
+#[^\n]*		{ yylval.comment=new std::string(yytext); return COMMENT; }
+\n			{ return EOL; }
+[0-9]+		{ yylval.i=new int(atoi(yytext)); return INT; }
+.			{ yylval.c=yytext; return CHAR; }
 %%

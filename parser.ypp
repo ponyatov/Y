@@ -4,14 +4,21 @@
 
 %union {
 	char *c;
+	std::string *comment;
+	int *i;
+	float *f;
 }
 
 %token <c> CHAR
 %token <c> EOL
+%token <comment> COMMENT
+%token <i> INT
 
 %%
 CODE : 
-	| CODE CHAR { std::cerr << "["<<$2<<"]"; } 
-	| CODE EOL  { std::cerr << "<eol>\n"; } 
+	| CODE CHAR 	{ std::cerr << "["<<$2<<"]\n"; } 
+	| CODE EOL  	{ std::cerr << "<eol>\n"; } 
+	| CODE COMMENT	{ std::cerr << "comment:" << *$2 << "\n"; } 
+	| CODE INT		{ std::cout << "int:" << *$2 << "\n"; } 
 ;
 %%
