@@ -1,4 +1,6 @@
 *~
 *.swp
 lex.yy.c
+parser.tab.*
+bI.exe
 
