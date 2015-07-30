@@ -15,3 +15,6 @@
 * bison 2.4+
 * g++
 * any posix-compatible runtime environment (pure embedded/libc or OS-based)
+
+### (c) public domain
+Dmitry Ponyatov <dponyatov@gmail.com>
