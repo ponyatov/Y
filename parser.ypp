@@ -1,5 +1,17 @@
-%token CHAR
-%%
-CODE : | CODE CHAR ;
-%%
+%{
+#include "h.h"
+%}
 
+%union {
+	char *c;
+}
+
+%token <c> CHAR
+%token <c> EOL
+
+%%
+CODE : 
+	| CODE CHAR { std::cerr << "["<<$2<<"]"; } 
+	| CODE EOL  { std::cerr << "<eol>\n"; } 
+;
+%%

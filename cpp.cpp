@@ -1,4 +1,12 @@
-int main(int argc, char *argv[]) {
-	return 0;
+#include "h.h"
+
+void yyerror(const char *msg) {
+	std::cerr << "\n\nerror:"<<msg<<"\n\n";
 }
 
+int main(int argc, char *argv[]) {
+	std::cerr << "# " << argv[0] << "\n";
+	yyparse();
+	std::cerr << "\n###\n";
+	return 0;
+}
