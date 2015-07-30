@@ -2,6 +2,8 @@
 #include "h.h"
 %}
 
+%error-verbose
+
 %union {
 	char c;
 	char *s;
@@ -13,28 +15,30 @@
 %token <s> COMMENT
 %token <i> INT
 
-%token ADD SUB MUL DIV NEG POW
+%token ADD SUB MUL DIV POW
 
 %type <i> expr
 
 %left ADD SUB
 %left MUL DIV
-%left NEG
+%left PFX
 %right POW
 
 %start CODE
 
 %%
 CODE :
-	| CODE COMMENT	{ std::cerr<<(char*)$2<<"\n"; }
-	| CODE EOL  	{ std::cerr<<"<eol>\n"; }
+	| CODE COMMENT	{ std::cerr<<$2<<"\n"; }
+	| CODE EOL  	{ }
 	| CODE CHAR 	{ std::cerr<<"["<<$2<<"]";} ;
 	| CODE expr		{ std::cout<<"="<<$2<<"\n"; }
 	
 expr:
-	  expr ADD expr	{ $$=$1+$3; std::cout<<$1<<"+"<<$3; }
-	| expr SUB expr	{ $$=$1-$3; std::cout<<$1<<"-"<<$3; }
-	| expr MUL expr	{ $$=$1*$3; std::cout<<$1<<"*"<<$3; }
-	| expr DIV expr	{ $$=$1/$3; std::cout<<$1<<"/"<<$3; }
-	| INT			{ $$=$1; std::cout<<"int:"<<$1<<"\n"; }
+	  INT					{ $$=$1; std::cout<<"int:"<<$1<<"\n"; }
+	| ADD expr %prec PFX	{ $$=+$2; std::cout<<"pfx:+"<<$2<<"\n"; }
+	| SUB expr %prec PFX	{ $$=-$2; std::cout<<"pfx:-"<<$2<<"\n"; }
+	| expr ADD expr			{ $$=$1+$3; std::cout<<$1<<"+"<<$3; }
+	| expr SUB expr			{ $$=$1-$3; std::cout<<$1<<"-"<<$3; }
+	| expr MUL expr			{ $$=$1*$3; std::cout<<$1<<"*"<<$3; }
+	| expr DIV expr			{ $$=$1/$3; std::cout<<$1<<"/"<<$3; }
 %%
