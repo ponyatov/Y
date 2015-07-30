@@ -1,3 +1,4 @@
+#!/usr/bin/bI
 # bI language system test kit
 # (this is comment)
 1+2

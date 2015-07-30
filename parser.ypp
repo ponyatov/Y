@@ -5,8 +5,8 @@
 %union {
 	char *c;
 	std::string *comment;
-	int *i;
-	float *f;
+	int i;
+	char op;
 }
 
 %token <c> CHAR
@@ -14,11 +14,31 @@
 %token <comment> COMMENT
 %token <i> INT
 
+%token <op> ADD
+%token <op> SUB
+
+%left ADD SUB
+/*
+%left MUL DIV
+%delf NEG
+*/
+
+%type <i> expr
+
+%start CODE
+
 %%
-CODE : 
+CODE :
 	| CODE CHAR 	{ std::cerr << "["<<$2<<"]\n"; } 
 	| CODE EOL  	{ std::cerr << "<eol>\n"; } 
-	| CODE COMMENT	{ std::cerr << "comment:" << *$2 << "\n"; } 
-	| CODE INT		{ std::cout << "int:" << *$2 << "\n"; } 
+	| CODE COMMENT	{ std::cerr << "comment:" << *$2 << "\n"; }
+	| CODE expr  	{ std::cout << "expr:" << $2 << "\n"; }
+;
+	
+expr :
+	  expr ADD expr	{ $$=$1+$3; 
+	  	  	  	  		std::cout << $1 << "+" << $3 << "=" << $$ << "\n"; } 
+	| INT 			{ $$=$1; 
+						std::cout << "int:" << $$ <<"\n";}
 ;
 %%

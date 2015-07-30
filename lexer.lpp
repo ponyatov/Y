@@ -3,11 +3,13 @@
 %}
 
 %option noyywrap
+%option yylineno
 
 %%
 \r			{}
 #[^\n]*		{ yylval.comment=new std::string(yytext); return COMMENT; }
 \n			{ return EOL; }
-[0-9]+		{ yylval.i=new int(atoi(yytext)); return INT; }
+[0-9]+		{ yylval.i=atoi(yytext); return INT; }
+\+			{ yylval.op=yytext[0]; return ADD; }
 .			{ yylval.c=yytext; return CHAR; }
 %%
