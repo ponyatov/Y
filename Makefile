@@ -8,6 +8,7 @@ clean:
 bI$(EXE):  cpp.cpp parser.tab.cpp lex.yy.c
 	g++ -o $@ cpp.cpp parser.tab.cpp lex.yy.c
 
+parser.tab.cpp: parser.tab.hpp
 parser.tab.hpp: parser.ypp
 	bison -d parser.ypp
 
