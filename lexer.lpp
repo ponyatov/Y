@@ -11,5 +11,8 @@
 \n			{ return EOL; }
 [0-9]+		{ yylval.i=atoi(yytext); return INT; }
 \+			{ yylval.op=yytext[0]; return ADD; }
+\-			{ yylval.op=yytext[0]; return SUB; }
+\*			{ yylval.op=yytext[0]; return MUL; }
+\/			{ yylval.op=yytext[0]; return DIV; }
 .			{ yylval.c=yytext; return CHAR; }
 %%
