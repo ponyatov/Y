@@ -6,6 +6,7 @@
 	char c;
 	int i;
 	float f;
+	char *s;
 };
 
 %token <c> CHAR
@@ -13,6 +14,8 @@
 %token <i> BIN
 %token <i> HEX
 %token <f> FLOAT
+%token <s> STRING
+%token <s> ID
 
 %%
 PROGRAM : 
@@ -21,5 +24,7 @@ PROGRAM :
 	| PROGRAM BIN  { std::cout<<"(bin "<<$2<<")\n"; }
 	| PROGRAM HEX  { std::cout<<"(hex "<<$2<<")\n"; }
 	| PROGRAM FLOAT { std::cout<<"(float "<<$2<<")\n"; }
+	| PROGRAM STRING { std::cout<<"(string "<<$2<<")\n"; }
+	| PROGRAM ID { std::cout<<"(id "<<$2<<")\n"; }
 ;
 %%

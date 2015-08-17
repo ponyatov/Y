@@ -4,7 +4,7 @@ EXE ?= bI.exe
 TEX = manual.tex tex.py 
 
 .PHONY: autobuild
-autobuild: pdf exe
+autobuild: pdf bI.log
 
 .PHONY: clean
 clean:
@@ -15,7 +15,13 @@ clean:
 	rm -f *.o
 
 .PHONY: all
-all: manual.pdf exe
+all: manual.pdf bI.log
+
+bI.log: bI.bI $(EXE) Makefile
+	$(EXE) < bI.bI > bI.log
+	@head bI.log
+	@echo ...
+	@tail bI.log
 
 .PHONY: pdf
 pdf: manual.pdf
@@ -28,12 +34,12 @@ manual.pdf: $(TEX)
 
 .PHONY: exe
 exe: $(EXE)
-$(EXE): lexer.lpp parser.ypp core.cpp bI.hpp test.bI bI.bI
-	bison -d parser.ypp
-	flex lexer.lpp
+$(EXE): core.cpp lex.yy.c parser.tab.cpp parser.tab.hpp bI.hpp
 	g++ -o $@ core.cpp lex.yy.c parser.tab.cpp
 	$@ < test.bI > test.log
-	@head test.log
-	@echo ...
-	@tail test.log
-	$@ < bI.bI > bI.log
+
+parser.tab.cpp: parser.ypp
+parser.tab.hpp: parser.ypp
+	bison -d parser.ypp
+lex.yy.c: lexer.lpp parser.tab.hpp
+	flex lexer.lpp
