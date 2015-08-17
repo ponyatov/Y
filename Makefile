@@ -13,7 +13,7 @@ manual.pdf: $(TEX)
 	python tex.py
 	pdflatex -halt-on-error -output-directory tmp manual.tex
 	pdflatex -halt-on-error -output-directory tmp manual.tex
-#	mv tmp/$@ $@
+	cp tmp/$@ $@
 
 .PHONY: exe
 exe: bI.exe 
