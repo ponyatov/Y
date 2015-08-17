@@ -4,7 +4,7 @@ EXE ?= bI.exe
 TEX = manual.tex tex.py 
 
 .PHONY: autobuild
-autobuild: exe
+autobuild: pdf exe
 
 .PHONY: clean
 clean:
