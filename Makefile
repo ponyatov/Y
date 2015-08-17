@@ -28,7 +28,7 @@ manual.pdf: $(TEX)
 
 .PHONY: exe
 exe: $(EXE)
-$(EXE): lexer.lpp parser.ypp core.cpp bI.hpp test.bI
+$(EXE): lexer.lpp parser.ypp core.cpp bI.hpp test.bI bI.bI
 	bison -d parser.ypp
 	flex lexer.lpp
 	g++ -o $@ core.cpp lex.yy.c parser.tab.cpp
@@ -36,3 +36,4 @@ $(EXE): lexer.lpp parser.ypp core.cpp bI.hpp test.bI
 	@head test.log
 	@echo ...
 	@tail test.log
+	$@ < bI.bI > bI.log
