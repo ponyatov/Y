@@ -33,4 +33,6 @@ $(EXE): lexer.lpp parser.ypp core.cpp bI.hpp test.bI
 	flex lexer.lpp
 	g++ -o $@ core.cpp lex.yy.c parser.tab.cpp
 	$@ < test.bI > test.log
-	tail test.log
+	@head test.log
+	@echo ...
+	@tail test.log

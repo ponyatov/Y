@@ -4,10 +4,22 @@
 
 %union {
 	char c;
+	int i;
+	float f;
 };
 
 %token <c> CHAR
+%token <i> INT
+%token <i> BIN
+%token <i> HEX
+%token <f> FLOAT
 
 %%
-PROGRAM : | PROGRAM CHAR { std::cout<<$2; };
+PROGRAM : 
+	| PROGRAM CHAR { std::cout<<"["<<$2<<"]\n"; }
+	| PROGRAM INT  { std::cout<<"(int "<<$2<<")\n"; }
+	| PROGRAM BIN  { std::cout<<"(bin "<<$2<<")\n"; }
+	| PROGRAM HEX  { std::cout<<"(hex "<<$2<<")\n"; }
+	| PROGRAM FLOAT { std::cout<<"(float "<<$2<<")\n"; }
+;
 %%
