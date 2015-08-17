@@ -1,7 +1,18 @@
+
+EXE ?= bI.exe
+
 TEX = manual.tex tex.py 
 
 .PHONY: autobuild
 autobuild: exe
+
+.PHONY: clean
+clean:
+	echo $@
+	rm -f parser.tab.* 
+	rm -f lex.yy.cc 
+	rm -f $(EXE)
+	rm -f *.o
 
 .PHONY: all
 all: manual.pdf exe
@@ -16,8 +27,8 @@ manual.pdf: $(TEX)
 	cp tmp/$@ $@
 
 .PHONY: exe
-exe: bI.exe 
-bI.exe: lexer.lpp parser.ypp core.cpp bI.hpp test.bI
+exe: $(EXE)
+$(EXE): lexer.lpp parser.ypp core.cpp bI.hpp test.bI
 	bison -d parser.ypp
 	flex lexer.lpp
 	g++ -o $@ core.cpp lex.yy.c parser.tab.cpp
