@@ -6,5 +6,3 @@ Author = {
 	name:"Dmitry Ponyatov"
 	email:"dponyatov@gmail.com"
 }
-
-
