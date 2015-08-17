@@ -1,0 +1,9 @@
+%{
+#include "bI.hpp"
+%}
+
+%option noyywrap
+
+%%
+.			{ yylval.c=yytext[0]; return CHAR; }
+%%

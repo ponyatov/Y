@@ -1,0 +1,13 @@
+%{
+#include "bI.hpp"
+%}
+
+%union {
+	char c;
+};
+
+%token <c> CHAR
+
+%%
+PROGRAM : | PROGRAM CHAR { std::cout<<$2; };
+%%
