@@ -1,9 +1,7 @@
 *~
 *.swp
-tmp
-
-*.idx
-*.synctex.gz
-
+/tmp/
 *.log
+*.exe
+*.o
 
