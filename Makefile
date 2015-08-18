@@ -4,7 +4,7 @@ EXE ?= bI.exe
 TEX = manual.tex tex.py 
 
 .PHONY: autobuild
-autobuild: pdf bI.log
+autobuild: pdf bI.log test.log
 
 .PHONY: clean
 clean:
@@ -17,11 +17,14 @@ clean:
 .PHONY: all
 all: manual.pdf bI.log
 
-bI.log: bI.bI $(EXE) Makefile
-	$(EXE) < bI.bI > bI.log
-	@head bI.log
+%.log: %.bI $(EXE) Makefile
+	$(EXE) < $< > $@
+	@echo .
+	@echo $@
+	@echo ======================
+	@head -n5 $@
 	@echo ...
-	@tail bI.log
+	@tail -n5 $@
 
 .PHONY: pdf
 pdf: manual.pdf
