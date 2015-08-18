@@ -10,10 +10,10 @@ int main(int argc, char *argv[]) {
 }
 
 
-biID::biID(char *val) {
-	value = new std::string(val);
-}
+//biID::biID(char *val) {
+//	value = new std::string(val);
+//}
 
-biID::~biID() { delete value; }
-
-std::string* biID::str() { return value; }
+//biID::~biID() { delete value; }
+//
+//std::string* biID::str() { return value; }

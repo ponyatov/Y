@@ -4,17 +4,15 @@
 #include <iostream>
 #include <cstdlib>
 
-class biObject {
-public:
-	virtual std::string *str();
-};
-
-class biID: public biObject {
-	std::string *value;
-public:
-	biID(char *);
-	~biID();
-	std::string *str(); 
+struct biObject {
+	enum {INT,FLOAT,STRING,ID,OP} t;
+	union {
+		int i;
+		float f;
+		std::string *s;
+		std::string *id;
+		char op;
+	} v;
 };
 
 extern int yylex(void);
@@ -23,6 +21,5 @@ extern char *yytext;
 extern int yylineno;
 extern void yyerror(const char *msg);
 #include "parser.tab.hpp"
-
 
 #endif //  _H_bI
