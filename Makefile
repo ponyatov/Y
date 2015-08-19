@@ -28,7 +28,7 @@ clean:
 bI$(EXE): lex.yy.c parser.tab.cpp core.cpp bI.hpp
 	$(CXX) $(CXXFLAGS) -o $@ lex.yy.c parser.tab.cpp core.cpp
 
-lex.yy.c: lexer.lpp Makefile
+lex.yy.c: lexer.lpp
 	flex -8 lexer.lpp
 	
 parser.tab.cpp: parser.ypp
