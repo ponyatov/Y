@@ -1,0 +1,10 @@
+%{
+#include "bI.hpp"
+%}
+
+%option noyywrap
+
+%%
+[ \n\r\t]+			{ }										/* spaces */
+.					{ yylval.c=yytext[0]; return CHAR; }	/* any char */
+%%

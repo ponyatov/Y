@@ -2,7 +2,8 @@
 *.swp
 /tmp/
 *.log
-*.exe
+bI.exe
+bI
 *.o
 /2del/
 lex.yy.c

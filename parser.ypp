@@ -1,0 +1,13 @@
+%{
+#include "bI.hpp"
+%}
+
+%union {
+	char c;
+};
+
+%token <c> CHAR
+
+%%
+SOURCE : | SOURCE CHAR { cout<<"["<<$2<<"]"; } ;
+%%
