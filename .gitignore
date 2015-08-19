@@ -1,6 +1,6 @@
 *~
 *.swp
-/tmp/
+tmp
 *.log
 bI.exe
 bI

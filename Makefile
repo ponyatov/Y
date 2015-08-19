@@ -1,8 +1,23 @@
 
+TEX = doc/manual.tex doc/header.tex doc/regtex.py doc/bib.tex
+TEX += doc/files.tex
+
 .PHONY: all
-all: bI$(EXE)
+all: pdf bI$(EXE)
+	@echo =============================
 	./bI$(EXE) < bI.bI
+	@echo =============================
 	
+.PHONY: pdf
+pdf: doc/bI.pdf
+doc/bI.pdf: $(TEX)
+	cd doc &&\
+	mkdir -p ../tmp &&\
+	python regtex.py &&\
+	pdflatex -halt-on-error -output-directory ../tmp manual.tex &&\
+	pdflatex -halt-on-error -output-directory ../tmp manual.tex &&\
+	cp ../tmp/manual.pdf bI.pdf
+
 .PHONY: clean
 clean:
 	rm -f bI$(EXE) *.o lex.yy.cc parser.tab.* *.log
@@ -10,8 +25,8 @@ clean:
 bI$(EXE): lex.yy.c parser.tab.cpp core.cpp bI.hpp
 	$(CXX) $(CXXFLAGS) -o $@ lex.yy.c parser.tab.cpp core.cpp
 
-lex.yy.c: lexer.lpp
-	flex lexer.lpp
+lex.yy.c: lexer.lpp Makefile
+	flex -8 lexer.lpp
 	
 parser.tab.cpp: parser.ypp
 	bison -d parser.ypp

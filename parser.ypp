@@ -4,10 +4,15 @@
 
 %union {
 	char c;
+	string *s;
 };
 
 %token <c> CHAR
+%token <s> USTR
 
 %%
-SOURCE : | SOURCE CHAR { cout<<"["<<$2<<"]"; } ;
+SOURCE : 
+	| SOURCE CHAR { cout<<"[c:"<<$2<<"]"; } 
+	| SOURCE USTR { cout<<"[s:"<<*$2<<"]"; } 
+;
 %%
