@@ -5,14 +5,20 @@
 %union {
 	char c;
 	string *s;
+	int i;
+	float f;
 };
 
 %token <c> CHAR
 %token <s> USTR
+%token <i> INT
+%token <f> FLOAT
 
 %%
 SOURCE : 
-	| SOURCE CHAR { cout<<"[c:"<<$2<<"]"; } 
-	| SOURCE USTR { cout<<"[s:"<<*$2<<"]"; } 
+	| SOURCE CHAR 	{ cout<<"[c:"<<$2<<"]"; } 
+	| SOURCE USTR 	{ cout<<"[s:"<<*$2<<"]"; } 
+	| SOURCE INT  	{ cout<<"[i:"<<$2<<"]"; } 
+	| SOURCE FLOAT	{ cout<<"[f:"<<$2<<"]"; } 
 ;
 %%

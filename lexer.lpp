@@ -17,9 +17,11 @@ U4      [\xf0-\xf4]
 ualpha  {alpha}|{U2}{U1}|{U3}{U1}{U1}|{U4}{U1}{U1}{U1}
 ustring	{ualpha}*
 /******************************************************/
+num		[0-9]+
 
 %%
-[ \r\t]+		{ }										/* spaces */
+[ \r\t]+		{ }											/* spaces */
+{num}			{ yylval.i=atoi(yytext); return INT;}		/* integer */
 {ustring}		{ yylval.s=new string(yytext); return USTR;}/* unicode string*/
-.				{ yylval.c=yytext[0]; return CHAR; }	/* any char */
+.				{ yylval.c=yytext[0]; return CHAR; }		/* any char */
 %%

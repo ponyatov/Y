@@ -1,11 +1,14 @@
 
 TEX = doc/manual.tex doc/header.tex doc/regtex.py doc/bib.tex
-TEX += doc/files.tex
+TEX += doc/files.tex doc/about.tex
 
 .PHONY: all
-all: pdf bI$(EXE)
+all: pdf bI.log
+
+bI.log: bI$(EXE)
 	@echo =============================
-	./bI$(EXE) < bI.bI
+	./bI$(EXE) < bI.bI > bI.log
+	head -n5 bI.log
 	@echo =============================
 	
 .PHONY: pdf

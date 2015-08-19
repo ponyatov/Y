@@ -9,7 +9,7 @@
 \normalfont
 
 % pdflatex options
-\usepackage[unicode]{hyperref}
+\usepackage[unicode,colorlinks=true]{hyperref}
 \newcommand{\email}[1]{$<$\href{mailto:#1}{#1}$>$}
 \usepackage[pdftex]{graphicx}
 
@@ -58,6 +58,7 @@ keywordstyle=\textbf
 \usepackage{enumitem}	% nosep option in lists/enums
 
 \newcommand{\note}[1]{\footnote{\ #1}}
+\renewcommand{\emph}[1]{\textcolor{blue}{#1}}
 
 % Cyrillization
 \usepackage[T1,T2A]{fontenc}
