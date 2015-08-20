@@ -2,8 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-   <extension
-         point="org.eclipse.ui.perspectives">
+   <extension point="org.eclipse.ui.perspectives">
       <perspective
             class="org.eclipse.bI.Perspective"
             id="org.eclipse.bI.perspective"
