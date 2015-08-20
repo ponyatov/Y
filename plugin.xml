@@ -6,6 +6,7 @@
       <perspective
             class="org.eclipse.bI.Perspective"
             id="org.eclipse.bI.perspective"
+            icon="META-INF/icon.png"
             name="bI">
       </perspective>
    </extension>
