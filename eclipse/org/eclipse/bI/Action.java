@@ -13,7 +13,7 @@ public class Action implements IWorkbenchWindowActionDelegate {
 	public void run(IAction arg0) {
 		// TODO Auto-generated method stub
 		Shell shell = activeWindow.getShell();
-		MessageDialog.openInformation(shell, "Hello World", "Hello World!");		
+		MessageDialog.openInformation(shell, "Hello", "World!");		
 	}
 
 	@Override
