@@ -1,18 +1,18 @@
 
 TEX = doc/manual.tex doc/header.tex doc/bib.tex doc/regtex.py
 TEX += doc/files.tex doc/about.tex
-TEX += doc/types.tex
+TEX += doc/syntax.tex doc/types.tex
 TEX += doc/eclipse.tex 
 TEX += META-INF/icon.png META-INF/new_project.png META-INF/MANIFEST.MF
 TEX += plugin.xml
 
 .PHONY: all
-all: pdf bI.log
+all: pdf bI.html
 
-bI.log: bI$(EXE) bI.bI
+bI.html: bI$(EXE) bI.bI
 	@echo =============================
-	./bI$(EXE) < bI.bI > bI.log
-	head -n5 bI.log
+	./bI$(EXE) < bI.bI > bI.html
+	head -n11 bI.html|tail -n6
 	@echo =============================
 	
 .PHONY: pdf

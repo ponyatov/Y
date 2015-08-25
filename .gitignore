@@ -5,6 +5,7 @@ tmp
 bI.exe
 bI
 *.o
+*.html
 /2del/
 lex.yy.c
 parser.tab.*
