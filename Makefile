@@ -1,7 +1,10 @@
 
-TEX = doc/manual.tex doc/header.tex doc/regtex.py doc/bib.tex
+TEX = doc/manual.tex doc/header.tex doc/bib.tex doc/regtex.py
 TEX += doc/files.tex doc/about.tex
 TEX += doc/types.tex
+TEX += doc/eclipse.tex 
+TEX += META-INF/icon.png META-INF/new_project.png META-INF/MANIFEST.MF
+TEX += plugin.xml
 
 .PHONY: all
 all: pdf bI.log
