@@ -42,4 +42,18 @@
    		name="bI nature">
    </extension>
    
+   <extension point="org.eclipse.ui.newWizards">
+   		<category id="org.eclipse.bI.category" name="_bI"/>
+   		<primaryWizard id="org.eclipse.bI.new"/>
+   		<wizard
+   			id="org.eclipse.bI.new"
+   			name="bI project"
+   			category="org.eclipse.bI.category"
+   			class="org.eclipse.bI.NewbI"
+   			icon="META-INF/new_project.png"
+   		>
+   		<description>Inherit new bI project from prototype system.</description>
+   		</wizard>
+   </extension>
+   
 </plugin>
