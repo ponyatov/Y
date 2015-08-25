@@ -36,4 +36,10 @@
    	  />
    </extension>
    
+   <extension
+   		point="org.eclipse.core.resources.natures"
+   		id="org.eclipse.bI.nature"
+   		name="bI nature">
+   </extension>
+   
 </plugin>
