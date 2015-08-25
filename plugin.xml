@@ -11,6 +11,15 @@
       </perspective>
    </extension>
    
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+   		<perspectiveExtension targetID="org.eclipse.bI.perspective">
+   			<hiddenMenuItem id="org.eclipse.ui.run"/>
+   			<hiddenMenuItem id="org.eclipse.help.menu"/>
+   			<hiddenMenuItem id="org.eclipse.ui.help"/>
+   			<hiddenMenuItem id="org.eclipse.search.menu"/>
+   		</perspectiveExtension>
+   </extension>
+   
    <extension point="org.eclipse.ui.activities">
    	  <activity
    	  		name="bI Activity"
@@ -19,7 +28,11 @@
    	  />
    	  <activityPatternBinding
    	  		activityId="org.eclipse.bI.activity"
-   	  		pattern="org.eclipse.cdt.ui/org.eclipse.cdt.ui.wizards.*"
+   	  		pattern="org.eclipse.cdt.*"
+   	  />
+   	  <activityPatternBinding
+   	  		activityId="org.eclipse.bI.activity"
+   	  		pattern="org.eclipse.jdt.*"
    	  />
    </extension>
    
