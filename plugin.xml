@@ -2,6 +2,23 @@
 <?eclipse version="3.4"?>
 <plugin>
 
+   <extension point="org.eclipse.ui.actionSets">
+   		<actionSet id="org.eclipse.bI.actionset"
+   			label="bI action set"
+   			description="bI action set"
+   		>
+   			<menu id="org.eclipse.bI.menu"
+   				label="bI action menu"
+   			/>
+   			<action id="org.eclipse.bI.action"
+   				label="bI action"
+   				tooltip="bI action tooltip"
+   				class="org.eclipse.bI.Action"
+   				toolbarPath="Normal"
+   			/>
+   		</actionSet>
+   </extension>
+
    <extension point="org.eclipse.ui.perspectives">
       <perspective
             class="org.eclipse.bI.Perspective"
@@ -56,18 +73,51 @@
    		</wizard>
    </extension>
    
-   <extension point="org.eclipse.ui.popupMenus">
-   		<viewerContribution
-   			id="org.eclipse.bI.popup.editor"
-   			targetID="#TextEditorContext"
-   		>
-   			<action
-   				id="org.eclipse.bI.popup.editor.bit"
-   				label="bIt"
-   				icon="META-INF/icon_16x16.png"
-   				menubarPath="addons"
-   			/>
-   		</viewerContribution>
+   <extension point="org.eclipse.ui.commands">
+   		<command
+   			id="org.eclipse.bI.command"
+   			name='bI command'
+   		/>
    </extension>
+   
+   <extension point="org.eclipse.ui.menus">
+   		<menuContribution 
+   			locationURI="toolbar:org.eclipse.ui.main.toolbar">
+   			<toolbar 
+   				id="org.eclipse.bI.toolbar"
+   				icon="META-INF/icon_16x16.png"
+   				label="bI тулбар"
+   				>
+   				<command
+   					commandId="org.eclipse.bI.new"
+   					label="bI проект"
+   					icon="META-INF/icon_16x16.png"
+   					/>
+   			</toolbar>
+   		</menuContribution>
+   
+   		<menuContribution
+   			locationURI="menu:new?before=new">
+<!--   			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?before=additions">
+-->   				<command
+   					commandId="org.eclipse.bI.command"
+   					label="bI popup"
+   					icon="META-INF/icon_16x16.png"
+   				/>
+   				<command
+   					commandId="org.eclipse.bI.new"
+   					label="bI проект"
+   					/>
+   		</menuContribution>
+   		<menuContribution
+   			locationURI="menu:org.eclipse.ui.navigator.ProjectExplorer">
+   				<command
+   					commandId="org.eclipse.bI.command"
+   					label="bI menu"
+   					icon="META-INF/icon_16x16.png"
+   				/>
+   		</menuContribution>
+   </extension>
+   
    
 </plugin>
