@@ -27,7 +27,7 @@ doc/bI.pdf: $(TEX)
 
 .PHONY: clean
 clean:
-	rm -f bI$(EXE) *.o lex.yy.cc parser.tab.* *.log
+	rm -f bI bI$(EXE) *.o lex.yy.c parser.tab.* *.log
 
 bI$(EXE): lex.yy.c parser.tab.cpp core.cpp bI.hpp
 	$(CXX) $(CXXFLAGS) -o $@ lex.yy.c parser.tab.cpp core.cpp
