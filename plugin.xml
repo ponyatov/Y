@@ -6,7 +6,7 @@
       <perspective
             class="org.eclipse.bI.Perspective"
             id="org.eclipse.bI.perspective"
-            icon="META-INF/icon.png"
+            icon="META-INF/icon_16x16.png"
             name="bI">
       </perspective>
    </extension>
@@ -50,10 +50,24 @@
    			name="bI project"
    			category="org.eclipse.bI.category"
    			class="org.eclipse.bI.NewbI"
-   			icon="META-INF/new_project.png"
+   			icon="META-INF/icon_16x16.png"
    		>
    		<description>Inherit new bI project from prototype system.</description>
    		</wizard>
+   </extension>
+   
+   <extension point="org.eclipse.ui.popupMenus">
+   		<viewerContribution
+   			id="org.eclipse.bI.popup.editor"
+   			targetID="#TextEditorContext"
+   		>
+   			<action
+   				id="org.eclipse.bI.popup.editor.bit"
+   				label="bIt"
+   				icon="META-INF/icon_16x16.png"
+   				menubarPath="addons"
+   			/>
+   		</viewerContribution>
    </extension>
    
 </plugin>

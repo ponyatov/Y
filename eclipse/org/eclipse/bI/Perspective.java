@@ -27,7 +27,7 @@ public class Perspective implements IPerspectiveFactory {
 
 	private void defineLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();
-		IFolderLayout left   = layout.createFolder("left", IPageLayout.LEFT, (float) 0.2, editorArea);
+		IFolderLayout left   = layout.createFolder("left", IPageLayout.LEFT, (float) 0.25, editorArea);
 		IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.7, editorArea);
 		left.addView(IPageLayout.ID_PROJECT_EXPLORER);
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
