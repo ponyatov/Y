@@ -11,4 +11,16 @@
       </perspective>
    </extension>
    
+   <extension point="org.eclipse.ui.activities">
+   	  <activity
+   	  		name="bI Activity"
+   	  		description="Developing in bI: disable unwanted activities"
+   	  		id="org.eclipse.bI.activity"
+   	  />
+   	  <activityPatternBinding
+   	  		activityId="org.eclipse.bI.activity"
+   	  		pattern="org.eclipse.cdt.ui/org.eclipse.cdt.ui.wizards.*"
+   	  />
+   </extension>
+   
 </plugin>
