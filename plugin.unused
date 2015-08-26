@@ -40,26 +40,6 @@
    	  />
    </extension>
    
-   <extension
-   		point="org.eclipse.core.resources.natures"
-   		id="org.eclipse.bI.nature"
-   		name="bI nature">
-   </extension>
-   
-   <extension point="org.eclipse.ui.newWizards">
-   		<category id="org.eclipse.bI.category" name="_bI"/>
-   		<primaryWizard id="org.eclipse.bI.new"/>
-   		<wizard
-   			id="org.eclipse.bI.new"
-   			name="bI project"
-   			category="org.eclipse.bI.category"
-   			class="org.eclipse.bI.NewbI"
-   			icon="META-INF/icon_16x16.png"
-   		>
-   		<description>Inherit new bI project from prototype system.</description>
-   		</wizard>
-   </extension>
-   
    <extension point="org.eclipse.ui.commands">
    		<command
    			id="org.eclipse.bI.command"

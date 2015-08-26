@@ -1,11 +1,14 @@
 package org.eclipse.bI;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -39,6 +42,8 @@ public class NewbI extends Wizard implements INewWizard  {
 		@Override
 		public void createControl(Composite par) {
 			container = new Composite(par, SWT.NONE);
+			//GridLayout grid = new GridLayout(5,2);
+			//container.setLayout(grid);
 			Label Lname = new Label(container, SWT.NONE);
 			Lname.setText("name:");
 			Lname.setBounds(XL,Y,LW,20);
@@ -58,7 +63,9 @@ public class NewbI extends Wizard implements INewWizard  {
 		}
 		
 		public boolean performFinish() {
-			System.out.println("performFinish()");
+			Display display = new Display();
+			Shell shell = new Shell(display);
+			MessageDialog.openInformation(shell, "New bI", "performFinish()");
 			return true;
 		}
 		

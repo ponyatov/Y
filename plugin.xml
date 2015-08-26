@@ -2,13 +2,32 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-   <extension point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.eclipse.bI.Perspective"
+	<extension point="org.eclipse.ui.perspectives">
+    	<perspective
+        	class="org.eclipse.bI.Perspective"
             id="org.eclipse.bI.perspective"
             icon="META-INF/icon_16x16.png"
             name="bI">
-      </perspective>
-   </extension>
+    	</perspective>
+	</extension>
+   
+	<!--extension point="org.eclipse.core.resources.natures"
+   		id="org.eclipse.bI.nature"
+		name="bI nature">
+	</extension-->
+   
+	<extension point="org.eclipse.ui.newWizards">
+   		<category id="org.eclipse.bI.category" name="_bI"/>
+   		<primaryWizard id="org.eclipse.bI.new"/>
+   		<wizard
+   			id="org.eclipse.bI.new"
+   			name="bI project"
+   			category="org.eclipse.bI.category"
+   			class="org.eclipse.bI.NewbI"
+   			icon="META-INF/icon_16x16.png"
+   		>
+   		<description>Inherit new bI project from prototype system.</description>
+   		</wizard>
+	</extension>
    
 </plugin>
