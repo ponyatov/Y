@@ -13,12 +13,16 @@
 %token <s> USTR
 %token <i> INT
 %token <f> FLOAT
+%token <s> COMMENT
+%token <s> dotSEC
 
 %%
 SOURCE : 
-	| SOURCE CHAR 	{ cout<<"[c:"<<$2<<"]"; } 
-	| SOURCE USTR 	{ cout<<"[s:"<<*$2<<"]"; } 
-	| SOURCE INT  	{ cout<<"[i:"<<$2<<"]"; } 
-	| SOURCE FLOAT	{ cout<<"[f:"<<$2<<"]"; } 
+	| SOURCE CHAR 		{ cout<<$2; } 
+	| SOURCE USTR 		{ cout<<*$2; } 
+	| SOURCE INT  		{ cout<<"<font color=\"blue\">i:<b>"<<$2<<"</b></font>"; } 
+	| SOURCE FLOAT		{ cout<<"<font color=\"darkcyan\">f:<b>"<<$2<<"</b></font>"; } 
+	| SOURCE COMMENT	{ cout<<"<font color=\"brown\">"<<*$2<<"</font>"; }
+	| SOURCE dotSEC		{ cout << "<h3>"<<*$2<<"</h3><hr>\n"; }
 ;
 %%

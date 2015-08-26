@@ -17,11 +17,22 @@ U4      [\xf0-\xf4]
 ualpha  {alpha}|{U2}{U1}|{U3}{U1}{U1}|{U4}{U1}{U1}{U1}
 ustring	{ualpha}*
 /******************************************************/
-num		[0-9]+
 
 %%
-[ \r\t]+		{ }											/* spaces */
-{num}			{ yylval.i=atoi(yytext); return INT;}		/* integer */
-{ustring}		{ yylval.s=new string(yytext); return USTR;}/* unicode string*/
-.				{ yylval.c=yytext[0]; return CHAR; }		/* any char */
+
+#\|[^\|]*\|#	{ yylval.s=new string(yytext); return COMMENT;} /* block comment */
+#[^\n]*			{ yylval.s=new string(yytext); return COMMENT;} /* line comment */
+
+\.sec[^\n]+		{ yylval.s=new string(yytext); return dotSEC;} /* documenting commands */
+
+[\+\-]{0,1}[0-9]+(\.[0-9]+){0,1}[eE][\+\-]{0,1}[0-9]*	{ yylval.f=atof(yytext); return FLOAT;}		/* float */
+[\+\-]{0,1}[0-9]+\.[0-9]+	{ yylval.f=atof(yytext); return FLOAT;}		/* float */
+[\+\-]{0,1}[0-9]+			{ yylval.i=atoi(yytext); return INT;}		/* integer */
+
+.				{ yylval.c=yytext[0]; return CHAR; }		/* bypass chars */
 %%
+
+/* unused 
+[ \r\t]+		{ }											/* spaces
+{ustring}		{ yylval.s=new string(yytext); return USTR;}/* unicode string
+*/

@@ -42,19 +42,24 @@ extendedchars=true,inputencoding=utf8, % i18n
 frame=single, % show frames around
 numbers=left, numberstyle=\small,numbersep=1mm,% line numbering
 tabsize=4, % tab style
-keywordstyle=\textbf
+keywordstyle=\textsc
 }
 \newcommand{\lst}[2]{\lstinputlisting[title={#1}]{#2}}
+\newcommand{\lstx}[3]{\lstinputlisting[title={#1},language=#3]{#2}}
 \newcommand{\file}[1]{\texttt{#1}}
 \newcommand{\class}[1]{\textcolor{blue}{#1}}
+\usepackage{framed}
 
 % programming languages
 \newcommand{\cpp}{$C^+_+$}
 \newcommand{\py}{$Python$}
 \newcommand{\st}{$SmallTalk$}
 \newcommand{\lisp}{$LISP$}
+\newcommand{\forth}{$Forth$}
 \newcommand{\bi}{$bI$}
+\newcommand{\biz}{$bI_0$}
 \newcommand{\bivm}{$bI_{VM}$}
+\newcommand{\eclipse}{\textcircled{$\equiv$}$ECLIPSE$}
 
 % misc
 \usepackage{enumitem}	% nosep option in lists/enums

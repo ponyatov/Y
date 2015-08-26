@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: bI
+Bundle-SymbolicName: org.eclipse.bI;singleton:=true
+Bundle-Version: 0.0.1.alpha
+Bundle-Activator: org.eclipse.bI.Activator
+Bundle-Vendor: Dmitry Ponyatov <dponyatov@gmail.com>
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ui,
+ org.eclipse.ui.console
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7,
+ JavaSE-1.8
+Bundle-ActivationPolicy: lazy

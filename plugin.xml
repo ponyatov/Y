@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension point="org.eclipse.ui.actionSets">
+   		<actionSet id="org.eclipse.bI.actionset"
+   			label="bI action set"
+   			description="bI action set"
+   		>
+   			<menu id="org.eclipse.bI.menu"
+   				label="bI action menu"
+   			/>
+   			<action id="org.eclipse.bI.action"
+   				label="bI action"
+   				tooltip="bI action tooltip"
+   				class="org.eclipse.bI.Action"
+   				toolbarPath="Normal"
+   			/>
+   		</actionSet>
+   </extension>
+
+   <extension point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.eclipse.bI.Perspective"
+            id="org.eclipse.bI.perspective"
+            icon="META-INF/icon_16x16.png"
+            name="bI">
+      </perspective>
+   </extension>
+   
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+   		<perspectiveExtension targetID="org.eclipse.bI.perspective">
+   			<hiddenMenuItem id="org.eclipse.ui.run"/>
+   			<hiddenMenuItem id="org.eclipse.help.menu"/>
+   			<hiddenMenuItem id="org.eclipse.ui.help"/>
+   			<hiddenMenuItem id="org.eclipse.search.menu"/>
+   		</perspectiveExtension>
+   </extension>
+   
+   <extension point="org.eclipse.ui.activities">
+   	  <activity
+   	  		name="bI Activity"
+   	  		description="Developing in bI: disable unwanted activities"
+   	  		id="org.eclipse.bI.activity"
+   	  />
+   	  <activityPatternBinding
+   	  		activityId="org.eclipse.bI.activity"
+   	  		pattern="org.eclipse.cdt.*"
+   	  />
+   	  <activityPatternBinding
+   	  		activityId="org.eclipse.bI.activity"
+   	  		pattern="org.eclipse.jdt.*"
+   	  />
+   </extension>
+   
+   <extension
+   		point="org.eclipse.core.resources.natures"
+   		id="org.eclipse.bI.nature"
+   		name="bI nature">
+   </extension>
+   
+   <extension point="org.eclipse.ui.newWizards">
+   		<category id="org.eclipse.bI.category" name="_bI"/>
+   		<primaryWizard id="org.eclipse.bI.new"/>
+   		<wizard
+   			id="org.eclipse.bI.new"
+   			name="bI project"
+   			category="org.eclipse.bI.category"
+   			class="org.eclipse.bI.NewbI"
+   			icon="META-INF/icon_16x16.png"
+   		>
+   		<description>Inherit new bI project from prototype system.</description>
+   		</wizard>
+   </extension>
+   
+   <extension point="org.eclipse.ui.commands">
+   		<command
+   			id="org.eclipse.bI.command"
+   			name='bI command'
+   		/>
+   </extension>
+   
+   <extension point="org.eclipse.ui.menus">
+   		<menuContribution 
+   			locationURI="toolbar:org.eclipse.ui.main.toolbar">
+   			<toolbar 
+   				id="org.eclipse.bI.toolbar"
+   				icon="META-INF/icon_16x16.png"
+   				label="bI тулбар"
+   				>
+   				<command
+   					commandId="org.eclipse.bI.new"
+   					label="bI проект"
+   					icon="META-INF/icon_16x16.png"
+   					/>
+   			</toolbar>
+   		</menuContribution>
+   
+   		<menuContribution
+   			locationURI="menu:new?before=new">
+<!--   			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?before=additions">
+-->   				<command
+   					commandId="org.eclipse.bI.command"
+   					label="bI popup"
+   					icon="META-INF/icon_16x16.png"
+   				/>
+   				<command
+   					commandId="org.eclipse.bI.new"
+   					label="bI проект"
+   					/>
+   		</menuContribution>
+   		<menuContribution
+   			locationURI="menu:org.eclipse.ui.navigator.ProjectExplorer">
+   				<command
+   					commandId="org.eclipse.bI.command"
+   					label="bI menu"
+   					icon="META-INF/icon_16x16.png"
+   				/>
+   		</menuContribution>
+   </extension>
+   
+   
+</plugin>
