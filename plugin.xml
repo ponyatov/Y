@@ -18,16 +18,70 @@
    
 	<extension point="org.eclipse.ui.newWizards">
    		<category id="org.eclipse.bI.category" name="_bI"/>
-   		<primaryWizard id="org.eclipse.bI.new"/>
+   		<primaryWizard id="org.eclipse.bI.newproject"/>
+   		<primaryWizard id="org.eclipse.bI.newtarget"/>
    		<wizard
-   			id="org.eclipse.bI.new"
-   			name="bI project"
+   			id="org.eclipse.bI.newproject"
+   			name="проект"
    			category="org.eclipse.bI.category"
    			class="org.eclipse.bI.NewbI"
    			icon="META-INF/icon_16x16.png"
    		>
-   		<description>Inherit new bI project from prototype system.</description>
+   		<description>Наследовать bI-проект из системы-прототипа.</description>
    		</wizard>
+   		<wizard
+   			id="org.eclipse.bI.newtarget"
+   			name="таргет"
+   			category="org.eclipse.bI.category"
+   			class="org.eclipse.bI.NewbI"
+   			icon="META-INF/new_project.png"
+   		>
+   		<description>Создать новую целевую систему.</description>
+   		</wizard>
+	</extension>
+	
+	<extension point="org.eclipse.ui.commands">
+		<command id="org.eclipse.bI.newcommand" name='new bI'/>
+		<command id="org.eclipse.bI.command" name='new bI'/>
+	</extension>
+   
+	<extension point="org.eclipse.ui.menus">
+	
+   		<menuContribution locationURI="menu:new?before=new">
+   				<menu id="org.eclipse.bI.newmenu" 
+   					label="bI"
+   					icon="META-INF/icon_16x16.png">
+				<command
+   					commandId="org.eclipse.bI.newproject"
+   					label="проект"
+   					icon="META-INF/icon_16x16.png"
+   				/>   				
+				<command
+   					commandId="org.eclipse.bI.newtarget"
+   					label="таргет"
+   					icon="META-INF/new_project.png"
+   				/>   				
+   				</menu>
+   		</menuContribution>
+   		
+   		<menuContribution locationURI="menu:common.new.menu?after=new">
+				<command
+   					commandId="org.eclipse.bI.newcommand"
+   					label="bI проект"
+   					icon="META-INF/icon_16x16.png"
+   				/>   				
+   		</menuContribution>
+   		
+   		<menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar">
+   			<toolbar id="org.eclipse.bI.toolbar">
+				<command
+   					commandId="org.eclipse.bI.command"
+   					label="bI проект"
+   					icon="META-INF/icon_16x16.png"
+   				/>   				
+   			</toolbar>
+   		</menuContribution>
+   		
 	</extension>
    
 </plugin>

@@ -17,11 +17,10 @@ public class Perspective implements IPerspectiveFactory {
 
 	private void defineActions(IPageLayout layout) {
 		// new menu items
-		/*
 		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.file");
 		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder");
-		layout.addNewWizardShortcut("org.eclipse.bI.new");
-		*/
+		layout.addNewWizardShortcut("org.eclipse.bI.newproject");
+		layout.addNewWizardShortcut("org.eclipse.bI.newtarget");
 		// views
 		layout.addShowViewShortcut(IPageLayout.ID_PROJECT_EXPLORER);
 		layout.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
