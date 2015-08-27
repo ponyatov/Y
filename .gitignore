@@ -8,6 +8,6 @@ bI
 *.html
 /2del/
 lex.yy.c
-parser.tab.*
-
+bI.tab.*
 /bin/
+
