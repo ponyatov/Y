@@ -2,6 +2,7 @@
 #define _H_bI
 
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 
 using namespace std;
@@ -11,6 +12,6 @@ extern int yyparse(void);
 extern char *yytext;
 extern int yylineno;
 extern void yyerror(const char *msg);
-#include "parser.tab.hpp"
+#include "bI.tab.hpp"
 
 #endif //  _H_bI

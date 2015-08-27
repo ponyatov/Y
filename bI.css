@@ -1,0 +1,60 @@
+
+BODY {
+	color: black;
+	background: white;
+}
+
+.int {
+	background: black;
+	color: lightblue;
+}
+
+.float {
+	background: black;
+	color: cyan;
+}
+
+.string {
+	background: black;
+	color: lightgreen;
+}
+
+.op {
+	background: black;
+	color: white;
+}
+
+.dot {
+	background: black;
+	color: red;
+}
+
+.url {
+	background: black;
+	color: lightblue;
+	font-weight: bold;
+}
+
+.file {
+	background: black;
+	color: lightcyan;
+	font-weight: bold;
+}
+
+.stdsym {
+	background: black;
+	color: yellow;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.sym {
+	background: black;
+	color: lightcyan;
+	font-weight: bold;
+	font-style: normal;
+}
+
+.comment {
+	color: brown;
+}

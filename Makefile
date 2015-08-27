@@ -12,7 +12,6 @@ all: pdf bI.html
 bI.html: bI$(EXE) bI.bI
 	@echo =============================
 	./bI$(EXE) < bI.bI > bI.html
-	head -n11 bI.html|tail -n6
 	@echo =============================
 	
 .PHONY: pdf
@@ -27,13 +26,13 @@ doc/bI.pdf: $(TEX)
 
 .PHONY: clean
 clean:
-	rm -f bI bI$(EXE) *.o lex.yy.c parser.tab.* *.log
+	rm -f bI bI$(EXE) *.o lex.yy.c bI.tab.* *.log
 
-bI$(EXE): lex.yy.c parser.tab.cpp core.cpp bI.hpp
-	$(CXX) $(CXXFLAGS) -o $@ lex.yy.c parser.tab.cpp core.cpp
+bI$(EXE): lex.yy.c bI.tab.cpp bI.cpp bI.hpp
+	$(CXX) $(CXXFLAGS) -o $@ lex.yy.c bI.tab.cpp bI.cpp
 
-lex.yy.c: lexer.lpp
-	flex -8 lexer.lpp
+lex.yy.c: bI.lpp
+	flex -8 bI.lpp
 	
-parser.tab.cpp: parser.ypp
-	bison -d parser.ypp
+bI.tab.cpp: bI.ypp
+	bison -d bI.ypp
