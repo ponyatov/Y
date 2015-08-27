@@ -54,3 +54,7 @@ BODY {
 	font-weight: bold;
 	font-style: normal;
 }
+
+.comment {
+	color: brown;
+}

@@ -1,3 +1,4 @@
+.html
 
 .sec Синтаксис
 \secrel{Синтаксис}\secdown

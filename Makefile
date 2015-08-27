@@ -12,7 +12,6 @@ all: pdf bI.html
 bI.html: bI$(EXE) bI.bI
 	@echo =============================
 	./bI$(EXE) < bI.bI > bI.html
-	head -n11 bI.html|tail -n6
 	@echo =============================
 	
 .PHONY: pdf
