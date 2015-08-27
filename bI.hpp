@@ -11,6 +11,6 @@ extern int yyparse(void);
 extern char *yytext;
 extern int yylineno;
 extern void yyerror(const char *msg);
-#include "parser.tab.hpp"
+#include "bI.tab.hpp"
 
 #endif //  _H_bI
