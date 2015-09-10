@@ -32,7 +32,7 @@ https{0,1}:\/\/[a-z\.\/]+	TS(URL)
 
 {D}							TA("int",NUM)
 {D}\.{D}					TA("float",NUM)
-{S}{D}[eE]{S}{D}			TA("double",NUM)
+{S}{D}[eE]{S}{D}			TA("float",NUM)
 {aZ}						TA("id",ID)
 
 [ \t]						TC(SPACE)
