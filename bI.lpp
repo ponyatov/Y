@@ -1,46 +1,42 @@
 %{
 #include "bI.hpp"
+
+#define TC(X)	{ yylval.c = yytext[0]; return X; }
+#define T2(X)	{ yylval.c = yytext[1]; return X; }
+#define TS(X)	{ yylval.s = new string(yytext); return X; }
+#define TA(C,X)	{ yylval.a = new AST(C,yytext); return X; }
 %}
 
-%option 8bit
 %option noyywrap
 %option yylineno
 
-/******************************************************/
-/* unicode hint from http://habrahabr.ru/post/192556/ */
-/******************************************************/
-alpha   [A-Za-z]
-U1      [\x80-\xbf]
-U2      [\xc2-\xdf]
-U3      [\xe0-\xef]
-U4      [\xf0-\xf4]
-ualpha  {alpha}|{U2}{U1}|{U3}{U1}{U1}|{U4}{U1}{U1}{U1}
-ustring	{ualpha}*
-/******************************************************/
+S	[\+\-]{0,1}
+D	[0-9]+
+az	[a-z]+
+AZ	[A-Z]+
+aZ	[a-zA-Z]+
 
 %%
 
-#\|[^\|]*\|#	{ yylval.s=new string(yytext); return COMMENT;} /* block comment */
-#[^\n]*			{ yylval.s=new string(yytext); return COMMENT;} /* line comment */
+\\#							T2(C);
+#[^\n]*\n					{}
 
-\.sec[^\n]+		{ yylval.s=new string(yytext); return dotSEC;} /* documenting commands */
-\.html			{ yylval.s=new string(yytext); return dotHTML; }
-\.make:			{ yylval.s=new string(yytext); return dotMAKE; }
+\$							TC(SX)
+\(							TC(LP)
+\)							TC(RP)
 
-[\+\-]{0,1}[0-9]+(\.[0-9]+){0,1}[eE][\+\-]{0,1}[0-9]*	{ yylval.f=atof(yytext); return FLOAT;}		/* float */
-[\+\-]{0,1}[0-9]+\.[0-9]+	{ yylval.f=atof(yytext); return FLOAT;}		/* float */
-[\+\-]{0,1}[0-9]+			{ yylval.i=atoi(yytext); return INT;}		/* integer */
+\.file						TS(FFILE)
+\.{az}						TS(DOTTY)
+https{0,1}:\/\/[a-z\.\/]+	TS(URL)
+{aZ}\.{az}|Makefile			TS(FNAME)
 
-https{0,1}:\/\/[a-z0-9\.\/]+	{ yylval.s=new string(yytext); return URL; }
-[a-z]+\.[a-z]+		{ yylval.s=new string(yytext); return FIL; }
+{D}							TA("int",NUM)
+{D}\.{D}					TA("float",NUM)
+{S}{D}[eE]{S}{D}			TA("double",NUM)
+{aZ}						TA("id",ID)
 
-'[^']*'			{ yylval.s=new string(yytext); return STR; } /* string */
-\"[^\"]*\"		{ yylval.s=new string(yytext); return STR; } /* string */
-
-\=				{ yylval.c=yytext[0]; return EQ; }
-
-module					{ yylval.s=new string(yytext); return STDSYM; }
-[a-zA-Z_][a-zA-Z0-9_]*	{ yylval.s=new string(yytext); return SYM; }
-
-.				{ yylval.c=yytext[0]; return CHAR; }		/* bypass chars */
+[ \t]						TC(SPACE)
+\n							TC(EOL);
+.							TC(C);
 %%
+

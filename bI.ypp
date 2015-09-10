@@ -7,58 +7,37 @@
 %union {
 	char c;
 	string *s;
-	int i;
-	float f;
-};
+	AST *a;
+}
 
-%token <c> CHAR
-%token <s> STR
-%token <i> INT
-%token <f> FLOAT
-%token <s> COMMENT
-%token <c> EQ
-%token <s> FIL
-%token <s> URL
+%token <c> C EOL SPACE
+%token <s> FFILE FNAME URL DOTTY
+%token <s> SX LP RP
 
-%token <s> dotSEC
-%token <s> dotHTML
-%token <s> dotMAKE
-
-%token <s> STDSYM
-%token <s> SYM
+%type <a> Sexpr
+%token <a> NUM ID
 
 %%
-bI:
-	| bI CHAR		{ cout << $2; }
-	| bI INT  		{ cout << "<span class=\"int\">i:<b>"<<$2<<"</b></span>"; } 
-	| bI FLOAT		{ cout << "<span class=\"float\">f:<b>"<<$2<<"</b></span>"; } 
-	| bI STR		{ cout << "<span class=\"string\">" << *$2 << "</span>" ; }
-	| bI SYM		{ cout << "<span class=\"sym\">" << *$2 << "</span>" ; }
-	| bI STDSYM		{ cout << "<span class=\"stdsym\">" << *$2 << "</span>" ; }
-	| bI URL		{ cout << "<a class=\"url\" href=\"" << *$2 << "\">"<<*$2<<"</a>"; }
-	| bI EQ			{ cout << "<span class=\"op\"> " << $2 << " </span>" ; }
-	| bI dotSEC		{ cout << "<h3>"<<*$2<<"</h3><hr>\n"; }
-	| bI COMMENT	{ cout << "<span class=\"comment\">"<<*$2<<"</span>"; }
-	| bI dotHTML	{ 
-		cout << "<html>\n";
-		cout << "<head>\n";
-		cout << "<link rel=\"stylesheet\" type=\"text/css\" href=\"bI.css\">\n";
-		cout << "<meta http-equiv=\"Content-Type\" ";
-		cout << "content=\"text/html; charset=utf-8\" />\n";
-		cout << "</head>\n";
-		cout << "<body>\n<pre>\n<span class=\"dot\">.html</span>"; 
-	}
-	| bI dotMAKE FIL {
-		cout << "<span class=\"dot\">" << *$2;
-		cout << "<a class=\"file\" href=\""<< *$3 << "\">"<<*$3<<"</a></span>" ;
-		ofstream mk($3->c_str());
-		mk << "# " << *$2 << *$3 <<"\n# ----------------\n\n";
-		/* mk << ".PHONY: all\nall:\n\n"; */
-		mk << "bI$(EXE): bI.lpp bI.ypp bI.cpp bI.hpp\n";
-		mk << "\tflex bI.lpp\n";
-		mk << "\tbison -d bI.ypp\n";
-		mk << "\t$(CXX) $(CXXFLAGS) -o $@ lex.yy.c bI.tab.cpp bI.cpp\n"; 
-		mk << "\n\n";
-	}
+pro : 
+	| pro SX LP Sexpr RP	{ W("$(\n"+$4->str()+")"); }
+	| pro FFILE	SPACE FNAME EOL {
+					W("$("+$2->substr(1)+" "+*$4+")\n",true);
+					if (bi_file) { delete bi_file; bi_file=NULL; }
+					bi_file = new biFile($4);
+					}
+	| pro SPACE		{ W($2); }
+	| pro URL		{ W("$(url "+*$2+")"); }
+	| pro DOTTY		{ W(*$2); }
+	| pro FNAME		{ W(*$2); }
+	| pro ID		{ W($2->str()); }
+	| pro EOL		{ W($2); } 
+	| pro C			{ W($2); }
+
+Sexpr :				{ $$=new AST("",""); }
+	| NUM			{ $$=$1; }
+	| ID			{ $$=$1; }
+	| Sexpr SPACE	{ $$=$1; }
+	| SPACE Sexpr	{ $$=$2; }
 ;
 %%
+

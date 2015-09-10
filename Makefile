@@ -9,7 +9,7 @@ clean:
 CPP = bI.cpp lex.yy.c bI.tab.cpp
 HPP = bI.hpp bI.tab.hpp
 
-#CXXFLAGS += -Wno-write-strings
+CXXFLAGS += -Wno-write-strings
 
 ./bI$(EXE): $(CPP) $(HPP) Makefile 
 	$(CXX) $(CXXFLAGS) -o $@ $(CPP)
