@@ -11,13 +11,13 @@
 }
 
 %token <c> C EOL SPACE
-%token <s> FFILE FNAME DOTTY
+%token <s> EC
+%token <s> FFILE FNAME DOTTY FEOF
 %token <s> SX EX LP RP
 %token <a> ADD SUB MUL DIV INC DEC
 
 %type <a> Sexpr
-%token <a> NUM ID URL
-%token <s> SNUM SURL
+%token <a> NUM ID OBJ
 
 %left ADD SUB
 %left MUL DIV
@@ -26,24 +26,28 @@
 
 %%
 bI : 
-	| bI SX Sexpr EX	{ W("$("+$3->str()+")"); }
+	| bI SX Sexpr EX	{ W("$("+$3->str()+")$"); }
+	| bI OBJ			{ W("$("+$2->str()+")$"); }
+	| bI ID				{ W("$("+$2->str()+")$"); }
 	| bI FFILE	SPACE FNAME EOL {
 						W("$("+AST(new string("file"),$4).str()+")$\n");
 						if (bi_file) { delete bi_file; bi_file=NULL; }
 						bi_file = new biFile($4);
 						}
+	| bI FEOF			{ W(*$2);
+						if (bi_file) { delete bi_file; bi_file=NULL; }
+						}
 	| bI SPACE			{ W($2); }
 	| bI DOTTY			{ W(*$2); }
 	| bI FNAME			{ W(*$2); }
-	| bI SURL			{ W(*$2); }
-	| bI ID				{ W($2->str()); }
-	| bI EOL			{ W($2); } 
+	| bI EOL			{ W($2); }
+	| bI EC				{ W(*$2); }
 	| bI C				{ W($2); }
 
-Sexpr :						{ $$=new AST("nil","nil"); }
+Sexpr :						{ $$=new AST("atom","$0"); }
 	| NUM					{ $$=$1; }
+	| OBJ					{ $$=$1; }
 	| ID					{ $$=$1; }
-	| URL					{ $$=$1; }
 	| Sexpr SPACE			{ $$=$1; }
 	| SPACE Sexpr			{ $$=$2; }
 	| LP Sexpr RP			{ $$=$2; }

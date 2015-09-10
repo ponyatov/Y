@@ -2,7 +2,6 @@
 #include "bI.hpp"
 
 #define TC(X)	{ yylval.c = yytext[0]; return X; }
-#define T2(X)	{ yylval.c = yytext[1]; return X; }
 #define TS(X)	{ yylval.s = new string(yytext); return X; }
 #define TA(C,X)	{ yylval.a = new AST(C,yytext); return X; }
 %}
@@ -12,45 +11,48 @@
 %option yylineno
 %option 8bit
 
-%s SEX
+%x sx
+%x urs
 
 S	[\+\-]{0,1}
 D	[0-9]+
 az	[a-z]+
 AZ	[A-Z]+
 aZ	[a-zA-Z]+
-URL	https{0,1}:\/\/[a-z\.\/]+
+UR	https{0,1}:\/\/[a-z0-9\.\/\#\-_]+
+EM	[a-z]+\@[a-z\.]+
 
 %%
 
-\\#							T2(C);
+\\.							TS(EC);
 #[^\n]*\n					{}				/* line comment */
 #\|[^\|]*\|#				{}				/* block comment */
 
-\$\(						{ TC(SX); BEGIN(SEX); }
-\)\$						{ TC(EX); BEGIN(INITIAL); }
-<SEX>\(							TC(LP)
-<SEX>\)							TC(RP)
-<SEX>\+\+						TA("op",INC)
-<SEX>\-\-						TA("op",DEC)
-<SEX>\+							TA("op",ADD)
-<SEX>\-							TA("op",SUB)
-<SEX>\*							TA("op",MUL)
-<SEX>\/							TA("op",DIV)
-
+\$\(						{ BEGIN(sx); TC(SX); }
+<sx>\)\$					{ BEGIN(INITIAL); TC(EX); }
+<sx>\(						TC(LP)
+<sx>\)						TC(RP)
+<sx>\+\+					TA("op",INC)
+<sx>\-\-					TA("op",DEC)
+<sx>\+						TA("op",ADD)
+<sx>\-						TA("op",SUB)
+<sx>\*						TA("op",MUL)
+<sx>\/						TA("op",DIV)
 
 \.file						TS(FFILE)
+\.eof						TS(FEOF)
 \.{az}						TS(DOTTY)
-<SEX>{URL}					TA("url",URL)
-{URL}						TS(SURL)
+<*>{EM}						TA("email",OBJ)
+<*>{UR}						TA("url",OBJ)
 {aZ}\.{az}|Makefile			TS(FNAME)
 
-{D}							TA("int",NUM)
-0x[0-9A-F]+					TA("hex",NUM)
-0b[01]+						TA("bin",NUM)
-{D}\.{D}					TA("float",NUM)
-{S}{D}[eE]{S}{D}			TA("float",NUM)
-<SEX>{aZ}					TA("id",ID)
+<sx>{D}						TA("int",NUM)
+<sx>0x[0-9A-F]+				TA("hex",NUM)
+<sx>0b[01]+					TA("bin",NUM)
+<sx>{D}\.{D}				TA("float",NUM)
+<sx>{S}{D}[eE]{S}{D}		TA("float",NUM)
+\${aZ}						TA("id",ID)
+<sx>{aZ}					TA("id",ID)
 
 [ \t]						TC(SPACE)
 \n							TC(EOL);

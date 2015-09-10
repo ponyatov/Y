@@ -66,9 +66,9 @@ AST::AST(AST* A, AST* OP, AST* B) {
 }
 
 string AST::str(int depth) {
-	if (tag.size()>2||child.size()) {
+	if (tag.size()>2||child.size()||depth>0) {
 	string S = string("");
-	if (depth==0) S+="------------------------------------------------\n";
+	if (depth==0) S+="\n------------------------------------------------\n";
 	for (int i=0;i<depth;i++) S+="\t";
 	S+="< ";
 	for ( map<string,string>::iterator t=tag.begin(); t!=tag.end(); t++ )
@@ -78,7 +78,7 @@ string AST::str(int depth) {
 		S+= (*c)->str(depth+1);
 	if (depth==0) S+="------------------------------------------------\n";
 	return S;		
-	} else return tag["class"]+":"+tag["value"];
+	} else return "<"+tag["class"]+":"+tag["value"]+">";
 }
 
 void W(char c,bool log_only) { 
