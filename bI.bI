@@ -1,18 +1,22 @@
 
-.title		ALYEH:dYnamic language
-.subtitle	Динамический язык программирования Ы (чтобы никто не догадался)
+.title		ALYEH platform
+.subtitle	dYnamic language bI
 .author		Dmitry Ponyatov <dponyatov@gmail.com>
 .github		https://github.com/ponyatov/pro
 .about		{
 
-Used manual: lisp in C(++): http://www.buildyourownlisp.com/contents
+\#\#\# bibliography
+
+* lisp in C(++): http://www.buildyourownlisp.com/contents
+* SICP
+* Dragon Book: Aho Seti Ulmann Compilers. Principles and technology
 
 \#\#\# required tools:
 
 * MinGW [http://www.mingw.org/] GNU CC toolchain for win32
 * GnuWin32 http://gnuwin32.sourceforge.net/packages.html
 * git-scm [https://git-scm.com/] GitHub client for project versioning
-* (g)Vim 7.4 [http://www.vim.org/download.php#pc] power programming editor
+* (g)Vim 7.4 [http://www.vim.org/download.php#pc] power code editor
 
 \#\#\# current state:
 
@@ -37,10 +41,16 @@ depends on: $DEPENDS
 
 .sec S-expressions inlining
 
+$(
+A,
+B,
+C
+)$
+
 $()$ $(1234)$ $(56.78)$ $(-8e+9)$ $(xyz)$
 $(1+2)$ $(0x1234)$ $(0b1101)$
 $(	((1+2)/(3-4))						)$
-$(	1+(2.3+someid)/query(http://ya.ru)	)$
+$(	1+(2.3+someid), query(http://ya.ru)	)$
 $(	1+2*-3-+4++							)$
 #$(	1+2 3								)$
 
@@ -129,6 +139,7 @@ class Integer
 \# $CHEADER
 
 .PHONY: next
+
 next: ./bI\$(EXE)
 
 $MAKECPP
@@ -142,3 +153,16 @@ bI.tab.cpp: $PARSER
 <tab>bison -d $PARSER
 
 $MAKE
+
+	| Sexpr SPACE			{ $$=$1; }
+	| SPACE Sexpr			{ $$=$2; }
+
+	| EOL					{ $$=$1; }
+	| spaces SPACE 			{ $$=$2; }
+	| spaces EOL			{ $$=$2; }
+
+spaces : 
+	  SPACE 				{ $$=$1; }
+;
+	
+

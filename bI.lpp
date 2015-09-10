@@ -32,6 +32,7 @@ EM	[a-z]+\@[a-z\.]+
 <sx>\)\$					{ BEGIN(INITIAL); TC(EX); }
 <sx>\(						TC(LP)
 <sx>\)						TC(RP)
+<sx>,						TC(COMMA)
 <sx>\+\+					TA("op",INC)
 <sx>\-\-					TA("op",DEC)
 <sx>\+						TA("op",ADD)

@@ -10,8 +10,12 @@
 syntax match Constant "\vhttp.+"
 
 syntax match Keyword "\v\.[a-z]+"
+syntax match Function "\v\$[a-zA-Z]+"
+syntax match Function "[\+\-\*\/]"
 syntax keyword Keyword module file url
 
+syntax match Constant "\v[a-z]+\@[a-z\.]+"
+syntax match Constant "\vhttps{0,1}://[a-z0-9\.\-\#\/]+"
 syntax match Constant "\v[a-zA-Z]+\.[a-z]+|Makefile"
 
 syntax match Todo "\v\$\("
