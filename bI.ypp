@@ -11,33 +11,49 @@
 }
 
 %token <c> C EOL SPACE
-%token <s> FFILE FNAME URL DOTTY
+%token <s> FFILE FNAME DOTTY
 %token <s> SX LP RP
+%token <a> ADD SUB MUL DIV INC DEC
 
 %type <a> Sexpr
-%token <a> NUM ID
+%token <a> NUM ID URL
+
+%left ADD SUB
+%left MUL DIV
+%left PFX 
+%left SFX
 
 %%
-pro : 
-	| pro SX LP Sexpr RP	{ W("$(\n"+$4->str()+")"); }
-	| pro FFILE	SPACE FNAME EOL {
-					W("$("+$2->substr(1)+" "+*$4+")\n",true);
-					if (bi_file) { delete bi_file; bi_file=NULL; }
-					bi_file = new biFile($4);
-					}
-	| pro SPACE		{ W($2); }
-	| pro URL		{ W("$(url "+*$2+")"); }
-	| pro DOTTY		{ W(*$2); }
-	| pro FNAME		{ W(*$2); }
-	| pro ID		{ W($2->str()); }
-	| pro EOL		{ W($2); } 
-	| pro C			{ W($2); }
+bI : 
+	| bI SX LP Sexpr RP	{ W("$(\n"+$4->str()+")"); }
+	| bI FFILE	SPACE FNAME EOL {
+						W("$("+$2->substr(1)+" "+*$4+")\n",true);
+						if (bi_file) { delete bi_file; bi_file=NULL; }
+						bi_file = new biFile($4);
+						}
+	| bI SPACE			{ W($2); }
+	| bI DOTTY			{ W(*$2); }
+	| bI FNAME			{ W(*$2); }
+	| bI ID				{ W($2->str()); }
+	| bI EOL			{ W($2); } 
+	| bI C				{ W($2); }
 
-Sexpr :				{ $$=new AST("",""); }
-	| NUM			{ $$=$1; }
-	| ID			{ $$=$1; }
-	| Sexpr SPACE	{ $$=$1; }
-	| SPACE Sexpr	{ $$=$2; }
+Sexpr :						{ $$=new AST("",""); }
+	| NUM					{ $$=$1; }
+	| ID					{ $$=$1; }
+	| URL					{ $$=$1; }
+	| Sexpr SPACE			{ $$=$1; }
+	| SPACE Sexpr			{ $$=$2; }
+	| LP Sexpr RP			{ $$=$2; }
+	| Sexpr ADD Sexpr		{ $$=new AST($1,$2,$3); }
+	| Sexpr SUB Sexpr		{ $$=new AST($1,$2,$3); }
+	| Sexpr MUL Sexpr		{ $$=new AST($1,$2,$3); }
+	| Sexpr DIV Sexpr		{ $$=new AST($1,$2,$3); }
+	| ID LP Sexpr RP		{ $$=new AST($1,$3); }
+	| Sexpr %prec SFX INC	{ $$=new AST($2,$1); }
+	| Sexpr %prec SFX DEC	{ $$=new AST($2,$1); }
+	| SUB %prec PFX NUM		{ $$=new AST($1,$2); }
+	| ADD %prec PFX NUM		{ $$=new AST($1,$2); }
 ;
 %%
 

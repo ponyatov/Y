@@ -47,13 +47,30 @@ AST::AST(char *cls, char *val) {
 	tag["value"]=val;
 }
 
+AST::AST(AST* FN, AST* A) {
+	tag["class"]=FN->tag["class"];
+	tag["value"]=FN->tag["value"];
+	child.push_back(A);
+}
+
+AST::AST(AST* A, AST* OP, AST* B) {
+	tag["class"]=OP->tag["class"];
+	tag["value"]=OP->tag["value"];
+	child.push_back(A);
+	child.push_back(B);
+}
+
 string AST::str(int depth) {
 	string S = string("");
+	if (depth==0) S+="------------------------------------------------\n";
 	for (int i=0;i<depth;i++) S+="\t";
 	S+="< ";
 	for ( map<string,string>::iterator t=tag.begin(); t!=tag.end(); t++ )
 		S+= t->first +":"+ t->second +" ";
 	S+=">\n";
+	for ( list<AST*>::iterator c=child.begin(); c!=child.end(); c++)
+		S+= (*c)->str(depth+1);
+	if (depth==0) S+="------------------------------------------------\n";
 	return S;		
 }
 

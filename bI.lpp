@@ -7,8 +7,10 @@
 #define TA(C,X)	{ yylval.a = new AST(C,yytext); return X; }
 %}
 
+%option nounput
 %option noyywrap
 %option yylineno
+%option 8bit
 
 S	[\+\-]{0,1}
 D	[0-9]+
@@ -24,13 +26,22 @@ aZ	[a-zA-Z]+
 \$							TC(SX)
 \(							TC(LP)
 \)							TC(RP)
+\+\+						TA("op",INC)
+\-\-						TA("op",DEC)
+\+							TA("op",ADD)
+\-							TA("op",SUB)
+\*							TA("op",MUL)
+\/							TA("op",DIV)
+
 
 \.file						TS(FFILE)
 \.{az}						TS(DOTTY)
-https{0,1}:\/\/[a-z\.\/]+	TS(URL)
+https{0,1}:\/\/[a-z\.\/]+	TA("url",URL)
 {aZ}\.{az}|Makefile			TS(FNAME)
 
 {D}							TA("int",NUM)
+0x[0-9A-F]+					TA("hex",NUM)
+0b[01]+						TA("bin",NUM)
 {D}\.{D}					TA("float",NUM)
 {S}{D}[eE]{S}{D}			TA("float",NUM)
 {aZ}						TA("id",ID)
@@ -39,4 +50,3 @@ https{0,1}:\/\/[a-z\.\/]+	TS(URL)
 \n							TC(EOL);
 .							TC(C);
 %%
-

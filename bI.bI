@@ -1,19 +1,22 @@
-
-$() $(1234) $(56.78) $(-8e+9) $(xyz)
-$(1+2)
-
-$(	1+2 3								)
-$(	((1+2)/(3-4))						)
-$(	1+(2.3+someid)/query(http://ya.ru)	)
-$(	1+2*-3-+4++							)
-
 .title PROtotyping language system
 .github https://github.com/ponyatov/pro
 
 .file README.md
-\# pro
-# this is line comment
-PROtotyping system
+# ALYEH platform
+## ALYEH:dYnamic language
+### developer/experimental branch
+Динамический язык программирования Ы (чтобы никто не догадался)
+
+lisp in C(++): http://www.buildyourownlisp.com/contents
+.eof
+
+$() $(1234) $(56.78) $(-8e+9) $(xyz)
+$(1+2) $(0x1234) $(0b1101)
+$(	1+(2.3+someid)/query(http://ya.ru)	)
+$(	1+2*-3-+4++							)
+
+$(	1+2 3								)
+$(	((1+2)/(3-4))						)
 
 .file filetype.vim
 

@@ -44,7 +44,19 @@ struct AST {
 	list<AST*> child;
 	AST();
 	AST(char*,char*);
+	AST(AST*,AST*);
+	AST(AST*,AST*,AST*);
 	string str(int depth=0);
+};
+
+struct biNative {
+	enum  {INT,FLOAT,BIN,HEX,STR,PTR} t;
+	union {
+		int i;
+		float f;
+		string *s;
+		void *p;
+	} v;
 };
 
 extern int yylex();
