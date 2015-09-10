@@ -1,11 +1,3 @@
-%{
-#include "bI.hpp"
-%}
-
-%option 8bit
-%option noyywrap
-%option yylineno
-
 /******************************************************/
 /* unicode hint from http://habrahabr.ru/post/192556/ */
 /******************************************************/

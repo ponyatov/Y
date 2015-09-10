@@ -47,6 +47,11 @@ AST::AST(char *cls, char *val) {
 	tag["value"]=val;
 }
 
+AST::AST(string *cls, string *val) {
+	tag["class"]=*cls;
+	tag["value"]=*val;
+}
+
 AST::AST(AST* FN, AST* A) {
 	tag["class"]=FN->tag["class"];
 	tag["value"]=FN->tag["value"];
@@ -61,6 +66,7 @@ AST::AST(AST* A, AST* OP, AST* B) {
 }
 
 string AST::str(int depth) {
+	if (tag.size()>2||child.size()) {
 	string S = string("");
 	if (depth==0) S+="------------------------------------------------\n";
 	for (int i=0;i<depth;i++) S+="\t";
@@ -72,6 +78,7 @@ string AST::str(int depth) {
 		S+= (*c)->str(depth+1);
 	if (depth==0) S+="------------------------------------------------\n";
 	return S;		
+	} else return tag["class"]+":"+tag["value"];
 }
 
 void W(char c,bool log_only) { 

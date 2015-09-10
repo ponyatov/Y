@@ -44,18 +44,20 @@ struct AST {
 	list<AST*> child;
 	AST();
 	AST(char*,char*);
+	AST(string*,string*);
 	AST(AST*,AST*);
 	AST(AST*,AST*,AST*);
 	string str(int depth=0);
 };
 
 struct biNative {
-	enum  {INT,FLOAT,BIN,HEX,STR,PTR} t;
+	enum  {INT,FLOAT,BIN,HEX,STR,PTR,FFILE} t;
 	union {
 		int i;
 		float f;
 		string *s;
 		void *p;
+		FILE *ff;
 	} v;
 };
 

@@ -12,11 +12,12 @@
 
 %token <c> C EOL SPACE
 %token <s> FFILE FNAME DOTTY
-%token <s> SX LP RP
+%token <s> SX EX LP RP
 %token <a> ADD SUB MUL DIV INC DEC
 
 %type <a> Sexpr
 %token <a> NUM ID URL
+%token <s> SNUM SURL
 
 %left ADD SUB
 %left MUL DIV
@@ -25,20 +26,21 @@
 
 %%
 bI : 
-	| bI SX LP Sexpr RP	{ W("$(\n"+$4->str()+")"); }
+	| bI SX Sexpr EX	{ W("$("+$3->str()+")"); }
 	| bI FFILE	SPACE FNAME EOL {
-						W("$("+$2->substr(1)+" "+*$4+")\n",true);
+						W("$("+AST(new string("file"),$4).str()+")$\n");
 						if (bi_file) { delete bi_file; bi_file=NULL; }
 						bi_file = new biFile($4);
 						}
 	| bI SPACE			{ W($2); }
 	| bI DOTTY			{ W(*$2); }
 	| bI FNAME			{ W(*$2); }
+	| bI SURL			{ W(*$2); }
 	| bI ID				{ W($2->str()); }
 	| bI EOL			{ W($2); } 
 	| bI C				{ W($2); }
 
-Sexpr :						{ $$=new AST("",""); }
+Sexpr :						{ $$=new AST("nil","nil"); }
 	| NUM					{ $$=$1; }
 	| ID					{ $$=$1; }
 	| URL					{ $$=$1; }

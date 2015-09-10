@@ -12,31 +12,37 @@
 %option yylineno
 %option 8bit
 
+%s SEX
+
 S	[\+\-]{0,1}
 D	[0-9]+
 az	[a-z]+
 AZ	[A-Z]+
 aZ	[a-zA-Z]+
+URL	https{0,1}:\/\/[a-z\.\/]+
 
 %%
 
 \\#							T2(C);
-#[^\n]*\n					{}
+#[^\n]*\n					{}				/* line comment */
+#\|[^\|]*\|#				{}				/* block comment */
 
-\$							TC(SX)
-\(							TC(LP)
-\)							TC(RP)
-\+\+						TA("op",INC)
-\-\-						TA("op",DEC)
-\+							TA("op",ADD)
-\-							TA("op",SUB)
-\*							TA("op",MUL)
-\/							TA("op",DIV)
+\$\(						{ TC(SX); BEGIN(SEX); }
+\)\$						{ TC(EX); BEGIN(INITIAL); }
+<SEX>\(							TC(LP)
+<SEX>\)							TC(RP)
+<SEX>\+\+						TA("op",INC)
+<SEX>\-\-						TA("op",DEC)
+<SEX>\+							TA("op",ADD)
+<SEX>\-							TA("op",SUB)
+<SEX>\*							TA("op",MUL)
+<SEX>\/							TA("op",DIV)
 
 
 \.file						TS(FFILE)
 \.{az}						TS(DOTTY)
-https{0,1}:\/\/[a-z\.\/]+	TA("url",URL)
+<SEX>{URL}					TA("url",URL)
+{URL}						TS(SURL)
 {aZ}\.{az}|Makefile			TS(FNAME)
 
 {D}							TA("int",NUM)
@@ -44,7 +50,7 @@ https{0,1}:\/\/[a-z\.\/]+	TA("url",URL)
 0b[01]+						TA("bin",NUM)
 {D}\.{D}					TA("float",NUM)
 {S}{D}[eE]{S}{D}			TA("float",NUM)
-{aZ}						TA("id",ID)
+<SEX>{aZ}					TA("id",ID)
 
 [ \t]						TC(SPACE)
 \n							TC(EOL);
