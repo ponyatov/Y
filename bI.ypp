@@ -51,8 +51,8 @@ Xexpr :
 	| Sexpr 				{ $$=$1; }
 ;
 
-Sexpr :						{ $$=new AST("#","0"); }
-	| NUM					{ $$=$1; }
+Sexpr :	
+	  NUM					{ $$=$1; }
 	| OBJ					{ $$=$1; }
 	| ID					{ $$=$1; }
 	| LP Sexpr RP			{ $$=$2; }
