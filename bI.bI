@@ -165,4 +165,13 @@ spaces :
 	  SPACE 				{ $$=$1; }
 ;
 	
+.sec Intel Xeon X5560 code generation & optmimization
+
+Cluster "Sergey Korolev" http://hpc.ssau.ru/ :
+* CPU: 2x Intel Xeon X5560, 2.80GHz, 8MB Cache;
+* Memory: 12 GB;
+
+.sec Out-of-order execution
+
+.sec LLVM tuned backend
 
