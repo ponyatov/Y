@@ -45,6 +45,7 @@ AST::AST() {}
 AST::AST(char *cls, char *val) {
 	tag["class"]=cls;
 	tag["value"]=val;
+	fix();
 }
 
 AST::AST(string *cls, string *val) {
@@ -65,6 +66,13 @@ AST::AST(AST* A, AST* OP, AST* B) {
 	child.push_back(B);
 }
 
+void AST::fix() {
+	if (tag["class"]=="email") {
+		tag["value"].erase(tag["value"].find('<'),1);
+		tag["value"].erase(tag["value"].find('>'),1);
+	}
+}
+
 string AST::str(int depth) {
 	if (tag.size()>2||child.size()||depth>0) {
 	string S = string("");
@@ -78,7 +86,12 @@ string AST::str(int depth) {
 		S+= (*c)->str(depth+1);
 	if (depth==0) S+="------------------------------------------------\n";
 	return S;		
-	} else return "<"+tag["class"]+":"+tag["value"]+">";
+	} else {
+		if (tag["class"]=="id")
+			return tag["value"];
+		else
+			return "<"+tag["class"]+":"+tag["value"]+">";
+	}
 }
 
 void W(char c,bool log_only) { 

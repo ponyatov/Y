@@ -1,9 +1,12 @@
 %{
 #include "bI.hpp"
 
-#define TC(X)	{ yylval.c = yytext[0]; return X; }
-#define TS(X)	{ yylval.s = new string(yytext); return X; }
-#define TA(C,X)	{ yylval.a = new AST(C,yytext); return X; }
+#define TC(X)		{ yylval.c = yytext[0]; return X; }
+#define TS(X)		{ yylval.s = new string(yytext); return X; }
+#define TA(C,X)		{ yylval.a = new AST(C,yytext); return X; }
+#define TV(C,V,X)	{ yylval.a = new AST(C,V); return X; }
+
+int PAR=0; // paren depth
 %}
 
 %option nounput
@@ -13,6 +16,8 @@
 
 %x sx
 %x urs
+%s commentB
+%s commentL
 
 S	[\+\-]{0,1}
 D	[0-9]+
@@ -20,18 +25,29 @@ az	[a-z]+
 AZ	[A-Z]+
 aZ	[a-zA-Z]+
 UR	https{0,1}:\/\/[a-z0-9\.\/\#\-_]+
-EM	[a-z]+\@[a-z\.]+
+EM	\<{0,1}[a-z]+\@[a-z\.]+\>{0,1}
 
 %%
 
-\\.							TS(EC);
-#[^\n]*\n					{}				/* line comment */
-#\|[^\|]*\|#				{}				/* block comment */
+<*>\<end\>					TS(END);
 
-\$\(						{ BEGIN(sx); TC(SX); }
-<sx>\)\$					{ BEGIN(INITIAL); TC(EX); }
-<sx>\(						TC(LP)
-<sx>\)						TC(RP)
+<INITIAL>\\.				TS(EC);
+<INITIAL>#\|				{BEGIN(commentB);}
+<commentB>\|#				{BEGIN(INITIAL);}
+<INITIAL>#					{BEGIN(commentL);}
+<commentL>\n				{BEGIN(INITIAL);}
+<commentB,commentL>.		{}
+
+\.file						TS(FFILE)
+\.eof						TV("eof","",FEOF)
+<INITIAL>\.{az}				TS(DOTTY)
+<INITIAL,sx>{EM}			TA("email",OBJ)
+<INITIAL,sx>{UR}			TA("url",OBJ)
+<INITIAL,sx>{aZ}\.{az}|Makefile			TS(FNAME)
+
+<INITIAL>\$					{BEGIN(sx); PAR=0; TS(SX);}
+<sx>\(						{PAR++; TA("(",LP);}
+<sx>\)						{if (--PAR==0) BEGIN(INITIAL); TA(")",RP); }
 <sx>,						TC(COMMA)
 <sx>\+\+					TA("op",INC)
 <sx>\-\-					TA("op",DEC)
@@ -39,23 +55,19 @@ EM	[a-z]+\@[a-z\.]+
 <sx>\-						TA("op",SUB)
 <sx>\*						TA("op",MUL)
 <sx>\/						TA("op",DIV)
-
-\.file						TS(FFILE)
-\.eof						TS(FEOF)
-\.{az}						TS(DOTTY)
-<*>{EM}						TA("email",OBJ)
-<*>{UR}						TA("url",OBJ)
-{aZ}\.{az}|Makefile			TS(FNAME)
+<sx>\<						TA("op",LW)
+<sx>\>						TA("op",GR)
 
 <sx>{D}						TA("int",NUM)
 <sx>0x[0-9A-F]+				TA("hex",NUM)
 <sx>0b[01]+					TA("bin",NUM)
 <sx>{D}\.{D}				TA("float",NUM)
 <sx>{S}{D}[eE]{S}{D}		TA("float",NUM)
-\${aZ}						TA("id",ID)
-<sx>{aZ}					TA("id",ID)
+<sx>{aZ}					{if (PAR==0) BEGIN(INITIAL); TA("id",ID);}
 
-[ \t]						TC(SPACE)
+<INITIAL>[ \t]				TC(SPACE)
+<sx>[ \t]					{}
 \n							TC(EOL);
 .							TC(C);
 %%
+

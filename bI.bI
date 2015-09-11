@@ -3,6 +3,7 @@
 .subtitle	dYnamic language bI
 .author		Dmitry Ponyatov <dponyatov@gmail.com>
 .github		https://github.com/ponyatov/pro
+
 .about		{
 
 \#\#\# bibliography
@@ -41,11 +42,9 @@ depends on: $DEPENDS
 
 .sec S-expressions inlining
 
-$(
-A,
-B,
-C
-)$
+$(A B C)
+
+<end>
 
 $()$ $(1234)$ $(56.78)$ $(-8e+9)$ $(xyz)$
 $(1+2)$ $(0x1234)$ $(0b1101)$

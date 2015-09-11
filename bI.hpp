@@ -48,6 +48,7 @@ struct AST {
 	AST(AST*,AST*);
 	AST(AST*,AST*,AST*);
 	string str(int depth=0);
+	void fix();					// fixes for different AST node classes
 };
 
 struct biNative {
