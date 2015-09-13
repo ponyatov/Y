@@ -44,5 +44,5 @@ syntax match Comment "#.*$"
 "syntax region String start="'" end="'"
 "syntax region String start="\"" end="\""
 
-let b:current_syntax = "pro"
+let b:current_syntax = "bI"
 
