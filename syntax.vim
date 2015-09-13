@@ -20,8 +20,8 @@ syntax match Constant "\v[a-zA-Z]+\.[a-z]+|Makefile"
 
 syntax match Todo "\v\$\("
 
-"syntax region Comment start="#|" end="|#"
-syntax match Comment "#.*$"
+syntax match Comment "\v#.*$"
+syntax region Comment start="#|" end="|#"
 
 "syntax match Keyword "\$[a-zA-Z0-9_]*"
 "syntax match Keyword "[\+\-=]"
