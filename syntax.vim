@@ -1,7 +1,7 @@
 " Vim "syntax file
 " Language: pro
 " Maintainer: Dmitry Ponyatov <dponyatov@gmail.com>
-" GitHub: [https://github.com/ponyatov/pro/blob/master/"syntax.vim]
+" GitHub: [https://github.com/ponyatov/Y/blob/master/syntax.vim]
 
 "if exists("b:current_"syntax")
 "    finish
