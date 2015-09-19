@@ -2,7 +2,8 @@
 *.swp
 *.exe
 *.o
-lexer.c
+bI.blog
+lex.yy.c
 parser.tab.*
 /2del/
 

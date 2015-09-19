@@ -1,0 +1,19 @@
+%{
+#include "bI.hpp"
+%}
+
+%defines
+
+%union {
+	string *s;
+	biObject *o;
+}
+
+%token <s> S
+
+%%
+bI :
+	| bI S			{ W($2); }
+;
+%%
+

@@ -2,16 +2,30 @@
 #define _H_bI
 
 #include <iostream>
-#include <fstream>
 #include <cstdlib>
+#include <cstdio>
+
+#include <list>
+
+#ifdef __MINGW32__
+#else
+#error no Linux
+#endif
 
 using namespace std;
 
-extern int yylex(void);
-extern int yyparse(void);
+struct biObject {
+};
+
+extern int yylex();
 extern char *yytext;
 extern int yylineno;
-extern void yyerror(const char *msg);
-#include "bI.tab.hpp"
+extern int yyparse();
+extern void yyerror(string);
+#include "parser.tab.hpp"
 
-#endif //  _H_bI
+void W(string*);
+void W(string);
+
+#endif // _H_bI
+

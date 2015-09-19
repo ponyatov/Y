@@ -1,0 +1,16 @@
+%{
+#include "bI.hpp"
+
+#define TS(X)	{ yylval.s=new string(yytext); return X; }
+%}
+
+%option noyywrap
+%option yylineno
+
+S	[\+\-]{0,1}
+D	[0-9]+
+
+%%
+.						TS(S)
+%%
+
