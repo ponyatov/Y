@@ -1,13 +1,8 @@
 *~
 *.swp
-tmp
-*.log
-bI.exe
-bI
+*.exe
 *.o
-*.html
+lexer.c
+parser.tab.*
 /2del/
-lex.yy.c
-bI.tab.*
-/bin/
 
