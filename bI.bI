@@ -88,12 +88,24 @@ for statical compilation, native machine code or hardware synthesis.
 Any text string not detected as other literal, treated as symbol.
 Symbol represents themself in dump, evaluation, and it's value.
 
-biClass Symbol,ID
+biClass Symbol,id
 	lexer regexp = '[a-zA-Z_][a-zA-Z_0-9]+' # classical ID char set
 	@dump -> %								# dump it as is
 	@eval -> %								# eval it as is
 
-.sec- 
+.sec- Number
+
+Float and integer processing is too different, but Number type process both.
+
+biClass Number,num
+	lexer regexp = (
+		'[\+\-]{0,1}[0-9]+',				# integers like -1 +2
+		'0x[0-9A-F]+',						# hex literals
+		'0b[01]+',							# bin literals
+		'[\+\-]{0,1}[0-9]+\.[0-9]+'			# dotted floats like -12.34
+		)
+	@dump -> %								# dump it as is
+	@eval -> %								# eval it as is
 
 .sec Machine types
 

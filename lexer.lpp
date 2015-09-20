@@ -9,6 +9,8 @@
 
 %%
 \\.					TS(S)	/* escaped char */
-#[^\n]*\n			{}		/* line comment */
+#[^\n]*				{}		/* line comment */
+\n					TS(S)
+.					TS(S)
 %%
 
