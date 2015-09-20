@@ -7,10 +7,8 @@
 %option noyywrap
 %option yylineno
 
-S	[\+\-]{0,1}
-D	[0-9]+
-
 %%
-.						TS(S)
+\\.					TS(S)	/* escaped char */
+#[^\n]*\n			{}		/* line comment */
 %%
 

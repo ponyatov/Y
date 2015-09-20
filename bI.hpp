@@ -14,7 +14,9 @@
 
 using namespace std;
 
-struct biObject {
+struct biObject {				// master class
+	virtual string* dump();		// dump object in reloadable form
+	virtual string* eval();		// evaluate (compute) object contents
 };
 
 extern int yylex();
