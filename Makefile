@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .PHONY: next
 next: ./bI$(EXE) Makefile
 	./bI$(EXE) < bI.bI > bI.log
@@ -42,3 +43,22 @@ bI.tab.cpp bI.tab.hpp: bI.ypp
 #	pdflatex -halt-on-error -output-directory ../tmp manual.tex &&\
 #	pdflatex -halt-on-error -output-directory ../tmp manual.tex &&\
 #	cp ../tmp/manual.pdf bI.pdf
+=======
+
+.PHONY: exec
+exec: bI.blog
+
+bI.blog: bI.bI ./bI$(EXE)
+	./bI$(EXE) < $< > $@
+
+C = core.cpp lex.yy.c parser.tab.cpp
+H = bI.hpp
+
+./bI$(EXE): $(C) $(H)
+	$(CXX) $(CXXFLAGS) -o $@ $(C)
+lex.yy.c: lexer.lpp
+	flex $<
+parser.tab.cpp: parser.ypp
+	bison $<
+
+>>>>>>> master
