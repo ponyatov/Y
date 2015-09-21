@@ -1,5 +1,15 @@
 #include "bI.hpp"
 
+// object
+
+biObject::biObject(const char* C,char* V) { 
+	cls = new string(C);
+	val = new string(V);
+}
+
+string* biObject::dump()	{ return new string("<"+*cls+":"+*val+">"); }
+string* biObject::eval()	{ return val; }
+
 // writers
 
 void W(string* s)	{ cout << *s; }

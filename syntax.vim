@@ -25,8 +25,15 @@ syntax match Number "\v0x[0-9A-F]+"
 syntax match Number "\v[\+\-]{0,1}[0-9]+"
 syntax match Number "\v[\+\-]{0,1}[0-9]+\.[0-9]+"
 
+" strings
+syntax region String start="'" end="'"
+
 " composite and classes
 syntax match Function "\v\<[a-z]+:"
+
+" code inlines
+syntax match Keyword "\v\$"
+syntax match Keyword "\v\?"
 
 " dot-commands
 syntax match Todo "\v\.[a-z]+\{?[ \t]*"

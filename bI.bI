@@ -57,21 +57,21 @@ Comments must be removed from output.
 
 biClass LineComment lexer regexp = '\#.*\n'
 
-.sec $ (dump) and ? (eval) prefixes
+.sec \$ (dump) and \? (eval) prefixes
 
-Code sections in bI script file must be marked using $ and ? prefixes.
+Code sections in bI script file must be marked using \$ and \? prefixes.
 
 .sec- object dump
 
-$-prefixed code will be .term{dump}ed into symbol representation form of 
-internal objects structure. $ is sign of lisp S-expression with some bI specific 
-extensions. Dumping can be used for debugging, and object serialization.
-Every bI object must include @dump writer method and @load constructor for 
-serialization work.
+\$-prefixed code will be .term{dump}ed into symbol representation form of 
+internal objects structure. \$ is sign of lisp S-expression with some bI 
+specific extensions. Dumping can be used for debugging, and object 
+serialization. Every bI object must include @dump writer method and @load 
+constructor for serialization work.
 
 .sec- object evaluation (computing)
 
-?-prefixed code will be computed using @eval methods in all nested objects.
+\?-prefixed code will be computed using @eval methods in all nested objects.
 
 .sec+ Data types
 
@@ -83,29 +83,73 @@ level types, and bI metaprogramming hell: it have all debug, profiling and
 tracking functions, but can be transparently transformed into primitive types
 for statical compilation, native machine code or hardware synthesis.
 
+.sec String
+
+Most unversal data type, can represent and data in serialized form.
+
+class String,str
+	value
+	@size		'size in chars'					-> int
+	@+(str,str)	'concatenate'					-> str
+	@*(str,int)	'repeat str num times'			-> str
+	@*(str,str)	'fetch substrings using regexp'	-> list<str>
+	@/(str,str)	'split str using regexp'		-> list<str>
+
+.sec Object
+
+Generic object implements all bI-specific features for all other data types.
+
+class Object
+	str name	'class name'
+	str value	'some textual value'
+	@dump		'serializer/dumper'					-> '<'+cls+':'+val+'>'
+	@load(str)	'deserialize constructor/loader'	-> %
+	@eval		'evaluate (compute)'				-> % # as is
+
 .sec Symbol
 
 Any text string not detected as other literal, treated as symbol.
-Symbol represents themself in dump, evaluation, and it's value.
+Symbol represents themself in dump, evaluation, and its value.
 
-biClass Symbol,id
+Object Symbol,sym
 	lexer regexp = '[a-zA-Z_][a-zA-Z_0-9]+' # classical ID char set
-	@dump -> %								# dump it as is
-	@eval -> %								# eval it as is
+
+$biClass $Symbol,$id
+?biClass ?Symbol,?id
 
 .sec- Number
 
 Float and integer processing is too different, but Number type process both.
 
-biClass Number,num
-	lexer regexp = (
-		'[\+\-]{0,1}[0-9]+',				# integers like -1 +2
-		'0x[0-9A-F]+',						# hex literals
-		'0b[01]+',							# bin literals
-		'[\+\-]{0,1}[0-9]+\.[0-9]+'			# dotted floats like -12.34
-		)
-	@dump -> %								# dump it as is
-	@eval -> %								# eval it as is
+Object Number,num
+	lexer regexp (
+		S : '[\-\+]{0,1}'		# optional +/- sign
+		D : '[0-9]+'			# decimal digits group
+	)
+	@dump -> %					# dump it as is
+	@eval -> %					# eval it as is
+
+Number Integer,int 
+	lexer regexp (
+		'{S}{D}'			# integers like -1 +2
+		'0x[0-9A-F]+'		# hex literals
+		'0b[01]+'			# bin literals
+	)
+
+Number Float,float
+	lexer regexp (
+		'{S}{D}\.{D}'		# dotted floats like -12.34
+		'{S}{D}[eE]{S}{D}'	# exponential form -7e+8
+	)	
+
+$00 $-01 $+0002 
+#$-3.4 $5.6 $+7.8 
+#$-1e+3 $+4E-5
+
+?00 ?-01 ?+0002 
+#?-3.4 ?5.6 ?+7.8 
+#?-1e+3 ?+4E-5
+
 
 .sec Machine types
 

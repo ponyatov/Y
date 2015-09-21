@@ -25,6 +25,10 @@
 using namespace std;
 
 struct biObject {				// master class
+	string *cls;					// class name
+	string *val;					// generic string value
+	biObject(const char*,char*);
+//	biObject(string*,string*);
 	virtual string* dump();		// dump object in reloadable form
 	virtual string* eval();		// evaluate (compute) object contents
 };
