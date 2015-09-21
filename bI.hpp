@@ -38,10 +38,12 @@ struct biSec: public biDirective {
 
 struct TEX {
 	FILE* fh;
-	string title,author;
+	string title,author,head,body,foot;
 	TEX(const char*);
 	~TEX();
 	void W(string);
+	void sec(string);
+	string fix(string);
 };
 extern TEX tex;
 

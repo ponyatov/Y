@@ -1,3 +1,6 @@
+.PHONY: default
+default: pdf
+
 .PHONY: exec
 exec: bI.blog
 
@@ -8,7 +11,8 @@ clean:
 
 .PHONY: pdf
 bI.tex: bI.blog
-pdf: bI.tex
+pdf: tmp/bI.pdf
+tmp/bI.pdf:	bI.tex
 	mkdir -p tmp
 	pdflatex -output-directory tmp $<
 	pdflatex -output-directory tmp $<

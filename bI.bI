@@ -94,7 +94,7 @@ Directive .sec lexer regexp = '\.sec[^\n]+'
 
 .sec+ Data types
 
-.sec Generics (primitive data types)
+.sec+ Generics (primitive data types)
 
 Generic bI language types provides highlevel abstracts for typical primitive
 data types in other programming languages. Generics is gateway between machine
@@ -116,36 +116,6 @@ class String,str
 
 'string1' $'string2' ?'string3'
 
-.sec Object
-
-Generic object implements all bI-specific features for all other data types.
-
-class Object
-	str name	'class name'
-	str value	'some textual value'
-	@dump		'serializer/dumper'					-> '<'+cls+':'+val+'>'
-	@load(str)	'deserialize constructor/loader'	-> %
-	@eval		'evaluate (compute)'				-> % # as is
-
-.sec \% current object itself marker
-
-\% symbol marks current object (like self and this in other languages).
-
-.sec Signals
-
-bI uses SmallTalk like passing signals between objects, but have
-inkernel multiagent parallel computing ideology, and this signals is real 
-async messages, not function calls.
-
-\@signal marks signal a.k.a. class method:
-
-class Signal,sig 
-	lexer regexp SIG = '@[a-z0-9_\+\-\*\/]+'
-	parser SIG list<type>
-
-Extended signal definiton uses Erlang-like pattern mathching: is uses match 
-pattern defined via type argument list.
-
 .sec Symbol
 
 Any text string not detected as other literal, treated as symbol.
@@ -157,7 +127,7 @@ Object Symbol,sym
 $biClass $Symbol,$id
 ?biClass ?Symbol,?id
 
-.sec- Number
+.sec Number
 
 Float and integer processing is too different, Number type holds shared 
 semantics.
@@ -198,7 +168,37 @@ generation.
 .li [f]loat, [d]ouble
 .li [v]ector
 
-.sec Objects
+.sec+ Object-oriented design
 
-.sec Containers (composite types)
+.sec Object
+
+Generic object implements all bI-specific features for all other data types.
+
+class Object
+	str name	'class name'
+	str value	'some textual value'
+	@dump		'serializer/dumper'					-> '<'+cls+':'+val+'>'
+	@load(str)	'deserialize constructor/loader'	-> %
+	@eval		'evaluate (compute)'				-> % # as is
+
+.sec \% current object itself marker
+
+\% symbol marks current object (like self and this in other languages).
+
+.sec Signal
+
+bI uses SmallTalk like passing signals between objects, but have
+inkernel multiagent parallel computing ideology, and this signals is real 
+async messages, not function calls.
+
+\@signal marks signal a.k.a. class method:
+
+class Signal,sig 
+	lexer regexp SIG = '@[a-z0-9_\+\-\*\/]+'
+	parser SIG list<type>
+
+Extended signal definiton uses Erlang-like pattern mathching: is uses match 
+pattern defined via type argument list.
+
+.sec+ Containers (composite types)
 

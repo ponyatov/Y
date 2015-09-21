@@ -24,16 +24,40 @@ biString::biString(char *V):biObject("str",V) {}
 
 TEX tex("bI.tex");
 
-void TEX::W(string x)		{ assert(fh); fprintf(fh,"%s",x.c_str()); }
-TEX::TEX(const char *fn)	{ fh=fopen(fn,"w"); 
+string TEX::fix(string s) {
+	string T;
+	for ( string::iterator c=s.begin(); c!=s.end(); c++) { switch (*c) {
+		case '^':
+		case '[':
+		case ']':
+		case '\\': break;
+		case '#': T+="\\#"; break;
+		case '$': T+="\\$"; break;
+		case '%': T+="\\%"; break;
+		default: T+=*c; break;
+	}}
+	return T;
 }
+
+void TEX::W(string x)		{ body+=fix(x); }
+void TEX::sec(string x)		{ 
+	switch (x[0]) {
+		case '+': body+="\\section{"+fix(x)+"}\n"; break;
+		case '-': body+="\\subsubsection{"+fix(x)+"}\n"; break;
+		default: body+="\\subsection{"+fix(x)+"}\n"; break;
+	}}
+
+TEX::TEX(const char *fn)	{ assert(fh=fopen(fn,"w")); }
 TEX::~TEX()					{ 
-	W("\\documentclass[10pt]{article}\n");
-	W("\\usepackage[a5paper,landscape,margin=5mm]{geometry}\n");
-	W("\\title{"+title+"}\n");
-	W("\\author{"+author+"}\n");
-	W("\\begin{document}\n\\maketitle\n\\tableofcontents\n\n");
-	W("\\end{document}\n");
+	head+="\\documentclass[10pt]{article}\n";
+	head+="\\usepackage[a5paper,landscape,margin=5mm]{geometry}\n";
+	head+="\\title{"+title+"}\n";
+	head+="\\author{"+author+"}\n";
+	head+="\\begin{document}\n\\maketitle\n\\tableofcontents\n\n";
+	foot+="\\end{document}\n";
+	fprintf(fh,"%s",head.c_str());
+	fprintf(fh,"%s",body.c_str());
+	fprintf(fh,"%s",foot.c_str());
 	fclose(fh); 
 }
 
@@ -41,7 +65,10 @@ TEX::~TEX()					{
 
 
 biDirective::biDirective(const char* C,char *V):biObject(C,V) {}
-biSec::biSec(char *V):biDirective(".sec",V) { val->erase(val->find(".sec"),4); }
+biSec::biSec(char *V):biDirective(".sec",V) { 
+	val->erase(val->find(".sec"),4);
+	tex.sec(*val);
+}
 
 // writers
 
