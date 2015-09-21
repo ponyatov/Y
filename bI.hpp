@@ -9,10 +9,6 @@
 //#include <map>
 #include <list>
 
-#ifndef __MINGW32__
-#error linux
-#endif // __MINGW32__
-
 using namespace std;
 
 struct biObject {				// master class
