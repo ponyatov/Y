@@ -17,11 +17,7 @@ string* biObject::eval()	{ return val; }
 
 // string
 
-biString::biString(string V):biObject("str") {
-	val = new string(V);
-}
-
-string* biString::dump()	{ return new string("<"+*cls+":'"+*val+"'>"); }
+biString::biString(char *V):biObject("str",V) {}
 
 // writers
 

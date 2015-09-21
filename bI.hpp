@@ -5,21 +5,11 @@
 #include <cstdlib>
 #include <cstdio>
 
+//#include <map>
 #include <list>
 
-#ifdef __MINGW32__
-#else
-#error no Linux
-#endif
-
-#include <map>
-#include <list>
-
-#ifdef __linux__
-#include <sys/stat.h>
-#endif // __linux__
-#ifdef __MINGW32__
-#include <direct.h>
+#ifndef __MINGW32__
+#error linux
 #endif // __MINGW32__
 
 using namespace std;
@@ -34,8 +24,7 @@ struct biObject {				// master class
 };
 
 struct biString: public biObject {
-	biString(string);
-	string* dump();
+	biString(char*);
 };
 
 extern int yylex();
