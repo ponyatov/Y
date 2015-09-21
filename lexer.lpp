@@ -24,6 +24,7 @@ D	[0-9]+
 \?							{BEGIN(xx); TC(QX);}
 <xx>[ \t\n]					{BEGIN(INITIAL); TC(S);}
 
+<xx>:						TC(COLON)
 <xx>{S}{D}					TO("int",NUM)
 <xx>0x[0-9A-Z]+				TO("hex",NUM)
 <xx>0b[01]+					TO("bin",NUM)

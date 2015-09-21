@@ -181,11 +181,11 @@ class Object
 	@load(str)	'deserialize constructor/loader'	-> %
 	@eval		'evaluate (compute)'				-> % # as is
 
-.sec \% current object itself marker
+.sec \% current object itself marker (this, self)
 
 \% symbol marks current object (like self and this in other languages).
 
-.sec Signal
+.sec Signal as object method
 
 bI uses SmallTalk like passing signals between objects, but have
 inkernel multiagent parallel computing ideology, and this signals is real 
@@ -200,5 +200,19 @@ class Signal,sig
 Extended signal definiton uses Erlang-like pattern mathching: is uses match 
 pattern defined via type argument list.
 
+.sec Data in nested variables
+
+Data stored in object using nested variables.
+All objects includes two required vars: name and value.
+
 .sec+ Containers (composite types)
+
+class Container
+	@size -> int	# content size
+
+.sec Pair
+
+Container Pair parser = expr ':' expr
+
+$this:is ?pair:sample $1:2 ?pi:3.1415
 
