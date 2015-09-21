@@ -12,22 +12,23 @@
 %token <s> S
 
 %token <s> SX QX ARROW
-%token <o> NUM SYM STR
+%token <o> NUM SYM STR SIG
 %type <o> ex
 
 %%
 bI :
    	| bI SX ex		{ W($2); W($3->dump()); }
 	| bI QX ex		{ W($2); W($3->eval()); }
+	| bI ex			{ W($2->dump()); }
 	| bI ARROW		{ W(" -> "); /* -> cosmetics */}
-	| bI STR		{ W($2->eval()); }
 	| bI S			{ W($2); }
 ;
 
 ex :
 	  NUM
-	| SYM
 	| STR
+	| SIG
+	| SYM
 ;
 %%
 

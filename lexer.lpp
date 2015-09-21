@@ -18,12 +18,19 @@ D	[0-9]+
 \\.							TC(S)	/* escaped char */
 #[^\n]*						{}		/* line comment */
 
+[a-z]+@[a-z\.]+				TC(S)	/* indoc email vs signal fix */
+
 \$							{BEGIN(xx); TC(SX);}
 \?							{BEGIN(xx); TC(QX);}
 <xx>[ \t\n]					{BEGIN(INITIAL); TC(S);}
+
 <xx>{S}{D}					TO("int",NUM)
 <xx>0x[0-9A-Z]+				TO("hex",NUM)
 <xx>0b[01]+					TO("bin",NUM)
+<xx>{S}{D}\.{D}				TO("float",NUM)
+<xx>{S}{D}[eE]{S}{D}		TO("float",NUM)
+
+@[a-z0-9_\+\-\*\/]+			TO("sig",SIG)
 <xx>[a-zA-Z_][a-zA-Z0-9_]*	TO("sym",SYM)
 
 [ \t]*->[ \t]*				TC(ARROW)			/* -> cosmetics */

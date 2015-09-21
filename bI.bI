@@ -108,6 +108,25 @@ class Object
 	@load(str)	'deserialize constructor/loader'	-> %
 	@eval		'evaluate (compute)'				-> % # as is
 
+.sec \% current object itself marker
+
+\% symbol marks current object (like self and this in other languages).
+
+.sec Signals
+
+bI uses SmallTalk like passing signals between objects, but have
+inkernel multiagent parallel computing ideology, and this signals is real 
+async messages, not function calls.
+
+\@signal marks signal a.k.a. class method:
+
+class Signal,sig 
+	lexer regexp SIG = '@[a-z0-9_\+\-\*\/]+'
+	parser SIG list<type>
+
+Extended signal definiton uses Erlang-like pattern mathching: is uses match 
+pattern defined via type argument list.
+
 .sec Symbol
 
 Any text string not detected as other literal, treated as symbol.
@@ -132,9 +151,9 @@ Object Number,num
 	@dump -> %					# dump it as is
 	@eval -> %					# eval it as is
 
-Number Integer,int	lexer regexp = '{S}{D}'			# integers like -1 +2
-Number hex			lexer regexp = '0x[0-9A-Z]+'	# hex literals
-Number bin			lexer regexp = '0b[01]+'		# bin literals
+Number Integer,int	lexer regexp NUM = '{S}{D}'			# integers like -1 +2
+Number hex			lexer regexp NUM = '0x[0-9A-Z]+'	# hex literals
+Number bin			lexer regexp NUM = '0b[01]+'		# bin literals
 
 Number Float,float
 	lexer regexp (
@@ -143,12 +162,12 @@ Number Float,float
 	)	
 
 $00 $-01 $+0002 $0x1234 $0b1101
-#$-3.4 $5.6 $+7.8 
-#$-1e+3 $+4E-5
+$-3.4 $5.6 $+7.8 
+$-1e+3 $+4E-5
 
 ?00 ?-01 ?+0002 ?0x1234 ?0b1101
-#?-3.4 ?5.6 ?+7.8 
-#?-1e+3 ?+4E-5
+?-3.4 ?5.6 ?+7.8 
+?-1e+3 ?+4E-5
 
 
 .sec Machine types
