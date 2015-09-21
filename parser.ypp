@@ -11,7 +11,7 @@
 
 %token <s> S
 
-%token <s> SX QX
+%token <s> SX QX ARROW
 %token <o> NUM SYM STR
 %type <o> ex
 
@@ -19,7 +19,8 @@
 bI :
    	| bI SX ex		{ W($2); W($3->dump()); }
 	| bI QX ex		{ W($2); W($3->eval()); }
-	| bI STR		{ W($2->dump()); }
+	| bI ARROW		{ W(" -> "); /* -> cosmetics */}
+	| bI STR		{ W($2->eval()); }
 	| bI S			{ W($2); }
 ;
 

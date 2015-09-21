@@ -121,7 +121,8 @@ $biClass $Symbol,$id
 
 .sec- Number
 
-Float and integer processing is too different, but Number type process both.
+Float and integer processing is too different, Number type holds shared 
+semantics.
 
 Object Number,num
 	lexer regexp (
@@ -131,12 +132,9 @@ Object Number,num
 	@dump -> %					# dump it as is
 	@eval -> %					# eval it as is
 
-Number Integer,int 
-	lexer regexp (
-		'{S}{D}'			# integers like -1 +2
-		'0x[0-9A-F]+'		# hex literals
-		'0b[01]+'			# bin literals
-	)
+Number Integer,int	lexer regexp = '{S}{D}'			# integers like -1 +2
+Number hex			lexer regexp = '0x[0-9A-Z]+'	# hex literals
+Number bin			lexer regexp = '0b[01]+'		# bin literals
 
 Number Float,float
 	lexer regexp (
@@ -144,11 +142,11 @@ Number Float,float
 		'{S}{D}[eE]{S}{D}'	# exponential form -7e+8
 	)	
 
-$00 $-01 $+0002 
+$00 $-01 $+0002 $0x1234 $0b1101
 #$-3.4 $5.6 $+7.8 
 #$-1e+3 $+4E-5
 
-?00 ?-01 ?+0002 
+?00 ?-01 ?+0002 ?0x1234 ?0b1101
 #?-3.4 ?5.6 ?+7.8 
 #?-1e+3 ?+4E-5
 
