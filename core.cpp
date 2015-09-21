@@ -7,6 +7,11 @@ biObject::biObject(const char* C) {
 	val = new string();
 }
 
+biObject::biObject(const char* C,const char* V) { 
+	cls = new string(C);
+	val = new string(V);
+}
+
 biObject::biObject(const char* C,char* V) { 
 	cls = new string(C);
 	val = new string(V);
@@ -19,6 +24,14 @@ string* biObject::eval()	{ return val; }
 
 biString::biString(char *V):biObject("str",V) {}
 
+// pair
+
+biPair::biPair(biObject* X,biObject* Y):biObject("pair","") {
+	A=X; B=Y; 
+}
+
+string* biPair::dump()	{ return new string(*A->dump()+":"+*B->dump()); }
+string* biPair::eval()	{ return new string(*A->eval()+":"+*B->eval()); }
 
 // tex
 
@@ -62,7 +75,6 @@ TEX::~TEX()					{
 }
 
 // directive
-
 
 biDirective::biDirective(const char* C,char *V):biObject(C,V) {}
 biSec::biSec(char *V):biDirective(".sec",V) { 

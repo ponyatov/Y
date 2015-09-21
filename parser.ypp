@@ -30,7 +30,7 @@ ex :
 	| SIG
 	| DOT
 	| SYM
-	| ex COLON ex
+	| ex COLON ex	{ $$=new biPair($1,$3); }
 ;
 %%
 

@@ -214,5 +214,7 @@ class Container
 
 Container Pair parser = expr ':' expr
 
-$this:is ?pair:sample $1:2 ?pi:3.1415
+$this:is ?pair:sample 
+$1:2 ?3.4:5e6
+$e:2.71 ?pi:3.1415
 

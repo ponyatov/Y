@@ -20,12 +20,20 @@ struct biObject {				// master class
 	string *val;					// generic string value
 	biObject(const char*);
 	biObject(const char*,char*);
+	biObject(const char*,const char*);
 	virtual string* dump();		// dump object in reloadable form
 	virtual string* eval();		// evaluate (compute) object contents
 };
 
 struct biString: public biObject {
 	biString(char*);
+};
+
+struct biPair: public biObject {
+	biObject *A; biObject *B; 
+	biPair(biObject*,biObject*);
+	string* dump();
+	string* eval();
 };
 
 struct biDirective: public biObject {
