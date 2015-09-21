@@ -2,6 +2,11 @@
 
 // object
 
+biObject::biObject(const char* C) { 
+	cls = new string(C);
+	val = new string();
+}
+
 biObject::biObject(const char* C,char* V) { 
 	cls = new string(C);
 	val = new string(V);
@@ -9,6 +14,14 @@ biObject::biObject(const char* C,char* V) {
 
 string* biObject::dump()	{ return new string("<"+*cls+":"+*val+">"); }
 string* biObject::eval()	{ return val; }
+
+// string
+
+biString::biString(string V):biObject("str") {
+	val = new string(V);
+}
+
+string* biString::dump()	{ return new string("<"+*cls+":'"+*val+"'>"); }
 
 // writers
 

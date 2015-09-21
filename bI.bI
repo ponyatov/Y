@@ -95,6 +95,8 @@ class String,str
 	@*(str,str)	'fetch substrings using regexp'	-> list<str>
 	@/(str,str)	'split str using regexp'		-> list<str>
 
+'string1' # $'string2' ?'string3'
+
 .sec Object
 
 Generic object implements all bI-specific features for all other data types.

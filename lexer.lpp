@@ -1,8 +1,11 @@
 %{
 #include "bI.hpp"
 
-#define TS(X)	{ yylval.s = new string(yytext);     return X; }
+#define TC(X)	{ yylval.s = new string(yytext);     return X; }
 #define TO(C,X)	{ yylval.o = new biObject(C,yytext); return X; }
+
+string ss;
+#define TS(X)	{ yylval.o = new biString(ss); return X; }
 %}
 
 %option noyywrap
@@ -15,20 +18,20 @@ S	[\+\-]{0,1}
 D	[0-9]+
 
 %%
-\\.							TS(S)	/* escaped char */
+\\.							TC(S)	/* escaped char */
 #[^\n]*						{}		/* line comment */
 
-\$							{BEGIN(xx); TS(SX);}
-\?							{BEGIN(xx); TS(QX);}
-<xx>[ \t\n]					{BEGIN(INITIAL); TS(S);}
+\$							{BEGIN(xx); TC(SX);}
+\?							{BEGIN(xx); TC(QX);}
+<xx>[ \t\n]					{BEGIN(INITIAL); TC(S);}
 <xx>{S}{D}					TO("num",NUM)
 <xx>[a-zA-Z_][a-zA-Z0-9_]*	TO("sym",SYM)
 
-\'							{BEGIN(str); TS(S);}
-<str>\'						{BEGIN(INITIAL); TS(S);}
-<str>[^\']+					TO("str",STR)
+<INITIAL>\'					{BEGIN(str); ss="";}
+<str>\'						{BEGIN(INITIAL);TS(STR);}
+<str>[^\']*					{ss+=yytext;}
 
-\n							TS(S)
-.							TS(S)
+\n							TC(S)
+.							TC(S)
 %%
 
