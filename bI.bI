@@ -55,7 +55,8 @@ biClass Directive lexer regexp = '\.[a-z]+'
 Comments must be removed from output.
 # line comments until end of line 
 
-biClass LineComment lexer regexp = '\#.*\n'
+class Comment
+Comment LineComment lexer regexp = '#[^\n]*'
 
 .sec \$ (dump) and \? (eval) prefixes
 
@@ -72,6 +73,24 @@ constructor for serialization work.
 .sec- object evaluation (computing)
 
 \?-prefixed code will be computed using @eval methods in all nested objects.
+
+.sec+ Directive
+
+Elements starting with . is directives, controls mainly document generation,
+but can control other language system functions.
+
+class Directive lexer regexp DOT = '\.[a-z]+[\+\-]?[ \t]+[^\n]*'
+
+.sec \.title: current (sub)module title.
+.sec \.author: author marker
+.sec \.github: GutHub marker
+.sec \.module: define (sub)module
+.sec \.file \.eof: create file contents intext
+.sec \.sec \.sec+ \.sec-: sectioning, mark contents items
+
+Directive .sec lexer regexp = '\.sec[^\n]+'
+
+.sec \.list \.li: itemize/enumerate list (not <list> type)
 
 .sec+ Data types
 
@@ -168,7 +187,6 @@ $-1e+3 $+4E-5
 ?00 ?-01 ?+0002 ?0x1234 ?0b1101
 ?-3.4 ?5.6 ?+7.8 
 ?-1e+3 ?+4E-5
-
 
 .sec Machine types
 

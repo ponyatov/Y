@@ -12,7 +12,7 @@
 %token <s> S
 
 %token <s> SX QX ARROW
-%token <o> NUM SYM STR SIG
+%token <o> NUM SYM STR SIG DOT
 %type <o> ex
 
 %%
@@ -28,6 +28,7 @@ ex :
 	  NUM
 	| STR
 	| SIG
+	| DOT
 	| SYM
 ;
 %%

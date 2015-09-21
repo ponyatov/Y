@@ -27,6 +27,14 @@ struct biString: public biObject {
 	biString(char*);
 };
 
+struct biDirective: public biObject {
+	biDirective(const char*,char*);
+};
+
+struct biSec: public biDirective {
+	biSec(char*);
+};
+
 extern int yylex();
 extern char *yytext;
 extern int yylineno;

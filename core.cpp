@@ -19,6 +19,11 @@ string* biObject::eval()	{ return val; }
 
 biString::biString(char *V):biObject("str",V) {}
 
+// directive
+
+biDirective::biDirective(const char* C,char *V):biObject(C,V) {}
+biSec::biSec(char *V):biDirective(".sec",V) { val->erase(val->find(".sec"),4); }
+
 // writers
 
 void W(string* s)	{ cout << *s; }
