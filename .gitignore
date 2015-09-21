@@ -3,6 +3,8 @@
 *.exe
 *.o
 bI.blog
+bI.tex
+/tmp/
 lex.yy.c
 parser.tab.*
 /2del/

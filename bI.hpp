@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
+#include <cassert>
 
 //#include <map>
 #include <list>
@@ -34,6 +35,15 @@ struct biDirective: public biObject {
 struct biSec: public biDirective {
 	biSec(char*);
 };
+
+struct TEX {
+	FILE* fh;
+	string title,author;
+	TEX(const char*);
+	~TEX();
+	void W(string);
+};
+extern TEX tex;
 
 extern int yylex();
 extern char *yytext;

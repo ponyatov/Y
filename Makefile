@@ -3,8 +3,15 @@ exec: bI.blog
 
 .PHONY: clean
 clean:
-	rm -rf *~ .*~ ./bI$(EXE) lex.yy.c parser.tab.?pp
+	rm -rf *~ .*~ ./bI$(EXE) lex.yy.c parser.tab.?pp bI.tex tmp
 	echo -n > bI.blog
+
+.PHONY: pdf
+bI.tex: bI.blog
+pdf: bI.tex
+	mkdir -p tmp
+	pdflatex -output-directory tmp $<
+	pdflatex -output-directory tmp $<
 
 bI.blog: bI.bI ./bI$(EXE)
 	./bI$(EXE) < $< > $@
