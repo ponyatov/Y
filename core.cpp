@@ -53,10 +53,10 @@ string TEX::fix(string s) {
 }
 
 void TEX::W(string x)		{ body+=fix(x); }
-void TEX::sec(string x)		{ 
-	switch (x[0]) {
-		case '+': body+="\\section{"+fix(x)+"}\n"; break;
-		case '-': body+="\\subsubsection{"+fix(x)+"}\n"; break;
+void TEX::sec(int l,string x)		{ 
+	switch (l) {
+		case +1: body+="\\section{"+fix(x)+"}\n"; break;
+		case -1: body+="\\subsubsection{"+fix(x)+"}\n"; break;
 		default: body+="\\subsection{"+fix(x)+"}\n"; break;
 	}}
 
@@ -76,10 +76,20 @@ TEX::~TEX()					{
 
 // directive
 
-biDirective::biDirective(const char* C,char *V):biObject(C,V) {}
-biSec::biSec(char *V):biDirective(".sec",V) { 
-	val->erase(val->find(".sec"),4);
-	tex.sec(*val);
+biDirective::biDirective(char *V):biObject("",V) {
+	while (val->at(0)!=' '&&val->at(0)!='\t') {
+		*cls += val->at(0);
+		val->erase(0,1);
+		if (val->size()==0) break;
+	}
+	if (val->size())
+		while (val->at(0)==' '||val->at(0)=='\t') val->erase(0,1);
+
+	if (*cls==".title") 	tex.title=*val;
+	if (*cls==".author") 	tex.author=*val;
+	if (*cls==".sec")		tex.sec(0,*val);
+	if (*cls==".sec+")		tex.sec(+1,*val);
+	if (*cls==".sec-")		tex.sec(-1,*val);
 }
 
 // writers

@@ -44,7 +44,15 @@ Data detected as language constructs will be computed inplace.
 Directives is documentation markup mainly, 
 but can control bI system in other way.
 
-biClass Directive lexer regexp = '\.[a-z]+'
+biClass Directive
+	lexer regexp = '\.[a-z]+[ \t]*[^\n]*'
+	@init {
+		%[class] = %[value] * '\.[a-z]+' [first] # rename class for new object
+		%[value] = %[value] - '^\.[a-z]+[ \t]*' # remove leading .some<space>
+	}
+
+Directive object modify themself using first '.some' string from 
+Directive[val] field for dynamic class rename.
 
 .sec \ escape char
 
@@ -107,7 +115,8 @@ for statical compilation, native machine code or hardware synthesis.
 Most unversal data type, can represent and data in serialized form.
 
 class String,str
-	value
+	class		'class name'
+	value		'generic value'
 	@size		'size in chars'					-> int
 	@+(str,str)	'concatenate'					-> str
 	@*(str,int)	'repeat str num times'			-> str
@@ -208,7 +217,8 @@ All objects includes two required vars: name and value.
 .sec+ Containers (composite types)
 
 class Container
-	@size -> int	# content size
+	@size	-> int	# content size
+	@+=		-> %	# add element
 
 .sec Pair
 
@@ -217,4 +227,12 @@ Container Pair parser = expr ':' expr
 $this:is ?pair:sample 
 $1:2 ?3.4:5e6
 $e:2.71 ?pi:3.1415
+
+.sec+ Deploy control
+
+.sec Modules
+
+Directive \.module creates/switches current module. In base bI realization 
+module mapped to directory, and controls \.file directive path for new files.
+
 

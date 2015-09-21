@@ -33,11 +33,7 @@ struct biPair: public biObject {
 };
 
 struct biDirective: public biObject {
-	biDirective(const char*,char*);
-};
-
-struct biSec: public biDirective {
-	biSec(char*);
+	biDirective(char*);
 };
 
 struct TEX {
@@ -46,7 +42,7 @@ struct TEX {
 	TEX(const char*);
 	~TEX();
 	void W(string);
-	void sec(string);
+	void sec(int,string);
 	string fix(string);
 };
 extern TEX tex;

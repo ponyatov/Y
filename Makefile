@@ -10,7 +10,9 @@ clean:
 	echo -n > bI.blog
 
 .PHONY: pdf
-pdf: bI.tex
+pdf: tmp/bI.pdf
+bI.tex: bI.blog
+tmp/bI.pdf: bI.tex
 	mkdir -p tmp
 	pdflatex -output-directory tmp $<
 	pdflatex -output-directory tmp $<
