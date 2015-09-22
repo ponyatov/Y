@@ -235,4 +235,21 @@ $e:2.71 ?pi:3.1415
 Directive \.module creates/switches current module. In base bI realization 
 module mapped to directory, and controls \.file directive path for new files.
 
+Module 'tmp' used by default after bI system starts.
+This done for preventing current bI files overwrite.
+
+.sec File creation
+
+You can use \.file and \.eof directives for direct file creation (in current
+module only for sequrity reasons):
+
+README.md
+
+.file README.md
+\# ALYEH platform
+\#\# ALYEH:dYnamic language bI
+\#\#\# developer/experimental branch
+.eof
+
+EOF
 

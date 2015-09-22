@@ -2,12 +2,17 @@
 #define _bI_H
 
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
 
 //#include <map>
 #include <list>
+
+#ifdef __MINGW32__
+#include <direct.h>
+#endif // __MINGW32__
 
 using namespace std;
 
@@ -16,6 +21,7 @@ struct biObject {				// master class
 	string *val;					// generic string value
 	biObject(const char*);
 	biObject(const char*,char*);
+	biObject(const char*,string*);
 	biObject(const char*,const char*);
 	virtual string* dump();		// dump object in reloadable form
 	virtual string* eval();		// evaluate (compute) object contents
@@ -36,6 +42,22 @@ struct biDirective: public biObject {
 	biDirective(char*);
 };
 
+struct biModule: public biObject {
+	biModule(const char*);
+};
+extern biModule *bi_module;
+
+struct biFile: public biObject {
+	FILE *fh;
+	char mode;
+	biFile(string*,char);
+	~biFile();
+	string *dump();
+	void W(string);
+	void W(char);
+};
+extern biFile *bi_file;
+
 struct TEX {
 	FILE* fh;
 	string title,author,head,body,foot;
@@ -54,8 +76,9 @@ extern int yyparse();
 extern void yyerror(string);
 #include "parser.tab.hpp"
 
-void W(string*);
-void W(string);
+void W(string*, bool tofile=true);
+void W(string, bool tofile=true);
+void W(char, bool tofile=true);
 
 #endif // _bI_H
 

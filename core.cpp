@@ -17,6 +17,11 @@ biObject::biObject(const char* C,char* V) {
 	val = new string(V);
 }
 
+biObject::biObject(const char* C,string* V) { 
+	cls = new string(C);
+	val = V;
+}
+
 string* biObject::dump()	{ return new string("<"+*cls+":"+*val+">"); }
 string* biObject::eval()	{ return val; }
 
@@ -32,6 +37,37 @@ biPair::biPair(biObject* X,biObject* Y):biObject("pair","") {
 
 string* biPair::dump()	{ return new string(*A->dump()+":"+*B->dump()); }
 string* biPair::eval()	{ return new string(*A->eval()+":"+*B->eval()); }
+
+// module
+
+biModule::biModule(const char*m):biObject("module",m) {
+	mkdir(val->c_str());
+};
+biModule *bi_module = new biModule("tmp");
+
+// file
+
+biFile::biFile(string *name,char m): biObject("file",name) {
+	mode=m;
+	switch (mode) {
+		case 'r': assert(fh=fopen(val->c_str(),"r")); break;
+		case 'w': assert(fh=fopen(val->c_str(),"w")); break;
+		default: yyerror(string("file mode ")+*dump());
+	}
+}
+biFile::~biFile() { fclose(fh); }
+
+string* biFile::dump()	{
+	ostringstream os; 
+	os << "<" << *cls << ":" << *val ;
+	os << ",mode:" << mode << ",open:" << (fh==NULL ? "F" : "T") << ">";
+	return new string(os.str());
+}
+
+void biFile::W(string s)	{ fprintf(fh,"%s",s.c_str());	}
+void biFile::W(char c)		{ fprintf(fh,"%c",c);			}
+
+biFile *bi_file = NULL;
 
 // tex
 
@@ -90,12 +126,27 @@ biDirective::biDirective(char *V):biObject("",V) {
 	if (*cls==".sec")		tex.sec(0,*val);
 	if (*cls==".sec+")		tex.sec(+1,*val);
 	if (*cls==".sec-")		tex.sec(-1,*val);
+	if (*cls==".file")		{ 
+		if (bi_file) delete bi_file; 
+		bi_file=new biFile(new string(*bi_module->val+"/"+*val),'w');
+	}
+	if (*cls==".eof")		{
+		if (bi_file) delete bi_file;
+		bi_file=NULL;
+	}
 }
 
 // writers
 
-void W(string* s)	{ cout << *s; }
-void W(string  s)	{ cout <<  s; }
+void W(string* s, bool tofile)	{ 
+	cout << *s; 
+	if (tofile&&bi_file) bi_file->W(*s); }
+void W(string  s, bool tofile)	{ 
+	cout <<  s; 
+	if (tofile&&bi_file) bi_file->W( s); }
+void W(char c, bool tofile)	{ 
+	cout << c; 
+	if (tofile&&bi_file) bi_file->W( c); }
 
 // main
 
