@@ -10,21 +10,31 @@
 	biObject *o;
 }
 
-%token	<c>	EOL C SX QX COLON 
-%token	<s> S ARROW
+%token	<c>	EOL C SX QX COLON COMMA LP RP
+%token	<s> S ARROW CLASS ENDCLASS
 %token	<o> NUM SYM STR SIG DOT DOTFILE
-%type	<o> ex
+%type	<o> ex list
 
 %%
 bI :
    	| bI SX ex			{ W($2); W($3->dump()); }
+   	| bI SX list		{ W($2); W($3->dump()); }
 	| bI QX ex			{ W($2); W($3->eval()); }
-	| bI DOTFILE EOL	{ W($2->dump(),false); }
+	| bI QX list		{ W($2); W($3->dump()); }
+	| bI DOTFILE EOL	{ W($2->dump(),false); W($3,false); }
+	| bI CLASS SYM		{ W((new biClass($3))->dump()); }
+	| bI ENDCLASS		{ W("\n<end:class>"); W($2); } 
 	| bI ex				{ W($2->dump()); }
 	| bI ARROW			{ W(" -> "); /* -> cosmetics */}
 	| bI EOL			{ W($2); }
 	| bI C				{ W($2); }
 	| bI S				{ W($2); }
+;
+
+list :
+	  LP ex RP			{ $$=new biList($2); }	
+	| ex COMMA ex		{ $$=new biList($1); $$->join($3); }
+	| list COMMA ex		{ $$=$1; $$->join($3); }
 ;
 
 ex :

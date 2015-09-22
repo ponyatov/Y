@@ -22,8 +22,34 @@ biObject::biObject(const char* C,string* V) {
 	val = V;
 }
 
+biObject::biObject(string* C,string* V) { 
+	cls = C;
+	val = V;
+}
+
 string* biObject::dump()	{ return new string("<"+*cls+":"+*val+">"); }
 string* biObject::eval()	{ return val; }
+
+void biObject::join(biObject*)	{}
+
+// generic class
+
+biClass::biClass(biObject *sym):biObject("class",sym->val) {}
+
+// list
+
+biList::biList():biObject("list","()")				{}
+biList::biList(biObject* X):biObject("list","()")	{ join(X); }
+void biList::join(biObject* X)						{ L.push_back(X); }
+
+string* biList::dump() {
+	string* s = new string("<"+*cls+":(");
+	for (list<biObject*>::iterator it=L.begin(); it!=L.end(); it++) {
+		*s += *((*it)->dump());
+	}
+	*s += ")>";
+	return s; 
+}
 
 // string
 
@@ -158,6 +184,7 @@ void W(char c, bool tofile)	{
 
 void yyerror(string s) {
 	cerr << "\n\n" << s << " # " << yylineno << " : " << yytext << "\n\n";
+	cout << "\n\n" << s << " # " << yylineno << " : " << yytext << "\n\n";
 	exit(-1);
 }
 

@@ -44,13 +44,13 @@ Data detected as language constructs will be computed inplace.
 Directives is documentation markup mainly, 
 but can control bI system in other way.
 
-biClass Directive
+class Directive
 	lexer regexp = '^\.[a-z]+[\+\-]?[ \t]*[^\n]*'
 	@init {
 		%[class] = %[value] * '\.[a-z]+' [first] # rename class for new object
 		%[value] = %[value] - '^\.[a-z]+[ \t]*' # remove leading .some<space>
 	}
-Directive .file
+class .file: Directive
 	lexer regexp = '^\.file[ \t]+[^\n]+'
 
 Directive object modify themself using first '.some' string from 
@@ -66,7 +66,8 @@ Comments must be removed from output.
 # line comments until end of line 
 
 class Comment
-Comment LineComment lexer regexp = '#[^\n]*'
+
+class LineComment:Comment lexer regexp = '#[^\n]*'
 
 .sec \$ (dump) and \? (eval) prefixes
 
@@ -132,18 +133,18 @@ class String,str
 Any text string not detected as other literal, treated as symbol.
 Symbol represents themself in dump, evaluation, and its value.
 
-Object Symbol,sym
+class Symbol,sym
 	lexer regexp = '[a-zA-Z_][a-zA-Z_0-9]+' # classical ID char set
 
-$biClass $Symbol,$id
-?biClass ?Symbol,?id
+$biClass $Symbol,id
+?biClass ?Symbol,id
 
 .sec Number
 
 Float and integer processing is too different, Number type holds shared 
 semantics.
 
-Object Number,num
+class Number,num
 	lexer regexp (
 		S : '[\-\+]{0,1}'		# optional +/- sign
 		D : '[0-9]+'			# decimal digits group
@@ -181,11 +182,22 @@ generation.
 
 .sec+ Object-oriented design
 
+.sec Base class inheritance
+
+Core class can be created using this syntax (start with first char in line):
+
+class Class,alias,es vars @and @signals inline
+	'also docstring for class'
+	and some
+	extra			'with their'
+	variables 		
+	@and @signals	'own docstrings'
+
 .sec Object
 
 Generic object implements all bI-specific features for all other data types.
 
-class Object
+#class Object
 	str name	'class name'
 	str value	'some textual value'
 	@dump		'serializer/dumper'					-> '<'+cls+':'+val+'>'
@@ -230,6 +242,12 @@ $this:is ?pair:sample
 $1:2 ?3.4:5e6
 $e:2.71 ?pi:3.1415
 
+.sec List
+
+$(1)
+$1,2
+$1,2,3
+
 .sec+ Deploy control
 
 .sec Modules
@@ -245,13 +263,20 @@ This done for preventing current bI files overwrite.
 You can use \.file and \.eof directives for direct file creation (in current
 module only for sequrity reasons):
 
-README.md
-
 .file README.md
 \# ALYEH platform
 \#\# ALYEH:dYnamic language bI
 \#\#\# developer/experimental branch
 .eof
 
-EOF
+.sec+ GUI extension
+
+class Display
+
+class Color
+
+class Rect int W; int H; 
+	color F,B
+
+class Window : Rect
 

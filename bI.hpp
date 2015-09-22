@@ -21,12 +21,26 @@ using namespace std;
 struct biObject {				// master class
 	string *cls;					// class name
 	string *val;					// generic string value
+	list<biObject*> L;
 	biObject(const char*);
 	biObject(const char*,char*);
 	biObject(const char*,string*);
+	biObject(string*,string*);
 	biObject(const char*,const char*);
 	virtual string* dump();		// dump object in reloadable form
 	virtual string* eval();		// evaluate (compute) object contents
+	virtual void join(biObject*);
+};
+
+struct biClass: public biObject {
+	biClass(biObject*);
+};
+
+struct biList: public biObject {
+	biList();
+	biList(biObject*);
+	void join(biObject*);
+	string* dump();
 };
 
 struct biString: public biObject {

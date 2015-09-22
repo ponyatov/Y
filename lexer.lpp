@@ -12,11 +12,13 @@
 %option yylineno
 
 %s xx
+%s bb
 
 S	[\+\-]{0,1}
 D	[0-9]+
 
 %%
+\r							{}		/* win/dos eol gluck */
 \\.							T1(C)	/* escaped char */
 #[^\n]*						{}		/* line comment */
 
@@ -24,19 +26,24 @@ D	[0-9]+
 
 \$							{BEGIN(xx); TC(SX);}
 \?							{BEGIN(xx); TC(QX);}
-<xx>[ \t\n]					{BEGIN(INITIAL); TC(C);}
+<xx>[ \t\n]					{BEGIN(INITIAL); TS(S); }
 <xx>:						TC(COLON)
-<xx>{S}{D}					TO("int",NUM)
-<xx>0x[0-9A-Z]+				TO("hex",NUM)
-<xx>0b[01]+					TO("bin",NUM)
-<xx>{S}{D}\.{D}				TO("float",NUM)
-<xx>{S}{D}[eE]{S}{D}		TO("float",NUM)
+<xx>,						TC(COMMA)
+<xx>\(						TC(LP)
+<xx>\)						TC(RP)
+<xx,bb>{S}{D}				TO("int",NUM)
+<xx,bb>0x[0-9A-Z]+			TO("hex",NUM)
+<xx,bb>0b[01]+				TO("bin",NUM)
+<xx,bb>{S}{D}\.{D}			TO("float",NUM)
+<xx,bb>{S}{D}[eE]{S}{D}		TO("float",NUM)
 
 ^\.file[ \t]+[^\n]+				TA(biDirective,DOTFILE)
 ^\.[a-z]+[\+\-]?[ \t]*[^\n]*	TA(biDirective,DOT)
 
-@[a-z0-9_\+\-\*\/]+				TO("sig",SIG)
-<xx>[a-zA-Z_][a-zA-Z0-9_]*		TO("sym",SYM)
+^class[ \t]+						{BEGIN(bb); TS(CLASS);}
+<bb>\n\n							{BEGIN(INITIAL); TS(ENDCLASS); }
+@[a-z0-9_\+\-\*\/]+					TO("sig",SIG)
+<xx,bb>\.?[a-zA-Z_][a-zA-Z0-9_]*	TO("sym",SYM)
 
 [ \t]*->[ \t]*				TS(ARROW)			/* -> cosmetics */
 
