@@ -45,11 +45,13 @@ Directives is documentation markup mainly,
 but can control bI system in other way.
 
 biClass Directive
-	lexer regexp = '\.[a-z]+[ \t]*[^\n]*'
+	lexer regexp = '^\.[a-z]+[\+\-]?[ \t]*[^\n]*'
 	@init {
 		%[class] = %[value] * '\.[a-z]+' [first] # rename class for new object
 		%[value] = %[value] - '^\.[a-z]+[ \t]*' # remove leading .some<space>
 	}
+Directive .file
+	lexer regexp = '^\.file[ \t]+[^\n]+'
 
 Directive object modify themself using first '.some' string from 
 Directive[val] field for dynamic class rename.
