@@ -2,22 +2,22 @@
 default: exec
 
 .PHONY: exec
-exec: bI.blog
+exec: bI.bIog
 
 .PHONY: clean
 clean:
 	rm -rf *~ .*~ ./bI$(EXE) lex.yy.c parser.tab.?pp bI.tex tmp
-	echo -n > bI.blog
+	echo -n > bI.bIog
 
 .PHONY: pdf
 pdf: tmp/bI.pdf
-bI.tex: bI.blog
+bI.tex: bI.bIog
 tmp/bI.pdf: bI.tex
 	mkdir -p tmp
 	pdflatex -output-directory tmp $<
 	pdflatex -output-directory tmp $<
 
-bI.blog: bI.bI ./bI$(EXE)
+bI.bIog: bI.bI ./bI$(EXE)
 	./bI$(EXE) < $< > $@
 
 C = core.cpp lex.yy.c parser.tab.cpp
