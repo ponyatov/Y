@@ -12,6 +12,8 @@
 
 #ifdef __MINGW32__
 #include <direct.h>
+#else
+#include <sys/stat.h>
 #endif // __MINGW32__
 
 using namespace std;

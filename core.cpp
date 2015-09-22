@@ -41,7 +41,11 @@ string* biPair::eval()	{ return new string(*A->eval()+":"+*B->eval()); }
 // module
 
 biModule::biModule(const char*m):biObject("module",m) {
+#ifdef __MINGW32__
 	mkdir(val->c_str());
+#else
+	mkdir(val->c_str(),0744);
+#endif	
 };
 biModule *bi_module = new biModule("tmp");
 
