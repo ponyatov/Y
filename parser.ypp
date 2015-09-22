@@ -10,10 +10,10 @@
 	biObject *o;
 }
 
-%token <c> EOL C SX QX COLON 
-%token <s> S ARROW
-%token <o> NUM SYM STR SIG DOT DOTFILE
-%type <o> ex
+%token	<c>	EOL C SX QX COLON 
+%token	<s> S ARROW
+%token	<o> NUM SYM STR SIG DOT DOTFILE
+%type	<o> ex
 
 %%
 bI :

@@ -79,7 +79,9 @@ string TEX::fix(string s) {
 		case '^':
 		case '[':
 		case ']':
-		case '\\': break;
+		case '<': T+="\\textless "; break;
+		case '>': T+="\\textgreater "; break;
+		case '\\': T+=""; break;
 		case '#': T+="\\#"; break;
 		case '$': T+="\\$"; break;
 		case '%': T+="\\%"; break;
@@ -121,8 +123,8 @@ biDirective::biDirective(char *V):biObject("",V) {
 	if (val->size())
 		while (val->at(0)==' '||val->at(0)=='\t') val->erase(0,1);
 
-	if (*cls==".title") 	tex.title=*val;
-	if (*cls==".author") 	tex.author=*val;
+	if (*cls==".title") 	tex.title=tex.fix(*val);
+	if (*cls==".author") 	tex.author=tex.fix(*val);
 	if (*cls==".sec")		tex.sec(0,*val);
 	if (*cls==".sec+")		tex.sec(+1,*val);
 	if (*cls==".sec-")		tex.sec(-1,*val);

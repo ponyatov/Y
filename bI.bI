@@ -54,9 +54,9 @@ biClass Directive
 Directive object modify themself using first '.some' string from 
 Directive[val] field for dynamic class rename.
 
-.sec \ escape char
+.sec \\ escape char
 
-\ escape char is prefix before any special char marks use this char as is.
+\\ escape char is prefix before any special char marks use this char as is.
 
 .sec Comments
 
