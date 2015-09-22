@@ -32,10 +32,6 @@ struct biObject {				// master class
 	virtual void join(biObject*);
 };
 
-struct biClass: public biObject {
-	biClass(biObject*);
-};
-
 struct biList: public biObject {
 	biList();
 	biList(biObject*);
@@ -59,7 +55,11 @@ struct biDirective: public biObject {
 };
 
 struct biModule: public biObject {
+	FILE *make;
 	biModule(const char*);
+	~biModule();
+	void depends(string,string,string);
+	void o_dep(string);
 };
 extern biModule *bi_module;
 
@@ -73,6 +73,14 @@ struct biFile: public biObject {
 	void W(char);
 };
 extern biFile *bi_file;
+
+struct biClass: public biObject {
+	static const char chead[];
+	biFile *cpp;
+	biFile *hpp;
+	biClass(biObject*);
+	~biClass();
+};
 
 struct TEX {
 	FILE* fh;
