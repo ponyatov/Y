@@ -29,22 +29,10 @@
    </documentation>
   </annotation>
 
-<prototype group="bI language system" name="bI" description="bI script">
-	<location link="bI.hrc"/>
-	<filename>/\.bI$/i</filename>	
-</prototype>
-<prototype group="bI language system" name="bIog" description="bI exec log">
-	<location link="bI.hrc"/>
-	<filename>/\.bIog$/i</filename>	
-</prototype>
-<prototype group="bI language system" name="Flex" description="Flex lexer">
-    <location link="jar:common.jar!scripts/lex.hrc"/>
-	<filename>/\.lpp$/i</filename>	
-</prototype>
-<prototype group="bI language system" name="Bison" description="Bison parser">
-	<location link="bison.hrc"/>
-	<filename>/\.ypp$/i</filename>	
-</prototype>
+  <prototype name="bI" group="bI" description="bI">
+    <location link="/home/ponyatov/Y/bI.hrc"/>
+    <filename>/\.bI$/ix</filename>
+  </prototype>
 
   <!--  main languages  -->
   <prototype name="c" group="main" description="C">
