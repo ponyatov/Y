@@ -74,23 +74,18 @@ struct biFile: public biObject {
 };
 extern biFile *bi_file;
 
-struct biSym: public biObject {
-	string* ref;
-	biSym(char*);
-	string* dump();
-};
-
 struct biClass: public biObject {
 	static const char chead[];
 	biFile *cpp;
 	string hpps;
-	string sup;
+	string super;
 	list<string> fld;
 	biFile *hpp;
+	void init(biObject*);
 	biClass(biObject*);
+	biClass(biObject*,biObject*);
 	~biClass();
-	void super(biSym*);
-	void add(biSym*);
+	string* dump();
 };
 
 extern biClass* bi_class;
