@@ -29,7 +29,7 @@ syntax match Number "\v[\+\-]{0,1}[0-9]+\.[0-9]+"
 syntax region String start="'" end="'"
 
 " composite and classes
-syntax match Function "\v\<[a-z]+:"
+syntax match Function "\v[a-z]+:"
 
 " code inlines
 syntax match Keyword "\v\$"

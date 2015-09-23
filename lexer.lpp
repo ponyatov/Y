@@ -43,7 +43,7 @@ D	[0-9]+
 ^class[ \t]+						{BEGIN(bb); TS(CLASS);}
 <bb>\n\n							{BEGIN(INITIAL); TS(ENDCLASS); }
 @[a-z0-9_\+\-\*\/]+					TO("sig",SIG)
-<xx,bb>\.?[a-zA-Z_][a-zA-Z0-9_]*	TO("sym",SYM)
+<xx,bb>\.?[a-zA-Z_][a-zA-Z0-9_]*	TA(biSym,SYM)
 
 [ \t]*->[ \t]*				TS(ARROW)			/* -> cosmetics */
 

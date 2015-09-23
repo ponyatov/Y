@@ -144,13 +144,14 @@ $biClass $Symbol,id
 Float and integer processing is too different, Number type holds shared 
 semantics.
 
-class Number,num
+class Number
 	lexer regexp (
 		S : '[\-\+]{0,1}'		# optional +/- sign
 		D : '[0-9]+'			# decimal digits group
 	)
 	@dump -> %					# dump it as is
 	@eval -> %					# eval it as is
+class int: Number
 
 Number Integer,int	lexer regexp NUM = '{S}{D}'			# integers like -1 +2
 Number hex			lexer regexp NUM = '0x[0-9A-Z]+'	# hex literals
@@ -271,12 +272,11 @@ module only for sequrity reasons):
 
 .sec+ GUI extension
 
-class Display
+class Rect int Width; int Height
+
+class Display: Rect int ColorDepth; str ID
 
 class Color
-
-class Rect int W; int H; 
-	color F,B
 
 class Window : Rect
 

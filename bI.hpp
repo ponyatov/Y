@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <cassert>
 
-//#include <map>
+#include <map>
 #include <list>
 
 #ifdef __MINGW32__
@@ -74,13 +74,27 @@ struct biFile: public biObject {
 };
 extern biFile *bi_file;
 
+struct biSym: public biObject {
+	string* ref;
+	biSym(char*);
+	string* dump();
+};
+
 struct biClass: public biObject {
 	static const char chead[];
 	biFile *cpp;
+	string hpps;
+	string sup;
+	list<string> fld;
 	biFile *hpp;
 	biClass(biObject*);
 	~biClass();
+	void super(biSym*);
+	void add(biSym*);
 };
+
+extern biClass* bi_class;
+extern map<string,string*> bi_class_reg;
 
 struct TEX {
 	FILE* fh;
