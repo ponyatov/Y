@@ -1,7 +1,7 @@
 au BufNewFile,BufRead *.bI set filetype=bI
-au BufNewFile,BufRead *.blog set filetype=blog
+au BufNewFile,BufRead *.bIog set filetype=bIog
 " autload bI language budle files
-au BufNewFile,BufRead *.bI tabf bI.blog|set filetype=blog|set autoread
+au BufNewFile,BufRead *.bI tabf bI.bIog|set filetype=bIog|set autoread
 "au BufNewFile,BufRead *.bI tabf bI.tex|set filetype=tex|set autoread
 au BufNewFile,BufRead *.bI tabf syntax.vim|set filetype=vim
 au BufNewFile,BufRead *.bI tabf parser.ypp|set filetype=yacc
