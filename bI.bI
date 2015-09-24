@@ -295,7 +295,7 @@ class Window : Rect
 %option noyywrap
 %option yylineno
 
-S	[\\+\\-]{0,1}
+S	[\\+\\-]\?
 D	[0-9]+
 
 %%
@@ -333,17 +333,23 @@ D	[0-9]+
 }
 
 %token	<s>		S EOL COLON
-%type	<s>		ex
+%type	<s>		ex list
 
 %%
 sym :
-	| sym EOL	{ cout << "<eol>\\n\\n"; }
-	| sym ex 	{ cout << *\$2->dump() << *\$2->eval() << "\\n" ; } 
+	| sym EOL		{ cout << "<eol>\\n\\n"; }
+	| sym list		{ cout << *\$2->dump() << *\$2->eval() << "\\n" ; } 
+	| sym ex		{ cout << *\$2->dump() << *\$2->eval() << "\\n" ; } 
 ;
 
 ex :
 	  S				{ \$\$=\$1; }
 	| S COLON S		{ \$\$=new sym("pair",\$1,\$3); }
+;
+
+list : 
+	   ex ex		{ \$\$=new sym("list",\$1,\$2); }
+	 | list ex		{ \$\$=\$1; \$\$->next.push_back(\$2); }
 ;
 %%
 .eof
@@ -415,6 +421,7 @@ string* sym::eval()	{
 	string *S = new string(*val);
 	string delim(" ");
 	if (*cls=="pair") delim=":";
+	if (*cls=="comment") *S = "\#"+*S;
 	int er=0;
 	for (list<sym*>::iterator it=next.begin(); it!=next.end(); it++,er++ )
 		*S += *((*it)->eval())+delim;
@@ -465,7 +472,11 @@ true %T false %F nil %N this/self %
 
 \# pair
 
-1.2:3e5
+1.2:3e5 1:2 3 :4 5: 6
+
+\# list
+1 2
+1 2 3
 
 .eof
 
