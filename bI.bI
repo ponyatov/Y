@@ -289,16 +289,32 @@ class Window : Rect
 .file lexer.lpp
 %{
 \#include "sym.hpp"
-\#define T(X)	{ yylval.s=new sym(yytext); return X; }
+\#define T(C,X)	{ yylval.s=new sym(C,yytext); return X; }
 %}
 
 %option noyywrap
 %option yylineno
 
+S	[\\+\\-]{0,1}
+D	[0-9]+
+
 %%
-\#[^\\n]*		T(S)	/* comment line */
-[ \\t\\r\\n]+	{}		/* drop spaces */
-.				T(S)	/* any undetected data as char symbols */
+\#[^\\n]*				T("comment",S)	/* comment line */
+[ \\t\\r\\n]+			{}				/* drop spaces */
+[\\+\\-\\*\\/\\^]		T("op",S)		/* operator */
+[\\<\\>\\.\\,]			T("op",S)
+[=:;]					T("op",S)
+[\\(\\)\\{\\}\\[\\]]	T("par",S)		/* parens */
+\\"[^\\n\\"]*\\"		T("str",S)		/* string */
+\\'[^\\\n\\']*\\'		T("str",S)		/* string */
+{D}						T("num",S)		/* integer number, no prefix sign */
+0x[a-zA-Z0-9]+			T("num",S)		/* hex number */
+0b[01]+					T("num",S)		/* bin number */
+{D}\\.{D}				T("num",S)		/* float number in dotted form */
+{D}[eE]{S}{D}			T("num",S)		/* float number in exponential form */
+[a-zA-Z_][a-zA-Z_0-9]*	T("sym",S)		/* symbol */
+%[TFN]|%				T("sym",S)		/* special */
+.						T("char",S)		/* any undetected data as char */
 %%
 .eof
 
@@ -318,7 +334,7 @@ class Window : Rect
 
 %%
 sym :
-	| sym S { cout << *\$2->dump() << "\\n" << *\$2->eval() << "\\n\\n" ; } 
+	| sym S { cout << *\$2->dump() << "\\t" << *\$2->eval() << "\\n" ; } 
 ;
 %%
 .eof
@@ -343,7 +359,7 @@ struct sym {
 	string *val;				// symbol value
 	list<sym*> attr;			// attributes
 	list<sym*> next;			// nested symbols (for non-leaf symbol)
-	sym(char*);					// constructor
+	sym(const char*,char*);		// constructor (class,value)
 	virtual string* dump();		// dump symbol
 	virtual string* eval();		// evaluate (compute) symbol into string value
 };
@@ -361,7 +377,11 @@ extern void yyerror(string);
 .file sym.cpp
 \#include "sym.hpp"
 
-sym::sym(char *txt)	{ cls = new string( "sym" ); val = new string( yytext ); }
+sym::sym(const char *C, char *V) { 
+	cls = new string( C ); val = new string( V );
+	if (*cls=="comment") val->erase(0,1); // del \#
+}
+
 string* sym::dump()	{ return new string( "<" + *cls + ":" + *val + ">" ); }
 string* sym::eval()	{ return val; }
 
@@ -371,7 +391,7 @@ void yyerror(string err) {
 }
 
 int main(int argc, char *argv[]) { 
-	cout<<"\# "<<argv[0]<<"\\n\\n"; 
+	cout<<"\\n\# "<<argv[0]<<"\\n\\n"; 
 	return yyparse(); 
 }
 .eof
@@ -381,20 +401,28 @@ int main(int argc, char *argv[]) {
 .file test.bI
 \#!/usr/bin/sym
 \# this is line comment # required by UNIX first script line 
+\#
 
 \# symbols
 this is generic symbols
+But iT _can be in 0Any ClAssical ID form including n00mber_s.
+Leading 01Fdigits treated as number with unknown base.
 
 \# numbers: sym engine treat all number as symbols
 0 -1 +2 -03 04 +05 0x12AFG 0b11010110
-\# but in @eval it shuld be marked with % prefix
-%0 %-1 %+2 %-03 %04 %+05 %0x12AFG %0b11010110
 
 \# special symbols
 
 true %T false %F nil %N this/self %
 
-\# strings: sym 
+/# operators and float numbers
+
++1+-2/03*4.5^-6e+7
+
+\# strings: sym as is
+
+'this " is ' "a ' string"
+
 .eof
 
 .file Makefile
@@ -415,9 +443,13 @@ class Symbol,sym		'generic sym data type'
 	@eval -> str		'string representation of sym value (sym compute)'
 	@load str -> %		'constructor creates symbol object from dump string'
 	lexer {				'lexer constructor uses regexp matching for sym creation'
-		comment = '#[^\\n]*'		'comment line'
-		space = '[ \t\r\n]+':%N		'drop any spaces'
-		char = '.':%				'treat any char as symbol by default'
+		comment = '#[^\\n]*'			'comment line'
+		space = '[ \t\r\n]+':%N			'drop any spaces'
+		sym = '[a-zA-Z_][a-zA-Z_0-9]*'	'symbol'
+		special = '%[TFN]'				'special symbols true/false/nil'
+		operator = '[\+\-\*\n]'			'operator'
+		num = '[a-zA-Z0-9]+'			'number in any base, no prefix sign'
+		char = '.':%					'treat any char as symbol by default'
 	} -> %
 
 .sec- Attributes

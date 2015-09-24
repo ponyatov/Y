@@ -51,7 +51,7 @@ D	[0-9]+
 
 [ \t]*->[ \t]*				TS(ARROW)			/* -> cosmetics */
 
-\'[^\']*\'					TA(biString,STR)
+<xx,bb>\'[^\']*\'			TA(biString,STR)
 
 \n							TC(EOL)
 .							TC(C)
