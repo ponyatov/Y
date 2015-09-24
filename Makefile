@@ -4,7 +4,7 @@ default: sym
 .PHONY: sym
 sym: sym$(EXE)
 	sym/sym$(EXE) < sym/test.bI > bI.bIog
-	sym/sym$(EXE) < lex.yy.c >> bI.bIog
+#	sym/sym$(EXE) < lex.yy.c >> bI.bIog
 sym$(EXE): bI.bIog
 	cd sym &&\
 	flex lexer.lpp &&\

@@ -300,10 +300,10 @@ D	[0-9]+
 
 %%
 \#[^\\n]*				T("comment",S)	/* comment line */
-[ \\t\\r\\n]+			{}				/* drop spaces */
 [\\+\\-\\*\\/\\^]		T("op",S)		/* operator */
 [\\<\\>\\.\\,]			T("op",S)
-[=:;]					T("op",S)
+[=;]					T("op",S)
+:						T("colon",COLON)
 [\\(\\)\\{\\}\\[\\]]	T("par",S)		/* parens */
 \\"[^\\n\\"]*\\"		T("str",S)		/* string */
 \\'[^\\\n\\']*\\'		T("str",S)		/* string */
@@ -314,6 +314,8 @@ D	[0-9]+
 {D}[eE]{S}{D}			T("num",S)		/* float number in exponential form */
 [a-zA-Z_][a-zA-Z_0-9]*	T("sym",S)		/* symbol */
 %[TFN]|%				T("sym",S)		/* special */
+[ \\t\\r]+				{}				/* drop spaces */
+\\n+					T("eol",EOL)
 .						T("char",S)		/* any undetected data as char */
 %%
 .eof
@@ -330,11 +332,18 @@ D	[0-9]+
 	sym *s;
 }
 
-%token <s> S
+%token	<s>		S EOL COLON
+%type	<s>		ex
 
 %%
 sym :
-	| sym S { cout << *\$2->dump() << "\\t" << *\$2->eval() << "\\n" ; } 
+	| sym EOL	{ cout << "<eol>\\n\\n"; }
+	| sym ex 	{ cout << *\$2->dump() << *\$2->eval() << "\\n" ; } 
+;
+
+ex :
+	  S				{ \$\$=\$1; }
+	| S COLON S		{ \$\$=new sym("pair",\$1,\$3); }
 ;
 %%
 .eof
@@ -360,7 +369,8 @@ struct sym {
 	list<sym*> attr;			// attributes
 	list<sym*> next;			// nested symbols (for non-leaf symbol)
 	sym(const char*,char*);		// constructor (class,value)
-	virtual string* dump();		// dump symbol
+	sym(const char*,sym*,sym*);
+	virtual string* dump(int depth=0);	// dump symbol
 	virtual string* eval();		// evaluate (compute) symbol into string value
 };
 
@@ -382,11 +392,39 @@ sym::sym(const char *C, char *V) {
 	if (*cls=="comment") val->erase(0,1); // del \#
 }
 
-string* sym::dump()	{ return new string( "<" + *cls + ":" + *val + ">" ); }
-string* sym::eval()	{ return val; }
+sym::sym(const char *C, sym* S1, sym* S2) {
+	cls = new string(C); val = new string();
+	next.push_back(S1);
+	next.push_back(S2);
+}
+
+string sml(string x,int y) {
+	string s;
+	for (int i=0;i<y;i++) s+=x;
+	return s;
+}
+
+string* sym::dump(int depth) {
+	string *S = new string(sml("\\t",depth)+"<" + *cls + ":" + *val + ">\\n");
+	for (list<sym*>::iterator it=next.begin(); it!=next.end(); it++ )
+		*S += *((*it)->dump(depth+1));
+	return S;
+}
+
+string* sym::eval()	{ 
+	string *S = new string(*val);
+	string delim(" ");
+	if (*cls=="pair") delim=":";
+	int er=0;
+	for (list<sym*>::iterator it=next.begin(); it!=next.end(); it++,er++ )
+		*S += *((*it)->eval())+delim;
+	if (er) S->erase((S->size())-1,1);
+	return S; 
+}
 
 void yyerror(string err) { 
 	cerr<<"\\n"<<err<<" \# "<<yylineno<<" : "<<yytext<<"\\n\\n";
+	cout<<"\\n"<<err<<" \# "<<yylineno<<" : "<<yytext<<"\\n\\n";
 	exit(-1);
 }
 
@@ -422,6 +460,12 @@ true %T false %F nil %N this/self %
 \# strings: sym as is
 
 'this " is ' "a ' string"
+
+\# composite data
+
+\# pair
+
+1.2:3e5
 
 .eof
 
@@ -474,5 +518,6 @@ Every symbol has optional List field which can contain links to other symbols.
 
 Dump can be user for objects serializaton, storage, network messaging,..
 using @load constructor method.
+
 
 
