@@ -26,7 +26,8 @@ syntax match Number "\v[\+\-]{0,1}[0-9]+"
 syntax match Number "\v[\+\-]{0,1}[0-9]+\.[0-9]+"
 
 " strings
-syntax region String start="'" end="'"
+"syntax region String start="'" end="'"
+syntax match String "['"][a-zA-Z0-9\[\]\^\\\ \(\-\/\.]*"
 
 " composite and classes
 syntax match Function "\v[a-z]+:"
