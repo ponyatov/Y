@@ -36,8 +36,11 @@ D	[0-9]+
 <xx,bb>0b[01]+				TO("bin",NUM)
 <xx,bb>{S}{D}\.{D}			TO("float",NUM)
 <xx,bb>{S}{D}[eE]{S}{D}		TO("float",NUM)
+<xx,bb>%N					TO("%N",SYM)
+<xx,bb>%					TO("%",SYM)
 
 ^\.file[ \t]+[^\n]+				TA(biDirective,DOTFILE)
+^\.module[ \t]+[^\n]+			TA(biDirective,DOTMOD)
 ^\.[a-z]+[\+\-]?[ \t]*[^\n]*	TA(biDirective,DOT)
 
 ^class[ \t]+						{BEGIN(bb); TS(CLASS);}

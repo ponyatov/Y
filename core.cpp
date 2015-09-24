@@ -224,10 +224,12 @@ biDirective::biDirective(char *V):biObject("",V) {
 	if (*cls==".sec")		tex.sec(0,*val);
 	if (*cls==".sec+")		tex.sec(+1,*val);
 	if (*cls==".sec-")		tex.sec(-1,*val);
+	if (*cls==".module")	{
+		if (bi_module) delete bi_module; bi_module=new biModule(val->c_str()); }
 	if (*cls==".file")		{ 
-		if (bi_file) delete bi_file; bi_file=new biFile(val,'w');} 
+		if (bi_file) delete bi_file; bi_file=new biFile(val,'w'); }
 	if (*cls==".eof")		{
-		if (bi_file) delete bi_file; bi_file=NULL;} 
+		if (bi_file) delete bi_file; bi_file=NULL; }
 }
 
 // writers

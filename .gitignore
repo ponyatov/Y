@@ -5,6 +5,7 @@ bI
 bI.bIog
 bI.tex
 /tmp/
+/sym/
 lex.yy.c
 parser.tab.*
 /2del/

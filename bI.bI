@@ -280,3 +280,167 @@ class Color
 
 class Window : Rect
 
+.sec+ Symbolic computation engine
+
+.module sym
+
+.sec lexer
+
+.file lexer.lpp
+%{
+\#include "sym.hpp"
+\#define T(X)	{ yylval.s=new sym(yytext); return X; }
+%}
+
+%option noyywrap
+%option yylineno
+
+%%
+\#[^\\n]*		T(S)	/* comment line */
+[ \\t\\r\\n]+	{}		/* drop spaces */
+.				T(S)	/* any undetected data as char symbols */
+%%
+.eof
+
+.sec parser
+.file parser.ypp
+%{
+\#include "sym.hpp"
+%}
+
+%defines 
+
+%union {
+	sym *s;
+}
+
+%token <s> S
+
+%%
+sym :
+	| sym S { cout << *\$2->dump() << "\\n" << *\$2->eval() << "\\n\\n" ; } 
+;
+%%
+.eof
+
+.sec C++ runtime
+
+.file sym.hpp
+\#ifndef _H_SYM
+\#define _H_SYM
+
+\#include <iostream>
+\#include <cstdio>
+\#include <cstdlib>
+\#include <cassert>
+\#include <map>
+\#include <list>
+
+using namespace std;
+
+struct sym {
+	string *cls;				// class name
+	string *val;				// symbol value
+	list<sym*> attr;			// attributes
+	list<sym*> next;			// nested symbols (for non-leaf symbol)
+	sym(char*);					// constructor
+	virtual string* dump();		// dump symbol
+	virtual string* eval();		// evaluate (compute) symbol into string value
+};
+
+extern int yylex();
+extern int yyparse();
+extern int yylineno;
+extern char *yytext;
+extern void yyerror(string);
+\#include "parser.tab.hpp"
+
+\#endif // _H_SYM
+.eof
+
+.file sym.cpp
+\#include "sym.hpp"
+
+sym::sym(char *txt)	{ cls = new string( "sym" ); val = new string( yytext ); }
+string* sym::dump()	{ return new string( "<" + *cls + ":" + *val + ">" ); }
+string* sym::eval()	{ return val; }
+
+void yyerror(string err) { 
+	cerr<<"\\n"<<err<<" \# "<<yylineno<<" : "<<yytext<<"\\n\\n";
+	exit(-1);
+}
+
+int main(int argc, char *argv[]) { 
+	cout<<"\# "<<argv[0]<<"\\n\\n"; 
+	return yyparse(); 
+}
+.eof
+
+.sec Test suite
+
+.file test.bI
+\#!/usr/bin/sym
+\# this is line comment # required by UNIX first script line 
+
+\# symbols
+this is generic symbols
+
+\# numbers: sym engine treat all number as symbols
+0 -1 +2 -03 04 +05 0x12AFG 0b11010110
+\# but in @eval it shuld be marked with % prefix
+%0 %-1 %+2 %-03 %04 %+05 %0x12AFG %0b11010110
+
+\# special symbols
+
+true %T false %F nil %N this/self %
+
+\# strings: sym 
+.eof
+
+.file Makefile
+.eof
+
+.sec Generic Symbol
+
+.sec Object
+
+All elemenents in sym is objects.
+
+class Symbol,sym		'generic sym data type'
+	string Class,cls	'class name'
+	string Value,val	'value for leaf symbols'
+	list<sym> Attrib,attr 'list of optional symbol attributes'
+	list<sym> Nest,nest	'list for non-leaf (nested) symbols'
+	@dump -> str		'string representation of internal structure (sym dump)'
+	@eval -> str		'string representation of sym value (sym compute)'
+	@load str -> %		'constructor creates symbol object from dump string'
+	lexer {				'lexer constructor uses regexp matching for sym creation'
+		comment = '#[^\\n]*'		'comment line'
+		space = '[ \t\r\n]+':%N		'drop any spaces'
+		char = '.':%				'treat any char as symbol by default'
+	} -> %
+
+.sec- Attributes
+
+Every symbol can have optional assigned attributes. 
+Attributes widely used as misc data element markers in syntax analisis, 
+XML processing and data storage, thus they are supported by special list field.
+
+.sec- Leaf objects
+
+Every symbol has two string fields: Class name and Value.
+
+.sec- Non-leaf objects
+
+Every symbol has optional List field which can contain links to other symbols.
+
+.sec- Serialization and computing
+
+.list Every symbol can be represented in two forms using signals
+.li @eval compute symbol (recursively) into string Value.
+.li @dump dump symbol into string representation
+
+Dump can be user for objects serializaton, storage, network messaging,..
+using @load constructor method.
+
+
