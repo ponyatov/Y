@@ -31,6 +31,8 @@ struct biObject {				// master class
 	virtual string* eval();				// evaluate (compute) object contents
 };
 
+extern map<string,biObject*> env;
+
 struct biList: public biObject {
 	biList();
 	biList(biObject*);
@@ -57,15 +59,20 @@ struct biFile: public biObject {
 	void W(string);
 	void W(char);
 };
+struct biTest: public biFile {
+	biTest(string*);
+};
 extern biFile *bi_file;
 
 struct biModule: public biObject {
 	FILE *make;	FILE *cpp; FILE *hpp;
 	biModule(const char*);
 	~biModule();
+	string head; string body; string hbody;
 	bool lex_used;
 	void files(string);
 	void depends(string,string,string);
+	void headmake(string,string,string);
 };
 extern biModule *bi_module;
 
@@ -114,6 +121,8 @@ string autogen(string pfx, string obj="");
 void W(string*, bool tofile=true);
 void W(string, bool tofile=true);
 void W(char, bool tofile=true);
+
+void terminator();
 
 #endif // _bI_H
 

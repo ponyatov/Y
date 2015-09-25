@@ -1,4 +1,43 @@
 #!/Y
+.sec Pure symbolic
+
+.module pure
+
+lexer sym
+	bypass = 'cout<<yytext'
+	anychar = '.':bypass
+	comment = '\#[^\n]\n':bypass
+	options = 'noyywrap','yylineno'
+	opt = prefix, '%option ', options
+
+.file sym.lpp
+/* ?bILS */
+/* ?AUTHOR */
+?AUTOGEN
+%{
+\#include "?MODULE.hpp"
+\#define T(C,X)	{ yylval.s=new sym(C,yytext); return X; }
+%}
+?sym.opt
+%%
+\#[^\\n]*\\n	{ ?sym.bypass; }
+[ \\t\\r\\n]+	{}
+.				{ cout<<yytext<<"\\n"; }
+%%
+.eof
+
+
+.test empty
+.eof
+
+.test simplest
+simplest data types
+
+numbers: 	0 -1 +2 -03 +004 0056 -1.2 +3e-4
+symbols:	all Other <Data> (and) [any,1212,dsas] <class:types>
+.eof
+
+.end
 
 .title		bI dynamic language system
 .author		Dmitry Ponyatov <dponyatov@gmail.com>
