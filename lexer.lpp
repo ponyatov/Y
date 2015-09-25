@@ -11,8 +11,12 @@
 %option noyywrap
 %option yylineno
 
-%s xx
-%s bb
+			/* S-expression */
+%s ss		
+			/* class definition */
+%s cc		
+			/* lexer defenition */
+%s ll		
 
 S	[\+\-]{0,1}
 D	[0-9]+
@@ -24,34 +28,38 @@ D	[0-9]+
 
 [a-z]+@[a-z\.]+				TS(S)	/* indoc email vs signal fix */
 
-\$							{BEGIN(xx); TC(SX);}
-\?							{BEGIN(xx); TC(QX);}
-<xx>[ \t\n]					{BEGIN(INITIAL); TS(S); }
-<xx,bb>:					TC(COLON)
-<xx>,						TC(COMMA)
-<xx>\(						TC(LP)
-<xx>\)						TC(RP)
-<xx,bb>{S}{D}				TO("int",NUM)
-<xx,bb>0x[0-9A-Z]+			TO("hex",NUM)
-<xx,bb>0b[01]+				TO("bin",NUM)
-<xx,bb>{S}{D}\.{D}			TO("float",NUM)
-<xx,bb>{S}{D}[eE]{S}{D}		TO("float",NUM)
-<xx,bb>%N					TO("%N",SYM)
-<xx,bb>%					TO("%",SYM)
+\$							{BEGIN(ss); TC(SX);}
+\?							{BEGIN(ss); TC(QX);}
+<ss>[ \t\n]					{BEGIN(INITIAL); TS(S); }
+<ss,cc>:					TC(COLON)
+<ss>,						TC(COMMA)
+<ss>\(						TC(LP)
+<ss>\)						TC(RP)
+<ss,cc>{S}{D}				TO("int",NUM)
+<ss,cc>0x[0-9A-Z]+			TO("hex",NUM)
+<ss,cc>0b[01]+				TO("bin",NUM)
+<ss,cc>{S}{D}\.{D}			TO("float",NUM)
+<ss,cc>{S}{D}[eE]{S}{D}		TO("float",NUM)
+<ss,cc>%N					TO("%N",SYM)
+<ss,cc>%					TO("%",SYM)
 
 ^\.file[ \t]+[^\n]+				TA(biDirective,DOTFILE)
 ^\.module[ \t]+[^\n]+			TA(biDirective,DOTMOD)
 ^\.[a-z]+[\+\-]?[ \t]*[^\n]*	TA(biDirective,DOT)
 
-^class[ \t]+						{BEGIN(bb); TS(CLASS);}
-<bb>\n\n							{BEGIN(INITIAL); TS(ENDCLASS); }
-<bb>[ \t;\n]						{}
+^class[ \t]+						{BEGIN(cc); TS(CLASS);}
+<cc>\n\n							{BEGIN(INITIAL); TS(ENDCLASS); }
+<cc>[ \t;\n]						{}
+
+^lexer[ \t]+						{BEGIN(ll); TS(LEXER);}
+<ll>\n\n							{BEGIN(INITIAL); TS(ENDLEX);}
+
 @[a-z0-9_\+\-\*\/]+					TO("sig",SIG)
-<xx,bb>\.?[a-zA-Z_][a-zA-Z0-9_]*	TO("sym",SYM)
+<ss,cc,ll>\.?[a-zA-Z_][a-zA-Z0-9_]*	TO("sym",SYM)
 
 [ \t]*->[ \t]*				TS(ARROW)			/* -> cosmetics */
 
-<xx,bb>\'[^\']*\'			TA(biString,STR)
+<ss,cc>\'[^\']*\'			TA(biString,STR)
 
 \n							TC(EOL)
 .							TC(C)

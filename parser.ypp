@@ -11,7 +11,7 @@
 }
 
 %token	<c>	EOL C SX QX COLON COMMA LP RP BBEOL
-%token	<s> S ARROW CLASS ENDCLASS
+%token	<s> S ARROW CLASS ENDCLASS LEXER ENDLEX
 %token	<o> NUM SYM STR SIG DOT DOTFILE DOTMOD
 %type	<o> ex list
 
@@ -26,6 +26,8 @@ bI :
 	| bI CLASS SYM COLON SYM	{ W((new biClass($3,$5))->dump()); }
 	| bI CLASS SYM				{ W((new biClass($3))->dump()); }
 	| bI ENDCLASS				{ W("<end:class>"); W($2); } 
+	| bI LEXER SYM 				{ W((new biLexer($3))->dump()); }
+	| bI ENDLEX					{ W("<end:lexer>"); W($2); } 
 	| bI ex						{ W($2->dump()); }
 	| bI ARROW					{ W(" -> "); /* -> cosmetics */}
 	| bI EOL					{ W($2); }

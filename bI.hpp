@@ -54,15 +54,6 @@ struct biDirective: public biObject {
 	biDirective(char*);
 };
 
-struct biModule: public biObject {
-	FILE *make;
-	biModule(const char*);
-	~biModule();
-	void depends(string,string,string);
-	void o_dep(string);
-};
-extern biModule *bi_module;
-
 struct biFile: public biObject {
 	FILE *fh;
 	char mode;
@@ -74,8 +65,16 @@ struct biFile: public biObject {
 };
 extern biFile *bi_file;
 
+struct biModule: public biObject {
+	FILE *make;	FILE *cpp; FILE *hpp;
+	biModule(const char*);
+	~biModule();
+	void files(string);
+	void depends(string,string,string);
+};
+extern biModule *bi_module;
+
 struct biClass: public biObject {
-	static const char chead[];
 	biFile *cpp;
 	string hpps;
 	string super;
@@ -90,6 +89,13 @@ struct biClass: public biObject {
 
 extern biClass* bi_class;
 extern map<string,string*> bi_class_reg;
+
+struct biLexer: public biObject {
+	biFile *lpp; biFile *hpp;
+	biLexer(biObject*);
+	~biLexer();
+};
+extern biLexer *bi_lexer;
 
 struct TEX {
 	FILE* fh;
@@ -109,6 +115,7 @@ extern int yyparse();
 extern void yyerror(string);
 #include "parser.tab.hpp"
 
+string autogen(string pfx, string obj="");
 void W(string*, bool tofile=true);
 void W(string, bool tofile=true);
 void W(char, bool tofile=true);

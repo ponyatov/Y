@@ -35,7 +35,7 @@ syntax match Function "\v[a-z]+:"
 " code inlines
 syntax match Keyword "\v\$"
 syntax match Keyword "\v\?"
-syntax match Keyword "\vclass "
+syntax match Keyword "\v(class|lexer) "
 
 " dot-commands
 syntax match Todo "\v\.[a-z]+\{?[ \t]*"

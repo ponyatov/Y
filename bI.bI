@@ -320,6 +320,8 @@ D	[0-9]+
 %%
 .eof
 
+lexer sym
+
 .sec parser
 .file parser.ypp
 %{
@@ -356,7 +358,7 @@ list :
 
 .sec C++ runtime
 
-.file sym.hpp
+.file symsym.hpp
 \#ifndef _H_SYM
 \#define _H_SYM
 
@@ -390,7 +392,7 @@ extern void yyerror(string);
 \#endif // _H_SYM
 .eof
 
-.file sym.cpp
+.file symsym.cpp
 \#include "sym.hpp"
 
 sym::sym(const char *C, char *V) { 
@@ -478,9 +480,6 @@ true %T false %F nil %N this/self %
 1 2
 1 2 3
 
-.eof
-
-.file Makefile
 .eof
 
 .sec Generic Symbol

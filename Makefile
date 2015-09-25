@@ -1,5 +1,5 @@
 .PHONY: default
-default: sym
+default: exec
 
 .PHONY: sym
 sym: sym$(EXE)
