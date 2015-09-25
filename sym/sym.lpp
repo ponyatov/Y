@@ -8,11 +8,15 @@
 %option yylineno
 
 %%
-\.module		TS("directive",MODULE)
-\.file			TS("directive",FFILE)
-\.[a-z]+		TS("directive",S)
-[a-zA-Z0-9]+	TS("sym",S)
-\n				TC(EOL);
+[\r]			{}
+^\.sec[^\n]+\n	{W(yytext);}
+^\.module		TS("directive",MODULE)
+^\.file			TS("directive",FFILE)
+^\.eof			TS("directive",FEOF)
+^\.[a-z]+		TS("directive",S)
+[a-zA-Z0-9_]+	TS("sym",S)
+[\+\-\*\/\<\>]	TS("op",S)
+\n				TC(EOL)
 .				{W(yytext);}
 %%
 

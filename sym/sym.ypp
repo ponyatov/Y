@@ -14,10 +14,9 @@
 
 %%
 sym :
-	| sym MODULE S		{ W($2->dump()); W($3->dump()); 
-		W(" -> "); W(module($2,$3).dump()); }
-	| sym FFILE  S EOL	{ W($2->dump()); W($3->dump()); 
-		W(" -> "); W(ffile ($2,$3).dump(),false); W($4,false); }
+	| sym MODULE S		{ W(module($2,$3).dump()); }
+	| sym FFILE S EOL	{ W((new ffile($2,$3))->dump(),false); }
+	| sym FEOF			{ W($2,false); if (curr_file) delete curr_file; }
 	| sym EOL			{ W($2); }
 	| sym S				{ W($2); }
 ;

@@ -5,4 +5,5 @@ sym
 lex.yy.c
 sym.tab.?pp
 *.log
+/tmp/
 

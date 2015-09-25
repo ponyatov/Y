@@ -1,5 +1,10 @@
 
-.module sym
+.module tmp
+
+.sec simple numbers
+
+0 -1 +2 3 -04 +005 0x12AF 0b1101
+-1.2 +03.40 -3e+5 +03E-007
 
 .file Makefile
 sym.log: sym.sym ./sym$(EXE) 
@@ -15,6 +20,21 @@ sym.tab.cpp: sym.ypp
 lex.yy.c: sym.lpp
 	flex $<
 .eof
+
+.sec Pascal program sample
+
+PROGRAM NOMER_19;
+    VAR S,A: REAL;
+     D,I: INTEGER;
+     BEGIN
+     1: D := 20;  2: READ(A);
+      FOR I := 0 TO D DO 
+      BEGIN
+         S := 3.141*I-A; {тело цикла}
+        WRITE(S) 
+      END; IF D >= S THEN 
+                 GOTO 1 ELSE GOTO 2 
+    END.
 
 .end
 

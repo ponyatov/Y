@@ -11,4 +11,3 @@ sym.tab.cpp: sym.ypp
 	bison $<
 lex.yy.c: sym.lpp
 	flex $<
-
