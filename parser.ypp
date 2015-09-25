@@ -13,8 +13,7 @@
 %token	<c>	EOL C SX QX COLON COMMA LP RP BBEOL
 %token	<s> S ARROW CLASS ENDCLASS LEXER ENDLEX
 %token	<o> NUM SYM STR SIG DOT DOTFILE DOTMOD
-%type	<o> ex list
-
+%type	<o> ex pair list lexer rules class
 %%
 bI :
    	| bI SX ex					{ W($2); W($3->dump()); }
@@ -23,11 +22,10 @@ bI :
 	| bI QX list				{ W($2); W($3->dump()); }
 	| bI DOTFILE EOL			{ W($2->dump(),false); W($3,false); }
 	| bI DOTMOD  EOL			{ W($2->dump(),false); W($3,false); }
-	| bI CLASS SYM COLON SYM	{ W((new biClass($3,$5))->dump()); }
-	| bI CLASS SYM				{ W((new biClass($3))->dump()); }
-	| bI ENDCLASS				{ W("<end:class>"); W($2); } 
-	| bI LEXER SYM 				{ W((new biLexer($3))->dump()); }
-	| bI ENDLEX					{ W("<end:lexer>"); W($2); } 
+	| bI class 					{ W(*$2->dump()); }
+	| bI lexer 					{ W(*$2->dump()); }
+	| bI ENDCLASS				{ W("\n"); } 
+	| bI ENDLEX					{ W("\n"); } 
 	| bI ex						{ W($2->dump()); }
 	| bI ARROW					{ W(" -> "); /* -> cosmetics */}
 	| bI EOL					{ W($2); }
@@ -35,10 +33,26 @@ bI :
 	| bI S						{ W($2); }
 ;
 
+class : 
+	  CLASS SYM 				{ $$ = new biClass($2); }
+	| class SYM					{ $$ = $1; $$->L.push_back($2); }
+	| class pair				{ $$ = $1; $$->L.push_back($2); }
+;
+
+lexer : LEXER SYM rules			{ $$ = new biLexer($2); $$->L.push_back($3); }
+;
+
+rules : 				{ $$ = new biList(); }
+	| rules list		{ $$ = $1; $$->L.push_back($2); }
+;
+
 list :
-	  LP ex RP			{ $$=new biList($2); }	
-	| ex COMMA ex		{ $$=new biList($1); $$->join($3); }
-	| list COMMA ex		{ $$=$1; $$->join($3); }
+	  LP ex RP			{ $$=new biList($2); }
+	| ex COMMA ex		{ $$=new biList($1); $$->L.push_back($3); }
+	| list COMMA ex		{ $$=$1; $$->L.push_back($3); }
+;
+
+pair : ex COLON ex		{ $$=new biPair($1,$3); } 
 ;
 
 ex :
@@ -47,8 +61,7 @@ ex :
 	| SIG
 	| DOT
 	| SYM
-	| ex COLON ex		{ $$=new biPair($1,$3); }
-	| SYM SYM			{ $$=new biPair($1,$2); }
+	| pair
 ;
 %%
 

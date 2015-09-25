@@ -45,13 +45,14 @@ Directives is documentation markup mainly,
 but can control bI system in other way.
 
 class Directive
-	lexer regexp = '^\.[a-z]+[\+\-]?[ \t]*[^\n]*'
-	@init {
-		%[class] = %[value] * '\.[a-z]+' [first] # rename class for new object
-		%[value] = %[value] - '^\.[a-z]+[ \t]*' # remove leading .some<space>
-	}
-class .file: Directive
-	lexer regexp = '^\.file[ \t]+[^\n]+'
+#	lexer regexp = '^\.[a-z]+[\+\-]?[ \t]*[^\n]*'
+#	@init {
+#		%[class] = %[value] * '\.[a-z]+' [first] # rename class for new object
+#		%[value] = %[value] - '^\.[a-z]+[ \t]*' # remove leading .some<space>
+#	}
+class .file
+#: Directive
+#	lexer regexp = '^\.file[ \t]+[^\n]+'
 
 Directive object modify themself using first '.some' string from 
 Directive[val] field for dynamic class rename.
@@ -67,7 +68,7 @@ Comments must be removed from output.
 
 class Comment
 
-class LineComment:Comment lexer regexp = '#[^\n]*'
+#class LineComment:Comment lexer regexp = '#[^\n]*'
 
 .sec \$ (dump) and \? (eval) prefixes
 
@@ -90,7 +91,7 @@ constructor for serialization work.
 Elements starting with . is directives, controls mainly document generation,
 but can control other language system functions.
 
-class Directive lexer regexp DOT = '\.[a-z]+[\+\-]?[ \t]+[^\n]*'
+#class Directive lexer regexp DOT = '\.[a-z]+[\+\-]?[ \t]+[^\n]*'
 
 .sec \.title: current (sub)module title.
 .sec \.author: author marker
@@ -144,14 +145,14 @@ $biClass $Symbol,id
 Float and integer processing is too different, Number type holds shared 
 semantics.
 
-class Number
-	lexer regexp (
-		S : '[\-\+]{0,1}'		# optional +/- sign
-		D : '[0-9]+'			# decimal digits group
-	)
-	@dump -> %					# dump it as is
-	@eval -> %					# eval it as is
-class int: Number
+#class Number
+#	lexer regexp (
+#		S : '[\-\+]{0,1}'		# optional +/- sign
+#		D : '[0-9]+'			# decimal digits group
+#	)
+#	@dump -> %					# dump it as is
+#	@eval -> %					# eval it as is
+#class int: Number
 
 Number Integer,int	lexer regexp NUM = '{S}{D}'			# integers like -1 +2
 Number hex			lexer regexp NUM = '0x[0-9A-Z]+'	# hex literals
@@ -231,9 +232,9 @@ All objects includes two required vars: name and value.
 
 .sec+ Containers (composite types)
 
-class Container
-	@size	-> int	# content size
-	@+=		-> %	# add element
+#class Container
+#	@size	-> int	# content size
+#	@+=		-> %	# add element
 
 .sec Pair
 
@@ -272,13 +273,13 @@ module only for sequrity reasons):
 
 .sec+ GUI extension
 
-class Rect int Width; int Height
+# class Rect int Width; int Height
 
-class Display: Rect int ColorDepth; str ID
+#class Display: Rect int ColorDepth; str ID
 
-class Color
+#class Color
 
-class Window : Rect
+#class Window : Rect
 
 .sec+ Symbolic computation engine
 
@@ -320,7 +321,18 @@ D	[0-9]+
 %%
 .eof
 
-lexer sym
+class file
+	name
+	mode
+
+class lexer
+	file : lpp
+	file : hpp
+
+#lexer sym
+#	'\#[^\\n]*'	,	'comment'	,	COMMENT
+#	'[0-9]+'	,	'num'		,	NUM
+
 
 .sec parser
 .file parser.ypp
@@ -488,7 +500,7 @@ true %T false %F nil %N this/self %
 
 All elemenents in sym is objects.
 
-class Symbol,sym		'generic sym data type'
+clazz Symbol,sym		'generic sym data type'
 	string Class,cls	'class name'
 	string Value,val	'value for leaf symbols'
 	list<sym> Attrib,attr 'list of optional symbol attributes'
@@ -530,4 +542,5 @@ Dump can be user for objects serializaton, storage, network messaging,..
 using @load constructor method.
 
 
+$1,2,3
 

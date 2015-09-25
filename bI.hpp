@@ -27,16 +27,13 @@ struct biObject {				// master class
 	biObject(const char*,string*);
 	biObject(string*,string*);
 	biObject(const char*,const char*);
-	virtual string* dump();		// dump object in reloadable form
-	virtual string* eval();		// evaluate (compute) object contents
-	virtual void join(biObject*);
+	virtual string* dump(int depth=0);	// dump object in reloadable form
+	virtual string* eval();				// evaluate (compute) object contents
 };
 
 struct biList: public biObject {
 	biList();
 	biList(biObject*);
-	void join(biObject*);
-	string* dump();
 };
 
 struct biString: public biObject {
@@ -44,10 +41,7 @@ struct biString: public biObject {
 };
 
 struct biPair: public biObject {
-	biObject *A; biObject *B; 
 	biPair(biObject*,biObject*);
-	string* dump();
-	string* eval();
 };
 
 struct biDirective: public biObject {
@@ -59,7 +53,7 @@ struct biFile: public biObject {
 	char mode;
 	biFile(string*,char);
 	~biFile();
-	string *dump();
+	string *dump(int depth=0);
 	void W(string);
 	void W(char);
 };
@@ -69,6 +63,7 @@ struct biModule: public biObject {
 	FILE *make;	FILE *cpp; FILE *hpp;
 	biModule(const char*);
 	~biModule();
+	bool lex_used;
 	void files(string);
 	void depends(string,string,string);
 };
@@ -84,7 +79,7 @@ struct biClass: public biObject {
 	biClass(biObject*);
 	biClass(biObject*,biObject*);
 	~biClass();
-	string* dump();
+	string* dump(int depth=0);
 };
 
 extern biClass* bi_class;

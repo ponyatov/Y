@@ -2,35 +2,21 @@
 
 // object
 
-biObject::biObject(const char* C) { 
-	cls = new string(C);
-	val = new string();
-}
+biObject::biObject(const char* C) { cls = new string(C); val = new string(); }
+biObject::biObject(const char* C,const char* V) { cls = new string(C); val = new string(V); }
+biObject::biObject(const char* C,char* V) { cls = new string(C); val = new string(V); }
+biObject::biObject(const char* C,string* V) { cls = new string(C); val = V; }
+biObject::biObject(string* C,string* V) { cls = C; val = V; }
 
-biObject::biObject(const char* C,const char* V) { 
-	cls = new string(C);
-	val = new string(V);
-}
+string smux(string x,int y) { string s; for (int i=0;i<y;i++) s+=x; return s; }
 
-biObject::biObject(const char* C,char* V) { 
-	cls = new string(C);
-	val = new string(V);
+string* biObject::dump(int depth) {
+	string *S = new string(smux("\t",depth)+"<" + *cls + ":" + *val + ">\n");
+	for (list<biObject*>::iterator it=L.begin(); it!=L.end(); it++ )
+		*S += *((*it)->dump(depth+1));
+	return S;
 }
-
-biObject::biObject(const char* C,string* V) { 
-	cls = new string(C);
-	val = V;
-}
-
-biObject::biObject(string* C,string* V) { 
-	cls = C;
-	val = V;
-}
-
-string* biObject::dump()	{ return new string("<"+*cls+":"+*val+">"); }
 string* biObject::eval()	{ return val; }
-
-void biObject::join(biObject*)	{}
 
 // generic class
 
@@ -61,7 +47,7 @@ biClass::~biClass()	{
 	delete cpp; bi_class=NULL; 
 	delete hpp;
 }
-string* biClass::dump() {
+string* biClass::dump(int depth) {
 	if (super.size())	return new string("<"+*cls+":"+*val+",super:"+super+">");
 	else				return biObject::dump();
 }
@@ -71,18 +57,8 @@ map<string,string*> bi_class_reg;
 
 // list
 
-biList::biList():biObject("list","()")				{}
-biList::biList(biObject* X):biObject("list","()")	{ join(X); }
-void biList::join(biObject* X)						{ L.push_back(X); }
-
-string* biList::dump() {
-	string* s = new string("<"+*cls+":(");
-	for (list<biObject*>::iterator it=L.begin(); it!=L.end(); it++) {
-		*s += *((*it)->dump());
-	}
-	*s += ")>";
-	return s; 
-}
+biList::biList():biObject("list","")				{}
+biList::biList(biObject* X):biObject("list","")		{ L.push_back(X); }
 
 // string
 
@@ -90,12 +66,9 @@ biString::biString(char *V):biObject("str",V) {}
 
 // pair
 
-biPair::biPair(biObject* X,biObject* Y):biObject("pair","") {
-	A=X; B=Y; 
+biPair::biPair(biObject* X,biObject* Y):biObject("pair","") { 
+	L.push_back(X); L.push_back(Y);
 }
-
-string* biPair::dump()	{ return new string("("+*A->dump()+":"+*B->dump()+")"); }
-string* biPair::eval()	{ return new string("("+*A->eval()+":"+*B->eval()+")"); }
 
 // module
 
@@ -107,19 +80,29 @@ biModule::biModule(const char*m):biObject("module",m) {
 #endif
 	assert(make = fopen((*val+"/Makefile").c_str(),"w"));
 	fprintf(make,"%s",autogen("#",*dump()).c_str());
-	fprintf(make,".PHONY: default\ndefault: %s$(EXE)\n\n",val->c_str());
-	files("main");
+	fprintf(make,".PHONY: default\ndefault: ./%s$(EXE)\n\n",val->c_str());
+	files(*val);
 	assert(cpp=fopen((*val+"/"+*val+".cpp").c_str(),"w"));
 	fprintf(cpp,"%s",autogen("//",*dump()).c_str());
+	fprintf(cpp,("#include \""+*val+".hpp\"\n\n").c_str());
 	assert(hpp=fopen((*val+"/"+*val+".hpp").c_str(),"w"));
 	fprintf(hpp,"%s",autogen("//",*dump()).c_str());
+	fprintf(hpp,("#ifndef _H_"+*val+"\n#define _H_"+*val+"\n\n").c_str());
+	lex_used=false;
 };
 
 biModule::~biModule() {
-	fprintf(make,(*val+"$(EXE): $(O_FILES)\n\t$(CXX)"
-			   " -o $@ $(O_FILES)\n\n").c_str());
+	fprintf(make,("./"+*val+"$(EXE): $(O_FILES)\n\t$(CXX)"
+			   " -o $@ $(O_FILES)\n").c_str());
+	if (lex_used) {
+		fprintf(cpp,"int main() { yylex(); }\n");
+		fprintf(make,("\t./"+*val+"$(EXE) < test.bI > log.log\n").c_str());
+	} else {
+		fprintf(cpp,"int main() {};\n");
+	}
 	fclose(make);
 	fclose(cpp);
+	fprintf(hpp,("#endif // _H_"+*val+"\n\n").c_str());
 	fclose(hpp);
 }
 
@@ -152,7 +135,7 @@ biFile::biFile(string *name,char m): biObject("file",name) {
 }
 biFile::~biFile() { fclose(fh); }
 
-string* biFile::dump()	{
+string* biFile::dump(int depth)	{
 	ostringstream os; 
 	os << "<" << *cls << ":" << *val ;
 	os << ",mode:" << mode << ",open:" << (fh==NULL ? "F" : "T") << ">";
@@ -236,7 +219,7 @@ biDirective::biDirective(char *V):biObject("",V) {
 
 biLexer::biLexer(biObject* s):biObject("lexer",s->val)	{
 	bi_module->files(*val+".lex");
-	bi_module->depends(*val+".lex.cpp",*val+".lpp","flex -o"+*val+".lex.cpp -P"+*val+" $<");
+	bi_module->depends(*val+".lex.cpp",*val+".lpp","flex -o"+*val+".lex.cpp $<");//-P"+*val+" $<");
 	lpp = new biFile(new string(*val+".lpp"),'w');
 	lpp->W(
 		"%{\n"
@@ -248,13 +231,20 @@ biLexer::biLexer(biObject* s):biObject("lexer",s->val)	{
 	);
 	hpp = new biFile(new string(*val+".lex.hpp"),'w');
 	hpp->W(autogen("//",*dump()));
+	fprintf(bi_module->hpp,("#include \""+*val+".lex.hpp\"\n\n").c_str());
+	hpp->W(
+			"extern int yylex();\n"
+			"extern int yylineno;\n"
+			"extern char* yytext;\n\n"
+			);
 	bi_lexer=this;
+	bi_module->lex_used=true;
 }
 biLexer *bi_lexer = NULL;
 
 biLexer::~biLexer()		{
 	lpp->W("%%\n");
-	lpp->W("%%\n\n");
+	lpp->W("\n%%\n\n");
 	delete lpp,hpp;
 }
 
