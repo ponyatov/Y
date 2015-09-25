@@ -1,0 +1,10 @@
+%{
+#include "sym.hpp"
+%}
+
+%option noyywrap
+%option yylineno
+
+%%
+%%
+

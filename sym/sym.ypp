@@ -1,0 +1,17 @@
+%{
+#include "sym.hpp"
+%}
+
+%defines
+
+%union {
+	string *s;
+}
+
+%token <s> S
+
+%%
+sym :
+	| sym S		{ cout<<$2<<"\n"; }
+%%
+
