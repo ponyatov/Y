@@ -7,7 +7,7 @@
 %option yylineno
 
 %%
-\.module		T("module",S)
+\.module		T("directive",MODULE)
 \.[a-z]+		T("directive",S)
 [a-zA-Z0-9]+	T("sym",S)
 %%

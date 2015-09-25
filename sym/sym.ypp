@@ -8,11 +8,12 @@
 	sym *s;
 }
 
-%token <s> S
+%token <s> S MODULE
 
 %%
 sym :
-	| sym S		{ cout << $2->dump(); }
+	| sym MODULE S	{ W($2->dump()); W($3->dump()); W(" -> "); W(module($2,$3).dump()); }
+	| sym S			{ W($2->dump()); }
 ;
 %%
 
