@@ -1,10 +1,14 @@
 %{
 #include "sym.hpp"
+#define T(C,X)	{ yylval.s = new sym(C,yytext); return X; }
 %}
 
 %option noyywrap
 %option yylineno
 
 %%
+\.module		T("module",S)
+\.[a-z]+		T("directive",S)
+[a-zA-Z0-9]+	T("sym",S)
 %%
 

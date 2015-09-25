@@ -5,7 +5,19 @@
 #include <cstdlib>
 #include <cstdio>
 
+#include <list>
+#include <map>
+
 using namespace std;
+
+struct sym {
+	string cls;				// class
+	string val;				// value
+	list<sym*> nest;		// nested syms list
+	sym(string,char*);		// token constructor
+	virtual string dump();	// dump sym internals for debugging
+	virtual string eval();	// evaluate (compute) object
+};
 
 extern int yyparse();
 extern void yyerror(string);
