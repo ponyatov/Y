@@ -5,15 +5,21 @@
 %defines
 
 %union {
+	char c;
 	sym *s;
 }
 
-%token <s> S MODULE
+%token <s> S MODULE FFILE FEOF
+%token <c> EOL
 
 %%
 sym :
-	| sym MODULE S	{ W($2->dump()); W($3->dump()); W(" -> "); W(module($2,$3).dump()); }
-	| sym S			{ W($2->dump()); }
+	| sym MODULE S		{ W($2->dump()); W($3->dump()); 
+		W(" -> "); W(module($2,$3).dump()); }
+	| sym FFILE  S EOL	{ W($2->dump()); W($3->dump()); 
+		W(" -> "); W(ffile ($2,$3).dump(),false); W($4,false); }
+	| sym EOL			{ W($2); }
+	| sym S				{ W($2); }
 ;
 %%
 

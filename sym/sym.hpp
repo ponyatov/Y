@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
+#include <cassert>
 
 #include <list>
 #include <map>
@@ -28,7 +29,16 @@ struct module: sym {
 	module(string);
 	module(sym*,sym*);
 };
-extern module curr_module;
+extern module *curr_module;
+
+struct ffile: sym {
+	FILE *fh;
+	ffile(sym*,sym*);
+	void W(char);
+	void W(string);
+	~ffile();
+};
+extern ffile *curr_file;
 
 extern int yyparse();
 extern void yyerror(string);
@@ -37,7 +47,9 @@ extern int yylineno;
 extern char* yytext;
 #include "sym.tab.hpp"
 
-extern void W(string);
+extern void W(char  ,bool tofile=true);
+extern void W(string,bool tofile=true);
+extern void W(sym*,bool tofile=true);
 
 #endif // _H_SYM
 

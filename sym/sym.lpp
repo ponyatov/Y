@@ -1,14 +1,18 @@
 %{
 #include "sym.hpp"
-#define T(C,X)	{ yylval.s = new sym(C,yytext); return X; }
+#define TC(X)	{ yylval.c = yytext[0]; return X; }
+#define TS(C,X)	{ yylval.s = new sym(C,yytext); return X; }
 %}
 
 %option noyywrap
 %option yylineno
 
 %%
-\.module		T("directive",MODULE)
-\.[a-z]+		T("directive",S)
-[a-zA-Z0-9]+	T("sym",S)
+\.module		TS("directive",MODULE)
+\.file			TS("directive",FFILE)
+\.[a-z]+		TS("directive",S)
+[a-zA-Z0-9]+	TS("sym",S)
+\n				TC(EOL);
+.				{W(yytext);}
 %%
 
