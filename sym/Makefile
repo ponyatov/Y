@@ -1,5 +1,5 @@
 
-log.sym: sym.sym ./sym$(EXE) 
+sym.log: sym.sym ./sym$(EXE) 
 	./sym$(EXE) < $< > $@
 
 C = sym.cpp sym.tab.cpp lex.yy.c

@@ -4,5 +4,5 @@ sym.exe
 sym
 lex.yy.c
 sym.tab.?pp
-log.sym
+*.log
 

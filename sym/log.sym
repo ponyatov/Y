@@ -1,9 +1,0 @@
-# D:\w\Y\sym\sym.exe
-
-<module:.module> <sym:sym>
-
-<directive:.file> <sym:Makefile>
-<directive:.eof>
-
-<directive:.end>
-
