@@ -1,16 +1,6 @@
 .PHONY: default
 default: exec
 
-.PHONY: sym
-sym: sym$(EXE)
-	sym/sym$(EXE) < sym/test.bI > bI.bIog
-#	sym/sym$(EXE) < lex.yy.c >> bI.bIog
-sym$(EXE): bI.bIog
-	cd sym &&\
-	flex lexer.lpp &&\
-	bison parser.ypp &&\
-	$(CXX) $(CXXFLAGS) -o sym$(EXE) sym.cpp lex.yy.c parser.tab.cpp
-
 .PHONY: exec
 exec: bI.bIog
 
