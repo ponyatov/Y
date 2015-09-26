@@ -17,7 +17,7 @@ map<string,sym*> env;
 // module
 
 void module::init() {
-	#ifdef __MIGW32__
+	#ifdef __MINGW32__
 	mkdir(val.c_str()); 
 	#else
 	mkdir(val.c_str(),0744); 
