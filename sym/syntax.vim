@@ -24,4 +24,6 @@ syntax match	Function	"\v\@[a-z]+"
 syntax keyword	Keyword		class
 " string-defines symbols
 syntax region	String		start="'" end="'"
+" number symbols
+syntax match	Number		"\v[0-9]+"
 
