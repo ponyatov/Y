@@ -28,6 +28,9 @@ syntax region	String		start="'" end="'"
 
 "" core language
 
+" tags part
+syntax match	Function	"\v\<\.?[a-z]+:"
+syntax match	Keyword		"\v\<\@:"
 " core class inheritance
 syntax match	Keyword		"\v^class"
 " core class fields and signals

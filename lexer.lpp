@@ -4,8 +4,8 @@
 #define TC(X)	{ yylval.c = yytext[0];     			return X; }
 #define T1(X)	{ yylval.c = yytext[1];					return X; }
 #define TS(X)	{ yylval.s = new string(yytext);     	return X; }
-/*
 #define TO(C,X)	{ yylval.o = new biObject(C,yytext); 	return X; }
+/*
 #define TA(C,X)	{ yylval.o = new C(yytext); 		 	return X; }
 #define TL(C,X) {\
 	yylval.o = env[yytext]; \
@@ -34,6 +34,7 @@ D	[0-9]+
 %%
 \\.							T1(C)
 ^\.end						TS(END)
+^\.[a-z]+[ \t]*[^\n]*		TO(".directive",DIRECTIVE)
 \n							TC(EOL)
 .							TC(C)
 %%

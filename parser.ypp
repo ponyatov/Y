@@ -7,10 +7,15 @@
 %union {
 	char c;
 	string *s;
+	biObject *o;
 }
 
 %token <c> C EOL
 %token <s> END
+
+%token <o> DIRECTIVE
+%type  <o> dir
+
 /*
 %token	<c>	EOL SX QX COLON EQ COMMA LP RP BBEOL
 %token	<s> S ARROW CLASS ENDCLASS LEXER ENDLEX
@@ -20,10 +25,13 @@
 
 %%
 sym :
+	| sym dir					{ W($2); }
 	| sym END					{ W($2); exit(0); }
 	| sym EOL					{ W($2); }
 	| sym C						{ W($2); }
 ;
+
+dir : DIRECTIVE ;
 %%
 
 /*

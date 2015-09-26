@@ -74,7 +74,7 @@ Directives is documentation markup mainly,
 but can control bI system in other way.
 
 class Directive
-	regexp = '^\.[a-z]+'
+	regexp = '^.[a-z]+[ \\t]*[^\\n]*\\n'
 
 .sec- Control
 
@@ -91,6 +91,7 @@ Directive .github	'<url> to github page'		regexp = '^\\.github'
 
 .sec- Documenting markup
 
+Directive .sec		'define progrsm section'	regexp = '^\.sec[ \\t]+'
 
 
 .end
