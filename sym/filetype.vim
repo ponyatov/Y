@@ -1,3 +1,7 @@
+" Vim filetype file
+" Language: bI/sym
+" add to: $WINHOME/vimfiles/ftdetect/sym.vim: 
+" source D:\w\Y\sym\filetype.vim
 
 au BufNewFile,BufRead sym.sym set filetype=sym
 au BufNewFile,BufRead sym.log set filetype=sym
