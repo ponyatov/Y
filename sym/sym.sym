@@ -13,6 +13,8 @@
 .module		tmp
 .about		default module for experimenting and ongoing work
 
+.end
+
 .sec symbol: bI language core type
 
 class Symbol

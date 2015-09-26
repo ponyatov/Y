@@ -8,7 +8,9 @@
 %option yylineno
 
 		/* dotblock state */
-%x db
+%s db
+%s sx
+%s qx
 
 %%
 										/* priority source stream fixes */
@@ -19,15 +21,24 @@
 ^\.about\{		{BEGIN(db); W(yytext);}
 <db>\}			{BEGIN(INITIAL); W(yytext);}
 
+^\.end			TC(END)
 ^\.module		TS("directive",MODULE)	/* new/select current .module */
 ^\.file			TS("directive",FFILE)	/* inline .file */
 ^\.eof			TS("directive",FEOF)	/* end inline file */
 
 ^\.[a-z]+[^\n]*	{W(yytext);}		/* bypass any other.directive */
+
+										/* mode selectors */
+\$				{BEGIN(sx); TC(SX);}
+\?				{BEGIN(qx); TC(QX);}
+<sx,qx>[ \t]	{BEGIN(INITIAL);}
 	
 										/* basic language lexemes */
 \'[^\']*\'		TS("str",S)				/* string-defined symbol */
 \@[a-zA-Z0-9_]+	TS("@",S)				/* signal */
+
+<sx>class			TS("class",CLASS)		/* class creation keyword */
+
 [a-zA-Z0-9_]+	TS("sym",S)				/* generic symbol */
 [\+\-\*\/\<\>]	TS("op",S)				/* operators */
 \n				TC(EOL)					/* endline marker */

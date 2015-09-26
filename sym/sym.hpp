@@ -28,25 +28,36 @@ struct biSymbol {					// class implements all symbol functionality
 	biSymbol(biSymbol*,biSymbol*);	// pair constructor
 	// serializatin and computing
     virtual string dump(int depth=0);// (idented) debug dump
+	virtual string eval();			// evaluate (compute) recursive with nested
 };
+// ///
+
+// \\\ file
+struct biFile:biSymbol {
+	biFile(biSymbol*,biSymbol*);
+	biFile(const char*);
+	~biFile();
+	void W(string);						// \\ file writers
+	void W(string*);
+	void W(biSymbol*);					// //
+private:
+	FILE *fh;
+	void init();	
+};
+extern biFile *bi_file;					// current file opened for writing
 // ///
 
 // \\\ module
 struct biModule:biSymbol {
 	biModule(biSymbol*,biSymbol*);
 	biModule(const char*);
+	~biModule();
+private:
+	biFile* Makefile;
+	biFile* README;
+	void init();
 };
 extern biModule *bi_module;				// current active module
-// ///
-
-// \\\ file
-struct biFile:biSymbol {
-	biFile(biSymbol*,biSymbol*);
-	void W(string);						// \\ file writers
-	void W(string*);
-	void W(biSymbol*);					// //
-};
-extern biFile *bi_file;					// current file opened for writing
 // ///
 
 // \\\ lexer/parser header block

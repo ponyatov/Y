@@ -13,26 +13,48 @@ string biSymbol::dump(int depth) {
 	return S;//+"\n";									// return final string
 }
 
-// ///
-
-// \\\ module
-
-biModule::biModule(biSymbol* T,biSymbol* V):biSymbol(T,V) {}
-biModule::biModule(const char *V):biSymbol(".module",V) {}
-
-biModule *bi_module = new biModule("tmp");
+string biSymbol::eval() { return value; }
 
 // ///
 
 // \\\ file
 
-biFile::biFile(biSymbol* T,biSymbol* V):biSymbol(T,V) {}
+void biFile::init() {
+	if (bi_file) delete bi_file;
+	assert(fh = fopen((bi_module->value+"/"+value).c_str(),"w"));
+	bi_file = this;
+}
+
+biFile::biFile(biSymbol* T,biSymbol* V):biSymbol(T,V)	{ init(); }
+biFile::biFile(const char *V):biSymbol("file",V)		{ init(); }
+
+biFile::~biFile()	{ fclose(fh); }
 
 void biFile::W(string    C) { }
 void biFile::W(string  * C) { }
 void biFile::W(biSymbol* S) { }
 
-biFile *bi_file=NULL;
+biFile *bi_file = NULL;
+
+// ///
+
+// \\\ module
+
+void biModule::init() {
+	if (bi_module) delete bi_module;		// close current module
+	if (bi_file) delete bi_file;			// close current file
+	mkdir(value.c_str());					// create module dir
+	bi_module = this;						// set current module
+	README = new biFile("README.md");		// \ open files AFTER bi_module set
+	Makefile = new biFile("Makefile");		// /
+}
+
+biModule::biModule(biSymbol* T,biSymbol* V):biSymbol(T,V)	{ init(); }
+biModule::biModule(const char *V):biSymbol(".module",V)		{ init(); }
+
+biModule::~biModule()	{ delete README,Makefile; }
+
+biModule *bi_module = new biModule("tmp");
 
 // ///
 
@@ -55,7 +77,7 @@ void yyerror(string err) {
 	exit(-1);
 }
 
-int main(int argc, char *argv[]) { 
+int main(int argc, char *argv[]) {
 	W("#!" + string(argv[0]) + "\n");
 	return yyparse();
 }
