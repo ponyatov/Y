@@ -10,7 +10,8 @@ computing systems programming, hardware design, science data processing,
 and DSL compilers/translators development.
 }
 
-.module tmp
+.module		tmp
+.about		default module for experimenting and ongoing work
 
 .sec simple numbers
 
