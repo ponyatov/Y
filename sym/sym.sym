@@ -4,6 +4,12 @@
 .license	http://www.gnu.org/copyleft/lesser.html
 .github		https://github.com/ponyatov/Y/sym
 
+.about{
+bI/sym is experimental dynamic language system targeted on embedded and
+computing systems programming, hardware design, science data processing,
+and DSL compilers/translators development.
+}
+
 .module tmp
 
 .sec simple numbers

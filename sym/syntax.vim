@@ -6,7 +6,7 @@
 " line comments
 syntax match Comment	"\v#.*"
 " directives 
-syntax match Todo		"\v^\.[a-z]+[ \t]*"
+syntax match Todo		"\v^\.[a-z]+[ \t]*\{?"
 " tags part
 syntax match Function	"\v\<[a-z]+:"
 " email
