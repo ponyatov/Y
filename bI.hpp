@@ -1,22 +1,25 @@
 #ifndef _bI_H
 #define _bI_H
 
+
+// \\\ header files in std namespace
 #include <iostream>
-#include <sstream>
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
-
-#include <map>
 #include <list>
-
+#include <map>
 #ifdef __MINGW32__
 #include <direct.h>
 #else
 #include <sys/stat.h>
-#endif // __MINGW32__
-
+#endif
 using namespace std;
+// ///
+
+/*
+
+#include <sstream>
 
 struct biObject {				// master class
 	string *cls;					// class name
@@ -110,19 +113,27 @@ struct TEX {
 };
 extern TEX tex;
 
-extern int yylex();
-extern char *yytext;
-extern int yylineno;
-extern int yyparse();
-extern void yyerror(string);
-#include "parser.tab.hpp"
-
 string autogen(string pfx, string obj="");
 void W(string*, bool tofile=true);
-void W(string, bool tofile=true);
 void W(char, bool tofile=true);
 
 void terminator();
+
+*/
+
+// \\\ lexer/parser header block
+extern int yyparse();
+extern void yyerror(string);
+extern int yylex();
+extern int yylineno;
+extern char* yytext;
+#include "parser.tab.hpp"
+// ///
+
+// \\ textout writers
+void W(string   ,bool to_file=true);
+void W(string  *,bool to_file=true);
+// //
 
 #endif // _bI_H
 

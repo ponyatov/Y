@@ -5,16 +5,27 @@
 %defines
 
 %union {
-	char c;
-	string *s;
-	biObject *o;
+	string *c;
 }
 
-%token	<c>	EOL C SX QX COLON EQ COMMA LP RP BBEOL
+%token	<c> C EOL END
+/*
+%token	<c>	EOL SX QX COLON EQ COMMA LP RP BBEOL
 %token	<s> S ARROW CLASS ENDCLASS LEXER ENDLEX
 %token	<o> NUM SYM STR SIG DOT DOTFILE DOTMOD DOTTEST
 %type	<o> ex pair list lexer class
+*/
+
 %%
+sym :
+	| sym END					{ exit(0); }
+	| sym EOL					{ W($2); }
+	| sym C						{ W($2); }
+;
+%%
+
+/*
+
 bI :
    	| bI SX ex					{ W($2); W($3->dump()); }
    	| bI SX list				{ W($2); W($3->dump()); }
@@ -28,7 +39,7 @@ bI :
 	| bI ENDCLASS				{ W("\n"); } 
 	| bI ENDLEX					{ W("\n"); } 
 	| bI ex						{ W($2->dump()); }
-	| bI ARROW					{ W(" -> "); /* -> cosmetics */}
+	| bI ARROW					{ W(" -> "); /* -> cosmetics }
 	| bI EOL					{ W($2); }
 	| bI C						{ W($2); }
 	| bI S						{ W($2); }
@@ -65,4 +76,5 @@ ex :
 	| pair
 ;
 %%
+*/
 

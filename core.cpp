@@ -1,5 +1,7 @@
 #include "bI.hpp"
 
+/*
+
 // object
 
 biObject::biObject(const char* C) { cls = new string(C); val = new string(); }
@@ -28,7 +30,7 @@ void init_env() {
 	env["AUTOGEN"]=new biObject("",
 		"/************** DO NOT EDIT *************\n"
 		"   this file was autogened by bI system  \n"
-		" ************** DO NOT EDIT *************/\n"	);
+		" ************** DO NOT EDIT *************\n"	);
 }
 
 // generic class
@@ -258,7 +260,7 @@ biLexer::biLexer(biObject* s):biObject("lexer",s->val)	{
 		"\%option noyywrap\n"
 		"\%option yylineno\n\n"
 	);
-*/
+//
 	hpp = new biFile(new string(*val+".lex.hpp"),'w');
 	hpp->W(autogen("//",*dump()));
 	bi_module->hbody += "#include \""+*val+".lex.hpp\"\n\n";
@@ -325,12 +327,24 @@ void terminator() {
 	exit(0);
 }
 
-
-
 int main() { 
 	init_env();
-	yyparse(); 
 	terminator(); 
-	return 0;
 }
+*/
+
+// \\ textout writers
+void W(string   S,bool to_file)		{ cout <<  S; }
+void W(string  *S,bool to_file)		{ cout << *S; }
+// //
+
+// parser error
+
+void yyerror(string err) {
+	cout << "\n" << err << " # " << yylineno << " : " << yytext << "\n\n";
+	cerr << "\n" << err << " # " << yylineno << " : " << yytext << "\n\n";
+	exit(-1);
+}
+
+int main()	{ return yyparse(); }
 

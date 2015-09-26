@@ -1,7 +1,73 @@
 
+.title		bI dynamic language system
+.author		(c) Dmitry Ponyatov <dponyatov@gmail.com>, All rights reserved
+.license	http://www.gnu.org/copyleft/lesser.html
+.github		https://github.com/ponyatov/Y
+
+.about{
+	bI/sym is experimental dynamic language system targeted on embedded and
+	computing systems programming, hardware design, science data processing,
+	and DSL compilers/translators development.
+}
+
+.sec Goal
+
+.list The goal of bI language design is 
+.li ultra high level scripting, programming and design system, supports
+.li dynamic metaprogramming on large computers, 
+.li statical cross-compilation for tiny embedded systems,
+.li hardware design including CAD/CAM/CAE/EDA functions,
+.li science data crunching and visualization and
+.li text data processing including DSL translation and compilers design.
+
+.sec Literate programming
+
+Documentation is program, program must be selfdocumented.
+
+.sec Free Syntax Programming
+
+Language syntax is under your control, bI it mutable DSL for your own tasks.
+
+.sec Composition
+
+bI is composite language, mix of OOP, functional, literate programming,...,
+and all modern programming languages.
+
+.sec Bootstrapping
+
+Core language system written in flex, bison and C++, 
+bI/next (next generation) is realized in bI themself.
+
+.sec+ Core syntax
+
+.sec Bypass translation
+
+All undetected text data must be bypassed from stdin to stdout.
+Data detected as language constructs will be computed inplace.
+
+.sec Directives
+
+Directives is documentation markup mainly, 
+but can control bI system in other way.
+
+class Directive
+	regexp = '\.[a-z]+'
+
+
+
+
+
+
+
 .end
 
-#!/Y
+.sec numbers
+
+0 -1 +2 -03 +004 1.2 -3e+04
+
+.end
+
+
 .sec Pure symbolic
 
 .module pure
@@ -41,50 +107,6 @@ symbols:	all Other <Data> (and) [any,1212,dsas] <class:types>
 .eof
 
 .end
-
-.title		bI dynamic language system
-.author		Dmitry Ponyatov <dponyatov@gmail.com>
-.github		https://github.com/ponyatov/Y
-
-.sec Goal
-
-.list The goal of bI language design is 
-.li ultra high level scripting, programming and design system, supports
-.li dynamic metaprogramming on large computers, 
-.li statical cross-compilation for tiny embedded systems,
-.li hardware design including CAD/CAM/CAE/EDA functions,
-.li science data crunching and visualization and
-.li text data processing including translation and compilers design.
-
-.sec Literate programming
-
-Documentation is program, program must be selfdocumented.
-
-.sec Free Syntax Programming
-
-Language syntax is under your control, bI it mutable DSL for your own tasks.
-
-.sec Composition
-
-bI is composite language, mix of OOP, functional, literate programming,...,
-and all modern programming languages.
-
-.sec Bootstrapping
-
-Core language system written in flex, bison and C++, 
-bI/next (next generation) is realized in bI themself.
-
-.sec+ Core syntax
-
-.sec Bypass translation
-
-All undetected text data must be bypassed from stdin to stdout.
-Data detected as language constructs will be computed inplace.
-
-.sec Directives
-
-Directives is documentation markup mainly, 
-but can control bI system in other way.
 
 class Directive
 #	lexer regexp = '^\.[a-z]+[\+\-]?[ \t]*[^\n]*'
