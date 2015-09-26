@@ -8,9 +8,9 @@
 %option yylineno
 
 		/* dotblock state */
-%s db
-%s sx
-%s qx
+%x about
+%x sx
+%x qx
 
 %%
 										/* priority source stream fixes */
@@ -18,8 +18,9 @@
 #[^\n]*\n		{W(yytext);}			/* line comment bypass */
 
 										/* directives */
-^\.about\{		{BEGIN(db); W(yytext);}
-<db>\}			{BEGIN(INITIAL); W(yytext);}
+
+^\.about\{		{BEGIN(about); W(yytext);}		/* \ about */
+<about>\}		{BEGIN(INITIAL); W(yytext);}	/* / block */
 
 ^\.end			TC(END)
 ^\.module		TS("directive",MODULE)	/* new/select current .module */
@@ -31,16 +32,16 @@
 										/* mode selectors */
 \$				{BEGIN(sx); TC(SX);}
 \?				{BEGIN(qx); TC(QX);}
-<sx,qx>[ \t]	{BEGIN(INITIAL);}
+<sx,qx>[ \t\n]	{BEGIN(INITIAL);}
 	
-										/* basic language lexemes */
-\'[^\']*\'		TS("str",S)				/* string-defined symbol */
-\@[a-zA-Z0-9_]+	TS("@",S)				/* signal */
+											/* basic language lexemes */
+<sx,qx>\'[^\']*\'		TS("str",S)				/* string-defined symbol */
+<sx,qx>\@[a-zA-Z0-9_]+	TS("@",S)				/* signal */
 
-<sx>class			TS("class",CLASS)		/* class creation keyword */
+<sx,qx>class			TS("class",CLASS)		/* class creation keyword */
+<sx,qx>[a-zA-Z0-9_]+	TS("sym",S)				/* generic symbol */
+<sx,qx>[\+\-\*\/\<\>]	TS("op",S)				/* operators */
 
-[a-zA-Z0-9_]+	TS("sym",S)				/* generic symbol */
-[\+\-\*\/\<\>]	TS("op",S)				/* operators */
 \n				TC(EOL)					/* endline marker */
 
 .				{W(yytext);}			/* bypass any other undetected chars */
