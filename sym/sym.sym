@@ -1,4 +1,9 @@
 
+.title		bI/sym synamic language system
+.author		(c) Dmitry Ponyatov <dponyatov@gmail.com>, All rights reserved
+.license	http://www.gnu.org/copyleft/lesser.html
+.github		https://github.com/ponyatov/Y/sym
+
 .module tmp
 
 .sec simple numbers
@@ -6,9 +11,15 @@
 0 -1 +2 3 -04 +005 0x12AF 0b1101
 -1.2 +03.40 -3e+5 +03E-007
 
+.sec Using inline files
+
 .file Makefile
 sym.log: sym.sym ./sym$(EXE) 
 	./sym$(EXE) < $< > $@
+
+.PHONY: clean
+clean:
+	rm -rf *~ .*~ ./sym$(EXE) *.log lex.yy.c sym.tab.?pp tmp
 
 C = sym.cpp sym.tab.cpp lex.yy.c
 H = sym.hpp sym.tab.hpp
@@ -21,6 +32,10 @@ lex.yy.c: sym.lpp
 	flex $<
 .eof
 
+.sec \.end directive stops all processing
+
+.end
+
 .sec Pascal program sample
 
 PROGRAM NOMER_19;
@@ -30,11 +45,9 @@ PROGRAM NOMER_19;
      1: D := 20;  2: READ(A);
       FOR I := 0 TO D DO 
       BEGIN
-         S := 3.141*I-A; {тело цикла}
+         S := 3.141*I-A;
         WRITE(S) 
       END; IF D >= S THEN 
                  GOTO 1 ELSE GOTO 2 
     END.
-
-.end
 
