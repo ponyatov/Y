@@ -1,7 +1,6 @@
 " Vim syntax file
 " Language: bI/sym
-" add to: $WINHOME/vimfiles/syntax/sym.vim: 
-" source D:\w\sym_stone\syntax.vim
+" add to: $WINHOME/vimfiles/syntax/sym.vim: source D:\w\sym_stone\syntax.vim
 
 " line comments
 syntax match	Comment		"\v#.*"
