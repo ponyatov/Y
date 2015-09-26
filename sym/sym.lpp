@@ -1,22 +1,28 @@
 %{
 #include "sym.hpp"
-#define TC(X)	{ yylval.c = yytext[0]; return X; }
-#define TS(C,X)	{ yylval.s = new sym(C,yytext); return X; }
+#define TC(X)	{ yylval.c = yytext[0];			return X; }	/* char token */
+#define TS(C,X)	{ yylval.s = new sym(C,yytext); return X; }	/* symbol token */
 %}
 
 %option noyywrap
 %option yylineno
 
 %%
-[\r]			{}
-^\.sec[^\n]+\n	{W(yytext);}
-^\.module		TS("directive",MODULE)
-^\.file			TS("directive",FFILE)
-^\.eof			TS("directive",FEOF)
-^\.[a-z]+		TS("directive",S)
-[a-zA-Z0-9_]+	TS("sym",S)
-[\+\-\*\/\<\>]	TS("op",S)
-\n				TC(EOL)
-.				{W(yytext);}
+										/* priority source stream fixes */
+[\r]			{}						/* drop DOS 0x0D endline component */
+
+										/* directives */
+^\.sec[^\n]+\n	{W(yytext);}			/* bypass .section line */
+^\.module		TS("directive",MODULE)	/* new/select current .module */
+^\.file			TS("directive",FFILE)	/* inline .file */
+^\.eof			TS("directive",FEOF)	/* end inline file */
+^\.[a-z]+		TS("directive",S)		/* any other.directive */
+	
+										/* basic language lexemes */
+[a-zA-Z0-9_]+	TS("sym",S)				/* generic symbol */
+[\+\-\*\/\<\>]	TS("op",S)				/* operators */
+\n				TC(EOL)					/* endline marker */
+
+.				{W(yytext);}			/* bypass any other undetected chars */
 %%
 
