@@ -5,13 +5,23 @@
 .github		https://github.com/ponyatov/Y/sym
 
 .about{
-bI/sym is experimental dynamic language system targeted on embedded and
-computing systems programming, hardware design, science data processing,
-and DSL compilers/translators development.
+	bI/sym is experimental dynamic language system targeted on embedded and
+	computing systems programming, hardware design, science data processing,
+	and DSL compilers/translators development.
 }
 
 .module		tmp
 .about		default module for experimenting and ongoing work
+
+.sec symbol: bI language core type
+
+class Symbol
+	tag			# class / data type tag
+	value		# data item value itself
+	attr		# attributes: options, compiler/optimizator markers for item
+	nest		# optional nested symbols
+	@dump		# (indented) debug dump
+	@eval		# evaluate (compute) symbol recursive with nested symbols
 
 .sec simple numbers
 
