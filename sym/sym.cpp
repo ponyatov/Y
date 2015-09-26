@@ -43,7 +43,11 @@ biFile *bi_file = NULL;
 void biModule::init() {
 	if (bi_module) delete bi_module;		// close current module
 	if (bi_file) delete bi_file;			// close current file
+	#ifdef __MINGW32__
 	mkdir(value.c_str());					// create module dir
+	#else
+	mkdir(value.c_str(),0744);
+	#endif
 	bi_module = this;						// set current module
 	README = new biFile("README.md");		// \ open files AFTER bi_module set
 	Makefile = new biFile("Makefile");		// /
