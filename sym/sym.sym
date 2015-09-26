@@ -2,7 +2,7 @@
 .title		bI/sym dynamic language system
 .author		(c) Dmitry Ponyatov <dponyatov@gmail.com>, All rights reserved
 .license	http://www.gnu.org/copyleft/lesser.html
-.github		https://github.com/ponyatov/Y/sym
+.github		https://github.com/ponyatov/sym_stone
 
 .about{
 	bI/sym is experimental dynamic language system targeted on embedded and
@@ -16,14 +16,16 @@
 .sec symbol: bI language core type
 
 class Symbol
-	tag			# class / data type tag
-	value		# data item value itself
-	attr		# attributes: options, compiler/optimizator markers for item
-	nest		# optional nested symbols
-	@dump		# (indented) debug dump
-	@eval		# evaluate (compute) symbol recursive with nested symbols
+	tag			'class/data type tag'
+	value		'data item value itself'
+	attr		'attributes: options, compiler/optimizator markers for item'
+	nest		'optional nested symbols'
+	@dump		'(idented) debug dump'
+	@eval		'evaluate (compute) symbol recursive with nested symbols'
 
 .sec simple numbers
+
+Numbers in sym (not bI) threated as pure symbols.
 
 0 -1 +2 3 -04 +005 0x12AF 0b1101
 -1.2 +03.40 -3e+5 +03E-007

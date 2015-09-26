@@ -5,8 +5,8 @@
 %defines
 
 %union {
-	char c;
-	sym *s;
+	string *c;
+	biSymbol *s;
 }
 
 %token <s> S MODULE FFILE FEOF
@@ -14,9 +14,9 @@
 
 %%
 sym :
-	| sym MODULE S		{ W(module($2,$3).dump()); }
-	| sym FFILE S EOL	{ W((new ffile($2,$3))->dump(),false); }
-	| sym FEOF			{ W($2,false); if (curr_file) delete curr_file; }
+	| sym MODULE S		{ W((new biModule($2,$3)),false); }
+	| sym FFILE S EOL	{ W((new biFile  ($2,$3)),false); }
+	| sym FEOF			{ W($2,false); if (bi_file) delete bi_file; }
 	| sym EOL			{ W($2); }
 	| sym S				{ W($2); }
 ;

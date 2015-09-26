@@ -1,57 +1,67 @@
 #ifndef _H_SYM
 #define _H_SYM
 
+// \\\ header files in std namespace
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
-
 #include <list>
 #include <map>
-
 #ifdef __MINGW32__
 #include <direct.h>
 #else
 #include <sys/stat.h>
 #endif
-
 using namespace std;
+// ///
 
-struct sym {
-	string cls;							// class
-	string val;							// value
-	list<sym*> nest;					// nested syms list
-	sym(string,string);					// token constructor
-	sym(sym*,sym*);						// pairing constructor
-	virtual string dump(int depth=0);	// dump sym internals for debugging
-	virtual string eval();				// evaluate (compute) object
+// \\\ generic symbol type
+struct biSymbol {					// class implements all symbol functionality
+	// data fields
+    string tag;						// symbol tag a.k.a. class/type name
+    string value;					// symbol value
+    map<string,biSymbol*>attr;		// symbol attributes
+    list<biSymbol*>nest;			// nested symbols for composite symbols/types
+	// constructors
+	biSymbol(string,string);		// leaf symbol from strings
+	biSymbol(biSymbol*,biSymbol*);	// pair constructor
+	// serializatin and computing
+    virtual string dump(int depth=0);// (idented) debug dump
 };
-extern map<string,sym*> env;
+// ///
 
-struct module: sym {
-	void init();
-	module(string);
-	module(sym*,sym*);
+// \\\ module
+struct biModule:biSymbol {
+	biModule(biSymbol*,biSymbol*);
+	biModule(const char*);
 };
-extern module *curr_module;
+extern biModule *bi_module;				// current active module
+// ///
 
-struct ffile: sym {
-	FILE *fh;
-	ffile(sym*,sym*);
-	~ffile();
+// \\\ file
+struct biFile:biSymbol {
+	biFile(biSymbol*,biSymbol*);
+	void W(string);						// \\ file writers
+	void W(string*);
+	void W(biSymbol*);					// //
 };
-extern ffile *curr_file;
+extern biFile *bi_file;					// current file opened for writing
+// ///
 
+// \\\ lexer/parser header block
 extern int yyparse();
 extern void yyerror(string);
 extern int yylex();
 extern int yylineno;
 extern char* yytext;
 #include "sym.tab.hpp"
+// ///
 
-extern void W(char  ,bool tofile=true);
-extern void W(string,bool tofile=true);
-extern void W(sym*  ,bool tofile=true);
+// textout writers
+void W(string   ,bool to_file=true);
+void W(string  *,bool to_file=true);
+void W(biSymbol*,bool to_file=true);
 
 #endif // _H_SYM
 

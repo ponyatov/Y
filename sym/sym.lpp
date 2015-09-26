@@ -1,24 +1,33 @@
 %{
 #include "sym.hpp"
-#define TC(X)	{ yylval.c = yytext[0];			return X; }	/* char token */
-#define TS(C,X)	{ yylval.s = new sym(C,yytext); return X; }	/* symbol token */
+#define TC(X)	{ yylval.c = new string(yytext);		return X; }	/* char */
+#define TS(C,X)	{ yylval.s = new biSymbol(C,yytext); 	return X; } /* symbol */
 %}
 
 %option noyywrap
 %option yylineno
 
+		/* dotblock state */
+%x db
+
 %%
 										/* priority source stream fixes */
 [\r]			{}						/* drop DOS 0x0D endline component */
+#[^\n]*\n		{W(yytext);}			/* line comment bypass */
 
 										/* directives */
-^\.sec[^\n]+\n	{W(yytext);}			/* bypass .section line */
+^\.about\{		{BEGIN(db); W(yytext);}
+<db>\}			{BEGIN(INITIAL); W(yytext);}
+
 ^\.module		TS("directive",MODULE)	/* new/select current .module */
 ^\.file			TS("directive",FFILE)	/* inline .file */
 ^\.eof			TS("directive",FEOF)	/* end inline file */
-^\.[a-z]+		TS("directive",S)		/* any other.directive */
+
+^\.[a-z]+[^\n]*	{W(yytext);}		/* bypass any other.directive */
 	
 										/* basic language lexemes */
+\'[^\']*\'		TS("str",S)				/* string-defined symbol */
+\@[a-zA-Z0-9_]+	TS("@",S)				/* signal */
 [a-zA-Z0-9_]+	TS("sym",S)				/* generic symbol */
 [\+\-\*\/\<\>]	TS("op",S)				/* operators */
 \n				TC(EOL)					/* endline marker */
