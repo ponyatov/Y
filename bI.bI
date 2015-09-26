@@ -45,17 +45,51 @@ bI/next (next generation) is realized in bI themself.
 All undetected text data must be bypassed from stdin to stdout.
 Data detected as language constructs will be computed inplace.
 
+.list
+.li prefix \$ switches system to object dump
+.li prefix \? evaluates (computes) bI expression
+.li some syntax constructs works without and special marks, 
+but must be formatted properly for its detection, class definition for example
+
+For best markup and syntax undestanding you should use bI system
+itself source code in bI.bI file. Use (g)vim and includes syntax files for
+apropriate coloring highlighting.
+
+.sec \\ escape char
+
+\\ escape char is prefix before any special char marks use this char as is.
+
+.sec Comments
+
+Comments must be removed from output.
+# line comments until end of line 
+
+class Comment
+
+Comment LineComment regexp = '#[^\\n]*\\n'
+
 .sec Directives
 
 Directives is documentation markup mainly, 
 but can control bI system in other way.
 
 class Directive
-	regexp = '\.[a-z]+'
+	regexp = '^\.[a-z]+'
 
+.sec- Control
 
+Directive .end		'stop translation'			regexp = '^\\.end'
+Directive .module	'set current module'		regexp = '^\\.module'
+Directive .file		'create file inline'		regexp = '^\\.file'
 
+.sec- Metadata
 
+Directive .title	'title for current module'	regexp = '^\\.title'
+Directive .author	'(c) author <email>'		regexp = '^\\.author'
+Directive .license	'<url> to license page'		regexp = '^\\.license'
+Directive .github	'<url> to github page'		regexp = '^\\.github'
+
+.sec- Documenting markup
 
 
 
@@ -120,19 +154,6 @@ class .file
 
 Directive object modify themself using first '.some' string from 
 Directive[val] field for dynamic class rename.
-
-.sec \\ escape char
-
-\\ escape char is prefix before any special char marks use this char as is.
-
-.sec Comments
-
-Comments must be removed from output.
-# line comments until end of line 
-
-class Comment
-
-#class LineComment:Comment lexer regexp = '#[^\n]*'
 
 .sec \$ (dump) and \? (eval) prefixes
 

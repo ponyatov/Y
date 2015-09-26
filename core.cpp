@@ -334,8 +334,9 @@ int main() {
 */
 
 // \\ textout writers
-void W(string   S,bool to_file)		{ cout <<  S; }
-void W(string  *S,bool to_file)		{ cout << *S; }
+void W(char    C,bool to_file)		{ cout <<  C; }
+void W(string  S,bool to_file)		{ cout <<  S; }
+void W(string *S,bool to_file)		{ cout << *S; }
 // //
 
 // parser error

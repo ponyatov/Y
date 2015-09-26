@@ -29,7 +29,7 @@ syntax region	String		start="'" end="'"
 "" core language
 
 " core class inheritance
-syntax keyword	Keyword		class
+syntax match	Keyword		"\v^class"
 " core class fields and signals
 syntax keyword	Function	regexp
 " operators

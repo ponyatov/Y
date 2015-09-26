@@ -131,8 +131,9 @@ extern char* yytext;
 // ///
 
 // \\ textout writers
-void W(string   ,bool to_file=true);
-void W(string  *,bool to_file=true);
+void W(char   ,bool to_file=true);
+void W(string ,bool to_file=true);
+void W(string*,bool to_file=true);
 // //
 
 #endif // _bI_H

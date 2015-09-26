@@ -5,10 +5,12 @@
 %defines
 
 %union {
-	string *c;
+	char c;
+	string *s;
 }
 
-%token	<c> C EOL END
+%token <c> C EOL
+%token <s> END
 /*
 %token	<c>	EOL SX QX COLON EQ COMMA LP RP BBEOL
 %token	<s> S ARROW CLASS ENDCLASS LEXER ENDLEX
@@ -18,7 +20,7 @@
 
 %%
 sym :
-	| sym END					{ exit(0); }
+	| sym END					{ W($2); exit(0); }
 	| sym EOL					{ W($2); }
 	| sym C						{ W($2); }
 ;
@@ -40,8 +42,6 @@ bI :
 	| bI ENDLEX					{ W("\n"); } 
 	| bI ex						{ W($2->dump()); }
 	| bI ARROW					{ W(" -> "); /* -> cosmetics }
-	| bI EOL					{ W($2); }
-	| bI C						{ W($2); }
 	| bI S						{ W($2); }
 ;
 

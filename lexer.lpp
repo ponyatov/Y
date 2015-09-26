@@ -1,10 +1,10 @@
 %{
 #include "bI.hpp"
 
-#define TC(X)	{ yylval.c = new string(yytext);     	return X; }
-/*
 #define TC(X)	{ yylval.c = yytext[0];     			return X; }
 #define T1(X)	{ yylval.c = yytext[1];					return X; }
+#define TS(X)	{ yylval.s = new string(yytext);     	return X; }
+/*
 #define TO(C,X)	{ yylval.o = new biObject(C,yytext); 	return X; }
 #define TA(C,X)	{ yylval.o = new C(yytext); 		 	return X; }
 #define TL(C,X) {\
@@ -32,7 +32,8 @@ S	[\+\-]{0,1}
 D	[0-9]+
 
 %%
-\.end						TC(END)
+\\.							T1(C)
+^\.end						TS(END)
 \n							TC(EOL)
 .							TC(C)
 %%
