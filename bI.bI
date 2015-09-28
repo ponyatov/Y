@@ -12,9 +12,9 @@
 
 .sec Goal
 
-.list The goal of bI language design is 
+.list The goal of bI language design is
 .li ultra high level scripting, programming and design system, supports
-.li dynamic metaprogramming on large computers, 
+.li dynamic metaprogramming on large computers,
 .li statical cross-compilation for tiny embedded systems,
 .li hardware design including CAD/CAM/CAE/EDA functions,
 .li science data crunching and visualization and
@@ -35,7 +35,7 @@ and all modern programming languages.
 
 .sec Bootstrapping
 
-Core language system written in flex, bison and C++, 
+Core language system written in flex, bison and C++,
 bI/next (next generation) is realized in bI themself.
 
 .sec+ Core syntax
@@ -48,7 +48,7 @@ Data detected as language constructs will be computed inplace.
 .list
 .li prefix \$ switches system to object dump
 .li prefix \? evaluates (computes) bI expression
-.li some syntax constructs works without and special marks, 
+.li some syntax constructs works without and special marks,
 but must be formatted properly for its detection, class definition for example
 
 For best markup and syntax undestanding you should use bI system
@@ -62,7 +62,7 @@ apropriate coloring highlighting.
 .sec Comments
 
 Comments must be removed from output.
-# line comments until end of line 
+# line comments until end of line
 
 class Comment
 
@@ -70,7 +70,7 @@ Comment LineComment regexp = '#[^\\n]*\\n'
 
 .sec Directives
 
-Directives is documentation markup mainly, 
+Directives is documentation markup mainly,
 but can control bI system in other way.
 
 class Directive
@@ -106,7 +106,7 @@ class Number
 
 Number int			'integer'					regexp = '[0-9]+'
 
-0 -1 +2 -03 +004 
+0 -1 +2 -03 +004
 
 Number hex			'hexadigital'				regexp = '0x[0-9A-F]+'
 Number bin			'binary'					regexp = '0b[01]+'
@@ -171,7 +171,7 @@ class .file
 #: Directive
 #	lexer regexp = '^\.file[ \t]+[^\n]+'
 
-Directive object modify themself using first '.some' string from 
+Directive object modify themself using first '.some' string from
 Directive[val] field for dynamic class rename.
 
 .sec \$ (dump) and \? (eval) prefixes
@@ -180,10 +180,10 @@ Code sections in bI script file must be marked using \$ and \? prefixes.
 
 .sec- object dump
 
-\$-prefixed code will be .term{dump}ed into symbol representation form of 
-internal objects structure. \$ is sign of lisp S-expression with some bI 
-specific extensions. Dumping can be used for debugging, and object 
-serialization. Every bI object must include @dump writer method and @load 
+\$-prefixed code will be .term{dump}ed into symbol representation form of
+internal objects structure. \$ is sign of lisp S-expression with some bI
+specific extensions. Dumping can be used for debugging, and object
+serialization. Every bI object must include @dump writer method and @load
 constructor for serialization work.
 
 .sec- object evaluation (computing)
@@ -214,7 +214,7 @@ Directive .sec lexer regexp = '\.sec[^\n]+'
 
 Generic bI language types provides highlevel abstracts for typical primitive
 data types in other programming languages. Generics is gateway between machine
-level types, and bI metaprogramming hell: it have all debug, profiling and 
+level types, and bI metaprogramming hell: it have all debug, profiling and
 tracking functions, but can be transparently transformed into primitive types
 for statical compilation, native machine code or hardware synthesis.
 
@@ -246,7 +246,7 @@ $biClass $Symbol,id
 
 .sec Number
 
-Float and integer processing is too different, Number type holds shared 
+Float and integer processing is too different, Number type holds shared
 semantics.
 
 #class Number
@@ -269,17 +269,17 @@ Number Float,float
 	)	
 
 $00 $-01 $+0002 $0x1234 $0b1101
-$-3.4 $5.6 $+7.8 
+$-3.4 $5.6 $+7.8
 $-1e+3 $+4E-5
 
 ?00 ?-01 ?+0002 ?0x1234 ?0b1101
-?-3.4 ?5.6 ?+7.8 
+?-3.4 ?5.6 ?+7.8
 ?-1e+3 ?+4E-5
 
 .sec Machine types
 
-Machine types was inherited from LLVM design, and uses LLVM itself for code 
-generation. 
+Machine types was inherited from LLVM design, and uses LLVM itself for code
+generation.
 
 .list
 .li [iN]teger, N=2^n
@@ -317,16 +317,16 @@ Generic object implements all bI-specific features for all other data types.
 .sec Signal as object method
 
 bI uses SmallTalk like passing signals between objects, but have
-inkernel multiagent parallel computing ideology, and this signals is real 
+inkernel multiagent parallel computing ideology, and this signals is real
 async messages, not function calls.
 
 \@signal marks signal a.k.a. class method:
 
-class Signal,sig 
+class Signal,sig
 	lexer regexp SIG = '@[a-z0-9_\+\-\*\/]+'
 	parser SIG list<type>
 
-Extended signal definiton uses Erlang-like pattern mathching: is uses match 
+Extended signal definiton uses Erlang-like pattern mathching: is uses match
 pattern defined via type argument list.
 
 .sec Data in nested variables
@@ -344,7 +344,7 @@ All objects includes two required vars: name and value.
 
 Container Pair parser = expr ':' expr
 
-$this:is ?pair:sample 
+$this:is ?pair:sample
 $1:2 ?3.4:5e6
 $e:2.71 ?pi:3.1415
 
@@ -358,7 +358,7 @@ $1,2,3
 
 .sec Modules
 
-Directive \.module creates/switches current module. In base bI realization 
+Directive \.module creates/switches current module. In base bI realization
 module mapped to directory, and controls \.file directive path for new files.
 
 Module 'tmp' used by default after bI system starts.
@@ -444,7 +444,7 @@ class lexer
 \#include "sym.hpp"
 %}
 
-%defines 
+%defines
 
 %union {
 	sym *s;
@@ -456,8 +456,8 @@ class lexer
 %%
 sym :
 	| sym EOL		{ cout << "<eol>\\n\\n"; }
-	| sym list		{ cout << *\$2->dump() << *\$2->eval() << "\\n" ; } 
-	| sym ex		{ cout << *\$2->dump() << *\$2->eval() << "\\n" ; } 
+	| sym list		{ cout << *\$2->dump() << *\$2->eval() << "\\n" ; }
+	| sym ex		{ cout << *\$2->dump() << *\$2->eval() << "\\n" ; }
 ;
 
 ex :
@@ -465,7 +465,7 @@ ex :
 	| S COLON S		{ \$\$=new sym("pair",\$1,\$3); }
 ;
 
-list : 
+list :
 	   ex ex		{ \$\$=new sym("list",\$1,\$2); }
 	 | list ex		{ \$\$=\$1; \$\$->next.push_back(\$2); }
 ;
@@ -511,7 +511,7 @@ extern void yyerror(string);
 .file symsym.cpp
 \#include "sym.hpp"
 
-sym::sym(const char *C, char *V) { 
+sym::sym(const char *C, char *V) {
 	cls = new string( C ); val = new string( V );
 	if (*cls=="comment") val->erase(0,1); // del \#
 }
@@ -535,7 +535,7 @@ string* sym::dump(int depth) {
 	return S;
 }
 
-string* sym::eval()	{ 
+string* sym::eval()	{
 	string *S = new string(*val);
 	string delim(" ");
 	if (*cls=="pair") delim=":";
@@ -544,18 +544,18 @@ string* sym::eval()	{
 	for (list<sym*>::iterator it=next.begin(); it!=next.end(); it++,er++ )
 		*S += *((*it)->eval())+delim;
 	if (er) S->erase((S->size())-1,1);
-	return S; 
+	return S;
 }
 
-void yyerror(string err) { 
+void yyerror(string err) {
 	cerr<<"\\n"<<err<<" \# "<<yylineno<<" : "<<yytext<<"\\n\\n";
 	cout<<"\\n"<<err<<" \# "<<yylineno<<" : "<<yytext<<"\\n\\n";
 	exit(-1);
 }
 
-int main(int argc, char *argv[]) { 
-	cout<<"\\n\# "<<argv[0]<<"\\n\\n"; 
-	return yyparse(); 
+int main(int argc, char *argv[]) {
+	cout<<"\\n\# "<<argv[0]<<"\\n\\n";
+	return yyparse();
 }
 .eof
 
@@ -563,7 +563,7 @@ int main(int argc, char *argv[]) {
 
 .file test.bI
 \#!/usr/bin/sym
-\# this is line comment # required by UNIX first script line 
+\# this is line comment # required by UNIX first script line
 \#
 
 \# symbols
@@ -624,8 +624,8 @@ clazz Symbol,sym		'generic sym data type'
 
 .sec- Attributes
 
-Every symbol can have optional assigned attributes. 
-Attributes widely used as misc data element markers in syntax analisis, 
+Every symbol can have optional assigned attributes.
+Attributes widely used as misc data element markers in syntax analisis,
 XML processing and data storage, thus they are supported by special list field.
 
 .sec- Leaf objects
