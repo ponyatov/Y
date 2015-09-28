@@ -32,7 +32,7 @@ syntax match	Constant	"\v[0-9]+"
 "" core language
 
 " tags part
-syntax match	Function	"\v\<\.?[a-z\+\-]+:"
+syntax match	Function	"\v\<?\.?[a-z\+\-]+:"
 syntax match	Keyword		"\v\<\@:"
 " core class inheritance
 syntax match	Keyword		"\v^class"

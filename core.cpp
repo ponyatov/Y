@@ -17,7 +17,7 @@ string biObject::dump(int depth) {
 	if (attr.size()) {									// dump attributes
 		for ( map<string,biObject*>::iterator A = attr.begin();
 			A != attr.end(); A++ )
-				S += "\n"+pad(depth+1)+A->first+" : "+A->second->value;
+				S += "\n"+pad(depth+1)+A->first+":"+A->second->value;
 	}
 	if (nest.size()) {									// nested symbols
 		for ( list<biObject*>::iterator N = nest.begin();

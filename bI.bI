@@ -144,11 +144,11 @@ for statical compilation, native machine code or hardware synthesis.
 
 Current bI supports only machine numeric types, covered by C++ alias types.
 
-.sec Numbers
+.sec Number
 
 class Number
 
-.sec Strings
+.sec String
 
 Most unversal data type, can represent and data in serialized form.
 
@@ -164,7 +164,13 @@ generation.
 .li [f]loat, [d]ouble
 .li [v]ector
 
-.sec Numbers
+.sec Memory elements
+
+class i8
+
+class byte:i8
+
+.sec Number
 
 .sec- int: integer
 
@@ -188,7 +194,17 @@ Number float		'float'						regexp = '[0-9]+[eE][+-]?[0-9]+'
 
 1.2 -3e+04
 
-.sec str: string
+.sec String
+
+.sec- char: 8-bit classic C char (byte)
+
+class char:byte		'8-bit classic C char'		regexp 'any char' =  '.'	
+
+.sec- uchar: unicode character
+
+class uchar:char
+
+.sec- str: string
 
 String str			'string'					regexp = "'[^']*'"
 	@size		'size in chars'	-> int
@@ -778,4 +794,5 @@ generation.
 .sec Objects
 
 .sec Containers (composite types)
+
 
