@@ -2,21 +2,6 @@
 
 /*
 
-// object
-
-map<string,biObject*> env;
-
-void init_env() {
-	env["bILS"]=new biObject("",
-		"bI language system");
-	env["AUTHOR"]=new biObject("(c)",
-		"(c) Dmitry Ponyatov <dponyatov@gmail.com>, all right reserved"	);
-	env["AUTOGEN"]=new biObject("",
-		"/************** DO NOT EDIT *************\n"
-		"   this file was autogened by bI system  \n"
-		" ************** DO NOT EDIT *************\n"	);
-}
-
 // generic class
 
 void biClass::init(biObject *sym) {
@@ -53,21 +38,6 @@ string* biClass::dump(int depth) {
 
 biClass* bi_class=NULL;
 map<string,string*> bi_class_reg;
-
-// list
-
-biList::biList():biObject("list","")				{}
-biList::biList(biObject* X):biObject("list","")		{ L.push_back(X); }
-
-// string
-
-biString::biString(char *V):biObject("str",V) {}
-
-// pair
-
-biPair::biPair(biObject* X,biObject* Y):biObject("pair","") { 
-	L.push_back(X); L.push_back(Y);
-}
 
 // module
 
@@ -159,151 +129,6 @@ biTest::biTest(string* name):biFile(new string(*name+".bI"),'w') {
 	bi_file=this;
 }
 
-// tex
-
-TEX tex("bI.tex");
-
-string TEX::fix(string s) {
-	string T;
-	for ( string::iterator c=s.begin(); c!=s.end(); c++) { switch (*c) {
-		case '^':
-		case '[':
-		case ']':
-		case '<': T+="\\textless "; break;
-		case '>': T+="\\textgreater "; break;
-		case '\\': T+=""; break;
-		case '#': T+="\\#"; break;
-		case '$': T+="\\$"; break;
-		case '%': T+="\\%"; break;
-		default: T+=*c; break;
-	}}
-	return T;
-}
-
-void TEX::W(string x)		{ body+=fix(x); }
-void TEX::sec(int l,string x)		{ 
-	switch (l) {
-		case +1: body+="\\section{"+fix(x)+"}\n"; break;
-		case -1: body+="\\subsubsection{"+fix(x)+"}\n"; break;
-		default: body+="\\subsection{"+fix(x)+"}\n"; break;
-	}}
-
-TEX::TEX(const char *fn)	{ assert(fh=fopen(fn,"w")); }
-TEX::~TEX()					{ 
-	head+="\\documentclass[10pt]{article}\n";
-	head+="\\usepackage[a5paper,landscape,margin=5mm]{geometry}\n";
-	head+="\\title{"+title+"}\n";
-	head+="\\author{"+author+"}\n";
-	head+="\\begin{document}\n\\maketitle\n\\tableofcontents\n\n";
-	foot+="\\end{document}\n";
-	fprintf(fh,"%s",head.c_str());
-	fprintf(fh,"%s",body.c_str());
-	fprintf(fh,"%s",foot.c_str());
-	fclose(fh); 
-}
-
-// directive
-
-biDirective::biDirective(char *V):biObject("",V) {
-	// autorename class
-	while (val->at(0)!=' '&&val->at(0)!='\t') {
-		*cls += val->at(0);
-		val->erase(0,1);
-		if (val->size()==0) break;
-	}
-	if (val->size())
-		while (val->at(0)==' '||val->at(0)=='\t') val->erase(0,1);
-
-	if (*cls==".title") 	tex.title=tex.fix(*val);
-	if (*cls==".author") 	tex.author=tex.fix(*val);
-	if (*cls==".sec")		tex.sec(0,*val);
-	if (*cls==".sec+")		tex.sec(+1,*val);
-	if (*cls==".sec-")		tex.sec(-1,*val);
-	if (*cls==".module")	{
-		if (bi_module) delete bi_module; bi_module=new biModule(val->c_str()); }
-	if (*cls==".file")		{ 
-		if (bi_file) delete bi_file; bi_file=new biFile(val,'w'); }
-	if (*cls==".test")		{ 
-		if (bi_file) delete bi_file; bi_file=new biTest(val); }
-	if (*cls==".eof")		{
-		if (bi_file) delete bi_file; bi_file=NULL; }
-}
-
-// lexer
-
-biLexer::biLexer(biObject* s):biObject("lexer",s->val)	{
-	bi_module->files(*val+".lex");
-	bi_module->depends(*val+".lex.cpp",*val+".lpp","flex -o"+*val+".lex.cpp $<");//-P"+*val+" $<");
-/*
-	lpp = new biFile(new string(*val+".lpp"),'w');
-	lpp->W(
-		"%{\n"
-		"#include \""+*val+".lex.hpp\"\n"
-		"#define T(C,X)	{ yylval.s=new sym(C,yytext); return X; }\n"
-		"%}\n\n"
-		"\%option noyywrap\n"
-		"\%option yylineno\n\n"
-	);
-//
-	hpp = new biFile(new string(*val+".lex.hpp"),'w');
-	hpp->W(autogen("//",*dump()));
-	bi_module->hbody += "#include \""+*val+".lex.hpp\"\n\n";
-	hpp->W(
-			"#include <iostream>\n"
-			"#include <cstdio>\n"
-			"#include <cstdlib>\n"
-			"#include <cassert>\n\n"
-			"#include <list>\n"
-			"#include <map>\n\n"
-			"using namespace std;\n\n"
-			"extern int yylex();\n"
-			"extern int yylineno;\n"
-			"extern char* yytext;\n\n"
-			);
-	bi_lexer=this;
-	bi_module->lex_used=true;
-}
-biLexer *bi_lexer = NULL;
-
-biLexer::~biLexer()		{
-//	lpp->W("%%\n");
-//	lpp->W("\n%%\n\n");
-//	delete lpp;
-	delete hpp;
-}
-
-// writers
-
-void W(string* s, bool tofile)	{ 
-	cout << *s; 
-	if (tofile&&bi_file) bi_file->W(*s); }
-void W(string  s, bool tofile)	{ 
-	cout <<  s; 
-	if (tofile&&bi_file) bi_file->W( s); }
-void W(char c, bool tofile)	{ 
-	cout << c; 
-	if (tofile&&bi_file) bi_file->W( c); }
-
-// main
-
-void yyerror(string s) {
-	cerr << "\n\n" << s << " # " << yylineno << " : " << yytext << "\n\n";
-	cout << "\n\n" << s << " # " << yylineno << " : " << yytext << "\n\n";
-	exit(-1);
-}
-
-void terminator() {
-	if (bi_lexer) delete bi_lexer;
-	if (bi_class) delete bi_class;
-	if (bi_file) delete bi_file;
-	if (bi_module) delete bi_module;
-	exit(0);
-}
-
-int main() { 
-	init_env();
-	terminator(); 
-}
 */
 
 // \\\ generic symbol type
@@ -325,7 +150,26 @@ string biObject::eval() { return value; }
 
 // ///
 
+// \\\ environment
+map<string,biObject*> env;
+
+void init_env() {
+	env["TITLE"]=new biObject("",
+		"bI dynamic language system");
+	env["AUTHOR"]=new biObject("(c)",
+		"(c) " AUTHOR);
+	env["AUTOGEN"]=new biObject("",
+		"/************** DO NOT EDIT *************\n"
+		"   this file was autogened by bI system  \n"
+		" ************** DO NOT EDIT *************\n"	);
+}
+// ///
+
 // \\\ directive
+
+FILE *toc=fopen("bI.toc","w");
+int toc1,toc2,toc3;
+
 biDirective::biDirective(string s):biObject(".directive",s) {
 	// adaptive class generation for directives
 	tag = "";
@@ -334,8 +178,34 @@ biDirective::biDirective(string s):biObject(".directive",s) {
 	}
 	while (value.size() && (value[0]==' ' || value[0]=='\t'))
 		value.erase(0,1);
-
+	// contents generating
+	if (tag==".sec+") fprintf(toc,"%i %s\n"       ,++toc1,value.c_str()),toc2=0,toc3=0;
+	if (tag==".sec")  fprintf(toc,"\t%i.%i %s\n"  ,toc1,++toc2,value.c_str()),toc3=0;
+	if (tag==".sec-") fprintf(toc,"\t\t%i.%i.%i %s\n",toc1,toc2,++toc3,value.c_str());
 };
+// ///
+
+// \\\ module
+biModule::biModule(string V):biObject("module",V) {
+	mkdir(V.c_str());
+	assert ( make = fopen((value+"/Makefile").c_str(),"w") );
+	fprintf(make,"%s\n",autogen("#",dump()).c_str());
+	assert ( readme = fopen((value+"/README.md").c_str(),"w") );
+	title = value;
+	author = AUTHOR;
+	about = "info";
+}
+
+biModule::~biModule() {
+	fclose(make);
+	fprintf(readme,"# module: %s\n",value.c_str());
+	fprintf(readme,"## %s\n",title.c_str());
+	fprintf(readme,"(c) %s\n",author.c_str());
+	fprintf(readme,"\n%s\n\n",about.c_str());
+	fclose(readme);
+}
+
+biModule* bi_module = new biModule("tmp");
 // ///
 
 // \\ textout writers
@@ -365,5 +235,16 @@ void yyerror(string err) {
 	exit(-1);
 }
 
-int main()	{ W(autogen("#","main()")); return yyparse(); }
+// system cleanup
+void terminator() {
+	if (bi_module) delete bi_module;
+	exit(0);
+}
+
+int main() {
+	init_env();
+	W(autogen("#","main()"));
+	yyparse();
+	terminator(); /* fake */ return 0;
+}
 

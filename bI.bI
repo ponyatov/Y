@@ -45,17 +45,30 @@ bI/next (next generation) is realized in bI themself.
 All undetected text data must be bypassed from stdin to stdout.
 Data detected as language constructs will be computed inplace.
 
-.list
-.li prefix \$ switches system to object dump
-.li prefix \? evaluates (computes) bI expression
-.li some syntax constructs works without and special marks,
-but must be formatted properly for its detection, class definition for example
+Code sections in bI script file must be marked using \$ and \? prefixes.
+
+.sec- \$ object dump
+
+\$-prefixed code will be .term{dump}ed into symbol representation form of
+internal objects structure. \$ is sign of lisp S-expression with some bI
+specific extensions. Dumping can be used for debugging, and object
+serialization. Every bI object must include @dump writer method and @load
+constructor for serialization work.
+
+.sec- \? object evaluation (computing)
+
+\?-prefixed code will be computed using @eval methods in all nested objects.
+
+.sec- inline constructs
+
+Some syntax constructs works without and special marks,
+but must be formatted properly for its detection, class definition for example.
 
 For best markup and syntax undestanding you should use bI system
 itself source code in bI.bI file. Use (g)vim and includes syntax files for
 apropriate coloring highlighting.
 
-.sec \\ escape char
+.sec- \\ escape char
 
 \\ escape char is prefix before any special char marks use this char as is.
 
@@ -70,11 +83,14 @@ Comment LineComment regexp = '#[^\\n]*\\n'
 
 .sec Directives
 
-Directives is documentation markup mainly,
-but can control bI system in other way.
+Directives is documentation markup mainly, but can control bI system in other way.
 
 class Directive
 	regexp = '^.[a-z]+[ \\t]*[^\\n]*\\n'
+	@init {										'adaptive constructor'
+		%tag  = %value * '^\.[a-z]+'
+		value = %value - '^\.[a-z]+\s+'
+	}
 
 .sec- Control
 
@@ -98,9 +114,11 @@ Directive .sec-		'define program subsection'	regexp = '^\.sec\-[ \\t]+'
 Directive .list		'documentation list'		regexp = '^\.list[ \\t]+'
 Directive .li		'doc list item'				regexp = '^\.li[ \\t]+'
 
-.sec numbers
+.sec Numbers
 
 Current bI supports only machine numeric types, covered by C++ alias types.
+
+.sec- Machine primitives
 
 class Number
 
@@ -118,48 +136,8 @@ Number float		'float'						regexp = '[0-9]+[eE][+-]?[0-9]+'
 1.2 -3e+04
 
 .end
-
-.end
-
-.sec Pure symbolic
-
-.module pure
-
-lexer sym
-	bypass = 'cout<<yytext'
-	anychar = '.':bypass
-	comment = '\#[^\n]\n':bypass
-	options = 'noyywrap','yylineno'
-	opt = prefix, '%option ', options
-
-.file sym.lpp
-/* ?bILS */
-/* ?AUTHOR */
-?AUTOGEN
-%{
-\#include "?MODULE.hpp"
-\#define T(C,X)	{ yylval.s=new sym(C,yytext); return X; }
-%}
-?sym.opt
-%%
-\#[^\\n]*\\n	{ ?sym.bypass; }
-[ \\t\\r\\n]+	{}
-.				{ cout<<yytext<<"\\n"; }
-%%
-.eof
-
-
-.test empty
-.eof
-
-.test simplest
-simplest data types
-
-numbers: 	0 -1 +2 -03 +004 0056 -1.2 +3e-4
-symbols:	all Other <Data> (and) [any,1212,dsas] <class:types>
-.eof
-
-.end
+###############################################################################
+###############################################################################
 
 class Directive
 #	lexer regexp = '^\.[a-z]+[\+\-]?[ \t]*[^\n]*'
@@ -173,22 +151,6 @@ class .file
 
 Directive object modify themself using first '.some' string from
 Directive[val] field for dynamic class rename.
-
-.sec \$ (dump) and \? (eval) prefixes
-
-Code sections in bI script file must be marked using \$ and \? prefixes.
-
-.sec- object dump
-
-\$-prefixed code will be .term{dump}ed into symbol representation form of
-internal objects structure. \$ is sign of lisp S-expression with some bI
-specific extensions. Dumping can be used for debugging, and object
-serialization. Every bI object must include @dump writer method and @load
-constructor for serialization work.
-
-.sec- object evaluation (computing)
-
-\?-prefixed code will be computed using @eval methods in all nested objects.
 
 .sec+ Directive
 

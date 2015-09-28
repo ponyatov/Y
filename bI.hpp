@@ -1,6 +1,7 @@
 #ifndef _bI_H
 #define _bI_H
 
+#define AUTHOR "Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
 
 // \\\ header files in std namespace
 #include <iostream>
@@ -18,28 +19,6 @@ using namespace std;
 // ///
 
 /*
-
-#include <sstream>
-
-extern map<string,biObject*> env;
-
-struct biList: public biObject {
-	biList();
-	biList(biObject*);
-};
-
-struct biString: public biObject {
-	biString(char*);
-};
-
-struct biPair: public biObject {
-	biPair(biObject*,biObject*);
-};
-
-struct biDirective: public biObject {
-	biDirective(char*);
-};
-
 struct biFile: public biObject {
 	FILE *fh;
 	char mode;
@@ -48,9 +27,6 @@ struct biFile: public biObject {
 	string *dump(int depth=0);
 	void W(string);
 	void W(char);
-};
-struct biTest: public biFile {
-	biTest(string*);
 };
 extern biFile *bi_file;
 
@@ -81,31 +57,6 @@ struct biClass: public biObject {
 
 extern biClass* bi_class;
 extern map<string,string*> bi_class_reg;
-
-struct biLexer: public biObject {
-	biFile *lpp; biFile *hpp;
-	biLexer(biObject*);
-	~biLexer();
-};
-extern biLexer *bi_lexer;
-
-struct TEX {
-	FILE* fh;
-	string title,author,head,body,foot;
-	TEX(const char*);
-	~TEX();
-	void W(string);
-	void sec(int,string);
-	string fix(string);
-};
-extern TEX tex;
-
-string autogen(string pfx, string obj="");
-void W(string*, bool tofile=true);
-void W(char, bool tofile=true);
-
-void terminator();
-
 */
 
 // \\\ generic symbol type
@@ -124,10 +75,25 @@ struct biObject {					// class implements all symbol functionality
 };
 // ///
 
+// \\\ environment
+extern map<string,biObject*> env;
+void init_env();
+// ///
+
 // \\\ directive
 struct biDirective: biObject {
 	biDirective(string);
 };
+// ///
+
+// \\\ module
+struct biModule: biObject {
+	FILE *make; FILE* readme;
+	string title,author,about;
+	biModule(string);
+	~biModule();
+};
+extern biModule* bi_module;
 // ///
 
 // \\\ lexer/parser header block
@@ -149,6 +115,9 @@ void W(string   ,bool to_file=true);
 void W(string  *,bool to_file=true);
 void W(biObject*,bool to_file=true);
 // //
+
+// system cleanup
+void terminator();
 
 #endif // _bI_H
 

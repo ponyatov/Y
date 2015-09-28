@@ -20,7 +20,7 @@
 sym :
 	| sym DIRECTIVE				{ W($2); }
 	| sym ex					{ W($2); }
-	| sym END					{ W($2); exit(0); }
+	| sym END					{ W($2); terminator(); }
 	| sym EOL					{ W($2); }
 	| sym C						{ W($2); }
 ;
