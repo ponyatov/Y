@@ -79,7 +79,7 @@ Comments must be removed from output.
 
 class Comment
 
-Comment LineComment regexp = '#[^\\n]*\\n'
+class LineComment:Comment	regexp = '#[^\\n]*\\n'
 
 .sec Directives
 

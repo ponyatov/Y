@@ -39,8 +39,8 @@ D	[0-9]+
 <ss>\n\n					{BEGIN(INITIAL); TS(ENDCLASS);}
 <ss>[a-zA-Z][a-zA-Z0-9]*	TO("sym",SYM)					/* symbol */
 
-<ss>[=]						TO("op",OP)						/* operator */
-<ss>:						TO("op",COLON)					/* : */
+<ss>[ \t]*:[ \t]*			TX(biOP,COLON)					/* : */
+<ss>[ \t]*=[ \t]*			TX(biOP,EQ)						/* = */
 
 \n						TC(EOL)						/* end line syntax marker */
 .						TC(C)						/* any undetected char */

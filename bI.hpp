@@ -48,6 +48,12 @@ struct biClass: biObject {
 extern map<string,biClass*> bi_class_registry;	/* global class registry */
 // ///
 
+// \\\ operator
+struct biOP: biObject {
+	biOP(string);
+};
+// ///
+
 // \\\ directive
 struct biDirective: biObject {
 	biDirective(string);

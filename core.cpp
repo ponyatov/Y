@@ -6,24 +6,24 @@ biObject::biObject(string T,string V)		{ tag=T; value=V; }
 biObject::biObject(biObject* T,biObject* V)	{ tag=T->value; value=V->value; }
 
 string pad(int depth) {
-	string S="\n"; 
+	string S;//="\n";
 	for(int i=0;i<depth;i++) S+="\t";	
 	return S;
 }
 
 string biObject::dump(int depth) {
-	string S;
-	if (depth) S+=pad(depth);							// left padding
+	string S="\n"+pad(depth);								// left padding
 	S+="<"+tag+":"+value+">";							// symbol header
 	if (attr.size()) {									// dump attributes
-		for ( map<string,biObject*>::iterator a = attr.begin();
-			a != attr.end(); a++ )
-			S += pad(depth+1)+a->first+" : "+a->second->value+"\n";
+		for ( map<string,biObject*>::iterator A = attr.begin();
+			A != attr.end(); A++ )
+				S += "\n"+pad(depth+1)+A->first+" : "+A->second->value;
 	}
 	if (nest.size()) {									// nested symbols
-		yyerror("nested objects");
+		for ( list<biObject*>::iterator N = nest.begin();
+			N != nest.end(); N++ )
+				S += (*N)->dump(depth+1);
 	}
-	if (depth) S+="\n";
 	return S;											// return final string
 }
 
@@ -63,6 +63,15 @@ biClass::biClass(biObject* P,biObject* C):biObject(P,C) {
 	attr["super"] = P;
 	bi_class_registry[C->value] = this;
 }
+// ///
+
+// \\\ operator
+biOP::biOP(string s): biObject("op",s) {
+	while (value[0] == ' ' || value[0] == '\t')
+		value.erase(0,1);
+	while (value[value.size()-1] == ' ' || value[value.size()-1] == '\t')
+		value.erase(value.size()-1,1);
+};
 // ///
 
 // \\\ directive

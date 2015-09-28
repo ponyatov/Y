@@ -14,7 +14,7 @@
 %token <s> S END
 
 %token <o> DIRECTIVE FFILE FEOF NUM STR SYM 
-%token <o> OP COLON
+%token <o> OP COLON EQ
 %token <s> CLASS ENDCLASS
 %type <o> ex classdef classym op
 
@@ -36,6 +36,8 @@ sym :
 ex	: NUM
 	| STR
 	| SYM
+	| SYM EQ ex					{ 
+		$$=$2; $$->nest.push_back($1); $$->nest.push_back($3); }
 ;
 
 classdef : classym				{ $$ = $1; }
