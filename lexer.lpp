@@ -19,6 +19,7 @@ D	[0-9]+
 
 %%
 \\.						T1(C)						/* escaped char */
+<*>#[^\n]*\n			{}							/* line comment */
 
 ^\.end					TS(END)						/* source end marker */
 ^\.[a-z]+[ \t]*/\{		TX(biDirective,DIRECTIVE)	/* {} blocked directive */

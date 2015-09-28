@@ -88,7 +88,7 @@ void TOC::W(int lvl,string s) {
 	fprintf(fh,"%4i\t",yylineno);
 	switch (lvl) {
 		case SECP:  
-			fprintf(fh,"t%i %s",++l1,s.c_str()); l2=0; l3=0;
+			fprintf(fh,"%i %s",++l1,s.c_str()); l2=0; l3=0;
 			break;
 		case SEC:   
 			fprintf(fh,"\t%i.%i %s",l1,++l2,s.c_str()); l3=0;
@@ -97,7 +97,7 @@ void TOC::W(int lvl,string s) {
 			fprintf(fh,"\t\t%i.%i.%i %s",l1,l2,++l3,s.c_str());
 			break;
 		case CLASS: 
-			fprintf(fh,"\t\t\t%.2i class %s\n",++cls,s.c_str());
+			fprintf(fh,"\t\t\t\t%s\n",s.c_str());
 			break;
 		default: 
 			fprintf(fh,"%s",s.c_str());

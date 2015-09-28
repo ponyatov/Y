@@ -88,10 +88,11 @@ mainly, but can control bI system in other way.
 
 class Directive
 	regexp = '^.[a-z]+[ \\t]*[^\\n]*\\n'
-	@init {										'adaptive constructor'
-		%tag  = %value * '^\.[a-z]+'
-		value = %value - '^\.[a-z]+\s+'
-	}
+
+#	@init {										'adaptive constructor'
+#		%tag  = %value * '^\.[a-z]+'
+#		value = %value - '^\.[a-z]+\s+'
+#	}
 
 Directive object modify themself for dynamic class mutation.
 
@@ -241,7 +242,15 @@ class Symbol
 
 .sec+ bI system model
 
-.sec core Symbol class
+.sec core Object class
+
+class Object 'core bI data'
+	tag		'class/data type marker'
+	value	'string value'
+	attr	'attributes'
+	nest	'nested objects'
+
+.sec+ Sources (with bI-computed substitutions)
 
 .file lexer.lpp
 %{
