@@ -85,12 +85,23 @@ TOC::TOC(string s)	{ assert( fh=fopen(s.c_str(),"w") ); l1=l2=l3=cls=0; }
 TOC::~TOC()			{ fclose(fh); }
 
 void TOC::W(int lvl,string s) {
+	fprintf(fh,"%4i\t",yylineno);
 	switch (lvl) {
-		case SECP:  fprintf(fh,"%i %s",++l1,s.c_str()); l2=0; l3=0; break;
-		case SEC:   fprintf(fh,"\t%i.%i %s",l1,++l2,s.c_str()); l3=0; break;
-		case SECM:  fprintf(fh,"\t\t%i.%i.%i %s",l1,l2,++l3,s.c_str()); break;
-		case CLASS: fprintf(fh,"\t\t\t\t%.2i class %s\n",++cls,s.c_str()); break;
-		default: fprintf(fh,"%s",s.c_str()); break;
+		case SECP:  
+			fprintf(fh,"t%i %s",++l1,s.c_str()); l2=0; l3=0;
+			break;
+		case SEC:   
+			fprintf(fh,"\t%i.%i %s",l1,++l2,s.c_str()); l3=0;
+			break;
+		case SECM:  
+			fprintf(fh,"\t\t%i.%i.%i %s",l1,l2,++l3,s.c_str());
+			break;
+		case CLASS: 
+			fprintf(fh,"\t\t\t%.2i class %s\n",++cls,s.c_str());
+			break;
+		default: 
+			fprintf(fh,"%s",s.c_str());
+			break;
 	}
 }
 // ///
@@ -106,10 +117,10 @@ biDirective::biDirective(string s):biObject(".directive",s) {
 	while (value.size() && (value[0]==' ' || value[0]=='\t'))
 		value.erase(0,1);
 	// std docfields
-	if (tag==".title")   toc.W(0,"  title:\t"+value+"\n");
-	if (tag==".author")  toc.W(0," author:\t"+value+"\n");
-	if (tag==".license") toc.W(0,"license:\t"+value+"\n");
-	if (tag==".github")  toc.W(0," github:\t"+value+"\n");
+	if (tag==".title")   toc.W(0,"  title: "+value+"\n");
+	if (tag==".author")  toc.W(0," author: "+value+"\n");
+	if (tag==".license") toc.W(0,"license: "+value+"\n");
+	if (tag==".github")  toc.W(0," github: "+value+"\n");
 	if (tag==".tocline") toc.W(0,"-----------------------------------------\n");
 	// contents generating
 	if (tag==".sec+") toc.W(1,value+"\n");
