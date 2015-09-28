@@ -1,7 +1,7 @@
 #ifndef _bI_H
 #define _bI_H
 
-#define AUTHOR "Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
+#define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
 
 // \\\ header files in std namespace
 #include <iostream>
@@ -84,6 +84,17 @@ void init_env();
 struct biDirective: biObject {
 	biDirective(string);
 };
+// ///
+
+// \\\ file
+struct biFile: biObject {
+	biFile(string);
+	~biFile();
+	void W(char);
+	void W(string);
+	FILE *fh;
+};
+extern biFile* bi_file;
 // ///
 
 // \\\ module

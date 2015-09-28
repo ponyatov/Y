@@ -13,20 +13,23 @@
 %token <c> C EOL
 %token <s> END
 
-%token <o> DIRECTIVE NUM STR
+%token <o> DIRECTIVE FFILE FEOF NUM STR SYM
 %type <o> ex
 
 %%
 sym :
 	| sym DIRECTIVE				{ W($2); }
+	| sym FFILE	EOL				{ W($2,false); W($3,false); }
+	| sym FEOF					{ W($2,false); if (bi_file) delete bi_file; }
 	| sym ex					{ W($2); }
 	| sym END					{ W($2); terminator(); }
 	| sym EOL					{ W($2); }
 	| sym C						{ W($2); }
 ;
 
-ex : NUM
-   | STR
+ex	: NUM
+	| STR
+	| SYM
 ;
 %%
 

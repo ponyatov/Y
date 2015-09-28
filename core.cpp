@@ -157,7 +157,7 @@ void init_env() {
 	env["TITLE"]=new biObject("",
 		"bI dynamic language system");
 	env["AUTHOR"]=new biObject("(c)",
-		"(c) " AUTHOR);
+		AUTHOR);
 	env["AUTOGEN"]=new biObject("",
 		"/************** DO NOT EDIT *************\n"
 		"   this file was autogened by bI system  \n"
@@ -182,25 +182,48 @@ biDirective::biDirective(string s):biObject(".directive",s) {
 	if (tag==".sec+") fprintf(toc,"%i %s\n"       ,++toc1,value.c_str()),toc2=0,toc3=0;
 	if (tag==".sec")  fprintf(toc,"\t%i.%i %s\n"  ,toc1,++toc2,value.c_str()),toc3=0;
 	if (tag==".sec-") fprintf(toc,"\t\t%i.%i.%i %s\n",toc1,toc2,++toc3,value.c_str());
+	// .file
+	if (tag==".file") {
+		if (bi_file) delete bi_file;	// autoclose prev file
+		bi_file = new biFile(value);
+	}
 };
+// ///
+
+// \\\ file
+
+biFile::biFile(string V):biObject(".file",V) {
+	assert( fh = fopen((bi_module->value+"/"+value).c_str(),"w") );
+}
+biFile::~biFile()	{ fclose(fh); bi_file = NULL; }
+
+void biFile::W(char   C)	{ fprintf(fh,"%c",C); }
+void biFile::W(string S)	{ fprintf(fh,"%s",S.c_str()); }
+
+biFile* bi_file = NULL;
 // ///
 
 // \\\ module
 biModule::biModule(string V):biObject("module",V) {
 	mkdir(V.c_str());
 	assert ( make = fopen((value+"/Makefile").c_str(),"w") );
-	fprintf(make,"%s\n",autogen("#",dump()).c_str());
+	fprintf(make,"%s",autogen("#",dump()).c_str());
 	assert ( readme = fopen((value+"/README.md").c_str(),"w") );
+	fprintf(readme,"%s",autogen(">",dump()).c_str());
 	title = value;
 	author = AUTHOR;
 	about = "info";
 }
 
 biModule::~biModule() {
+	fprintf(make,"# module: %s\n",value.c_str());
+	fprintf(make,"# title:  %s\n",title.c_str());
+	fprintf(make,"# author: %s\n",author.c_str());
+	fprintf(make,"\n\n");
 	fclose(make);
 	fprintf(readme,"# module: %s\n",value.c_str());
 	fprintf(readme,"## %s\n",title.c_str());
-	fprintf(readme,"(c) %s\n",author.c_str());
+	fprintf(readme,"%s\n",author.c_str());
 	fprintf(readme,"\n%s\n\n",about.c_str());
 	fclose(readme);
 }
@@ -221,10 +244,14 @@ string autogen(string pfx, string obj) {
 	);
 }
 
-void W(char      C,bool to_file)		{ cout <<  C; }
-void W(string    S,bool to_file)		{ cout <<  S; }
-void W(string   *S,bool to_file)		{ cout << *S; }
-void W(biObject *O,bool to_file)		{ cout << O->dump(); }
+void W(char      C,bool to_file)		{ cout <<  C;
+	if (to_file && bi_file) bi_file->W(C); }
+void W(string    S,bool to_file)		{ cout <<  S;
+	if (to_file && bi_file) bi_file->W(S); }
+void W(string   *S,bool to_file)		{ cout << *S;
+	if (to_file && bi_file) bi_file->W(*S); }
+void W(biObject *O,bool to_file)		{ cout << O->dump();
+	if (to_file && bi_file) bi_file->W(O->dump()); }
 // //
 
 // parser error

@@ -83,7 +83,8 @@ Comment LineComment regexp = '#[^\\n]*\\n'
 
 .sec Directives
 
-Directives is documentation markup mainly, but can control bI system in other way.
+Elements starting with . is directives, they are for documentation markup 
+mainly, but can control bI system in other way.
 
 class Directive
 	regexp = '^.[a-z]+[ \\t]*[^\\n]*\\n'
@@ -91,6 +92,8 @@ class Directive
 		%tag  = %value * '^\.[a-z]+'
 		value = %value - '^\.[a-z]+\s+'
 	}
+
+Directive object modify themself for dynamic class mutation.
 
 .sec- Control
 
@@ -107,12 +110,26 @@ Directive .github	'<url> to github page'		regexp = '^\\.github'
 
 .sec- Documenting markup
 
-Directive .sec		'define program section'	regexp = '^\.sec[ \\t]+'
-Directive .sec+		'define program chapter'	regexp = '^\.sec\+[ \\t]+'
-Directive .sec-		'define program subsection'	regexp = '^\.sec\-[ \\t]+'
+Directive .sec		'define program section'	regexp = '^\.sec\s+'
+Directive .sec+		'define program chapter'	regexp = '^\.sec\+\s+'
+Directive .sec-		'define program subsection'	regexp = '^\.sec\-\s+'
 
-Directive .list		'documentation list'		regexp = '^\.list[ \\t]+'
-Directive .li		'doc list item'				regexp = '^\.li[ \\t]+'
+Directive .list		'documentation list'		regexp = '^\.list\s+'
+Directive .li		'doc list item'				regexp = '^\.li\s+'
+
+.sec- Modules
+
+Default module from system startup is 'tmp'. Other modules can be created by
+
+Directive .module	'switch/create module'		regexp = '^\.module\s+'
+
+.sec- Inline file definition
+
+bI implements plain text file definitions with computable contents.
+Source between \.file and \.eof will be processed into stdout
+and copied into selected file with all bI language processing.
+
+Directive .file		'define file contents'		regexp = '^\.file\s+'
 
 .sec Numbers
 
@@ -135,34 +152,50 @@ Number float		'float'						regexp = '[0-9]+[eE][+-]?[0-9]+'
 
 1.2 -3e+04
 
+.sec+ bI system model
+
+.file lexer.lpp
+%{
+$AUTOGEN
+
+\#include "bI.hpp"
+
+\#define TC(X)	{ yylval.c = yytext[\0];     			return X; }
+\#define T\1(X)	{ yylval.c = yytext[\1];					return X; }
+\#define TS(X)	{ yylval.s = new string(yytext);     	return X; }
+\#define TO(C,X)	{ yylval.o = new biObject(C,yytext); 	return X; }
+\#define TX(C,X)	{ yylval.o = new C(yytext); 			return X; }
+%}
+
+%option noyywrap
+%option yylineno
+
+S	[\+\-]{\0,\1}
+D	[\0-\9]+
+
+%%
+$LEXER_RULES
+%%
+.eof
+
+.file parser.ypp
+$AUTOGEN
+.eof
+
+.file bI.hpp
+$AUTOGEN
+.eof
+
+.file core.cpp
+$AUTOGEN
+.eof
+
 .end
 ###############################################################################
 ###############################################################################
 
-class Directive
-#	lexer regexp = '^\.[a-z]+[\+\-]?[ \t]*[^\n]*'
-#	@init {
-#		%[class] = %[value] * '\.[a-z]+' [first] # rename class for new object
-#		%[value] = %[value] - '^\.[a-z]+[ \t]*' # remove leading .some<space>
-#	}
-class .file
-#: Directive
-#	lexer regexp = '^\.file[ \t]+[^\n]+'
-
-Directive object modify themself using first '.some' string from
-Directive[val] field for dynamic class rename.
-
 .sec+ Directive
 
-Elements starting with . is directives, controls mainly document generation,
-but can control other language system functions.
-
-#class Directive lexer regexp DOT = '\.[a-z]+[\+\-]?[ \t]+[^\n]*'
-
-.sec \.title: current (sub)module title.
-.sec \.author: author marker
-.sec \.github: GutHub marker
-.sec \.module: define (sub)module
 .sec \.file \.eof: create file contents intext
 .sec \.sec \.sec+ \.sec-: sectioning, mark contents items
 

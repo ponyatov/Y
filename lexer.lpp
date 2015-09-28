@@ -18,6 +18,8 @@ D	[0-9]+
 \\.						T1(C)						/* escaped char */
 ^\.end					TS(END)						/* source end marker */
 ^\.[a-z]+[ \t]*/\{		TX(biDirective,DIRECTIVE)	/* {} blocked directive */
+^\.file+[ \t]*[^\n]*	TX(biDirective,FFILE)		/* .file */
+^\.eof					TX(biDirective,FEOF)		/* .eof */
 ^\.[a-z]+[ \t]*[^\n]*	TX(biDirective,DIRECTIVE)	/* directive */
 '[^']*'					TO("str",STR)
 {D}						TO("int",NUM)
