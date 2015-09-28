@@ -18,47 +18,6 @@
 using namespace std;
 // ///
 
-/*
-struct biFile: public biObject {
-	FILE *fh;
-	char mode;
-	biFile(string*,char);
-	~biFile();
-	string *dump(int depth=0);
-	void W(string);
-	void W(char);
-};
-extern biFile *bi_file;
-
-struct biModule: public biObject {
-	FILE *make;	FILE *cpp; FILE *hpp;
-	biModule(const char*);
-	~biModule();
-	string head; string body; string hbody;
-	bool lex_used;
-	void files(string);
-	void depends(string,string,string);
-	void headmake(string,string,string);
-};
-extern biModule *bi_module;
-
-struct biClass: public biObject {
-	biFile *cpp;
-	string hpps;
-	string super;
-	list<string> fld;
-	biFile *hpp;
-	void init(biObject*);
-	biClass(biObject*);
-	biClass(biObject*,biObject*);
-	~biClass();
-	string* dump(int depth=0);
-};
-
-extern biClass* bi_class;
-extern map<string,string*> bi_class_reg;
-*/
-
 // \\\ generic symbol type
 struct biObject {					// class implements all symbol functionality
 	// data fields
@@ -78,6 +37,15 @@ struct biObject {					// class implements all symbol functionality
 // \\\ environment
 extern map<string,biObject*> env;
 void init_env();
+// ///
+
+// \\\ class
+struct biClass: biObject {
+	biClass(string);
+	biClass(biObject*);
+	biClass(biObject*,biObject*);
+};
+extern map<string,biClass*> bi_class_registry;	/* global class registry */
 // ///
 
 // \\\ directive

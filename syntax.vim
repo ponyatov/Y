@@ -25,6 +25,7 @@ syntax match	Constant	"\v[a-z\*\?]+(\.[a-z\*\?]+)+"
 
 " strings
 syntax region	String		start="'" end="'"
+syntax region	String		start="\"" end="\""
 " numbers
 syntax match	Constant	"\v[0-9]+"
 

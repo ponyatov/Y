@@ -11,19 +11,25 @@
 }
 
 %token <c> C EOL
-%token <s> END
+%token <s> S END
 
-%token <o> DIRECTIVE FFILE FEOF NUM STR SYM
-%type <o> ex
+%token <o> DIRECTIVE FFILE FEOF NUM STR SYM 
+%token <o> OP COLON
+%token <s> CLASS ENDCLASS
+%type <o> ex classdef classym op
 
 %%
 sym :
+	| sym classdef				{ W($2); }
 	| sym DIRECTIVE				{ W($2); }
 	| sym FFILE	EOL				{ W($2,false); W($3,false); }
 	| sym FEOF					{ W($2,false); if (bi_file) delete bi_file; }
 	| sym ex					{ W($2); }
 	| sym END					{ W($2); terminator(); }
 	| sym EOL					{ W($2); }
+	| sym ENDCLASS				{ W($2); }
+	| sym op					{ W($2); }
+	| sym S						{ W($2); }
 	| sym C						{ W($2); }
 ;
 
@@ -31,5 +37,15 @@ ex	: NUM
 	| STR
 	| SYM
 ;
+
+classdef : classym				{ $$ = $1; }
+	| classym COLON SYM			{ 
+		$$ = new biClass(bi_class_registry[$3->value],$1); }
+;
+
+classym : CLASS SYM 			{ $$ = new biClass($2); }
+;
+
+op : OP | COLON ;
 %%
 

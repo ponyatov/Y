@@ -114,6 +114,8 @@ Directive .sec		'define program section'	regexp = '^\.sec\s+'
 Directive .sec+		'define program chapter'	regexp = '^\.sec\+\s+'
 Directive .sec-		'define program subsection'	regexp = '^\.sec\-\s+'
 
+.sec-  Itemize/enumerate list (not <list> type)
+
 Directive .list		'documentation list'		regexp = '^\.list\s+'
 Directive .li		'doc list item'				regexp = '^\.li\s+'
 
@@ -130,29 +132,80 @@ Source between \.file and \.eof will be processed into stdout
 and copied into selected file with all bI language processing.
 
 Directive .file		'define file contents'		regexp = '^\.file\s+'
+Directive .eof		'end inline file'			regexp = '^\.eof'
 
-.sec Numbers
+.sec+ Generics (primitive data types)
+
+Generic bI language types provides highlevel abstracts for typical primitive
+data types in other programming languages. Generics is gateway between machine
+level types, and bI metaprogramming hell: it have all debug, profiling and
+tracking functions, but can be transparently transformed into primitive types
+for statical compilation, native machine code or hardware synthesis.
 
 Current bI supports only machine numeric types, covered by C++ alias types.
 
-.sec- Machine primitives
+.sec Numbers
 
 class Number
 
-Number int			'integer'					regexp = '[0-9]+'
+.sec Strings
+
+Most unversal data type, can represent and data in serialized form.
+
+class String
+
+.sec+ Machine types
+
+Machine types was inherited from LLVM design, and uses LLVM itself for code
+generation.
+
+.list
+.li [iN]teger, N=2^n
+.li [f]loat, [d]ouble
+.li [v]ector
+
+.sec Numbers
+
+.sec- int: integer
+
+class int :Number	'integer'					regexp = '[0-9]+'
 
 0 -1 +2 -03 +004
 
-Number hex			'hexadigital'				regexp = '0x[0-9A-F]+'
+.sec- hex: hexadecimal
+
+class hex:Number	'hexadigital'				regexp = '0x[0-9A-F]+'
+
+.sec- bin: binary
+
 Number bin			'binary'					regexp = '0b[01]+'
 
 0x12AF 0b1101
+
+.sec- float: floating point data
 
 Number float		'float'						regexp = '[0-9]+[eE][+-]?[0-9]+'
 
 1.2 -3e+04
 
+.sec str: string
+
+String str			'string'					regexp = "'[^']*'"
+	@size		'size in chars'	-> int
+	@+(str,str)	'concatenate'	-> str
+	@*(str,int)	'repeat str num times'			-> str
+	@*(str,str)	'fetch substrings using regexp'	-> list<str>
+	@/(str,str)	'split str using regexp'		-> list<str>
+
+.sec+ Object subsystem
+
+All elements in bI system based on Symbol class:
+
+class Symbol
+
 .sec+ bI system model
+
+.sec core Symbol class
 
 .file lexer.lpp
 %{
@@ -194,37 +247,16 @@ $AUTOGEN
 ###############################################################################
 ###############################################################################
 
-.sec+ Directive
-
-.sec \.file \.eof: create file contents intext
-.sec \.sec \.sec+ \.sec-: sectioning, mark contents items
-
-Directive .sec lexer regexp = '\.sec[^\n]+'
-
-.sec \.list \.li: itemize/enumerate list (not <list> type)
 
 .sec+ Data types
 
-.sec+ Generics (primitive data types)
-
-Generic bI language types provides highlevel abstracts for typical primitive
-data types in other programming languages. Generics is gateway between machine
-level types, and bI metaprogramming hell: it have all debug, profiling and
-tracking functions, but can be transparently transformed into primitive types
-for statical compilation, native machine code or hardware synthesis.
+.sec+ 
 
 .sec String
 
-Most unversal data type, can represent and data in serialized form.
-
-class String,str
+g,str
 	class		'class name'
 	value		'generic value'
-	@size		'size in chars'					-> int
-	@+(str,str)	'concatenate'					-> str
-	@*(str,int)	'repeat str num times'			-> str
-	@*(str,str)	'fetch substrings using regexp'	-> list<str>
-	@/(str,str)	'split str using regexp'		-> list<str>
 
 'string1' $'string2' ?'string3'
 
@@ -271,17 +303,7 @@ $-1e+3 $+4E-5
 ?-3.4 ?5.6 ?+7.8
 ?-1e+3 ?+4E-5
 
-.sec Machine types
-
-Machine types was inherited from LLVM design, and uses LLVM itself for code
-generation.
-
-.list
-.li [iN]teger, N=2^n
-.li [f]loat, [d]ouble
-.li [v]ector
-
-.sec+ Object-oriented design
+-oriented design
 
 .sec Base class inheritance
 

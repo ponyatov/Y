@@ -11,22 +11,37 @@
 %option noyywrap
 %option yylineno
 
+		/* expression mode */
+%x ss
+
 S	[\+\-]{0,1}
 D	[0-9]+
 
 %%
 \\.						T1(C)						/* escaped char */
+
 ^\.end					TS(END)						/* source end marker */
 ^\.[a-z]+[ \t]*/\{		TX(biDirective,DIRECTIVE)	/* {} blocked directive */
-^\.file+[ \t]*[^\n]*	TX(biDirective,FFILE)		/* .file */
+^\.file+[ \t]+[^\n]*	TX(biDirective,FFILE)		/* .file */
 ^\.eof					TX(biDirective,FEOF)		/* .eof */
 ^\.[a-z]+[ \t]*[^\n]*	TX(biDirective,DIRECTIVE)	/* directive */
-'[^']*'					TO("str",STR)
-{D}						TO("int",NUM)
+
+<*>\'[^\']*\'			TO("str",STR)				/* 'string' */
+<*>\"[^\"]*\"			TO("str",STR)				/* "string" */
+													
+{D}						TO("int",NUM)				/* numeric literals */
 0x[0-9A-F]+				TO("hex",NUM)
 0b[01]+					TO("bin",NUM)
 {D}\.{D}				TO("float",NUM)
 {D}[eE]{S}{D}			TO("float",NUM)
+
+^class[ \t]+				{BEGIN(ss); TS(CLASS);}			/* class keyword */
+<ss>\n\n					{BEGIN(INITIAL); TS(ENDCLASS);}
+<ss>[a-zA-Z][a-zA-Z0-9]*	TO("sym",SYM)					/* symbol */
+
+<ss>[=]						TO("op",OP)						/* operator */
+<ss>:						TO("op",COLON)					/* : */
+
 \n						TC(EOL)						/* end line syntax marker */
 .						TC(C)						/* any undetected char */
 %%
