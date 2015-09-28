@@ -54,6 +54,18 @@ struct biOP: biObject {
 };
 // ///
 
+// \\\ table of contents
+struct TOC {
+	FILE *fh;
+	int l1,l2,l3,cls;
+	void W(int,string);
+	static const int SECP=1,SEC=2,SECM=3,CLASS=5;
+	TOC(string);
+	~TOC();
+};
+extern TOC toc;
+// ///
+
 // \\\ directive
 struct biDirective: biObject {
 	biDirective(string);

@@ -3,7 +3,7 @@
 .author		(c) Dmitry Ponyatov <dponyatov@gmail.com>, All rights reserved
 .license	http://www.gnu.org/copyleft/lesser.html
 .github		https://github.com/ponyatov/Y
-
+.tocline
 .about{
 	bI/sym is experimental dynamic language system targeted on embedded and
 	computing systems programming, hardware design, science data processing,
@@ -166,9 +166,29 @@ generation.
 
 .sec Memory elements
 
+.sec- i8: byte
+
 class i8
 
 class byte:i8
+
+.sec- i16: short
+
+class i16
+
+class short:i16
+
+.sec- i32: word
+
+class i32
+
+class word:i32
+
+.sec- i64: long
+
+class i64
+
+class long:i64
 
 .sec Number
 

@@ -51,16 +51,19 @@ biObject *biCoreClass = new biObject("class","class");
 map<string,biClass*> bi_class_registry;
 
 biClass::biClass(string V):biObject("class",V) 			{
+	toc.W(TOC::CLASS,value);
 	bi_class_registry[V] = this;
 }
 
 biClass::biClass(biObject* S):biObject(biCoreClass,S)	{
+	toc.W(TOC::CLASS,value);
 	bi_class_registry[S->value] = this;
 }
 
 biClass::biClass(biObject* P,biObject* C):biObject(P,C) {
 	tag = "class";
 	attr["super"] = P;
+	toc.W(TOC::CLASS,value+":"+P->value);
 	bi_class_registry[C->value] = this;
 }
 // ///
@@ -74,10 +77,25 @@ biOP::biOP(string s): biObject("op",s) {
 };
 // ///
 
-// \\\ directive
+// \\\ table of contents
+TOC toc("bI.toc");
 
-FILE *toc=fopen("bI.toc","w");
-int toc1,toc2,toc3;
+
+TOC::TOC(string s)	{ assert( fh=fopen(s.c_str(),"w") ); l1=l2=l3=cls=0; }
+TOC::~TOC()			{ fclose(fh); }
+
+void TOC::W(int lvl,string s) {
+	switch (lvl) {
+		case SECP:  fprintf(fh,"%i %s",++l1,s.c_str()); l2=0; l3=0; break;
+		case SEC:   fprintf(fh,"\t%i.%i %s",l1,++l2,s.c_str()); l3=0; break;
+		case SECM:  fprintf(fh,"\t\t%i.%i.%i %s",l1,l2,++l3,s.c_str()); break;
+		case CLASS: fprintf(fh,"\t\t\t\t%.2i class %s\n",++cls,s.c_str()); break;
+		default: fprintf(fh,"%s",s.c_str()); break;
+	}
+}
+// ///
+
+// \\\ directive
 
 biDirective::biDirective(string s):biObject(".directive",s) {
 	// adaptive class generation for directives
@@ -87,10 +105,16 @@ biDirective::biDirective(string s):biObject(".directive",s) {
 	}
 	while (value.size() && (value[0]==' ' || value[0]=='\t'))
 		value.erase(0,1);
+	// std docfields
+	if (tag==".title")   toc.W(0,"  title:\t"+value+"\n");
+	if (tag==".author")  toc.W(0," author:\t"+value+"\n");
+	if (tag==".license") toc.W(0,"license:\t"+value+"\n");
+	if (tag==".github")  toc.W(0," github:\t"+value+"\n");
+	if (tag==".tocline") toc.W(0,"-----------------------------------------\n");
 	// contents generating
-	if (tag==".sec+") fprintf(toc,"%i %s\n"       ,++toc1,value.c_str()),toc2=0,toc3=0;
-	if (tag==".sec")  fprintf(toc,"\t%i.%i %s\n"  ,toc1,++toc2,value.c_str()),toc3=0;
-	if (tag==".sec-") fprintf(toc,"\t\t%i.%i.%i %s\n",toc1,toc2,++toc3,value.c_str());
+	if (tag==".sec+") toc.W(1,value+"\n");
+	if (tag==".sec")  toc.W(2,value+"\n");
+	if (tag==".sec-") toc.W(3,value+"\n");
 	// .file
 	if (tag==".file") {
 		if (bi_file) delete bi_file;	// autoclose prev file
