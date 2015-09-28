@@ -312,14 +312,30 @@ biObject::biObject(string T,string V)		{ tag=T; value=V; }
 biObject::biObject(biObject* T,biObject* V)	{ tag=T->value; value=V->value; }
 
 string biObject::dump(int depth) {
+	return "<"+tag+":"+value+">";
+/*	
 	string S="\n"; for(int i=0;i<depth;i++) S+="\t";	// left padding
 	S+="<"+tag+":"+value+">";							// symbol header
 														// nested symbols
 	return S;//+"\n";									// return final string
+*/
 }
 
 string biObject::eval() { return value; }
 
+// ///
+
+// \\\ directive
+biDirective::biDirective(string s):biObject(".directive",s) {
+	// adaptive class generation for directives
+	tag = "";
+	while (value.size() && (value[0]!=' ' && value[0]!='\t')) {
+		tag += value[0]; value.erase(0,1);
+	}
+	while (value.size() && (value[0]==' ' || value[0]=='\t'))
+		value.erase(0,1);
+
+};
 // ///
 
 // \\ textout writers
@@ -331,7 +347,7 @@ string autogen(string pfx, string obj) {
 	pfx+" ************** DO NOT EDIT *************\n"+
 	pfx+"   this file was autogened by bI system  \n"+
 	pfx+" ************** DO NOT EDIT *************\n"+
-	pfx+" "+obj+"\n\n"
+	pfx+" "+obj+"\n"
 	);
 }
 

@@ -124,6 +124,12 @@ struct biObject {					// class implements all symbol functionality
 };
 // ///
 
+// \\\ directive
+struct biDirective: biObject {
+	biDirective(string);
+};
+// ///
+
 // \\\ lexer/parser header block
 extern int yyparse();
 extern void yyerror(string);

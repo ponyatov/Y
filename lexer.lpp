@@ -5,89 +5,27 @@
 #define T1(X)	{ yylval.c = yytext[1];					return X; }
 #define TS(X)	{ yylval.s = new string(yytext);     	return X; }
 #define TO(C,X)	{ yylval.o = new biObject(C,yytext); 	return X; }
-/*
-#define TA(C,X)	{ yylval.o = new C(yytext); 		 	return X; }
-#define TL(C,X) {\
-	yylval.o = env[yytext]; \
-	if (!yylval.o) {\
-		yylval.o = new biObject(C,yytext);\
-		env[yytext] = yylval.o;\
-	}\
-	return X;\
-}
-*/
+#define TX(C,X)	{ yylval.o = new C(yytext); 			return X; }
 %}
 
 %option noyywrap
 %option yylineno
 
-			/* S-expression */
-%s ss		
-			/* class definition */
-%s cc		
-			/* lexer defenition */
-%s ll		
-
 S	[\+\-]{0,1}
 D	[0-9]+
 
 %%
-\\.							T1(C)
-^\.end						TS(END)
-^\.[a-z]+[ \t]*[^\n]*		TO(".directive",DIRECTIVE)
-\n							TC(EOL)
-.							TC(C)
+\\.						T1(C)						/* escaped char */
+^\.end					TS(END)						/* source end marker */
+^\.[a-z]+[ \t]*/\{		TX(biDirective,DIRECTIVE)	/* {} blocked directive */
+^\.[a-z]+[ \t]*[^\n]*	TX(biDirective,DIRECTIVE)	/* directive */
+'[^']*'					TO("str",STR)
+{D}						TO("int",NUM)
+0x[0-9A-F]+				TO("hex",NUM)
+0b[01]+					TO("bin",NUM)
+{D}\.{D}				TO("float",NUM)
+{D}[eE]{S}{D}			TO("float",NUM)
+\n						TC(EOL)						/* end line syntax marker */
+.						TC(C)						/* any undetected char */
 %%
-
-/*
-
-%%
-\.end						{ terminator(); }
-
-\r							{}		/* win/dos eol gluck 
-\\.							T1(C)	/* escaped char 
-#[^\n]*						{}		/* line comment 
-
-[a-z]+@[a-z\.]+				TS(S)	/* indoc email vs signal fix 
-
-\$							{BEGIN(ss); TC(SX);}
-\?							{BEGIN(ss); TC(QX);}
-<ss>[ \t\n\.]				{BEGIN(INITIAL); TS(S); }
-<ss,cc,ll>:					TC(COLON)
-<ss,cc,ll>=					TC(EQ)
-<ss,ll>,					TC(COMMA)
-<ss>\(						TC(LP)
-<ss>\)						TC(RP)
-{S}{D}						TO("int",NUM)
-<ss,cc>0x[0-9A-Z]+			TO("hex",NUM)
-<ss,cc>0b[01]+				TO("bin",NUM)
-<ss,cc>{S}{D}\.{D}			TO("float",NUM)
-<ss,cc>{S}{D}[eE]{S}{D}		TO("float",NUM)
-<ss,cc>%N					TO("%N",SYM)
-<ss,cc>%					TO("%",SYM)
-
-^\.module[ \t]+[^\n]+			TA(biDirective,DOTMOD)
-^\.file[ \t]+[^\n]+				TA(biDirective,DOTFILE)
-^\.test[ \t]+[^\n]+				TA(biDirective,DOTTEST)
-^\.[a-z]+[\+\-]?[ \t]*[^\n]*	TA(biDirective,DOT)
-
-^class[ \t]+						{BEGIN(cc); TS(CLASS);}
-<cc>\n\n							{BEGIN(INITIAL); TS(ENDCLASS); }
-
-^lexer[ \t]+						{BEGIN(ll); TS(LEXER);}
-<ll>\n\n							{BEGIN(INITIAL); TS(ENDLEX);}
-
-<cc,ll>[ \t;\n]						{}
-
-<ss,cc,ll>@[a-z0-9_\+\-\*\/]+			TO("sig",SIG)
-<ss,cc,ll>[a-zA-Z_][a-zA-Z0-9_]*		TL("sym",SYM)
-
-[ \t]*->[ \t]*				TS(ARROW)			/* -> cosmetics 
-
-<ss,cc,ll>\'[^\']*\'		TA(biString,STR)
-
-\n							TC(EOL)
-.							TC(C)
-%%
-*/
 

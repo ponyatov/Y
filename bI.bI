@@ -91,17 +91,35 @@ Directive .github	'<url> to github page'		regexp = '^\\.github'
 
 .sec- Documenting markup
 
-Directive .sec		'define progrsm section'	regexp = '^\.sec[ \\t]+'
+Directive .sec		'define program section'	regexp = '^\.sec[ \\t]+'
+Directive .sec+		'define program chapter'	regexp = '^\.sec\+[ \\t]+'
+Directive .sec-		'define program subsection'	regexp = '^\.sec\-[ \\t]+'
 
-
-.end
+Directive .list		'documentation list'		regexp = '^\.list[ \\t]+'
+Directive .li		'doc list item'				regexp = '^\.li[ \\t]+'
 
 .sec numbers
 
-0 -1 +2 -03 +004 1.2 -3e+04
+Current bI supports only machine numeric types, covered by C++ alias types.
+
+class Number
+
+Number int			'integer'					regexp = '[0-9]+'
+
+0 -1 +2 -03 +004 
+
+Number hex			'hexadigital'				regexp = '0x[0-9A-F]+'
+Number bin			'binary'					regexp = '0b[01]+'
+
+0x12AF 0b1101
+
+Number float		'float'						regexp = '[0-9]+[eE][+-]?[0-9]+'
+
+1.2 -3e+04
 
 .end
 
+.end
 
 .sec Pure symbolic
 

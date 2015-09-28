@@ -11,7 +11,7 @@
 syntax match	Comment		"\v#.*"
 
 " directives 
-syntax match	Todo		"\v^\.[a-z]+[ \t]*"
+syntax match	Todo		"\v^\.[a-z]+[\+\-]?[ \t]*"
 syntax region	Comment		start=".about{" end="}"
 
 "" literals
@@ -25,18 +25,20 @@ syntax match	Constant	"\v[a-z\*\?]+(\.[a-z\*\?]+)+"
 
 " strings
 syntax region	String		start="'" end="'"
+" numbers
+syntax match	Constant	"\v[0-9]+"
 
 "" core language
 
 " tags part
-syntax match	Function	"\v\<\.?[a-z]+:"
+syntax match	Function	"\v\<\.?[a-z\+\-]+:"
 syntax match	Keyword		"\v\<\@:"
 " core class inheritance
 syntax match	Keyword		"\v^class"
 " core class fields and signals
 syntax keyword	Function	regexp
 " operators
-syntax match	Keyword		"="
+syntax match	Keyword		"[=?$]"
 
 " numbers
 "syntax match Number "\v0b[01]+"
