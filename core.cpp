@@ -87,14 +87,14 @@ string biOP::eval() {
 
 // \\\ numeric types
 string biInt::intN() {
-	ostringstream os; os << "i" << sizeof(val)*8;
+	ostringstream os; os << "int";// << sizeof(val)*8;
 	return os.str();
 }
 
 biInt::biInt(string V):biObject(intN(),V) { val = atoi(V.c_str()); };
 
 string biInt::dump(int depth) {
-	ostringstream os; os << "<" << "tag" << ":" << val << ">"; 
+	ostringstream os; os << "<" << tag << ":" << val << ">"; 
 	return "\n"+pad(depth)+os.str(); 
 }
 

@@ -1,16 +1,18 @@
 
 .sec+ Simple Script
 
-# numbers
-.sec Number
+Simple Script (SS) is scripting language with bI-compliant syntax.
 
--1 +02 003 0x12AF 0b1101
-$-1 $+02 $003 $0x12AF $0b1101
-?-1 ?+02 ?003 ?0x12AF ?0b1101
+.sec Numbers
+# numbers
+
+ -1		 +02	 003	 0x12AF		 0b1101
+$-1		$+02 	$003	$0x12AF		$0b1101
+?-1		?+02	?003	?0x12AF		?0b1101
 
 .sec Infix expression
 
-1+2/3
+1+2/3	$1+2/3	?1+2/3
 
 .sec Simpe math
 
@@ -175,6 +177,11 @@ for statical compilation, native machine code or hardware synthesis.
 Current bI supports only machine numeric types, covered by C++ alias types.
 
 .sec Number
+# numbers
+
+ -1		 +02	 003	 0x12AF		 0b1101
+$-1		$+02 	$003	$0x12AF		$0b1101
+?-1		?+02	?003	?0x12AF		?0b1101
 
 class Number
 
