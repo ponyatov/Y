@@ -34,6 +34,11 @@ string biObject::eval() { return value; }
 void biObject::pfxadd()	{ value = "+"+value; }
 void biObject::pfxsub()	{ value = "-"+value; }
 
+void biObject::add(biObject* S) { value = value +"+"+ S->eval(); }
+void biObject::sub(biObject* S) { value = value +"-"+ S->eval(); }
+void biObject::mul(biObject* S) { value = value +"*"+ S->eval(); }
+void biObject::div(biObject* S) { value = value +"/"+ S->eval(); }
+
 // ///
 
 // \\\ environment
@@ -82,9 +87,17 @@ biOP::biOP(string s): biObject("op",s) {
 };
 
 string biOP::eval() {
+	if (nest.size()==0) yyerror("operator without parameters");
 	if (nest.size()==1) {
 		if (value=="+") nest[0]->pfxadd();
 		if (value=="-") nest[0]->pfxsub();
+		return nest[0]->eval();
+	}
+	if (nest.size()==2) {
+		if (value=="+") nest[0]->add(nest[1]);
+		if (value=="-") nest[0]->sub(nest[1]);
+		if (value=="*") nest[0]->mul(nest[1]);
+		if (value=="/") nest[0]->div(nest[1]);
 		return nest[0]->eval();
 	}
 	return biObject::eval();
@@ -106,8 +119,15 @@ string biInt::dump(int depth) {
 
 string biInt::eval() { ostringstream os; os << val; return os.str(); }
 
-void biInt::pfxadd()	{ }
-void biInt::pfxsub()	{ val = -val; }
+void biInt::pfxadd()	{ biObject::pfxadd(); }
+void biInt::pfxsub()	{ biObject::pfxsub(); val = -val; }
+
+void biInt::add(biObject* S)	{ biObject::add(S); }
+void biInt::sub(biObject* S)	{ biObject::sub(S); }
+void biInt::mul(biObject* S)	{ biObject::mul(S); }
+void biInt::div(biObject* S)	{ biObject::div(S); 
+	if (S->tag=="int") val = val/S->val; }
+
 // ///
 
 // \\\ table of contents
