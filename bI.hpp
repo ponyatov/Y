@@ -5,10 +5,12 @@
 
 // \\\ header files in std namespace
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
-#include <list>
+//#include <list>
+#include <vector>
 #include <map>
 #ifdef __MINGW32__
 #include <direct.h>
@@ -24,14 +26,16 @@ struct biObject {					// class implements all symbol functionality
     string tag;						// symbol tag a.k.a. class/type name
     string value;					// symbol value
     map<string,biObject*>attr;		// symbol attributes
-    list<biObject*>nest;			// nested symbols for composite symbols/types
-	void join(biObject*);			// add item to nest
+    vector<biObject*>nest;			// nested symbols for composite symbols/types
 	// constructors
 	biObject(string,string);		// leaf symbol from strings
 	biObject(biObject*,biObject*);	// pair constructor
 	// serializatin and computing
     virtual string dump(int depth=0);// (idented) debug dump
 	virtual string eval();			// evaluate (compute) recursive with nested	
+	// misc
+	void join(biObject*);			// add item to nest
+	string pad(int depth);			// dump padding
 };
 // ///
 
@@ -52,6 +56,18 @@ extern map<string,biClass*> bi_class_registry;	/* global class registry */
 // \\\ operator
 struct biOP: biObject {
 	biOP(string);
+	string eval();
+};
+// ///
+
+// \\\ numeric types
+struct biInt: biObject {
+	biInt(string);
+	int val;
+	private:
+	string intN();
+	string dump(int depth=0);
+	string eval();
 };
 // ///
 

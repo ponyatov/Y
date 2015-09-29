@@ -5,7 +5,7 @@
 biObject::biObject(string T,string V)		{ tag=T; value=V; }
 biObject::biObject(biObject* T,biObject* V)	{ tag=T->value; value=V->value; }
 
-string pad(int depth) {
+string biObject::pad(int depth) {
 	string S;//="\n";
 	for(int i=0;i<depth;i++) S+="\t";	
 	return S;
@@ -22,7 +22,7 @@ string biObject::dump(int depth) {
 				S += "\n"+pad(depth+1)+A->first+":"+A->second->value;
 	}
 	if (nest.size()) {									// nested symbols
-		for ( list<biObject*>::iterator N = nest.begin();
+		for ( vector<biObject*>::iterator N = nest.begin();
 			N != nest.end(); N++ )
 				S += (*N)->dump(depth+1);
 	}
@@ -77,6 +77,28 @@ biOP::biOP(string s): biObject("op",s) {
 	while (value[value.size()-1] == ' ' || value[value.size()-1] == '\t')
 		value.erase(value.size()-1,1);
 };
+
+string biOP::eval() {
+	if (value=="-" and nest.size()==1) return "-"+nest[0]->eval();
+	if (value=="+" and nest.size()==1) return "+"+nest[0]->eval();
+	return biObject::eval();
+}
+// ///
+
+// \\\ numeric types
+string biInt::intN() {
+	ostringstream os; os << "i" << sizeof(val)*8;
+	return os.str();
+}
+
+biInt::biInt(string V):biObject(intN(),V) { val = atoi(V.c_str()); };
+
+string biInt::dump(int depth) {
+	ostringstream os; os << "<" << "tag" << ":" << val << ">"; 
+	return "\n"+pad(depth)+os.str(); 
+}
+
+string biInt::eval() { ostringstream os; os << val; return os.str(); }
 // ///
 
 // \\\ table of contents

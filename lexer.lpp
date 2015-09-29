@@ -20,25 +20,28 @@ D	[0-9]+
 %%
 \r						{}							/* drop DOS eols */
 #[^\n]*\n+				{}							/* line comment */
-[ \t]+					{}							/* drop spaces */
+[ \t]+					TC(EOL)						/* drop spaces */
 
 ^\.[a-z]+[ \t]*/\{		TX(biDirective,DIRECTIVE)	/* {} blocked directive */
 ^\.end					TX(biDirective,END)			/* source end marker */
 ^\.[a-z]+[ \t]*[^\n]*	TX(biDirective,DIRECTIVE)	/* directive */
+
+													/* prefixes */
+\?						TC(EQ)						/* ? eval prefix */
 
 [a-zA-Z][a-zA-Z0-9]*	TO("sym",SYM)				/* symbol */
 													/* string */
 \'[^\']*\'				TO("str",STR)
 \"[^\"]*\"				TO("str",STR)
 													/* numeric literals */
-{D}						TO("int",NUM)				
+{D}						TX(biInt,NUM)				
 0x[0-9A-F]+				TO("hex",NUM)
 0b[01]+					TO("bin",NUM)
 {D}\.{D}				TO("float",NUM)
 {D}[eE]{S}{D}			TO("float",NUM)
 													/* operators */
-\+						TO("+",ADD)
-\-						TO("-",SUB)
+\+						TX(biOP,ADD)
+\-						TX(biOP,SUB)
 \*						TO("*",MUL)
 \/						TO("/",DIV)
 \^						TO("^",POW)

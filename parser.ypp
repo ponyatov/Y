@@ -10,7 +10,7 @@
 	biObject *o;
 }
 
-%token <c> C EOL
+%token <c> C EOL EQ
 %token <o> END DIRECTIVE
 %token <o> NUM SYM STR
 %token <o> ADD SUB MUL DIV POW
@@ -19,7 +19,8 @@
 
 %left ADD SUB
 %left MUL DIV
-%left POW
+%left PFX
+%right POW
 
 %%
 bi	: 
@@ -28,6 +29,7 @@ bi	:
    	| bi EOL					{ W("\n"); }
    	| bi C						{ W("["); W($2); W("]"); }
    	| bi script	EOL				{ W($2); W("\n"); }
+	| bi EQ script EOL			{ W($2); W($3->eval()); W("\n"); }
 ;
 
 script :
@@ -39,6 +41,8 @@ script :
 	| script MUL script			{ $$ = $2; $$->join($1); $$->join($3); }
 	| script DIV script			{ $$ = $2; $$->join($1); $$->join($3); }
 	| script POW script			{ $$ = $2; $$->join($1); $$->join($3); }
+	| ADD script %prec PFX		{ $$ = $1; $$->join($2); }
+	| SUB script %prec PFX		{ $$ = $1; $$->join($2); }
 	| LP RP						{ $$ = new biObject("(",")"); }
 	| LP script RP				{ $$ = new biObject("(",")"); $$->join($2); }
 	| script script				{ $$ = $1; $$->join($2); }

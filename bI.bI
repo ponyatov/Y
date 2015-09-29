@@ -4,7 +4,9 @@
 # numbers
 .sec Numbers
 
-1 2 3
+-1 +02 003 0x12AF 0b1101
+$-1 $+02 $003 $0x12AF $0b1101
+?-1 ?+02 ?003 ?0x12AF ?0b1101
 
 .sec Infix expressions
 
