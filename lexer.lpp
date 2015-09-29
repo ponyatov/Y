@@ -20,36 +20,37 @@ D	[0-9]+
 %%
 \r						{}							/* drop DOS eols */
 #[^\n]*\n+				{}							/* line comment */
-[ \t]+					TC(EOL)						/* drop spaces */
+\\.						T1(C)						/* escaped char */
 
-^\.[a-z]+[ \t]*/\{		TX(biDirective,DIRECTIVE)	/* {} blocked directive */
+													
 ^\.end					TX(biDirective,END)			/* source end marker */
+^\.[a-z]+[ \t]*/\{		TX(biDirective,DIRECTIVE)	/* {} blocked directive */
+^\.file+[ \t]+[^\n]*	TX(biDirective,FFILE)		/* .file */
+^\.eof					TX(biDirective,FEOF)		/* .eof */
 ^\.[a-z]+[ \t]*[^\n]*	TX(biDirective,DIRECTIVE)	/* directive */
 
 													/* prefixes */
-\?						TC(EQ)						/* ? eval prefix */
+\$						{BEGIN(ss);TC(SX);}			/* $ dump AST prefix */
+\?						{BEGIN(ss);TC(QX);}			/* ? eval prefix */
+<ss>\n					{BEGIN(INITIAL);TC(EOL);}	/* end line syntax marker */
+<ss>[ \t]+				TC(EOL)						/* drop spaces */
+<ss>[a-zA-Z][a-zA-Z0-9]*	TO("sym",SYM)			/* symbol */
+<ss>\'[^\']*\'			TO("str",STR)				/* string */
+<ss>\"[^\"]*\"			TO("str",STR)
+<ss>{D}					TX(biInt,NUM)				/* numeric literals */
+<ss>0x[0-9A-F]+			TO("hex",NUM)
+<ss>0b[01]+				TO("bin",NUM)
+<ss>{D}\.{D}			TO("float",NUM)
+<ss>{D}[eE]{S}{D}		TO("float",NUM)
+<ss>\+					TX(biOP,ADD)				/* operators */
+<ss>\-					TX(biOP,SUB)
+<ss>\*					TO("*",MUL)
+<ss>\/					TO("/",DIV)
+<ss>\^					TO("^",POW)
+<ss>\(					TO("(",LP)					/* parens */
+<ss>\)					TO(")",RP)
 
-[a-zA-Z][a-zA-Z0-9]*	TO("sym",SYM)				/* symbol */
-													/* string */
-\'[^\']*\'				TO("str",STR)
-\"[^\"]*\"				TO("str",STR)
-													/* numeric literals */
-{D}						TX(biInt,NUM)				
-0x[0-9A-F]+				TO("hex",NUM)
-0b[01]+					TO("bin",NUM)
-{D}\.{D}				TO("float",NUM)
-{D}[eE]{S}{D}			TO("float",NUM)
-													/* operators */
-\+						TX(biOP,ADD)
-\-						TX(biOP,SUB)
-\*						TO("*",MUL)
-\/						TO("/",DIV)
-\^						TO("^",POW)
-													/* parens */
-\(						TO("(",LP)
-\)						TO(")",RP)
-
-\n+						TC(EOL)
-.						TC(C)
+\n						TC(EOL)						/* end line in non-ss mode */
+.						TC(C)						/* any undetected char */
 %%
 
