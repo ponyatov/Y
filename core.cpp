@@ -11,6 +11,8 @@ string pad(int depth) {
 	return S;
 }
 
+void biObject::join(biObject* X)	{ nest.push_back(X); }
+
 string biObject::dump(int depth) {
 	string S="\n"+pad(depth);								// left padding
 	S+="<"+tag+":"+value+">";							// symbol header

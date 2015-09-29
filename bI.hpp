@@ -25,6 +25,7 @@ struct biObject {					// class implements all symbol functionality
     string value;					// symbol value
     map<string,biObject*>attr;		// symbol attributes
     list<biObject*>nest;			// nested symbols for composite symbols/types
+	void join(biObject*);			// add item to nest
 	// constructors
 	biObject(string,string);		// leaf symbol from strings
 	biObject(biObject*,biObject*);	// pair constructor
