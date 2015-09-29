@@ -10,13 +10,28 @@
 	biObject *o;
 }
 
-%token <s> END
+%token <o> END
 %token <o> NUM
+%token <o> ADD SUB MUL DIV POW
+%type <o> script
+
+%left ADD SUB
+%left MUL DIV
+%left POW
 
 %%
 bi	: 
    	| bi END					{ W($2); terminator(); }
-   	| bi NUM
+   	| bi script					{ W($2); }
+;
+
+script :
+	  NUM						{ $$ = $1; }
+	| script ADD script			{ $$ = $2; $$->join($1); $$->join($3); }
+	| script SUB script			{ $$ = $2; $$->join($1); $$->join($3); }
+	| script MUL script			{ $$ = $2; $$->join($1); $$->join($3); }
+	| script DIV script			{ $$ = $2; $$->join($1); $$->join($3); }
+	| script POW script			{ $$ = $2; $$->join($1); $$->join($3); }
 ;
 %%
 
@@ -24,10 +39,9 @@ bi	:
 
 %token <c> C EOL
 S END
-%type <o> script
 
 %token <o> DIRECTIVE FFILE FEOF STR SYM 
-%token <o> OP COLON EQ ADD SUB MUL DIV POW
+%token <o> OP COLON EQ 
 %token <s> CLASS ENDCLASS
 %type <o> ex classdef classym op docstring 
 

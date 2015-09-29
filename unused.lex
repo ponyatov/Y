@@ -9,17 +9,6 @@
 <*>\'[^\']*\'			TO("str",STR)				/* 'string' */
 <*>\"[^\"]*\"			TO("str",STR)				/* "string" */
 													
-{D}						TO("int",NUM)				/* numeric literals */
-0x[0-9A-F]+				TO("hex",NUM)
-0b[01]+					TO("bin",NUM)
-{D}\.{D}				TO("float",NUM)
-{D}[eE]{S}{D}			TO("float",NUM)
-													/* operators */
-\+						TO("+",ADD)
-\-						TO("-",SUB)
-\*						TO("*",MUL)
-\/						TO("/",DIV)
-\^						TO("^",POW)
 
 ^class[ \t]+				{BEGIN(ss); TS(CLASS);}			/* class keyword */
 <ss>\n\n					{BEGIN(INITIAL); TS(ENDCLASS);}

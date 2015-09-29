@@ -18,6 +18,19 @@ S	[\+\-]{0,1}
 D	[0-9]+
 
 %%
-^\.end					TS(END)						/* source end marker */
+													/* numeric literals */
+{D}						TO("int",NUM)				
+0x[0-9A-F]+				TO("hex",NUM)
+0b[01]+					TO("bin",NUM)
+{D}\.{D}				TO("float",NUM)
+{D}[eE]{S}{D}			TO("float",NUM)
+													/* operators */
+\+						TO("+",ADD)
+\-						TO("-",SUB)
+\*						TO("*",MUL)
+\/						TO("/",DIV)
+\^						TO("^",POW)
+
+^\.end					TX(biDirective,END)			/* source end marker */
 %%
 
