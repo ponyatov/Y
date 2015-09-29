@@ -45,7 +45,6 @@ script :
 	| SUB script %prec PFX		{ $$ = $1; $$->join($2); }
 	| LP RP						{ $$ = new biObject("(",")"); }
 	| LP script RP				{ $$ = new biObject("(",")"); $$->join($2); }
-	| script script				{ $$ = $1; $$->join($2); }
 ;
 %%
 

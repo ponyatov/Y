@@ -6,7 +6,7 @@ biObject::biObject(string T,string V)		{ tag=T; value=V; }
 biObject::biObject(biObject* T,biObject* V)	{ tag=T->value; value=V->value; }
 
 string biObject::pad(int depth) {
-	string S;//="\n";
+	string S;
 	for(int i=0;i<depth;i++) S+="\t";	
 	return S;
 }
@@ -30,6 +30,9 @@ string biObject::dump(int depth) {
 }
 
 string biObject::eval() { return value; }
+
+void biObject::pfxadd()	{ value = "+"+value; }
+void biObject::pfxsub()	{ value = "-"+value; }
 
 // ///
 
@@ -79,8 +82,11 @@ biOP::biOP(string s): biObject("op",s) {
 };
 
 string biOP::eval() {
-	if (value=="-" and nest.size()==1) return "-"+nest[0]->eval();
-	if (value=="+" and nest.size()==1) return "+"+nest[0]->eval();
+	if (nest.size()==1) {
+		if (value=="+") nest[0]->pfxadd();
+		if (value=="-") nest[0]->pfxsub();
+		return nest[0]->eval();
+	}
 	return biObject::eval();
 }
 // ///
@@ -99,6 +105,9 @@ string biInt::dump(int depth) {
 }
 
 string biInt::eval() { ostringstream os; os << val; return os.str(); }
+
+void biInt::pfxadd()	{ }
+void biInt::pfxsub()	{ val = -val; }
 // ///
 
 // \\\ table of contents

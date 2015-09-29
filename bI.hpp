@@ -36,6 +36,9 @@ struct biObject {					// class implements all symbol functionality
 	// misc
 	void join(biObject*);			// add item to nest
 	string pad(int depth);			// dump padding
+	// operators
+	virtual void pfxadd();			// +obj
+	virtual void pfxsub();			// -obj
 };
 // ///
 
@@ -68,6 +71,8 @@ struct biInt: biObject {
 	string intN();
 	string dump(int depth=0);
 	string eval();
+	void pfxadd();
+	void pfxsub();
 };
 // ///
 

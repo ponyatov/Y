@@ -43,9 +43,9 @@ D	[0-9]+
 <ss>{D}[eE]{S}{D}		TO("float",NUM)
 <ss>\+					TX(biOP,ADD)				/* operators */
 <ss>\-					TX(biOP,SUB)
-<ss>\*					TO("*",MUL)
-<ss>\/					TO("/",DIV)
-<ss>\^					TO("^",POW)
+<ss>\*					TX(biOP,MUL)
+<ss>\/					TX(biOP,DIV)
+<ss>\^					TX(biOP,POW)
 <ss>\(					TO("(",LP)					/* parens */
 <ss>\)					TO(")",RP)
 
