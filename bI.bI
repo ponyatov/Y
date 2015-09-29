@@ -2,13 +2,13 @@
 .sec+ Simple Script
 
 # numbers
-.sec Numbers
+.sec Number
 
 -1 +02 003 0x12AF 0b1101
 $-1 $+02 $003 $0x12AF $0b1101
 ?-1 ?+02 ?003 ?0x12AF ?0b1101
 
-.sec Infix expressions
+.sec Infix expression
 
 1+2/3
 
