@@ -10,16 +10,30 @@
 	biObject *o;
 }
 
-%token <c> C EOL
-%token <s> S END
-
-%token <o> DIRECTIVE FFILE FEOF NUM STR SYM 
-%token <o> OP COLON EQ
-%token <s> CLASS ENDCLASS
-%type <o> ex classdef classym op docstring
+%token <s> END
+%token <o> NUM
 
 %%
+bi	: 
+   	| bi END					{ W($2); terminator(); }
+   	| bi NUM
+;
+%%
+
+/* unused
+
+%token <c> C EOL
+S END
+%type <o> script
+
+%token <o> DIRECTIVE FFILE FEOF STR SYM 
+%token <o> OP COLON EQ ADD SUB MUL DIV POW
+%token <s> CLASS ENDCLASS
+%type <o> ex classdef classym op docstring 
+
+
 sym :
+	| sym script				{ W($2); }
 	| sym ex					{ W($2); }
 	| sym classdef				{ W($2); }
 	| sym DIRECTIVE				{ W($2); }
@@ -49,11 +63,11 @@ classdef : classym				{ $$ = $1; }
 classym : CLASS SYM 			{ $$ = new biClass($2); }
 ;
 
-op : OP | COLON ;
+op : OP | COLON | ADD | SUB | MUL | DIV ;
 
 docstring :
 	  SYM STR					{ $$ = $1; $$->attr["doc"] = $2; }
 	| classdef STR				{ $$ = $1; $$->attr["doc"] = $2; }
 ;
-%%
+*/
 

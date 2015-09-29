@@ -1,4 +1,13 @@
 
+1 2 3
+1+2/3
+
+class Symbol	'core class'
+
+Symbol Number	'any number'
+
+.end
+
 .title		bI dynamic language system
 .author		(c) Dmitry Ponyatov <dponyatov@gmail.com>, All rights reserved
 .license	http://www.gnu.org/copyleft/lesser.html
