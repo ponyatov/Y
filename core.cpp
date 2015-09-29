@@ -203,8 +203,8 @@ void W(biObject *O,bool to_file)		{ cout << O->dump();
 // parser error
 
 void yyerror(string err) {
-	cout << "\n" << err << " # " << yylineno << " : " << yytext << "\n\n";
-	cerr << "\n" << err << " # " << yylineno << " : " << yytext << "\n\n";
+	cout << "\n" << err << " # " << yylineno << " : [" << yytext << "]\n\n";
+	cerr << "\n" << err << " # " << yylineno << " : [" << yytext << "]\n\n";
 	exit(-1);
 }
 

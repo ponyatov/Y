@@ -1,13 +1,29 @@
 
+.sec+ Simple Script
+
+# numbers
+.sec Numbers
+
 1 2 3
+
+.sec Infix expressions
+
 1+2/3
+
+.sec Simpe math
+
+(1)
+sin (1)
+cos pi
+tan ()
+
+.sec Class construction
 
 class Symbol	'core class'
 
 Symbol Number	'any number'
 
-.end
-
+.tocline
 .title		bI dynamic language system
 .author		(c) Dmitry Ponyatov <dponyatov@gmail.com>, All rights reserved
 .license	http://www.gnu.org/copyleft/lesser.html
@@ -18,6 +34,8 @@ Symbol Number	'any number'
 	computing systems programming, hardware design, science data processing,
 	and DSL compilers/translators development.
 }
+
+.end
 
 .sec Goal
 

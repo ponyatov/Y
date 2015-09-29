@@ -10,9 +10,11 @@
 	biObject *o;
 }
 
-%token <o> END
-%token <o> NUM
+%token <c> C EOL
+%token <o> END DIRECTIVE
+%token <o> NUM SYM STR
 %token <o> ADD SUB MUL DIV POW
+%token <o> LP RP
 %type <o> script
 
 %left ADD SUB
@@ -22,25 +24,32 @@
 %%
 bi	: 
    	| bi END					{ W($2); terminator(); }
-   	| bi script					{ W($2); }
+	| bi DIRECTIVE				{ W($2); }
+   	| bi EOL					{ W("\n"); }
+   	| bi C						{ W("["); W($2); W("]"); }
+   	| bi script	EOL				{ W($2); W("\n"); }
 ;
 
 script :
 	  NUM						{ $$ = $1; }
+	| SYM						{ $$ = $1; }
+	| STR						{ $$ = $1; }
 	| script ADD script			{ $$ = $2; $$->join($1); $$->join($3); }
 	| script SUB script			{ $$ = $2; $$->join($1); $$->join($3); }
 	| script MUL script			{ $$ = $2; $$->join($1); $$->join($3); }
 	| script DIV script			{ $$ = $2; $$->join($1); $$->join($3); }
 	| script POW script			{ $$ = $2; $$->join($1); $$->join($3); }
+	| LP RP						{ $$ = new biObject("(",")"); }
+	| LP script RP				{ $$ = new biObject("(",")"); $$->join($2); }
+	| script script				{ $$ = $1; $$->join($2); }
 ;
 %%
 
 /* unused
 
-%token <c> C EOL
-S END
+S
 
-%token <o> DIRECTIVE FFILE FEOF STR SYM 
+%token <o> DIRECTIVE FFILE FEOF
 %token <o> OP COLON EQ 
 %token <s> CLASS ENDCLASS
 %type <o> ex classdef classym op docstring 

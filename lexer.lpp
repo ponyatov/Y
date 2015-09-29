@@ -18,6 +18,18 @@ S	[\+\-]{0,1}
 D	[0-9]+
 
 %%
+\r						{}							/* drop DOS eols */
+#[^\n]*\n+				{}							/* line comment */
+[ \t]+					{}							/* drop spaces */
+
+^\.[a-z]+[ \t]*/\{		TX(biDirective,DIRECTIVE)	/* {} blocked directive */
+^\.end					TX(biDirective,END)			/* source end marker */
+^\.[a-z]+[ \t]*[^\n]*	TX(biDirective,DIRECTIVE)	/* directive */
+
+[a-zA-Z][a-zA-Z0-9]*	TO("sym",SYM)				/* symbol */
+													/* string */
+\'[^\']*\'				TO("str",STR)
+\"[^\"]*\"				TO("str",STR)
 													/* numeric literals */
 {D}						TO("int",NUM)				
 0x[0-9A-F]+				TO("hex",NUM)
@@ -30,7 +42,11 @@ D	[0-9]+
 \*						TO("*",MUL)
 \/						TO("/",DIV)
 \^						TO("^",POW)
+													/* parens */
+\(						TO("(",LP)
+\)						TO(")",RP)
 
-^\.end					TX(biDirective,END)			/* source end marker */
+\n+						TC(EOL)
+.						TC(C)
 %%
 
