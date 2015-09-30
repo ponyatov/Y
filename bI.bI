@@ -214,28 +214,12 @@ generation.
 
 .sec Memory elements
 
-.sec- i8: byte
+.sec- i1: bool
 
-class i8
-
+class bool:i1
 class byte:i8
-
-.sec- i16: short
-
-class i16
-
 class short:i16
-
-.sec- i32: word
-
-class i32
-
 class word:i32
-
-.sec- i64: long
-
-class i64
-
 class long:i64
 
 .sec Number
