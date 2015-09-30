@@ -4,6 +4,7 @@
 
 biObject::biObject(string T,string V)		{ tag=T; value=V; }
 biObject::biObject(biObject* T,biObject* V)	{ tag=T->value; value=V->value; }
+biObject::biObject(biObject* P)				{ tag=P->tag; value=P->value; }
 
 string biObject::pad(int depth) {
 	string S;
@@ -29,15 +30,18 @@ string biObject::dump(int depth) {
 	return S;											// return final string
 }
 
-string biObject::eval() { return value; }
+biObject* biObject::eval() { return new biObject(this); }
 
 void biObject::pfxadd()	{ value = "+"+value; }
 void biObject::pfxsub()	{ value = "-"+value; }
 
-void biObject::add(biObject* S) { value = value +"+"+ S->eval(); }
-void biObject::sub(biObject* S) { value = value +"-"+ S->eval(); }
-void biObject::mul(biObject* S) { value = value +"*"+ S->eval(); }
-void biObject::div(biObject* S) { value = value +"/"+ S->eval(); }
+void biObject::add(biObject* S) { value = value +"+"+ S->value; }
+void biObject::sub(biObject* S) { value = value +"-"+ S->value; }
+void biObject::mul(biObject* S) { value = value +"*"+ S->value; }
+biObject* biObject::div(biObject* S) {
+	biObject *o = new biObject(this);
+	o->value = value +"/"+ S->value; 
+	return o; }
 
 // ///
 
@@ -86,7 +90,8 @@ biOP::biOP(string s): biObject("op",s) {
 		value.erase(value.size()-1,1);
 };
 
-string biOP::eval() {
+biObject* biOP::eval() {
+/*	
 	if (nest.size()==0) yyerror("operator without parameters");
 	if (nest.size()==1) {
 		if (value=="+") nest[0]->pfxadd();
@@ -100,33 +105,44 @@ string biOP::eval() {
 		if (value=="/") nest[0]->div(nest[1]);
 		return nest[0]->eval();
 	}
+*/	
 	return biObject::eval();
 }
 // ///
 
 // \\\ numeric types
-string biInt::intN() {
-	ostringstream os; os << "int";// << sizeof(val)*8;
-	return os.str();
-}
 
-biInt::biInt(string V):biObject(intN(),V) { val = atoi(V.c_str()); };
+biInt::biInt(string V):biObject("int",V) { val = atoi(V.c_str()); }
+biInt::biInt(biObject* P):biObject(P)	 { val = atoi(P->value.c_str()); }
 
 string biInt::dump(int depth) {
 	ostringstream os; os << "<" << tag << ":" << val << ">"; 
 	return "\n"+pad(depth)+os.str(); 
 }
 
-string biInt::eval() { ostringstream os; os << val; return os.str(); }
+biObject* biInt::eval()	{ 
+//	ostringstream os; os << val; return os.str(); 
+	return biObject::eval();
+}
 
 void biInt::pfxadd()	{ biObject::pfxadd(); }
 void biInt::pfxsub()	{ biObject::pfxsub(); val = -val; }
 
-void biInt::add(biObject* S)	{ biObject::add(S); }
-void biInt::sub(biObject* S)	{ biObject::sub(S); }
-void biInt::mul(biObject* S)	{ biObject::mul(S); }
-void biInt::div(biObject* S)	{ biObject::div(S); 
-	if (S->tag=="int") val = val/S->val; }
+biObject* biInt::div(biObject* S) {
+/*
+	if (S->tag == "int") {
+		biInt *o = new biInt(this);
+		o->value = value +"/"+ S->eval();
+		o->val   = val / dynamic_cast<biInt*>(S)->val;
+	   	cerr << "int::div";
+		cerr << "\nA:"<<this->dump()<<" val="<<this->val;
+		cerr << "\nB:"<<S->dump()<<" val="<<dynamic_cast<biInt*>(S)->val;
+		cerr << "\nC:"<<o->dump()<<" val="<<dynamic_cast<biInt*>(o)->val;
+		return o; 
+	}
+*/	
+	return biObject::div(S);
+}
 
 // ///
 

@@ -7,12 +7,16 @@ Simple Script (SS) is scripting language with bI-compliant syntax.
 # numbers
 
  -1		 +02	 003	 0x12AF		 0b1101
-$-1		$+02 	$003	$0x12AF		$0b1101
 ?-1		?+02	?003	?0x12AF		?0b1101
+$-1		$+02 	$003	$0x12AF		$0b1101
 
 .sec Infix expression
 
-1+2/3		$1+2/3		?1+2/3
+15/7		?15/7		$15/7
+1+15/7		?1+15/7		$1+15/7
+
+1+2			?1+2		$1+2
+1+2/3		?1+2/3		$1+2/3
 
 .sec Simpe math
 

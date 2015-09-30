@@ -30,9 +30,10 @@ struct biObject {					// class implements all symbol functionality
 	// constructors
 	biObject(string,string);		// leaf symbol from strings
 	biObject(biObject*,biObject*);	// pair constructor
+	biObject(biObject*);			// copy contructor
 	// serializatin and computing
     virtual string dump(int depth=0);// (idented) debug dump
-	virtual string eval();			// evaluate (compute) recursive with nested	
+	virtual biObject* eval();		// evaluate (compute) recursive with nested	
 	// misc
 	void join(biObject*);			// add item to nest
 	string pad(int depth);			// dump padding
@@ -42,7 +43,7 @@ struct biObject {					// class implements all symbol functionality
 	virtual void add(biObject*);	// obj+obj
 	virtual void sub(biObject*);	// obj-obj
 	virtual void mul(biObject*);	// obj*obj
-	virtual void div(biObject*);	// obj/obj
+	virtual biObject* div(biObject*);	// obj/obj
 };
 // ///
 
@@ -63,24 +64,20 @@ extern map<string,biClass*> bi_class_registry;	/* global class registry */
 // \\\ operator
 struct biOP: biObject {
 	biOP(string);
-	string eval();
+	biObject* eval();
 };
 // ///
 
 // \\\ numeric types
 struct biInt: biObject {
 	biInt(string);
+	biInt(biObject*);
 	int val;
-	private:
-	string intN();
 	string dump(int depth=0);
-	string eval();
+	biObject* eval();
 	void pfxadd();
 	void pfxsub();
-	void add(biObject*);
-	void sub(biObject*);
-	void mul(biObject*);
-	void div(biObject*);
+	virtual biObject* div(biObject*);	// int/int
 };
 // ///
 
