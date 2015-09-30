@@ -86,6 +86,9 @@ struct biFloat: biObject {
 	double val;
 	biFloat(string);
 	string dump(int depth=0);
+	// operators
+	biObject* pfxminus();
+	biObject* pfxplus();
 };
 // ///
 

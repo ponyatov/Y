@@ -6,9 +6,12 @@ Simple Script (SS) is scripting language with bI-compliant syntax.
 .sec Numbers
 # numbers
 
- -1		 +02	 003	 0x12AF		 0b1101		 -01.23		 +04e-56
-?-1		?+02	?003	?0x12AF		?0b1101		?-01.23		?+04e-56
-$-1		$+02 	$003	$0x12AF		$0b1101		$-01.23		$+04e-56
+ -1		 +02	 003	 0x12AF		 0b1101		 -01.23		 -04e-056  +0.4E-056
+?-1		?+02	?003	?0x12AF		?0b1101		?-01.23		?-04e-056 ?+0.4E-056
+$-1		$+02 	$003	$0x12AF		$0b1101		$-01.23		$-04e-056 $+0.4E-056
+
+ 1234567890		?1234567890		$1234567890		# max
+ 12345678901	?12345678901	$12345678901	# overflow
 
 .sec Infix expression
 
@@ -184,9 +187,12 @@ Current bI supports only machine numeric types, covered by C++ alias types.
 .sec Numbers
 # numbers
 
- -1		 +02	 003	 0x12AF		 0b1101
-?-1		?+02	?003	?0x12AF		?0b1101
-$-1		$+02 	$003	$0x12AF		$0b1101
+ -1		 +02	 003	 0x12AF		 0b1101		 -01.23		 -04e-056  +0.4E-056
+?-1		?+02	?003	?0x12AF		?0b1101		?-01.23		?-04e-056 ?+0.4E-056
+$-1		$+02 	$003	$0x12AF		$0b1101		$-01.23		$-04e-056 $+0.4E-056
+
+ 1234567890		?1234567890		$1234567890		# max
+ 12345678901	?12345678901	$12345678901	# overflow
 
 class Number
 

@@ -154,6 +154,9 @@ string biFloat::dump(int depth) {
 	return "\n"+pad(depth)+os.str(); 
 }
 
+biObject* biFloat::pfxminus() { val=-val; return this; }
+biObject* biFloat::pfxplus()  {           return this; }
+
 // //////
 
 // ///
