@@ -42,6 +42,8 @@ biObject* biObject::eval() {
 biObject* biObject::pfxminus()	{ value = "-"+value; return this; }
 biObject* biObject::pfxplus()	{ value = "+"+value; return this; }
 
+biObject* biObject::div(biObject* S) { value = value+"/"+S->value; return this; }
+
 // ///
 
 // \\\ environment
@@ -90,8 +92,13 @@ biOP::biOP(string s): biObject("op",s) {
 };
 
 biObject* biOP::eval() {
-	if (value=="-" and nest.size()==1) return nest[0]->pfxminus();
-	if (value=="+" and nest.size()==1) return nest[0]->pfxplus();
+	if (nest.size()==1) {
+		if (value=="-") return nest[0]->pfxminus();
+		if (value=="+") return nest[0]->pfxplus();
+	}
+	if (nest.size()==2) {
+		if (value=="/") return nest[0]->div(nest[1]);
+	}
 	return this;
 }
 // ///
@@ -108,6 +115,11 @@ string biInt::dump(int depth) {
 
 biObject* biInt::pfxminus() { val=-val; return this; }
 biObject* biInt::pfxplus()  { return this; }
+
+biObject* biInt::div(biObject* s)	{ 
+	assert(s->tag=="int");
+	val = val / dynamic_cast<biInt*>(s)->val; return this;
+}
 // ///
 
 // \\\ table of contents
