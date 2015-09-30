@@ -28,7 +28,7 @@ bi	:
 	| bi DIRECTIVE				{ W($2); }
    	| bi EOL					{ W($2); }
    	| bi C						{ W($2); }
-	| bi SX script EOL			{ W($2); W($3->eval()); W("\n"); }
+	| bi SX script EOL			{ W($2); W(($3->eval())->dump()); W("\n"); }
 	| bi QX script EOL			{ W($2); W($3->dump()); W("\n"); }
 ;
 

@@ -30,18 +30,17 @@ string biObject::dump(int depth) {
 	return S;											// return final string
 }
 
-biObject* biObject::eval() { return new biObject(this); }
+biObject* biObject::eval() {
+	for (
+		vector<biObject*>::iterator N = nest.begin();
+		N != nest.end();
+		N++
+		) (*N)->eval();
+	return this;
+}
 
-void biObject::pfxadd()	{ value = "+"+value; }
-void biObject::pfxsub()	{ value = "-"+value; }
-
-void biObject::add(biObject* S) { value = value +"+"+ S->value; }
-void biObject::sub(biObject* S) { value = value +"-"+ S->value; }
-void biObject::mul(biObject* S) { value = value +"*"+ S->value; }
-biObject* biObject::div(biObject* S) {
-	biObject *o = new biObject(this);
-	o->value = value +"/"+ S->value; 
-	return o; }
+biObject* biObject::pfxminus()	{ value = "-"+value; return this; }
+biObject* biObject::pfxplus()	{ value = "+"+value; return this; }
 
 // ///
 
@@ -91,64 +90,28 @@ biOP::biOP(string s): biObject("op",s) {
 };
 
 biObject* biOP::eval() {
-/*	
-	if (nest.size()==0) yyerror("operator without parameters");
-	if (nest.size()==1) {
-		if (value=="+") nest[0]->pfxadd();
-		if (value=="-") nest[0]->pfxsub();
-		return nest[0]->eval();
-	}
-	if (nest.size()==2) {
-		if (value=="+") nest[0]->add(nest[1]);
-		if (value=="-") nest[0]->sub(nest[1]);
-		if (value=="*") nest[0]->mul(nest[1]);
-		if (value=="/") nest[0]->div(nest[1]);
-		return nest[0]->eval();
-	}
-*/	
-	return biObject::eval();
+	if (value=="-" and nest.size()==1) return nest[0]->pfxminus();
+	if (value=="+" and nest.size()==1) return nest[0]->pfxplus();
+	return this;
 }
 // ///
 
 // \\\ numeric types
 
-biInt::biInt(string V):biObject("int",V) { val = atoi(V.c_str()); }
+biInt::biInt(string V):biObject("int",V) {}// val = atoi(V.c_str()); }
+/*
 biInt::biInt(biObject* P):biObject(P)	 { val = atoi(P->value.c_str()); }
 
 string biInt::dump(int depth) {
 	ostringstream os; os << "<" << tag << ":" << val << ">"; 
 	return "\n"+pad(depth)+os.str(); 
 }
-
-biObject* biInt::eval()	{ 
-//	ostringstream os; os << val; return os.str(); 
-	return biObject::eval();
-}
-
-void biInt::pfxadd()	{ biObject::pfxadd(); }
-void biInt::pfxsub()	{ biObject::pfxsub(); val = -val; }
-
-biObject* biInt::div(biObject* S) {
-/*
-	if (S->tag == "int") {
-		biInt *o = new biInt(this);
-		o->value = value +"/"+ S->eval();
-		o->val   = val / dynamic_cast<biInt*>(S)->val;
-	   	cerr << "int::div";
-		cerr << "\nA:"<<this->dump()<<" val="<<this->val;
-		cerr << "\nB:"<<S->dump()<<" val="<<dynamic_cast<biInt*>(S)->val;
-		cerr << "\nC:"<<o->dump()<<" val="<<dynamic_cast<biInt*>(o)->val;
-		return o; 
-	}
-*/	
-	return biObject::div(S);
-}
+*/
 
 // ///
 
 // \\\ table of contents
 TOC toc("bI.toc");
-
 
 TOC::TOC(string s)	{ assert( fh=fopen(s.c_str(),"w") ); l1=l2=l3=cls=0; }
 TOC::~TOC()			{ fclose(fh); }
@@ -156,21 +119,11 @@ TOC::~TOC()			{ fclose(fh); }
 void TOC::W(int lvl,string s) {
 	fprintf(fh,"%4i\t",yylineno);
 	switch (lvl) {
-		case SECP:  
-			fprintf(fh,"%i %s",++l1,s.c_str()); l2=0; l3=0;
-			break;
-		case SEC:   
-			fprintf(fh,"\t%i.%i %s",l1,++l2,s.c_str()); l3=0;
-			break;
-		case SECM:  
-			fprintf(fh,"\t\t%i.%i.%i %s",l1,l2,++l3,s.c_str());
-			break;
-		case CLASS: 
-			fprintf(fh,"\t\t\t\t%s\n",s.c_str());
-			break;
-		default: 
-			fprintf(fh,"%s",s.c_str());
-			break;
+		case SECP:	fprintf(fh,"%i %s",++l1,s.c_str()); l2=0; l3=0;		break;
+		case SEC:	fprintf(fh,"\t%i.%i %s",l1,++l2,s.c_str()); l3=0;	break;
+		case SECM:	fprintf(fh,"\t\t%i.%i.%i %s",l1,l2,++l3,s.c_str());	break;
+		case CLASS:	fprintf(fh,"\t\t\t\t%s\n",s.c_str());				break;
+		default:	fprintf(fh,"%s",s.c_str());							break;
 	}
 }
 // ///
@@ -223,9 +176,9 @@ biModule::biModule(string V):biObject("module",V) {
 	fprintf(make,"%s",autogen("#",dump()).c_str());
 	assert ( readme = fopen((value+"/README.md").c_str(),"w") );
 	fprintf(readme,"%s",autogen(">",dump()).c_str());
-	title = value;
+	title  = value ;
 	author = AUTHOR;
-	about = "info";
+	about  = "info";
 }
 
 biModule::~biModule() {
