@@ -13,6 +13,8 @@
 
 		/* expression mode (simple script) */
 %x ss
+		/* class definition */
+%x cc
 
 S	[\+\-]{0,1}
 D	[0-9]+
@@ -33,9 +35,9 @@ D	[0-9]+
 \$						{BEGIN(ss);TC(SX);}			/* $ dump AST prefix */
 \?						{BEGIN(ss);TC(QX);}			/* ? eval prefix */
 <ss>[ \t\n]+			{BEGIN(INITIAL);TC(EOL);}	/* end line syntax marker */
-<ss>[a-zA-Z][a-zA-Z0-9]*	TO("sym",SYM)			/* symbol */
-<ss>\'[^\']*\'			TO("str",STR)				/* string */
-<ss>\"[^\"]*\"			TO("str",STR)
+<ss,cc>[a-zA-Z][a-zA-Z0-9]*	TO("sym",SYM)			/* symbol */
+<ss,cc>\'[^\']*\'			TO("str",STR)			/* string */
+<ss,cc>\"[^\"]*\"			TO("str",STR)
 <ss>{D}					TX(biInt,NUM)				/* numeric literals */
 <ss>0x[0-9A-F]+			TO("hex",NUM)
 <ss>0b[01]+				TO("bin",NUM)
@@ -49,6 +51,12 @@ D	[0-9]+
 <ss>\^					TX(biOP,POW)
 <ss>\(					TO("(",LP)					/* parens */
 <ss>\)					TO(")",RP)
+
+^class					{BEGIN(cc);TX(biClass,CLASS);}	/* class def */
+<cc>\n\n				{BEGIN(INITIAL);TC(ENDCLASS);}
+<cc>[ \t\n]				{}
+<cc>:					TC(COLON)
+<cc>=					TC(EQ)
 
 \n						TC(EOL)						/* end line in non-ss mode */
 .						TC(C)						/* any undetected char */

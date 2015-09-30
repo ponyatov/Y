@@ -10,12 +10,12 @@
 	biObject *o;
 }
 
-%token <c> C EOL SX QX
+%token <c> C EOL SX QX ENDCLASS COLON EQ
 %token <o> END DIRECTIVE FFILE FEOF
-%token <o> NUM SYM STR
+%token <o> NUM SYM STR CLASS
 %token <o> ADD SUB MUL DIV POW
 %token <o> LP RP
-%type <o> script
+%type <o> script classdef
 
 %left ADD SUB
 %left MUL DIV
@@ -28,8 +28,9 @@ bi	:
 	| bi DIRECTIVE				{ W($2); }
    	| bi EOL					{ W($2); }
    	| bi C						{ W($2); }
-	| bi SX script EOL			{ W($2); W(($3->eval())->dump()); W("\n"); }
-	| bi QX script EOL			{ W($2); W($3->dump()); W("\n"); }
+	| bi SX script 				{ W($2); W(($3->eval())->dump()); W("\n"); }
+	| bi QX script 				{ W($2); W($3->dump()); W("\n"); }
+	| bi classdef ENDCLASS		{ W($2); W($3); }
 ;
 
 script :
@@ -45,6 +46,13 @@ script :
 	| SUB script %prec PFX		{ $$ = $1; $$->join($2); }
 	| LP RP						{ $$ = new biObject("(",")"); }
 	| LP script RP				{ $$ = new biObject("(",")"); $$->join($2); }
+;
+
+classdef :
+	  CLASS SYM					{ $$ = $1; $$->value = $2->value; }
+	| classdef COLON SYM		{ $$ = $1; $$->attr["super"] = $3; }	
+	| classdef STR				{ $$ = $1; $$->attr["doc"]=$2; }
+	| classdef SYM EQ script	{ $$ = $1; $$->attr[$2->value]=$4; }
 ;
 %%
 

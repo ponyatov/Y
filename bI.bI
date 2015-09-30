@@ -3,15 +3,7 @@
 
 Simple Script (SS) is scripting language with bI-compliant syntax.
 
-.sec Numbers
-# numbers
-
- -1		 +02	 003	 0x12AF		 0b1101		 -01.23		 -04e-056  +0.4E-056
-?-1		?+02	?003	?0x12AF		?0b1101		?-01.23		?-04e-056 ?+0.4E-056
-$-1		$+02 	$003	$0x12AF		$0b1101		$-01.23		$-04e-056 $+0.4E-056
-
- 1234567890		?1234567890		$1234567890		# max
- 12345678901	?12345678901	$12345678901	# overflow
+class Number
 
 .sec Infix expression
 

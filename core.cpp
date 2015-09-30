@@ -68,16 +68,19 @@ void init_env() {
 // ///
 
 // \\\ class
+biClass::biClass(string V):biObject("class",V) {
+	toc.W(TOC::CLASS,value);
+}
+/*
 biObject *biCoreClass = new biObject("class","class");
 map<string,biClass*> bi_class_registry;
 
-biClass::biClass(string V):biObject("class",V) 			{
+ 			{
 	toc.W(TOC::CLASS,value);
 	bi_class_registry[V] = this;
 }
 
 biClass::biClass(biObject* S):biObject(biCoreClass,S)	{
-	toc.W(TOC::CLASS,value);
 	bi_class_registry[S->value] = this;
 }
 
@@ -87,6 +90,7 @@ biClass::biClass(biObject* P,biObject* C):biObject(P,C) {
 	toc.W(TOC::CLASS,value+":"+P->value);
 	bi_class_registry[C->value] = this;
 }
+*/
 // ///
 
 // \\\ operator

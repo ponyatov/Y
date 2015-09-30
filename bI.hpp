@@ -55,10 +55,10 @@ void init_env();
 // \\\ class
 struct biClass: biObject {
 	biClass(string);
-	biClass(biObject*);
-	biClass(biObject*,biObject*);
+//	biClass(biObject*);
+//	biClass(biObject*,biObject*);
 };
-extern map<string,biClass*> bi_class_registry;	/* global class registry */
+//extern map<string,biClass*> bi_class_registry;	/* global class registry */
 // ///
 
 // \\\ operator
