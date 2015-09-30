@@ -47,8 +47,6 @@ Symbol Number	'any number'
 	and DSL compilers/translators development.
 }
 
-.end
-
 .sec Goal
 
 .list The goal of bI language design is
@@ -119,6 +117,8 @@ Comments must be removed from output.
 class Comment
 
 class LineComment:Comment	regexp = '#[^\\n]*\\n'
+
+.end
 
 .sec Directives
 
@@ -216,11 +216,11 @@ generation.
 
 .sec- i1: bool
 
-class bool:i1
-class byte:i8
-class short:i16
-class word:i32
-class long:i64
+class bool:		i1
+class byte:		i8
+class short:	i16
+class word:		i32
+class long:		i64
 
 .sec Number
 
@@ -318,6 +318,8 @@ $AUTOGEN
 .file core.cpp
 $AUTOGEN
 .eof
+
+.sec+ C++ runtime
 
 .end
 ###############################################################################
@@ -563,93 +565,6 @@ list :
 	 | list ex		{ \$\$=\$1; \$\$->next.push_back(\$2); }
 ;
 %%
-.eof
-
-.sec C++ runtime
-
-.file symsym.hpp
-\#ifndef _H_SYM
-\#define _H_SYM
-
-\#include <iostream>
-\#include <cstdio>
-\#include <cstdlib>
-\#include <cassert>
-\#include <map>
-\#include <list>
-
-using namespace std;
-
-struct sym {
-	string *cls;				// class name
-	string *val;				// symbol value
-	list<sym*> attr;			// attributes
-	list<sym*> next;			// nested symbols (for non-leaf symbol)
-	sym(const char*,char*);		// constructor (class,value)
-	sym(const char*,sym*,sym*);
-	virtual string* dump(int depth=0);	// dump symbol
-	virtual string* eval();		// evaluate (compute) symbol into string value
-};
-
-extern int yylex();
-extern int yyparse();
-extern int yylineno;
-extern char *yytext;
-extern void yyerror(string);
-\#include "parser.tab.hpp"
-
-\#endif // _H_SYM
-.eof
-
-.file symsym.cpp
-\#include "sym.hpp"
-
-sym::sym(const char *C, char *V) {
-	cls = new string( C ); val = new string( V );
-	if (*cls=="comment") val->erase(0,1); // del \#
-}
-
-sym::sym(const char *C, sym* S1, sym* S2) {
-	cls = new string(C); val = new string();
-	next.push_back(S1);
-	next.push_back(S2);
-}
-
-string sml(string x,int y) {
-	string s;
-	for (int i=0;i<y;i++) s+=x;
-	return s;
-}
-
-string* sym::dump(int depth) {
-	string *S = new string(sml("\\t",depth)+"<" + *cls + ":" + *val + ">\\n");
-	for (list<sym*>::iterator it=next.begin(); it!=next.end(); it++ )
-		*S += *((*it)->dump(depth+1));
-	return S;
-}
-
-string* sym::eval()	{
-	string *S = new string(*val);
-	string delim(" ");
-	if (*cls=="pair") delim=":";
-	if (*cls=="comment") *S = "\#"+*S;
-	int er=0;
-	for (list<sym*>::iterator it=next.begin(); it!=next.end(); it++,er++ )
-		*S += *((*it)->eval())+delim;
-	if (er) S->erase((S->size())-1,1);
-	return S;
-}
-
-void yyerror(string err) {
-	cerr<<"\\n"<<err<<" \# "<<yylineno<<" : "<<yytext<<"\\n\\n";
-	cout<<"\\n"<<err<<" \# "<<yylineno<<" : "<<yytext<<"\\n\\n";
-	exit(-1);
-}
-
-int main(int argc, char *argv[]) {
-	cout<<"\\n\# "<<argv[0]<<"\\n\\n";
-	return yyparse();
-}
 .eof
 
 .sec Test suite
