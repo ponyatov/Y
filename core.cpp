@@ -98,16 +98,16 @@ biObject* biOP::eval() {
 
 // \\\ numeric types
 
-biInt::biInt(string V):biObject("int",V) {}// val = atoi(V.c_str()); }
-/*
-biInt::biInt(biObject* P):biObject(P)	 { val = atoi(P->value.c_str()); }
+biInt::biInt(string V):biObject("int",V) { val = atoi(V.c_str()); }
+//biInt::biInt(biObject* P):biObject(P)	 { val = atoi(P->value.c_str()); }
 
 string biInt::dump(int depth) {
 	ostringstream os; os << "<" << tag << ":" << val << ">"; 
 	return "\n"+pad(depth)+os.str(); 
 }
-*/
 
+biObject* biInt::pfxminus() { val=-val; return this; }
+biObject* biInt::pfxplus()  { return this; }
 // ///
 
 // \\\ table of contents

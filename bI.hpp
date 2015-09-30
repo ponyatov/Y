@@ -68,8 +68,11 @@ struct biOP: biObject {
 struct biInt: biObject {
 	biInt(string);
 //	biInt(biObject*);
-//	int val;
-//	string dump(int depth=0);
+	int val;
+	string dump(int depth=0);
+	// operators
+	biObject* pfxminus();
+	biObject* pfxplus();
 };
 // ///
 
