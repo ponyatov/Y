@@ -35,13 +35,16 @@ biObject* biObject::eval() {
 		vector<biObject*>::iterator N = nest.begin();
 		N != nest.end();
 		N++
-		) (*N)->eval();
+		) (*N) = (*N)->eval();
 	return this;
 }
 
 biObject* biObject::pfxminus()	{ value = "-"+value; return this; }
 biObject* biObject::pfxplus()	{ value = "+"+value; return this; }
 
+biObject* biObject::add(biObject* S) { value = value+"+"+S->value; return this; }
+biObject* biObject::sub(biObject* S) { value = value+"-"+S->value; return this; }
+biObject* biObject::mul(biObject* S) { value = value+"*"+S->value; return this; }
 biObject* biObject::div(biObject* S) { value = value+"/"+S->value; return this; }
 
 // ///
@@ -50,11 +53,11 @@ biObject* biObject::div(biObject* S) { value = value+"/"+S->value; return this; 
 map<string,biObject*> env;
 
 void init_env() {
-	env["TITLE"]=new biObject("",
+	env["TITLE"]=new biObject("str",
 		"bI dynamic language system");
-	env["AUTHOR"]=new biObject("(c)",
+	env["AUTHOR"]=new biObject("str",
 		AUTHOR);
-	env["AUTOGEN"]=new biObject("",
+	env["AUTOGEN"]=new biObject("str",
 		"/************** DO NOT EDIT *************\n"
 		"   this file was autogened by bI system  \n"
 		" ************** DO NOT EDIT *************\n"	);
@@ -92,11 +95,15 @@ biOP::biOP(string s): biObject("op",s) {
 };
 
 biObject* biOP::eval() {
+	biObject::eval();
 	if (nest.size()==1) {
 		if (value=="-") return nest[0]->pfxminus();
 		if (value=="+") return nest[0]->pfxplus();
 	}
 	if (nest.size()==2) {
+		if (value=="+") return nest[0]->add(nest[1]);
+		if (value=="-") return nest[0]->sub(nest[1]);
+		if (value=="*") return nest[0]->mul(nest[1]);
 		if (value=="/") return nest[0]->div(nest[1]);
 	}
 	return this;
@@ -114,12 +121,24 @@ string biInt::dump(int depth) {
 }
 
 biObject* biInt::pfxminus() { val=-val; return this; }
-biObject* biInt::pfxplus()  { return this; }
+biObject* biInt::pfxplus()  {           return this; }
+
+biObject* biInt::add(biObject* s)	{ 
+	assert(s->tag=="int"); val = val + dynamic_cast<biInt*>(s)->val; return this;
+}
+
+biObject* biInt::sub(biObject* s)	{ 
+	assert(s->tag=="int"); val = val - dynamic_cast<biInt*>(s)->val; return this;
+}
+
+biObject* biInt::mul(biObject* s)	{ 
+	assert(s->tag=="int"); val = val * dynamic_cast<biInt*>(s)->val; return this;
+}
 
 biObject* biInt::div(biObject* s)	{ 
-	assert(s->tag=="int");
-	val = val / dynamic_cast<biInt*>(s)->val; return this;
+	assert(s->tag=="int"); val = val / dynamic_cast<biInt*>(s)->val; return this;
 }
+
 // ///
 
 // \\\ table of contents

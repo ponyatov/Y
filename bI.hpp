@@ -40,6 +40,9 @@ struct biObject {					// class implements all symbol functionality
 	// operators
 	virtual biObject* pfxminus();		// -obj
 	virtual biObject* pfxplus();		// +obj
+	virtual biObject* add(biObject*);	// obj+obj
+	virtual biObject* sub(biObject*);	// obj-obj
+	virtual biObject* mul(biObject*);	// obj*obj
 	virtual biObject* div(biObject*);	// obj/obj
 };
 // ///
@@ -74,6 +77,9 @@ struct biInt: biObject {
 	// operators
 	biObject* pfxminus();
 	biObject* pfxplus();
+	biObject* add(biObject*);
+	biObject* sub(biObject*);
+	biObject* mul(biObject*);
 	biObject* div(biObject*);
 };
 // ///
