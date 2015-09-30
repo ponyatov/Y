@@ -6,9 +6,9 @@ Simple Script (SS) is scripting language with bI-compliant syntax.
 .sec Numbers
 # numbers
 
- -1		 +02	 003	 0x12AF		 0b1101
-?-1		?+02	?003	?0x12AF		?0b1101
-$-1		$+02 	$003	$0x12AF		$0b1101
+ -1		 +02	 003	 0x12AF		 0b1101		 -01.23		 +04e-56
+?-1		?+02	?003	?0x12AF		?0b1101		?-01.23		?+04e-56
+$-1		$+02 	$003	$0x12AF		$0b1101		$-01.23		$+04e-56
 
 .sec Infix expression
 
@@ -181,12 +181,12 @@ for statical compilation, native machine code or hardware synthesis.
 
 Current bI supports only machine numeric types, covered by C++ alias types.
 
-.sec Number
+.sec Numbers
 # numbers
 
  -1		 +02	 003	 0x12AF		 0b1101
-$-1		$+02 	$003	$0x12AF		$0b1101
 ?-1		?+02	?003	?0x12AF		?0b1101
+$-1		$+02 	$003	$0x12AF		$0b1101
 
 class Number
 

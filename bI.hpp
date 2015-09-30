@@ -70,9 +70,8 @@ struct biOP: biObject {
 
 // \\\ numeric types
 struct biInt: biObject {
+	long long val;
 	biInt(string);
-//	biInt(biObject*);
-	int val;
 	string dump(int depth=0);
 	// operators
 	biObject* pfxminus();
@@ -81,6 +80,12 @@ struct biInt: biObject {
 	biObject* sub(biObject*);
 	biObject* mul(biObject*);
 	biObject* div(biObject*);
+};
+
+struct biFloat: biObject {
+	double val;
+	biFloat(string);
+	string dump(int depth=0);
 };
 // ///
 

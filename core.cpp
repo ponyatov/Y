@@ -15,14 +15,17 @@ string biObject::pad(int depth) {
 void biObject::join(biObject* X)	{ nest.push_back(X); }
 
 string biObject::dump(int depth) {
-	string S="\n"+pad(depth);								// left padding
-	S+="<"+tag+":"+value+">";							// symbol header
-	if (attr.size()) {									// dump attributes
+	// **** header ****
+	string S="\n"+pad(depth);							// left padding
+	S+="<"+tag+":"+value+">";
+	// **** attributes ****
+	if (attr.size()) {
 		for ( map<string,biObject*>::iterator A = attr.begin();
 			A != attr.end(); A++ )
 				S += "\n"+pad(depth+1)+A->first+":"+A->second->value;
 	}
-	if (nest.size()) {									// nested symbols
+	// **** nested symbols ***
+	if (nest.size()) {
 		for ( vector<biObject*>::iterator N = nest.begin();
 			N != nest.end(); N++ )
 				S += (*N)->dump(depth+1);
@@ -112,8 +115,9 @@ biObject* biOP::eval() {
 
 // \\\ numeric types
 
+// \\\\\\ integer
+
 biInt::biInt(string V):biObject("int",V) { val = atoi(V.c_str()); }
-//biInt::biInt(biObject* P):biObject(P)	 { val = atoi(P->value.c_str()); }
 
 string biInt::dump(int depth) {
 	ostringstream os; os << "<" << tag << ":" << val << ">"; 
@@ -138,6 +142,19 @@ biObject* biInt::mul(biObject* s)	{
 biObject* biInt::div(biObject* s)	{ 
 	assert(s->tag=="int"); val = val / dynamic_cast<biInt*>(s)->val; return this;
 }
+
+// //////
+
+// \\\\\\ float
+
+biFloat::biFloat(string V):biObject("float",V) { val = atof(V.c_str()); }
+
+string biFloat::dump(int depth) {
+	ostringstream os; os << "<" << tag << ":" << val << ">"; 
+	return "\n"+pad(depth)+os.str(); 
+}
+
+// //////
 
 // ///
 

@@ -39,8 +39,8 @@ D	[0-9]+
 <ss>{D}					TX(biInt,NUM)				/* numeric literals */
 <ss>0x[0-9A-F]+			TO("hex",NUM)
 <ss>0b[01]+				TO("bin",NUM)
-<ss>{D}\.{D}			TO("float",NUM)
-<ss>{D}[eE]{S}{D}		TO("float",NUM)
+<ss>{D}\.{D}			TX(biFloat,NUM)
+<ss>{D}[eE]{S}{D}		TX(biFloat,NUM)
 <ss>\+					TX(biOP,ADD)				/* operators */
 <ss>\-					TX(biOP,SUB)
 <ss>\*					TX(biOP,MUL)
