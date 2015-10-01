@@ -11,10 +11,14 @@ This ?is $a symbol.
 
 bI has some constants:
 
-pi		?pi		$pi
-e		?e		$e
-g		?g		$g
-h		?h		$h
+$pi = 999
+
+pi		?pi		$pi		# Pi
+e		?e		$e		# e
+c		?c		$c		# light speed
+G		?G		$G		# gravity const
+g		?g		$g		# gravitational acceleration
+h		?h		$h		# Plank constant
 
 .sec Infix expression
 

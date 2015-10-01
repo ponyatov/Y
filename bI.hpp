@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
-//#include <list>
+#include <cmath>
 #include <vector>
 #include <map>
 #ifdef __MINGW32__
@@ -87,7 +87,9 @@ struct biInt: biObject {
 
 struct biFloat: biObject {
 	double val;
+	static const int width=10;
 	biFloat(string);
+	biFloat(double);
 	string dump(int depth=0);
 	string tagmark();
 	// operators

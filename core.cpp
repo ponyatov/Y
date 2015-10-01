@@ -66,6 +66,12 @@ void init_env() {
 		"/************** DO NOT EDIT *************\n"
 		"   this file was autogened by bI system  \n"
 		" ************** DO NOT EDIT *************\n"	);
+	env["pi"]=new biFloat(M_PI);			// Pi
+	env["e"]=new biFloat(M_E);				// e
+	env["c"]=new biFloat(299792458);		// light speed
+	env["G"]=new biFloat(6.674e-11);		// gravity const
+	env["g"]=new biFloat(9.80665);			// gravitational acceleration
+	env["h"]=new biFloat(6.626070040e-34);	// Plank constant
 }
 // ///
 
@@ -187,16 +193,19 @@ biObject* biInt::div(biObject* s)	{
 // \\\\\\ float
 
 biFloat::biFloat(string V):biObject("float",V) { val = atof(V.c_str()); }
+biFloat::biFloat(double V):biObject("float","") {
+	ostringstream os; os << V; value = os.str(); val = V; }
 
 string biFloat::tagmark() {
-	ostringstream os; os << "<" << tag << ":" << val << ">"; 
+	ostringstream os; os.precision(width);
+	os << "<" << tag << ":" << val << ">"; 
 	return os.str();
 }
 
 string biFloat::dump(int depth) { return "\n"+tagmark(); }
 
-biObject* biFloat::pfxminus() { val=-val; return this; }
-biObject* biFloat::pfxplus()  {           return this; }
+biObject* biFloat::pfxminus() { val = -val; return this; }
+biObject* biFloat::pfxplus()  {             return this; }
 
 // //////
 

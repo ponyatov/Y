@@ -4,8 +4,18 @@
 #define TC(X)	{ yylval.c = yytext[0];     			return X; }
 #define T1(X)	{ yylval.c = yytext[1];					return X; }
 #define TS(X)	{ yylval.s = new string(yytext);     	return X; }
-#define TO(C,X)	{ yylval.o = new biObject(C,yytext); 	return X; }
+
+#define TO(C,X)	{\
+	yylval.o = env[yytext];\
+	if (!yylval.o) {\
+		yylval.o = new biObject(C,yytext);\
+		env[yytext] = yylval.o;\
+	}\
+	return X;\
+}
+
 #define TX(C,X)	{ yylval.o = new C(yytext); 			return X; }
+
 %}
 
 %option noyywrap
@@ -51,12 +61,12 @@ D	[0-9]+
 <ss>\^					TX(biOP,POW)
 <ss>\(					TO("(",LP)					/* parens */
 <ss>\)					TO(")",RP)
+<ss,cc>=				TX(biOP,EQ)
 
 ^class					{BEGIN(cc);TC(CLASS);}			/* class def */
 <cc>\n\n				{BEGIN(INITIAL);TC(ENDCLASS);}
 <cc>[ \t\n]				{}
 <cc>:					TC(COLON)
-<cc>=					TC(EQ)
 
 \n						TC(EOL)						/* end line in non-ss mode */
 .						TC(C)						/* any undetected char */
