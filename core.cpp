@@ -39,6 +39,7 @@ string biObject::dump(int depth) {
 }
 
 biObject* biObject::eval() {
+	// **** nested symbols ***
 	for (
 		vector<biObject*>::iterator N = nest.begin();
 		N != nest.end();
@@ -140,6 +141,7 @@ biObject* biOP::eval() {
 		if (value=="-") return nest[0]->sub(nest[1]);
 		if (value=="*") return nest[0]->mul(nest[1]);
 		if (value=="/") return nest[0]->div(nest[1]);
+		if (value=="=") yyerror(value);
 	}
 	return this;
 }
