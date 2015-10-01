@@ -2,9 +2,12 @@
 
 // \\\ generic symbol type
 
-biObject::biObject(string T,string V)		{ tag=T; value=V; }
-biObject::biObject(biObject* T,biObject* V)	{ tag=T->value; value=V->value; }
-biObject::biObject(biObject* P)				{ tag=P->tag; value=P->value; }
+biObject::biObject(string T,string V) {
+	tag=T; value=V; env[value]=this; }
+biObject::biObject(biObject* T,biObject* V) {
+	tag=T->value; value=V->value; env[value]=this; }
+biObject::biObject(biObject* P) {
+	tag=P->tag; value=P->value; }
 
 string biObject::pad(int depth) {
 	string S;
@@ -41,7 +44,7 @@ biObject* biObject::eval() {
 		N != nest.end();
 		N++
 		) (*N) = (*N)->eval();
-	return this;
+	if (nest.size()==1) return nest[0]; else return this;
 }
 
 biObject* biObject::pfxminus()	{ value = "-"+value; return this; }
@@ -66,12 +69,18 @@ void init_env() {
 		"/************** DO NOT EDIT *************\n"
 		"   this file was autogened by bI system  \n"
 		" ************** DO NOT EDIT *************\n"	);
-	env["pi"]=new biFloat(M_PI);			// Pi
-	env["e"]=new biFloat(M_E);				// e
-	env["c"]=new biFloat(299792458);		// light speed
-	env["G"]=new biFloat(6.674e-11);		// gravity const
-	env["g"]=new biFloat(9.80665);			// gravitational acceleration
-	env["h"]=new biFloat(6.626070040e-34);	// Plank constant
+	env["pi"]=new biObject("const","pi");			// Pi
+	env["pi"]->join(new biFloat(M_PI));
+	env["e"] =new biObject("const","e");			// e
+	env["e"]->join(new biFloat(M_E));
+	env["c"] =new biObject("const","c");			// light speed
+	env["c"]->join(new biFloat(299792458));
+	env["G"] =new biObject("const","G");			// gravity const
+	env["G"]->join(new biFloat(6.674e-11));
+	env["g"] =new biObject("const","g");		// gravitational acceleration
+	env["g"]->join(new biFloat(9.80665));
+	env["h"] =new biObject("const","h");			// Plank constant
+	env["h"]->join(new biFloat(6.626070040e-34));
 }
 // ///
 
@@ -110,26 +119,6 @@ biClass::~biClass() {
 }
 
 biClass *bi_class=NULL;
-/*
-biObject *biCoreClass = new biObject("class","class");
-map<string,biClass*> bi_class_registry;
-
- 			{
-	toc.W(TOC::CLASS,value);
-	bi_class_registry[V] = this;
-}
-
-biClass::biClass(biObject* S):biObject(biCoreClass,S)	{
-	bi_class_registry[S->value] = this;
-}
-
-biClass::biClass(biObject* P,biObject* C):biObject(P,C) {
-	tag = "class";
-	attr["super"] = P;
-	toc.W(TOC::CLASS,value+":"+P->value);
-	bi_class_registry[C->value] = this;
-}
-*/
 // ///
 
 // \\\ operator
@@ -167,7 +156,7 @@ string biInt::tagmark()	{
 	return os.str();
 }
 
-string biInt::dump(int depth) {	return "\n"+tagmark(); }
+string biInt::dump(int depth) {	return "\n"+pad(depth)+tagmark(); }
 
 biObject* biInt::pfxminus() { val=-val; return this; }
 biObject* biInt::pfxplus()  {           return this; }
@@ -202,7 +191,7 @@ string biFloat::tagmark() {
 	return os.str();
 }
 
-string biFloat::dump(int depth) { return "\n"+tagmark(); }
+string biFloat::dump(int depth) { return "\n"+pad(depth)+tagmark(); }
 
 biObject* biFloat::pfxminus() { val = -val; return this; }
 biObject* biFloat::pfxplus()  {             return this; }

@@ -29,9 +29,10 @@ bi	:
    	| bi EOL					{ W($2); }
    	| bi C						{ W($2); }
 	| bi SX script 				{ W($2); W(($3->eval())->dump()); W("\n"); }
+	| bi SX symdef 				{ W($2); W(($3->eval())->dump()); W("\n"); }
 	| bi QX script 				{ W($2); W($3->dump()); W("\n"); }
+	| bi QX symdef 				{ W($2); W($3->dump()); W("\n"); }
 	| bi classdef ENDCLASS		{ W($2); W($3); if (bi_class) delete bi_class; }
-	| bi symdef					{ W($2); }
 ;
 
 script :

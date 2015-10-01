@@ -11,7 +11,7 @@ This ?is $a symbol.
 
 bI has some constants:
 
-$pi = 999
+pi=999		?pi=999		$pi=999
 
 pi		?pi		$pi		# Pi
 e		?e		$e		# e
