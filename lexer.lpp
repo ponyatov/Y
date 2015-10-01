@@ -52,7 +52,7 @@ D	[0-9]+
 <ss>\(					TO("(",LP)					/* parens */
 <ss>\)					TO(")",RP)
 
-^class					{BEGIN(cc);TX(biClass,CLASS);}	/* class def */
+^class					{BEGIN(cc);TC(CLASS);}			/* class def */
 <cc>\n\n				{BEGIN(INITIAL);TC(ENDCLASS);}
 <cc>[ \t\n]				{}
 <cc>:					TC(COLON)

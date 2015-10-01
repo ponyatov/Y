@@ -5,6 +5,17 @@ Simple Script (SS) is scripting language with bI-compliant syntax.
 
 class Number
 
+.sec Symbols
+
+This ?is $a symbol.
+
+bI has some constants:
+
+pi		?pi		$pi
+e		?e		$e
+g		?g		$g
+h		?h		$h
+
 .sec Infix expression
 
 15/7		?15/7		$15/7

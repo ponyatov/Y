@@ -33,7 +33,8 @@ struct biObject {					// class implements all symbol functionality
 	biObject(biObject*);			// copy contructor
 	// serializatin and computing
     virtual string dump(int depth=0);// (idented) debug dump
-	virtual biObject* eval();		// evaluate (compute) recursive with nested	
+	virtual biObject* eval();		// evaluate (compute) recursive with nested
+	virtual string tagmark();		// <tag:value>
 	// misc
 	void join(biObject*);			// add item to nest
 	string pad(int depth);			// dump padding
@@ -54,10 +55,11 @@ void init_env();
 
 // \\\ class
 struct biClass: biObject {
-	biClass(string);
-//	biClass(biObject*);
-//	biClass(biObject*,biObject*);
+	FILE *cpp; FILE *hpp;
+	biClass(biObject*);
+	~biClass();
 };
+extern biClass *bi_class;
 //extern map<string,biClass*> bi_class_registry;	/* global class registry */
 // ///
 
@@ -73,6 +75,7 @@ struct biInt: biObject {
 	long long val;
 	biInt(string);
 	string dump(int depth=0);
+	string tagmark();
 	// operators
 	biObject* pfxminus();
 	biObject* pfxplus();
@@ -86,6 +89,7 @@ struct biFloat: biObject {
 	double val;
 	biFloat(string);
 	string dump(int depth=0);
+	string tagmark();
 	// operators
 	biObject* pfxminus();
 	biObject* pfxplus();
@@ -123,7 +127,7 @@ extern biFile* bi_file;
 
 // \\\ module
 struct biModule: biObject {
-	FILE *make; FILE* readme;
+	FILE *make; FILE* readme; FILE *cpp; FILE *hpp;
 	string title,author,about;
 	biModule(string);
 	~biModule();

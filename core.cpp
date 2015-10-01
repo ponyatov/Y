@@ -14,10 +14,12 @@ string biObject::pad(int depth) {
 
 void biObject::join(biObject* X)	{ nest.push_back(X); }
 
+string biObject::tagmark() { return "<"+tag+":"+value+">"; }
+
 string biObject::dump(int depth) {
 	// **** header ****
 	string S="\n"+pad(depth);							// left padding
-	S+="<"+tag+":"+value+">";
+	S+=tagmark();
 	// **** attributes ****
 	if (attr.size()) {
 		for ( map<string,biObject*>::iterator A = attr.begin();
@@ -68,9 +70,40 @@ void init_env() {
 // ///
 
 // \\\ class
-biClass::biClass(string V):biObject("class",V) {
+biClass::biClass(biObject* V):biObject(V) {
+	if (bi_class) delete bi_class;
 	toc.W(TOC::CLASS,value);
+	// .cpp
+	assert ( cpp = fopen((bi_module->value+"/"+value+".cpp").c_str(),"w") );
+	fprintf(cpp,autogen("//",tagmark()).c_str());
+	fprintf(cpp,"#include \"%s.hpp\"\n",bi_module->value.c_str());
+	// .hpp
+	assert ( hpp = fopen((bi_module->value+"/"+value+".hpp").c_str(),"w") );
+	fprintf(hpp,autogen("//",tagmark()).c_str());
+	fprintf(hpp,"#ifndef _H_%s\n#define _H_%s\n",value.c_str(),value.c_str());
+	fprintf(bi_module->hpp,"#include \"%s.hpp\"\n",value.c_str());
+	// Makefile dependencies
+	fprintf(bi_module->make,"C_FILES += %s.cpp\n",value.c_str());
+	fprintf(bi_module->make,"H_FILES += %s.hpp\n",value.c_str());
+	fprintf(bi_module->make,"O_FILES += %s.o\n",value.c_str());
+	fprintf(bi_module->make,"\n");
+	bi_class = this;
 }
+
+biClass::~biClass() {
+	fclose(cpp);
+	if (attr["super"])
+		fprintf(hpp,"class %s: public %s {\npublic:\n",
+			value.c_str(),attr["super"]->value.c_str());
+	else
+		fprintf(hpp,"class %s {\npublic:\n",value.c_str());
+	fprintf(hpp,"};\n");
+	fprintf(hpp,"#endif // _H_%s\n",value.c_str());
+	fclose(hpp);
+	bi_class = NULL;
+}
+
+biClass *bi_class=NULL;
 /*
 biObject *biCoreClass = new biObject("class","class");
 map<string,biClass*> bi_class_registry;
@@ -123,10 +156,12 @@ biObject* biOP::eval() {
 
 biInt::biInt(string V):biObject("int",V) { val = atoi(V.c_str()); }
 
-string biInt::dump(int depth) {
+string biInt::tagmark()	{ 
 	ostringstream os; os << "<" << tag << ":" << val << ">"; 
-	return "\n"+pad(depth)+os.str(); 
+	return os.str();
 }
+
+string biInt::dump(int depth) {	return "\n"+tagmark(); }
 
 biObject* biInt::pfxminus() { val=-val; return this; }
 biObject* biInt::pfxplus()  {           return this; }
@@ -153,10 +188,12 @@ biObject* biInt::div(biObject* s)	{
 
 biFloat::biFloat(string V):biObject("float",V) { val = atof(V.c_str()); }
 
-string biFloat::dump(int depth) {
+string biFloat::tagmark() {
 	ostringstream os; os << "<" << tag << ":" << val << ">"; 
-	return "\n"+pad(depth)+os.str(); 
+	return os.str();
 }
+
+string biFloat::dump(int depth) { return "\n"+tagmark(); }
 
 biObject* biFloat::pfxminus() { val=-val; return this; }
 biObject* biFloat::pfxplus()  {           return this; }
@@ -226,27 +263,55 @@ biFile* bi_file = NULL;
 
 // \\\ module
 biModule::biModule(string V):biObject("module",V) {
-	mkdir(V.c_str());
-	assert ( make = fopen((value+"/Makefile").c_str(),"w") );
-	fprintf(make,"%s",autogen("#",dump()).c_str());
-	assert ( readme = fopen((value+"/README.md").c_str(),"w") );
-	fprintf(readme,"%s",autogen(">",dump()).c_str());
 	title  = value ;
 	author = AUTHOR;
 	about  = "info";
+	// \\ file specific
+	// directory
+	mkdir(V.c_str());
+	// Makefile
+	assert ( make = fopen((value+"/Makefile").c_str(),"w") );
+	fprintf(make,"%s",autogen("#",tagmark()).c_str());
+	fprintf(make,"# module: %s\n", value.c_str());
+	fprintf(make,"# title:  %s\n", title.c_str());
+	fprintf(make,"# author: %s\n",author.c_str());
+	fprintf(make,"\n");
+	fprintf(make,"C_FILES = %s.cpp\n",value.c_str());
+	fprintf(make,"H_FILES = %s.hpp\n",value.c_str());
+	fprintf(make,"O_FILES = %s.o\n"  ,value.c_str());
+	fprintf(make,"\n");
+	assert ( readme = fopen((value+"/README.md").c_str(),"w") );
+	fprintf(readme,"%s",autogen(">",dump()).c_str());
+	// module cpp/hpp
+	assert( cpp = fopen((value+"/"+value+".cpp").c_str(),"w") );
+	fprintf(cpp,autogen("//",tagmark()).c_str());
+	fprintf(cpp,"#include \"%s.hpp\"\n",value.c_str());
+	fprintf(cpp,"int main(int argc, char *argv[]) { return 0; }\n");
+	assert( hpp = fopen((value+"/"+value+".hpp").c_str(),"w") );
+	fprintf(hpp,autogen("//",tagmark()).c_str());
+	fprintf(hpp,"#ifndef _H_%s\n#define _H_%s\n",value.c_str(),value.c_str());
+	// //
 }
 
 biModule::~biModule() {
-	fprintf(make,"# module: %s\n",value.c_str());
-	fprintf(make,"# title:  %s\n",title.c_str());
-	fprintf(make,"# author: %s\n",author.c_str());
-	fprintf(make,"\n\n");
+	fprintf(make,
+			"%s$(EXE): $(O_FILES)\n"
+			"\t$(CXX) $(LDFLAGS) -o $@ $(O_FILES)\n\n",
+			value.c_str());
+	fprintf(make,
+			"%%.o: %%.cpp %%.hpp\n"
+			"\t$(CXX) $(CXXFLAGS) -c -o $@ $<\n\n");
 	fclose(make);
 	fprintf(readme,"# module: %s\n",value.c_str());
 	fprintf(readme,"## %s\n",title.c_str());
 	fprintf(readme,"%s\n",author.c_str());
 	fprintf(readme,"\n%s\n\n",about.c_str());
 	fclose(readme);
+	// <module>.cpp
+	fclose(cpp); 
+	// <module>..hpp
+	fprintf(hpp,"#endif // _H_%s\n",value.c_str());
+	fclose(hpp);
 }
 
 biModule* bi_module = new biModule("tmp");
@@ -285,7 +350,8 @@ void yyerror(string err) {
 
 // system cleanup
 void terminator() {
-	if (bi_module) delete bi_module;
+	if (bi_class)	delete bi_class;
+	if (bi_module)	delete bi_module;
 	exit(0);
 }
 

@@ -10,9 +10,9 @@
 	biObject *o;
 }
 
-%token <c> C EOL SX QX ENDCLASS COLON EQ
+%token <c> C EOL SX QX CLASS ENDCLASS COLON EQ
 %token <o> END DIRECTIVE FFILE FEOF
-%token <o> NUM SYM STR CLASS
+%token <o> NUM SYM STR
 %token <o> ADD SUB MUL DIV POW
 %token <o> LP RP
 %type <o> script classdef
@@ -30,7 +30,7 @@ bi	:
    	| bi C						{ W($2); }
 	| bi SX script 				{ W($2); W(($3->eval())->dump()); W("\n"); }
 	| bi QX script 				{ W($2); W($3->dump()); W("\n"); }
-	| bi classdef ENDCLASS		{ W($2); W($3); }
+	| bi classdef ENDCLASS		{ W($2); W($3); if (bi_class) delete bi_class; }
 ;
 
 script :
@@ -49,7 +49,7 @@ script :
 ;
 
 classdef :
-	  CLASS SYM					{ $$ = $1; $$->value = $2->value; }
+	  CLASS SYM					{ $$ = new biClass($2); }
 	| classdef COLON SYM		{ $$ = $1; $$->attr["super"] = $3; }	
 	| classdef STR				{ $$ = $1; $$->attr["doc"]=$2; }
 	| classdef SYM EQ script	{ $$ = $1; $$->attr[$2->value]=$4; }
