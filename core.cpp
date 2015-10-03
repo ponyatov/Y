@@ -2,12 +2,9 @@
 
 // \\\ generic symbol type
 
-biObject::biObject(string T,string V) {
-	tag=T; value=V; env[value]=this; }
-biObject::biObject(biObject* T,biObject* V) {
-	tag=T->value; value=V->value; env[value]=this; }
-biObject::biObject(biObject* P) {
-	tag=P->tag; value=P->value; }
+biObject::biObject(string T,string V)		{ tag=T; value=V; }
+biObject::biObject(biObject* T,biObject* V)	{ tag=T->value; value=V->value; }
+biObject::biObject(biObject* P)				{ tag=P->tag; value=P->value; }
 
 string biObject::pad(int depth) {
 	string S;
@@ -45,7 +42,9 @@ biObject* biObject::eval() {
 		N != nest.end();
 		N++
 		) (*N) = (*N)->eval();
-	if (nest.size()==1) return nest[0]; else return this;
+	if (nest.size()==1) return nest[0];
+	if (env[value]) return env[value]->eval();
+	return this;
 }
 
 biObject* biObject::pfxminus()	{ value = "-"+value; return this; }
@@ -55,6 +54,13 @@ biObject* biObject::add(biObject* S) { value = value+"+"+S->value; return this; 
 biObject* biObject::sub(biObject* S) { value = value+"-"+S->value; return this; }
 biObject* biObject::mul(biObject* S) { value = value+"*"+S->value; return this; }
 biObject* biObject::div(biObject* S) { value = value+"/"+S->value; return this; }
+
+biObject* biObject::set(biObject* S) {
+	if (tag == "const") return this; // yyerror(tagmark()+" is constant");
+	if (nest.size()) nest[0]=S; else join(S);
+	if (!env[value]) env[value] = this;
+	return this;
+}
 
 // ///
 
@@ -132,16 +138,18 @@ biOP::biOP(string s): biObject("op",s) {
 
 biObject* biOP::eval() {
 	biObject::eval();
+	/*
 	if (nest.size()==1) {
 		if (value=="-") return nest[0]->pfxminus();
 		if (value=="+") return nest[0]->pfxplus();
 	}
+	*/
 	if (nest.size()==2) {
 		if (value=="+") return nest[0]->add(nest[1]);
-		if (value=="-") return nest[0]->sub(nest[1]);
-		if (value=="*") return nest[0]->mul(nest[1]);
+//		if (value=="-") return nest[0]->sub(nest[1]);
+//		if (value=="*") return nest[0]->mul(nest[1]);
 		if (value=="/") return nest[0]->div(nest[1]);
-		if (value=="=") yyerror(value);
+		if (value=="=") return nest[0]->set(nest[1]);
 	}
 	return this;
 }

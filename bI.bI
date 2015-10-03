@@ -1,17 +1,16 @@
 
-.sec+ Simple Script
+.sec- Variables
 
-Simple Script (SS) is scripting language with bI-compliant syntax.
+pi=999		?pi=999		$pi=999		
+pi			?pi			$pi
+si=999		?si=999		$si=999		
+si			?si		$si
 
-class Number
+sym $sym ?sym 
 
-.sec Symbols
-
-This ?is $a symbol.
+.sec- Science constants
 
 bI has some constants:
-
-pi=999		?pi=999		$pi=999
 
 pi		?pi		$pi		# Pi
 e		?e		$e		# e
@@ -20,16 +19,9 @@ G		?G		$G		# gravity const
 g		?g		$g		# gravitational acceleration
 h		?h		$h		# Plank constant
 
-.sec Infix expression
+.end
 
-15/7		?15/7		$15/7
-1+15/7		?1+15/7		$1+15/7
-
-1+2			?1+2		$1+2
-2/3			?2/3		$2/3
-1+2/3		?1+2/3		$1+2/3
-
-.sec Simpe math
+.sec- Standart math functions
 
 (1)
 sin (1)
@@ -125,7 +117,14 @@ class Comment
 
 class LineComment:Comment	regexp = '#[^\\n]*\\n'
 
-.end
+.sec Infix expressions
+
+15/7		?15/7		$15/7
+1+15/7		?1+15/7		$1+15/7
+
+1+2			?1+2		$1+2
+2/3			?2/3		$2/3
+1+2/3		?1+2/3		$1+2/3
 
 .sec Directives
 
@@ -223,11 +222,11 @@ generation.
 
 .sec- i1: bool
 
-class bool:		i1
-class byte:		i8
-class short:	i16
-class word:		i32
-class long:		i64
+clazz bool:		i1
+clazz byte:		i8
+clazz short:	i16
+clazz word:		i32
+clazz long:		i64
 
 .sec Number
 
@@ -257,11 +256,11 @@ Number float		'float'						regexp = '[0-9]+[eE][+-]?[0-9]+'
 
 .sec- char: 8-bit classic C char (byte)
 
-class char:byte		'8-bit classic C char'		regexp 'any char' =  '.'	
+clazz char:byte		'8-bit classic C char'		regexp 'any char' =  '.'	
 
 .sec- uchar: unicode character
 
-class uchar:char
+clazz uchar:char
 
 .sec- str: string
 
@@ -274,6 +273,10 @@ String str			'string'					regexp = "'[^']*'"
 
 .sec+ Object subsystem
 
+.sec Symbols
+
+This ?is $a symbol.
+
 All elements in bI system based on Symbol class:
 
 class Symbol
@@ -282,7 +285,7 @@ class Symbol
 
 .sec core Object class
 
-class Object 'core bI data'
+clazz Object 'core bI data'
 	tag		'class/data type marker'
 	value	'string value'
 	attr	'attributes'

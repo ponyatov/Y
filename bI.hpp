@@ -45,6 +45,7 @@ struct biObject {					// class implements all symbol functionality
 	virtual biObject* sub(biObject*);	// obj-obj
 	virtual biObject* mul(biObject*);	// obj*obj
 	virtual biObject* div(biObject*);	// obj/obj
+	virtual biObject* set(biObject*);	// obj=obj
 };
 // ///
 

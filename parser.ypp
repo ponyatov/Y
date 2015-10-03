@@ -28,11 +28,12 @@ bi	:
 	| bi DIRECTIVE				{ W($2); }
    	| bi EOL					{ W($2); }
    	| bi C						{ W($2); }
-	| bi SX script 				{ W($2); W(($3->eval())->dump()); W("\n"); }
-	| bi SX symdef 				{ W($2); W(($3->eval())->dump()); W("\n"); }
-	| bi QX script 				{ W($2); W($3->dump()); W("\n"); }
-	| bi QX symdef 				{ W($2); W($3->dump()); W("\n"); }
+	| bi SX script 				{ W($2); W(($3->eval())->dump()); }
+	| bi SX symdef				{ W($2); W(($3->eval())->dump()); }
+	| bi QX script 				{ W($2); W($3->dump()); }
+	| bi QX symdef 				{ W($2); W($3->dump()); }
 	| bi classdef ENDCLASS		{ W($2); W($3); if (bi_class) delete bi_class; }
+	| bi symdef					{ W($2); }
 ;
 
 script :
@@ -57,8 +58,8 @@ classdef :
 	| classdef SYM EQ script	{ $$ = $1; $$->attr[$2->value]=$4; }
 ;
 
-symdef : 
-	SYM EQ script 				{ $$ = $2; $$->join($1); $$->join($3); }
+symdef :
+	SYM EQ script				{ $$ = $2; $$->join($1); $$->join($3); }
 ;
 %%
 
