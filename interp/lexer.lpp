@@ -1,0 +1,14 @@
+%{
+#include "interp.hpp"
+
+#define TC(X)	{ yylval.c = yytext[0];     			return X; }
+%}
+
+%option noyywrap
+%option yylineno
+
+%%
+\n		TC(EOL)
+.		TC(C)
+%%
+

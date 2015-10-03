@@ -1,0 +1,25 @@
+%{
+#include "interp.hpp"
+%}
+
+%union {
+	char c;
+	int i;
+	string *s;
+}
+
+%defines
+
+%token <c> C EOL
+%token <i> NUM
+%token <s> SYM
+
+%%
+i :
+  |	i NUM		{ cout<<$2; }
+  |	i SYM		{ cout<<$2; }
+  |	i C			{ cout<<$2; }
+  |	i EOL		{ cout<<$2; }
+;
+%%
+
