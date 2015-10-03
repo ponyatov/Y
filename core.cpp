@@ -272,7 +272,6 @@ biModule::biModule(string V):biObject("module",V) {
 	// Makefile
 	assert ( make = fopen((value+"/Makefile").c_str(),"w") );
 	fprintf(make,"%s",autogen("#",tagmark()).c_str());
-	fprintf(make,"# module: %s\n", value.c_str());
 	fprintf(make,"# title:  %s\n", title.c_str());
 	fprintf(make,"# author: %s\n",author.c_str());
 	fprintf(make,"\n");
