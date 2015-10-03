@@ -18,8 +18,12 @@ struct sym {
 	string dump(int depth=0);
 	sym* eval();
 	void app(sym*);
-	sym* neg();
+	sym* pfxplus();
+	sym* pfxminus();
 	sym* add(sym*);
+	sym* sub(sym*);
+	sym* mul(sym*);
+	sym* div(sym*);
 };
 
 // \\\ lexer/parser header block

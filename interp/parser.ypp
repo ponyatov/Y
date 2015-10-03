@@ -10,7 +10,7 @@
 %defines
 
 %token <c> C EOL
-%token <s> NUM SYM
+%token <s> NUM SYM COMMENT
 %token <s> ADD SUB MUL DIV
 %type <s> ex
 
@@ -21,10 +21,13 @@
 %%
 i :
   |	i ex		{ 
-					cout << $2->dump() << $2->eval()->dump();
-					cout << "\n--------------------------------------"; }
+					cout << $2->dump();
+					cout << "\n--------------------------------------";
+					cout << $2->eval()->dump();
+				}
+  |	i COMMENT	{ cout<<$2->dump(); }
   |	i C			{ cout<<$2; }
-  |	i EOL		{ cout<<$2; }
+  |	i EOL		{ cout<<"\n"; }
 ;
 
 ex :

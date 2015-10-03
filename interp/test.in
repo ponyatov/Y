@@ -1,4 +1,17 @@
 # comment
 
-sym+bol
+# symbols and numbers
+
+num bers 12 34
+
+# infix expressions
+
+sym+bol 12+34
+
++012 +x
+0034 -0034
+56 -56 --56
+
+34/56 12+34/56 +12+-34/56
 +012+-0034/--56
+

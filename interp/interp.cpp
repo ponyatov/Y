@@ -26,23 +26,41 @@ sym* sym::eval()	{
 		(*it) = (*it)->eval();
 	if (tag=="op") {
 		if (nest.size()==1) {
-			if (value=="-") return nest[0]->neg();
+			if (value=="+") return nest[0]->pfxplus();
+			if (value=="-") return nest[0]->pfxminus();
 		}
 		if (nest.size()==2) {
 			if (value=="+") return nest[0]->add(nest[1]);
+			if (value=="/") return nest[0]->div(nest[1]);
 		}
 	}
 	return this;
 }
 
-sym* sym::neg()	{ sym* s = new sym(this);
-	s->value = "-"+s->value;
+sym* sym::pfxplus()	{ sym* s = new sym(this);
+	if (s->tag!="int")
+		s->value = "+"+s->value;
+	return s; }
+
+sym* sym::pfxminus()	{ sym* s = new sym(this);
+	if (s->tag=="int") {
+		ostringstream os; os << -atoi(s->value.c_str()); s->value=os.str();
+	} else
+		s->value = "-"+s->value;
 	return s; }
 
 sym* sym::add(sym* o)	{ sym* s = new sym(this);
 	if (s->tag=="sym" && o->tag=="sym") s->value += o->value;
 	if (s->tag=="int" && o->tag=="int") {
 		ostringstream os; os << atoi(s->value.c_str())+atoi(o->value.c_str());
+		s->value=os.str(); 
+	}
+	return s; }
+
+sym* sym::div(sym* o)	{ sym* s = new sym(this);
+	if (s->tag=="sym" && o->tag=="sym") s->value += "/"+o->value;
+	if (s->tag=="int" && o->tag=="int") {
+		ostringstream os; os << atoi(s->value.c_str())/atoi(o->value.c_str());
 		s->value=os.str(); 
 	}
 	return s; }
