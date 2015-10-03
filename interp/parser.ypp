@@ -4,22 +4,38 @@
 
 %union {
 	char c;
-	int i;
-	string *s;
+	sym *s;
 }
 
 %defines
 
 %token <c> C EOL
-%token <i> NUM
-%token <s> SYM
+%token <s> NUM SYM
+%token <s> ADD SUB MUL DIV
+%type <s> ex
+
+%left ADD SUB
+%left MUL DIV
+%left PFX
 
 %%
 i :
-  |	i NUM		{ cout<<$2; }
-  |	i SYM		{ cout<<$2; }
+  |	i ex		{ 
+					cout << $2->dump() << $2->eval()->dump();
+					cout << "\n--------------------------------------"; }
   |	i C			{ cout<<$2; }
   |	i EOL		{ cout<<$2; }
+;
+
+ex :
+	  NUM
+	| SYM
+	| ex ADD ex			{ $$=$2; $$->app($1); $$->app($3); }
+	| ex SUB ex			{ $$=$2; $$->app($1); $$->app($3); }
+	| ex MUL ex			{ $$=$2; $$->app($1); $$->app($3); }
+	| ex DIV ex			{ $$=$2; $$->app($1); $$->app($3); }
+	| ADD ex %prec PFX	{ $$=$1; $$->app($2); }
+	| SUB ex %prec PFX	{ $$=$1; $$->app($2); }
 ;
 %%
 

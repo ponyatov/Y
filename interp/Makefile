@@ -1,7 +1,7 @@
 
 .PHONY: exec
 exec: ./interp$(EXE)
-	./interp$(EXE) < test.in > test.out
+	./interp$(EXE) < test.in > test.out && tail -n33 test.out
 
 C = interp.cpp lex.yy.c parser.tab.cpp
 H = interp.hpp parser.tab.hpp

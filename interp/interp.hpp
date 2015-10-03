@@ -2,10 +2,25 @@
 #define _H_INTERP
 
 #include <iostream>
+#include <sstream>
 #include <cstdio>
 #include <cstdlib>
+#include <map>
+#include <vector>
 
 using namespace std;
+
+struct sym {
+	string tag,value;
+	sym(string,string);
+	sym(sym*);
+	vector<sym*> nest;
+	string dump(int depth=0);
+	sym* eval();
+	void app(sym*);
+	sym* neg();
+	sym* add(sym*);
+};
 
 // \\\ lexer/parser header block
 extern int yyparse();

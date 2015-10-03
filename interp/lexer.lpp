@@ -1,14 +1,22 @@
 %{
 #include "interp.hpp"
 
-#define TC(X)	{ yylval.c = yytext[0];     			return X; }
+#define TC(X)	{ yylval.c = yytext[0];     	return X; }
+#define TS(C,X)	{ yylval.s = new sym(C,yytext);	return X; }
 %}
 
 %option noyywrap
 %option yylineno
 
 %%
-\n		TC(EOL)
-.		TC(C)
+#[^\n]*\n					{}
+[0-9]+						TS("int",NUM)
+[a-zA-Z_][a-zA-Z_0-9]*		TS("sym",SYM)
+\+							TS("op",ADD)
+\-							TS("op",SUB)
+\*							TS("op",MUL)
+\/							TS("op",DIV)
+\n							TC(EOL)
+.							TC(C)
 %%
 
