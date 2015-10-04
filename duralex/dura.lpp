@@ -23,7 +23,9 @@
 <f>[\.a-zA-Z0-9]+		{BEGIN(INITIAL); TO("sym",SYM);}
 ^\.file[ \t]+[^\n]+		TX(biDirective,FFILE)
 ^\.eof					TX(biDirective,FEOF)
-^\.title[ \t]+[^\n]+	TX(biDirective,TITLE)
+^\.title[ \t]+[^\n]+	TX(biDirective,DIRECTIVE)
+^\.author[ \t]+[^\n]+	TX(biDirective,DIRECTIVE)
+^\.github[ \t]+[^\n]+	TX(biDirective,DIRECTIVE)
 
 \$						{BEGIN(x); TC(SX);}
 <x>[ \t]				{BEGIN(INITIAL);}

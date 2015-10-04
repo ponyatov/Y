@@ -50,10 +50,13 @@ biDirective::biDirective(string V):biObject("",V) {
 		{ tag+=value[0]; value.erase(0,1); }
 	while (value.size() && ( value[0]==' ' || value[0]=='\t'))
 		value.erase(0,1);
-	if (tag==".title") env["TITLE"]= this;
+	if (tag==".title")  env["TITLE"] = this;
+	if (tag==".github") env["GITHUB"]= this;
+	if (tag==".author") env["AUTHOR"]= this;
 	if (tag==".file") {
-		if (bi_file) delete bi_file; bi_file = new biFile(value);
-	}
+		if (bi_file) delete bi_file; bi_file = new biFile(value); }
+	if (tag==".eof") {
+		if (bi_file) delete bi_file; bi_file=NULL; }
 }
 
 void W(char      c,bool to_file)	{ cout << c ; 

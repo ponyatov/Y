@@ -1,6 +1,7 @@
 # comment
 
 .title		symbolic progam template generator
+.github		https://github.com/ponyatov/Y/tree/dev/duralex
 
 .module dura
 

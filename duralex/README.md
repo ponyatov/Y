@@ -4,4 +4,4 @@
 
 license:    http://www.gnu.org/copyleft/lesser.html
 
-github:     https://github.com/ponyatov/Y
+github:     https://github.com/ponyatov/Y/tree/dev/duralex
