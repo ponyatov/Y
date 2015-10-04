@@ -21,5 +21,7 @@ lex.yy.c
 .file README.md
 \# $TITLE
 $AUTHOR
+license:    $LICENSE
+github:     $GITHUB
 .eof
 

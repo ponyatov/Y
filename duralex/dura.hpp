@@ -2,6 +2,8 @@
 #define _H_DURA
 
 #define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
+#define LICENSE "http://www.gnu.org/copyleft/lesser.html"
+#define GITHUB "https://github.com/ponyatov/Y"
 
 #include <iostream>
 #include <sstream>

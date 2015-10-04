@@ -20,10 +20,10 @@
 #[^\n]*\n				{}
 
 ^\.module[ \t]+			{BEGIN(f);TS(MODULE);}
-^\.file[ \t]+			{BEGIN(f);TS(FFILE);}
 <f>[\.a-zA-Z0-9]+		{BEGIN(INITIAL); TO("sym",SYM);}
-^\.eof					TO(".",FEOF)
-^\.title[ \t]+[^\n]*	TX(biDirective,TITLE)
+^\.file[ \t]+[^\n]+		TX(biDirective,FFILE)
+^\.eof					TX(biDirective,FEOF)
+^\.title[ \t]+[^\n]+	TX(biDirective,TITLE)
 
 \$						{BEGIN(x); TC(SX);}
 <x>[ \t]				{BEGIN(INITIAL);}

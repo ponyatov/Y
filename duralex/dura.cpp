@@ -21,6 +21,8 @@ void env_init() {
 		env["EXE"] = new biObject("const","");
 	#endif
 	env["AUTHOR"] = new biObject(".author",AUTHOR);
+	env["LICENSE"] = new biObject(".license",LICENSE);
+	env["GITHUB"] = new biObject(".github",GITHUB);
 }
 
 biModule::biModule(string V):biObject(".module",V) {
@@ -49,6 +51,9 @@ biDirective::biDirective(string V):biObject("",V) {
 	while (value.size() && ( value[0]==' ' || value[0]=='\t'))
 		value.erase(0,1);
 	if (tag==".title") env["TITLE"]= this;
+	if (tag==".file") {
+		if (bi_file) delete bi_file; bi_file = new biFile(value);
+	}
 }
 
 void W(char      c,bool to_file)	{ cout << c ; 
