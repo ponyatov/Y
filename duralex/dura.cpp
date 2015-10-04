@@ -57,6 +57,9 @@ biDirective::biDirective(string V):biObject("",V) {
 		if (bi_file) delete bi_file; bi_file = new biFile(value); }
 	if (tag==".eof") {
 		if (bi_file) delete bi_file; bi_file=NULL; }
+	if (tag==".module") {
+		if (bi_module) delete bi_module; 
+		bi_module = new biModule(value); }
 }
 
 void W(char      c,bool to_file)	{ cout << c ; 

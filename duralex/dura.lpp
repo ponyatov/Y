@@ -19,10 +19,10 @@
 \\.						T1(C)
 #[^\n]*\n				{}
 
-^\.module[ \t]+			{BEGIN(f);TS(MODULE);}
-<f>[\.a-zA-Z0-9]+		{BEGIN(INITIAL); TO("sym",SYM);}
+^\.module[ \t]+[^\n]+	TX(biDirective,MODULE)
 ^\.file[ \t]+[^\n]+		TX(biDirective,FFILE)
 ^\.eof					TX(biDirective,FEOF)
+^\.sec[ \t]+[^\n]+		TX(biDirective,DIRECTIVE)
 ^\.title[ \t]+[^\n]+	TX(biDirective,DIRECTIVE)
 ^\.author[ \t]+[^\n]+	TX(biDirective,DIRECTIVE)
 ^\.github[ \t]+[^\n]+	TX(biDirective,DIRECTIVE)

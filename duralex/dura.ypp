@@ -11,21 +11,18 @@
 }
 
 %token <c> C EOL QX SX
-%token <s> MODULE 
-%token <o> SYM FFILE FEOF DIRECTIVE
+%token <o> SYM MODULE FFILE FEOF DIRECTIVE
 %type <o> ex
 
 %%
 dura: 
-	| dura MODULE SYM EOL		{ if (bi_module) delete bi_module; 
-								bi_module = new biModule($3->value); 
-								W(bi_module); }
-	| dura FFILE EOL			{ W($2,false); W($3,false); }
-	| dura FEOF					{ W($2,false); }								
-	| dura EOL					{ W($2); }
-	| dura SX ex				{ W($3->eval()->value); }
-	| dura DIRECTIVE			{ W($2); }
-	| dura C					{ W($2); }
+	| dura MODULE EOL		{ W($2); }
+	| dura FFILE EOL		{ W($2,false); W($3,false); }
+	| dura FEOF				{ W($2,false); }								
+	| dura EOL				{ W($2); }
+	| dura SX ex			{ W($3->eval()->value); }
+	| dura DIRECTIVE		{ W($2); }
+	| dura C				{ W($2); }
 ;
 
 ex :
