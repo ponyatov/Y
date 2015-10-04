@@ -1,5 +1,9 @@
 # comment
 
+?C=list,.gitignore,README.md,Makefile
+@C=list,.gitignore,README.md,Makefile
+$C=list,.gitignore,README.md,Makefile
+
 .title		symbolic program template generator
 .github		https://github.com/ponyatov/Y/tree/dev/duralex
 
@@ -11,12 +15,12 @@
 *~
 *.swp
 $MODULE
-$MODULE$EXE
-$MODULE.log
+$(MODULE)$EXE
+$(MODULE).log
 /tmp/
-$MODULE.tab.cpp
-$MODULE.tab.hpp
 lex.yy.c
+$(MODULE).tab.cpp
+$(MODULE).tab.hpp
 .eof
 
 .file README.md

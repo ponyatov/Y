@@ -6,11 +6,15 @@ string biObject::pad(int n)	{ string S; for (int i=0;i<n;i++) S+="\t"; return S;
 string biObject::tagval()	{ return "<"+tag+":"+value+">"; }
 
 string biObject::dump(int depth) {
-	if (depth)	return "\n"+pad(depth)+tagval();
-	else		return tagval();
+	string S="\n"+pad(depth)+tagval();
+	for (vector<biObject*>::iterator it = nest.begin(); it != nest.end(); it++)
+		S += (*it)->dump(depth+1);
+	return S;
 }
 
 biObject* biObject::eval()		{ return this; }
+
+void biObject::join(biObject* o)	{ nest.push_back(o); }
 
 map<string,biObject*> env;
 

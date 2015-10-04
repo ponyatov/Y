@@ -23,6 +23,8 @@ struct biObject {
 	virtual string dump(int depth=0);
 	virtual biObject* eval();
 	string tagval(),pad(int);
+	vector<biObject*> nest;
+	void join(biObject*);
 };
 
 extern map<string,biObject*> env;

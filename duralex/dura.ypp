@@ -10,9 +10,11 @@
 	biObject *o;
 }
 
-%token <c> C EOL QX SX LP RP
-%token <o> SYM MODULE FFILE FEOF DIRECTIVE
+%token <c> C EOL QX SX OX LP RP COMMA 
+%token <o> SYM MODULE FFILE FEOF DIRECTIVE EQ
 %type <o> ex
+
+%left COMMA
 
 %%
 dura: 
@@ -20,6 +22,8 @@ dura:
 	| dura FFILE EOL		{ W($2,false); W($3,false); }
 	| dura FEOF				{ W($2,false); }								
 	| dura EOL				{ W($2); }
+	| dura QX ex			{ W($3->dump()); }
+	| dura OX ex			{ W($3->eval()); }
 	| dura SX ex			{ W($3->eval()->value); }
 	| dura DIRECTIVE		{ W($2); }
 	| dura C				{ W($2); }
@@ -28,6 +32,8 @@ dura:
 ex :
    	  SYM					{ $$=$1; }
 	| LP ex RP				{ $$=$2; }
+	| ex COMMA ex			{ $$=$1; $$->join($3); }
+	| SYM EQ ex				{ $$=$2; $$->join($1); $$->join($3); }
 ;
 %%
 
