@@ -39,7 +39,7 @@ syntax match	Keyword		"\v^class"
 " core class fields and signals
 syntax keyword	Function	regexp
 " operators
-syntax match	Keyword		"[=?$@]"
+syntax match	Keyword		"[=?$@,]"
 
 " numbers
 "syntax match Number "\v0b[01]+"
