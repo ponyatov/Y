@@ -1,6 +1,6 @@
 # comment
 
-.title		symbolic progam template generator
+.title		symbolic program template generator
 .github		https://github.com/ponyatov/Y/tree/dev/duralex
 
 .module dura
@@ -27,5 +27,27 @@ $AUTHOR
 license:    $LICENSE
 
 github:     $GITHUB
+.eof
+
+.file Makefile
+.PHONY: exec
+exec: ./$(MODULE)\$(EXE)
+	./$(MODULE)\$(EXE) < $(MODULE).bI > $(MODULE).log
+
+.PHONY: upgrade
+upgrade:
+	cp dura/.gitignore ./
+	cp dura/README.md ./
+	cp dura/Makefile ./
+
+C = $(MODULE).cpp lex.yy.c $(MODULE).tab.cpp
+H = $(MODULE).hpp $(MODULE).tab.hpp
+
+./$(MODULE)\$(EXE): \$(C) \$(H)
+	\$(CXX) \$(CXXFLAGS) -o \$@ \$(C)
+lex.yy.c: $(MODULE).lpp
+	flex \$<
+$(MODULE).tab.cpp: $(MODULE).ypp
+	bison \$<
 .eof
 

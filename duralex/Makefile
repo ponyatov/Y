@@ -1,20 +1,19 @@
-MODULE = dura
-
-exec: ./$(MODULE)$(EXE)
-	./$(MODULE)$(EXE) < $(MODULE).bI > $(MODULE).log
+.PHONY: exec
+exec: ./dura$(EXE)
+	./dura$(EXE) < dura.bI > dura.log
 
 .PHONY: upgrade
-upgrade: .gitignore README.md
-%: dura/%
-	cp $< $@
-	
-C = $(MODULE).cpp lex.yy.c $(MODULE).tab.cpp
-H = $(MODULE).hpp $(MODULE).tab.hpp
+upgrade:
+	cp dura/.gitignore ./
+	cp dura/README.md ./
+	cp dura/Makefile ./
 
-./$(MODULE)$(EXE): $(C) $(H)
+C = dura.cpp lex.yy.c dura.tab.cpp
+H = dura.hpp dura.tab.hpp
+
+./dura$(EXE): $(C) $(H)
 	$(CXX) $(CXXFLAGS) -o $@ $(C)
-lex.yy.c: $(MODULE).lpp
+lex.yy.c: dura.lpp
 	flex $<
-$(MODULE).tab.cpp: $(MODULE).ypp
+dura.tab.cpp: dura.ypp
 	bison $<
-

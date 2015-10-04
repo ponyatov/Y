@@ -1,4 +1,4 @@
-# symbolic progam template generator
+# symbolic program template generator
 
 (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 

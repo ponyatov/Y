@@ -7,6 +7,8 @@
 					else yylval.o = new biObject(C,yytext); return X; }
 #define TX(C,X)		{ if (env[yytext]) yylval.o = env[yytext]; \
 					else yylval.o = new C(yytext); return X; }
+
+int PAREN=0;
 %}
 
 %option noyywrap
@@ -30,7 +32,9 @@
 \$						{BEGIN(x); TC(SX);}
 <x>[ \t]				{BEGIN(INITIAL);}
 <x>\n					{BEGIN(INITIAL); TC(EOL);}
-<x>[A-Z]+				{BEGIN(INITIAL); TO("sym",SYM);}
+<x>[A-Z]+				{if (!PAREN) BEGIN(INITIAL); TO("sym",SYM);}
+<x>\(					{PAREN++;TC(LP);}
+<x>\)					{if (--PAREN==0) BEGIN(INITIAL); TC(RP);}
 
 \n						TC(EOL)
 .						TC(C)

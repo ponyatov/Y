@@ -10,7 +10,7 @@
 	biObject *o;
 }
 
-%token <c> C EOL QX SX
+%token <c> C EOL QX SX LP RP
 %token <o> SYM MODULE FFILE FEOF DIRECTIVE
 %type <o> ex
 
@@ -26,7 +26,8 @@ dura:
 ;
 
 ex :
-   	SYM
+   	  SYM					{ $$=$1; }
+	| LP ex RP				{ $$=$2; }
 ;
 %%
 

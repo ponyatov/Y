@@ -66,7 +66,7 @@ void W(char      c,bool to_file)	{ cout << c ;
 	if (to_file&&bi_file) bi_file->W(c); }
 void W(string*   s,bool to_file)	{ cout << *s ; 
 	if (to_file&&bi_file) bi_file->W(s); }
-void W(string    s,bool to_file)	{ cout <<  s ; 
+void W(string    s,bool to_file)	{ cout << s ; 
 	if (to_file&&bi_file) bi_file->W(s); }
 void W(biObject* s,bool to_file) 	{ cout << s->dump();
 	if (to_file&&bi_file) bi_file->W(s); }
