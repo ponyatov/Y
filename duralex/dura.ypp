@@ -9,8 +9,8 @@
 	biObject *o;
 }
 
-%token <s> C EOL FEOF
-%token <s> MODULE FFILE COMMENT 
+%token <s> C EOL COMMENT
+%token <s> MODULE FFILE FEOF
 %token <o> SYM
 
 %%
@@ -19,7 +19,10 @@ dura:
 								bi_module = new biModule($3->value); 
 								W(bi_module); }
 	| dura FFILE SYM EOL		{ if (bi_file) delete bi_file;
-								bi_file = new biFile($3->value); }
+								bi_file = new biFile($3->value);
+								W(bi_file,false); W($4); }
+	| dura FEOF					{ W($2,false);
+								if (bi_file) delete bi_file; bi_file=NULL; }
 	| dura EOL					{ W($2); }
 	| dura C					{ W($2); }
 	| dura COMMENT				{ W("#"); W($2); }

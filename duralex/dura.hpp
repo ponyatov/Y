@@ -26,6 +26,9 @@ struct biFile: biObject {
 	FILE *fh;
 	biFile(string);
 	~biFile();
+	void W(string*);
+	void W(string);
+	void W(biObject*);
 };
 extern biFile *bi_file;
 
@@ -36,9 +39,9 @@ extern char *yytext;
 extern int yyparse();
 #include "dura.tab.hpp"
 
-void W(string*);
-void W(string);
-void W(biObject*);
+void W(string*,bool to_file=true);
+void W(string,bool to_file=true);
+void W(biObject*,bool to_file=true);
 
 #endif // _H_DURA
 

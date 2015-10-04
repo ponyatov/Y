@@ -7,10 +7,17 @@
 %option noyywrap
 %option yylineno
 
+%x f
+%x x
+
 %%
 #[^\n]*				TS(COMMENT)
-\.module[ \t]+		TS(MODULE)
-[a-z]+				TO("sym",SYM)
+
+^\.module[ \t]+		{BEGIN(f);TS(MODULE);}
+^\.file[ \t]+		{BEGIN(f);TS(FFILE);}
+<f>[\.a-z]+			{BEGIN(INITIAL); TO("sym",SYM);}
+^\.eof				TS(FEOF)
+
 \n					TS(EOL)
 .					TS(C)
 %%
