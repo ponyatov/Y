@@ -5,16 +5,24 @@
 %defines
 
 %union {
-	string *a;
-	sym *s;
+	string *s;
+	biObject *o;
 }
 
-%token <a> C EOL
+%token <s> C EOL FEOF
+%token <s> MODULE FFILE COMMENT 
+%token <o> SYM
 
 %%
 dura: 
-	| dura EOL	{ W($2); }
-	| dura C	{ W($2); }
+	| dura MODULE SYM EOL		{ if (bi_module) delete bi_module; 
+								bi_module = new biModule($3->value); 
+								W(bi_module); }
+	| dura FFILE SYM EOL		{ if (bi_file) delete bi_file;
+								bi_file = new biFile($3->value); }
+	| dura EOL					{ W($2); }
+	| dura C					{ W($2); }
+	| dura COMMENT				{ W("#"); W($2); }
 ;
 %%
 

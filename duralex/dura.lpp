@@ -1,10 +1,17 @@
 %{
 #include "dura.hpp"
+#define TS(X)		{ yylval.s = new string(yytext); return X; }
+#define TO(C,X)		{ yylval.o = new biObject(C,yytext); return X; }
 %}
 
 %option noyywrap
 %option yylineno
 
 %%
+#[^\n]*				TS(COMMENT)
+\.module[ \t]+		TS(MODULE)
+[a-z]+				TO("sym",SYM)
+\n					TS(EOL)
+.					TS(C)
 %%
 

@@ -1,7 +1,7 @@
 MODULE = dura
 
 exec: ./$(MODULE)$(EXE)
-	./$(MODULE)$(EXE) < $(MODULE).lex > $(MODULE).out
+	./$(MODULE)$(EXE) < $(MODULE).bI > $(MODULE).out
 	
 C = $(MODULE).cpp lex.yy.c $(MODULE).tab.cpp
 H = $(MODULE).hpp $(MODULE).tab.hpp
