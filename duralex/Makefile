@@ -1,7 +1,12 @@
 MODULE = dura
 
 exec: ./$(MODULE)$(EXE)
-	./$(MODULE)$(EXE) < $(MODULE).bI > $(MODULE).out
+	./$(MODULE)$(EXE) < $(MODULE).bI > $(MODULE).log
+
+.PHONY: upgrade
+upgrade: .gitignore README.md
+%: dura/%
+	cp $< $@
 	
 C = $(MODULE).cpp lex.yy.c $(MODULE).tab.cpp
 H = $(MODULE).hpp $(MODULE).tab.hpp

@@ -1,3 +1,2 @@
-# dura.lex
-## symbolic progam template generator
-
+# symbolic progam template generator
+(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved

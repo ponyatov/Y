@@ -1,7 +1,12 @@
 %{
 #include "dura.hpp"
+#define TC(X)		{ yylval.c = yytext[0]; return X; }
+#define T1(X)		{ yylval.c = yytext[1]; return X; }
 #define TS(X)		{ yylval.s = new string(yytext); return X; }
-#define TO(C,X)		{ yylval.o = new biObject(C,yytext); return X; }
+#define TO(C,X)		{ if (env[yytext]) yylval.o = env[yytext]; \
+					else yylval.o = new biObject(C,yytext); return X; }
+#define TX(C,X)		{ if (env[yytext]) yylval.o = env[yytext]; \
+					else yylval.o = new C(yytext); return X; }
 %}
 
 %option noyywrap
@@ -11,14 +16,21 @@
 %x x
 
 %%
-#[^\n]*				TS(COMMENT)
+\\.						T1(C)
+#[^\n]*\n				{}
 
-^\.module[ \t]+		{BEGIN(f);TS(MODULE);}
-^\.file[ \t]+		{BEGIN(f);TS(FFILE);}
-<f>[\.a-z]+			{BEGIN(INITIAL); TO("sym",SYM);}
-^\.eof				TS(FEOF)
+^\.module[ \t]+			{BEGIN(f);TS(MODULE);}
+^\.file[ \t]+			{BEGIN(f);TS(FFILE);}
+<f>[\.a-zA-Z0-9]+		{BEGIN(INITIAL); TO("sym",SYM);}
+^\.eof					TO(".",FEOF)
+^\.title[ \t]+[^\n]*	TX(biDirective,TITLE)
 
-\n					TS(EOL)
-.					TS(C)
+\$						{BEGIN(x); TC(SX);}
+<x>[ \t]				{BEGIN(INITIAL);}
+<x>\n					{BEGIN(INITIAL); TC(EOL);}
+<x>[A-Z]+				{BEGIN(INITIAL); TO("sym",SYM);}
+
+\n						TC(EOL)
+.						TC(C)
 %%
 

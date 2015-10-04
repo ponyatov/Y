@@ -1,9 +1,9 @@
 *~
 *.swp
-lex.yy.c
-*.tab.?pp
-*.log
-*.out
 dura
 dura.exe
-
+dura.log
+/tmp/
+dura.tab.cpp
+dura.tab.hpp
+lex.yy.c
