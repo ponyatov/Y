@@ -1,0 +1,9 @@
+*~
+*.swp
+lex.yy.c
+*.tab.?pp
+*.log
+*.out
+dura
+dura.exe
+

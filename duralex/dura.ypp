@@ -1,0 +1,20 @@
+%{
+#include "dura.hpp"
+%}
+
+%defines
+
+%union {
+	string *a;
+	sym *s;
+}
+
+%token <a> C EOL
+
+%%
+dura: 
+	| dura EOL	{ W($2); }
+	| dura C	{ W($2); }
+;
+%%
+

@@ -1,0 +1,10 @@
+%{
+#include "dura.hpp"
+%}
+
+%option noyywrap
+%option yylineno
+
+%%
+%%
+
