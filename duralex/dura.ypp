@@ -39,6 +39,8 @@ ex :
 	| list					{ $$=$1; }
 	| ex DIV ex				{ $$=$2; $$->join($1); $$->join($3); }
 	| SYM EQ ex				{ $$=$2; $$->join($1); $$->join($3); }
+	| SYM LP RP				{ $$=$1; $$->tag="fn"; } 
+	| SYM LP SYM RP			{ $$=$1; $$->tag="fn"; $$->join($3); } 
 ;
 
 list :

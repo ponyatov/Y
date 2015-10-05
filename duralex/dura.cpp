@@ -16,6 +16,9 @@ int biObject::size()		{ return nest.size(); }
 
 biObject* biObject::eval() {
 //	if (tag=="list" && nest.size()==1) return nest[0];
+	if (tag=="fn" && value=="class") {
+		return new biObject("class",nest[0]->value);
+	}
 	if (tag=="=" && nest.size()==2) {
 		env[nest[0]->value] = nest[1]; return nest[1];
 	}

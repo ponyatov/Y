@@ -55,3 +55,93 @@ $MODULE,'.tab.cpp: ',MODULE,.ypp
 	bison \$<
 .eof
 
+.file dura.lpp
+%{
+$'#include "',$MODULE,'.hpp"'
+\#define TC(X)		{ yylval.c = yytext[0]; return X; }
+\#define T1(X)		{ yylval.c = yytext[1]; return X; }
+\#define TS(X)		{ yylval.s = new string(yytext); return X; }
+%}
+%option noyywrap
+%option yylineno
+%%
+\\\\.			T1(CHAR)
+\#[^\\n]*\\n	{}
+\\n				TC(EOL)
+.				TC(CHAR)
+%%
+.eof
+
+@CHAR=class(char)
+@STRING=class(string)
+
+@Symbol=class(Symbol)
+
+.file dura.ypp
+%{
+$'#include "',$MODULE,'.hpp"'
+%}
+
+%defines
+
+%union {
+	$CHAR c;
+	$STRING *s;
+#	$Symbol *o;
+}
+
+%token <c> CHAR EOL
+
+%%
+x :
+	| x EOL		{ W(\$2); }
+	| x CHAR	{ W(\$2); }
+;
+%%
+.eof
+
+.file dura.hpp
+\#ifndef _H_$MODULE
+\#define _H_$MODULE
+
+\#include <iostream>
+\#include <sstream>
+\#include <cstdlib>
+\#include <cstdio>
+\#include <cassert>
+\#ifdef __MINGW32__
+\#include <direct.h>
+\#endif
+\#include <map>
+\#include <vector>
+using namespace std;
+
+extern int yylex();
+extern void yyerror(string);
+extern int yylineno;
+extern char *yytext;
+extern int yyparse();
+$'#include "',MODULE,'.tab.hpp"'
+
+void W(char,bool to_file=true);
+void W(string*,bool to_file=true);
+void W(string,bool to_file=true);
+#void W(biObject*,bool to_file=true);
+
+\#endif // _H_$MODULE
+.eof
+
+.file dura.cpp
+$'#include "',$MODULE,'.hpp"'
+
+void W(char      c,bool to_file)	{ cout << c ; }
+#	if (to_file&&bi_file) bi_file->W(c); }
+
+void yyerror(string err) {
+	cerr << "\\n\\n" << err << " \# " << yylineno << " : " << yytext << "\\n";
+	exit(-1);
+}
+
+int main() { return yyparse(); }
+.eof
+
