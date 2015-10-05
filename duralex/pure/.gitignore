@@ -1,0 +1,6 @@
+*~
+*.swp
+pure.exe
+lex.yy.c
+pure.tab.cpp
+pure.tab.hpp

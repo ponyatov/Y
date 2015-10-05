@@ -7,6 +7,8 @@
 					else yylval.o = new biObject(C,yytext); return X; }
 #define TX(C,X)		{ if (env[yytext]) yylval.o = env[yytext]; \
 					else yylval.o = new C(yytext); return X; }
+
+string StringBuffer;
 %}
 
 %option noyywrap
@@ -14,6 +16,7 @@
 
 %x f
 %x x
+%x s
 
 %%
 \\.						T1(C)
@@ -27,12 +30,20 @@
 ^\.author[ \t]+[^\n]+	TX(biDirective,DIRECTIVE)
 ^\.github[ \t]+[^\n]+	TX(biDirective,DIRECTIVE)
 
+<x>'					{BEGIN(s); StringBuffer="";}
+<s>'					{BEGIN(x);
+						yylval.o = new biObject("str",StringBuffer); 
+						return STR;}
+<s>\\\\					{StringBuffer+="\\";}
+<s>\\t					{StringBuffer+="\t";}
+<s>\\n					{StringBuffer+="\n";}
+<s>.					{StringBuffer+=yytext[0];}
+
 \$						{BEGIN(x); TC(SX);}
 \@						{BEGIN(x); TC(AX);}
 \?						{BEGIN(x); TC(QX);}
 <x>[ \t\n]				{BEGIN(INITIAL); TC(EOL);}
-<x>'[^']*'				TX(biString,SYM)
-<x>[a-zA-Z\.]+			TO("sym",SYM)
+<x>[a-zA-Z\._]+			TO("sym",SYM)
 <x>\(					TC(LP)
 <x>\)					TC(RP)
 <x>,					TC(COMMA)

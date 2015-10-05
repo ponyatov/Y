@@ -11,7 +11,7 @@
 }
 
 %token <c> C EOL QX SX AX LP RP COMMA 
-%token <o> SYM MODULE FFILE FEOF DIRECTIVE
+%token <o> SYM STR MODULE FFILE FEOF DIRECTIVE
 %token <o> ADD SUB MUL DIV POW EQ
 %type <o> ex list
 
@@ -35,6 +35,7 @@ dura:
 
 ex :
    	  SYM					{ $$=$1; }
+	| STR					{ $$=$1; }
 	| LP ex RP				{ $$=$2; }
 	| list					{ $$=$1; }
 	| ex DIV ex				{ $$=$2; $$->join($1); $$->join($3); }

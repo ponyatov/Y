@@ -1,0 +1,14 @@
+%{
+#include "pure.hpp"
+%}
+%defines
+%union {
+	char c;
+}
+%token <c> CHAR EOL
+%%
+pure :
+	| pure EOL		{ W($2); }
+	| pure CHAR		{ W($2); }
+;
+%%
