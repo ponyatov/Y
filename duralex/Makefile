@@ -1,6 +1,6 @@
 .PHONY: exec
 exec: ./dura$(EXE)
-	./dura$(EXE) < dura.bI > dura.log
+	./dura$(EXE) < dura.bI > dura.bIog
 
 .PHONY: upgrade
 upgrade:
@@ -12,8 +12,4 @@ C = dura.cpp lex.yy.c dura.tab.cpp
 H = dura.hpp dura.tab.hpp
 
 ./dura$(EXE): $(C) $(H)
-	$(CXX) $(CXXFLAGS) -o $@ $(C)
-lex.yy.c: dura.lpp
-	flex $<
-dura.tab.cpp: dura.ypp
-	bison $<
+	$(CXX) $(CXXFLAGS) -o $

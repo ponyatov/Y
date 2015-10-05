@@ -16,7 +16,7 @@ $C=list,.gitignore,README.md,Makefile
 *.swp
 $MODULE
 $(MODULE)$EXE
-$(MODULE).log
+$(MODULE).bIog
 /tmp/
 lex.yy.c
 $(MODULE).tab.cpp
@@ -36,7 +36,7 @@ github:     $GITHUB
 .file Makefile
 .PHONY: exec
 exec: ./$(MODULE)\$(EXE)
-	./$(MODULE)\$(EXE) < $(MODULE).bI > $(MODULE).log
+	./$(MODULE)\$(EXE) < $(MODULE).bI > $(MODULE).bIog
 
 .PHONY: upgrade
 upgrade:

@@ -2,8 +2,8 @@
 *.swp
 dura
 dura.exe
-dura.log
+dura.bIog
 /tmp/
+lex.yy.c
 dura.tab.cpp
 dura.tab.hpp
-lex.yy.c
