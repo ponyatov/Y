@@ -12,4 +12,8 @@ C = dura.cpp lex.yy.c dura.tab.cpp
 H = dura.hpp dura.tab.hpp
 
 ./dura$(EXE): $(C) $(H)
-	$(CXX) $(CXXFLAGS) -o $
+	$(CXX) $(CXXFLAGS) -o $@ $(C)
+lex.yy.c: dura.lpp
+	flex $<
+dura.tab.cpp: dura.ypp
+	bison $<
