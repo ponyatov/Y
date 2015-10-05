@@ -32,6 +32,10 @@ github: $GITHUB
 .file pure.cpp
 .eof
 
+.file vimedit.bat
+gvim -p $FILES/' '
+.eof
+
 $C=dura.cpp,lex.yy.c,dura.tab.cpp
 $H=dura.hpp,dura.tab.hpp
 

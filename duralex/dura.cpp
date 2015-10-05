@@ -64,6 +64,7 @@ void env_init() {
 	env["AUTHOR"] = new biObject(".author",AUTHOR);
 	env["LICENSE"] = new biObject(".license",LICENSE);
 	env["GITHUB"] = new biObject(".github",GITHUB);
+	env["FILES"] = new biObject("list","");
 	// internal functions
 }
 
@@ -76,6 +77,7 @@ biModule *bi_module = new biModule("tmp");
 
 biFile::biFile(string V):biObject(".file",V) {
 	assert( fh = fopen((bi_module->value+"/"+V).c_str(),"w") );
+	env["FILES"]->join(new biObject("str",value));
 }
 
 biFile::~biFile()	{ fclose(fh); }
