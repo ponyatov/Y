@@ -1,12 +1,43 @@
-# comment
+
+.title		pure symbolic calculated source files
+.github		https://github.com/ponyatov/Y/tree/dev/duralex
+
+.module pure
+
+.title
+
+.file README.md
+\# $TITLE
+
+author: $AUTHOR
+
+github: $GITHUB
+.eof
+
+.file .gitignore
+.eof
+
+.file Makefile
+.eof
+
+.file pure.lpp
+.eof
+
+.file pure.ypp
+.eof
+
+.file pure.hpp
+.eof
+
+.file pure.cpp
+.eof
 
 $C=dura.cpp,lex.yy.c,dura.tab.cpp
 $H=dura.hpp,dura.tab.hpp
 
+.module dura
 .title		symbolic program template generator
 .github		https://github.com/ponyatov/Y/tree/dev/duralex
-
-.module dura
 
 .sec File templates
 
