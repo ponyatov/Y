@@ -1,8 +1,8 @@
 *~
 *.swp
-dura
 dura.exe
 dura.bIog
+/dura/
 /tmp/
 lex.yy.c
 dura.tab.cpp

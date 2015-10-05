@@ -7,8 +7,6 @@
 					else yylval.o = new biObject(C,yytext); return X; }
 #define TX(C,X)		{ if (env[yytext]) yylval.o = env[yytext]; \
 					else yylval.o = new C(yytext); return X; }
-
-int PAREN=0;
 %}
 
 %option noyywrap
@@ -30,14 +28,15 @@ int PAREN=0;
 ^\.github[ \t]+[^\n]+	TX(biDirective,DIRECTIVE)
 
 \$						{BEGIN(x); TC(SX);}
-\@						{BEGIN(x); TC(OX);}
+\@						{BEGIN(x); TC(AX);}
 \?						{BEGIN(x); TC(QX);}
-<x>[ \t]				{BEGIN(INITIAL);}
-<x>\n					{BEGIN(INITIAL); TC(EOL);}
+<x>[ \t\n]				{BEGIN(INITIAL); TC(EOL);}
+<x>'[^']*'				TX(biString,SYM)
 <x>[a-zA-Z\.]+			TO("sym",SYM)
-<x>\(					{PAREN++;TC(LP);}
-<x>\)					{if (--PAREN==0) BEGIN(INITIAL); TC(RP);}
+<x>\(					TC(LP)
+<x>\)					TC(RP)
 <x>,					TC(COMMA)
+<x>\/					TO("/",EQ)
 <x>=					TO("=",EQ)
 
 \n						TC(EOL)

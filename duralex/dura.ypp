@@ -10,20 +10,24 @@
 	biObject *o;
 }
 
-%token <c> C EOL QX SX OX LP RP COMMA 
-%token <o> SYM MODULE FFILE FEOF DIRECTIVE EQ
-%type <o> ex
+%token <c> C EOL QX SX AX LP RP COMMA 
+%token <o> SYM MODULE FFILE FEOF DIRECTIVE
+%token <o> ADD SUB MUL DIV POW EQ
+%type <o> ex list
 
+%left ADD SUB
+%left MUL DIV
+%left PFX
 %left COMMA
 
 %%
 dura: 
 	| dura MODULE EOL		{ W($2); }
 	| dura FFILE EOL		{ W($2,false); W($3,false); }
-	| dura FEOF				{ W($2,false); }								
+	| dura FEOF				{ W($2->tagval(),false); }								
 	| dura EOL				{ W($2); }
 	| dura QX ex			{ W($3->dump()); }
-	| dura OX ex			{ W($3->eval()); }
+	| dura AX ex			{ W($3->eval()); }
 	| dura SX ex			{ W($3->eval()->value); }
 	| dura DIRECTIVE		{ W($2); }
 	| dura C				{ W($2); }
@@ -32,8 +36,16 @@ dura:
 ex :
    	  SYM					{ $$=$1; }
 	| LP ex RP				{ $$=$2; }
-	| ex COMMA ex			{ $$=$1; $$->join($3); }
+	| list					{ $$=$1; }
+	| ex DIV ex				{ $$=$2; $$->join($1); $$->join($3); }
 	| SYM EQ ex				{ $$=$2; $$->join($1); $$->join($3); }
+;
+
+list :
+	   COMMA 			{ $$= new biObject("list",""); }
+	 | ex COMMA 		{ $$= new biObject("list",""); $$->join($1); }
+	 | ex COMMA ex		{ $$= new biObject("list",""); $$->join($1); $$->join($3); }
+	 | list COMMA ex	{ $$=$1; $$->join($3); }
 ;
 %%
 

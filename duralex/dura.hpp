@@ -25,6 +25,7 @@ struct biObject {
 	string tagval(),pad(int);
 	vector<biObject*> nest;
 	void join(biObject*);
+	virtual int size();
 };
 
 extern map<string,biObject*> env;
@@ -48,6 +49,11 @@ extern biFile *bi_file;
 
 struct biDirective: biObject {
 	biDirective(string);
+};
+
+struct biString: biObject {
+	biString(string);
+	int size();
 };
 
 extern int yylex();

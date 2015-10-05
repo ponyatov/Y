@@ -12,7 +12,41 @@ string biObject::dump(int depth) {
 	return S;
 }
 
-biObject* biObject::eval()		{ return this; }
+int biObject::size()		{ return nest.size(); }
+
+biObject* biObject::eval() {
+//	if (tag=="list" && nest.size()==1) return nest[0];
+	if (tag=="=" && nest.size()==2) {
+		env[nest[0]->value] = nest[1]; return nest[1];
+	}
+	if (tag=="/") {
+		if (
+			nest[0]->tag=="list" && 
+//			nest[0]->size()>1 && 
+			nest[1]->tag=="str") {
+			// punctuate list by string (insert str between list items)
+			string S; string B = nest[1]->value;
+			for (
+				vector<biObject*>::iterator it = nest[0]->nest.begin();
+				it != nest[0]->nest.end();
+				it++ )
+				S += (*it)->eval()->value + B;
+			// drop last 
+			S.erase(S.size()-B.size(),B.size());
+			return new biObject("str",S);
+		}
+	}
+	if (tag=="list") {
+		value="";
+		for (
+			vector<biObject*>::iterator it = nest.begin();
+			it != nest.end();
+			it++ )
+			value += (*it)->eval()->value;
+		return this;
+	}
+	return this; 
+}
 
 void biObject::join(biObject* o)	{ nest.push_back(o); }
 
@@ -27,6 +61,7 @@ void env_init() {
 	env["AUTHOR"] = new biObject(".author",AUTHOR);
 	env["LICENSE"] = new biObject(".license",LICENSE);
 	env["GITHUB"] = new biObject(".github",GITHUB);
+	// internal functions
 }
 
 biModule::biModule(string V):biObject(".module",V) {
@@ -65,6 +100,12 @@ biDirective::biDirective(string V):biObject("",V) {
 		if (bi_module) delete bi_module; 
 		bi_module = new biModule(value); }
 }
+
+biString::biString(string V): biObject("str",V) {
+	value.erase(0,1);
+	value.erase(value.size()-1,1);
+};
+int biString::size() { return value.size(); }
 
 void W(char      c,bool to_file)	{ cout << c ; 
 	if (to_file&&bi_file) bi_file->W(c); }

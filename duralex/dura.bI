@@ -1,8 +1,7 @@
 # comment
 
-?C=list,.gitignore,README.md,Makefile
-@C=list,.gitignore,README.md,Makefile
-$C=list,.gitignore,README.md,Makefile
+$C=dura.cpp,lex.yy.c,dura.tab.cpp
+$H=dura.hpp,dura.tab.hpp
 
 .title		symbolic program template generator
 .github		https://github.com/ponyatov/Y/tree/dev/duralex
@@ -14,13 +13,13 @@ $C=list,.gitignore,README.md,Makefile
 .file .gitignore
 *~
 *.swp
-$MODULE
-$(MODULE)$EXE
-$(MODULE).bIog
+$(MODULE),(EXE)
+$(MODULE),.bIog
+$'/',(MODULE),'/'
 /tmp/
 lex.yy.c
-$(MODULE).tab.cpp
-$(MODULE).tab.hpp
+$(MODULE),.tab.cpp
+$(MODULE),.tab.hpp
 .eof
 
 .file README.md
@@ -35,8 +34,8 @@ github:     $GITHUB
 
 .file Makefile
 .PHONY: exec
-exec: ./$(MODULE)\$(EXE)
-	./$(MODULE)\$(EXE) < $(MODULE).bI > $(MODULE).bIog
+exec: $'./',MODULE,'$(EXE)'
+	$'./',MODULE,'$(EXE)',' < ',MODULE,'.bI > ',MODULE,'.bIog'
 
 .PHONY: upgrade
 upgrade:
@@ -44,14 +43,14 @@ upgrade:
 	cp dura/README.md ./
 	cp dura/Makefile ./
 
-C = $(MODULE).cpp lex.yy.c $(MODULE).tab.cpp
-H = $(MODULE).hpp $(MODULE).tab.hpp
+C = $C/' '
+H = $H/' '
 
-./$(MODULE)\$(EXE): \$(C) \$(H)
+$'./',MODULE,'$(EXE)',': $(C) $(H)'
 	\$(CXX) \$(CXXFLAGS) -o \$\@ \$(C)
-lex.yy.c: $(MODULE).lpp
+lex.yy.c: $MODULE,.lpp
 	flex \$<
-$(MODULE).tab.cpp: $(MODULE).ypp
+$MODULE,'.tab.cpp: ',MODULE,.ypp
 	bison \$<
 .eof
 
