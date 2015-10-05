@@ -1,6 +1,6 @@
 
 .title		pure symbolic calculated source files
-.github		https://github.com/ponyatov/Y/tree/dev/duralex
+.github		https://github.com/ponyatov/Y/tree/dev/duralex/pure
 
 .module pure
 

@@ -2,4 +2,4 @@
 
 author: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 
-github: https://github.com/ponyatov/Y/tree/dev/duralex
+github: https://github.com/ponyatov/Y/tree/dev/duralex/pure
