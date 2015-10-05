@@ -13,13 +13,14 @@ $H=dura.hpp,dura.tab.hpp
 .file .gitignore
 *~
 *.swp
-$(MODULE),(EXE)
-$(MODULE),.bIog
-$'/',(MODULE),'/'
+$MODULE,.elf
+$MODULE,EXE
+$MODULE,.bIog
+$'/',MODULE,'/'
 /tmp/
 lex.yy.c
-$(MODULE),.tab.cpp
-$(MODULE),.tab.hpp
+$MODULE,.tab.cpp
+$MODULE,.tab.hpp
 .eof
 
 .file README.md

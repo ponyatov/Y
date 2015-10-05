@@ -56,7 +56,7 @@ void env_init() {
 	#ifdef __MINGW32__
 		env["EXE"] = new biObject("const",".exe");
 	#else
-		env["EXE"] = new biObject("const","");
+		env["EXE"] = new biObject("const",".elf");
 	#endif
 	env["AUTHOR"] = new biObject(".author",AUTHOR);
 	env["LICENSE"] = new biObject(".license",LICENSE);
