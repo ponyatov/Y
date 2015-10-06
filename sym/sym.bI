@@ -86,6 +86,6 @@ $'#include "',MODULE,'.hpp"'
 .eof
 
 .file vimedit.bat
-gvim -p $MODULE,'.bI ',FILES/' '
+gvim -p $MODULE,'.bI ',MODULE,'.bIog ',MODULE,'.toc ',FILES/' '
 .eof
 
