@@ -1,0 +1,14 @@
+%{
+#include "sym.hpp"
+%}
+%defines
+%union {
+	char c;
+	string *s;
+}
+%token <c> CHAR EOL
+%%
+sym :
+	| sym EOL	{ W($2) }
+	| sym CHAR	{ W($2) }
+%%

@@ -56,6 +56,17 @@ $'\tcp ',MODULE,'/',MODULE,'.cpp ./'
 
 .file sym.ypp
 $'%{\n#include "',MODULE,'.hpp"\n%}'
+%defines
+%union {
+	char c;
+	string *s;
+}
+%token <c> CHAR EOL
+%%
+$MODULE,' :'
+$'\t| ',MODULE,' EOL\t{ W($2) }'
+$'\t| ',MODULE,' CHAR\t{ W($2) }'
+%%
 .eof
 
 .file sym.lpp
