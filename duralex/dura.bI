@@ -7,11 +7,7 @@
 .title
 
 .file README.md
-\# $TITLE
-
-author: $AUTHOR
-
-github: $GITHUB
+$'# ',TITLE,'\n\n',$AUTHOR,'\n\nlicense:\t',LICENSE,'\n\ngithub:\t\t',GITHUB
 .eof
 
 .file .gitignore
