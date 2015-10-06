@@ -23,7 +23,7 @@ upgrade:
 	cp sym/README.md ./
 	cp sym/vimedit.bat ./
 	cp sym/.gitignore ./
-	cp sym/Makefile ./
+#	cp sym/Makefile ./
 	cp sym/sym.ypp ./
 	cp sym/sym.lpp ./
 	cp sym/sym.hpp ./

@@ -149,6 +149,10 @@ struct biObject {
 struct biDirective: biObject {
 	biDirective(string);
 };
+struct biModule: biObject {
+	biModule(string);
+};
+extern biModule *bi_module;
 								// syntax core interface
 extern int yylex();				// \\ lexer
 extern char *yytext;			// 		regexp-parsed text
@@ -176,11 +180,20 @@ string biObject::dump(int depth)		{ return "<"+tag+":"+value+">"; }
 // /
 // \\ Directive
 biDirective::biDirective(string V):biObject("",V) {
+	// autogenerate tag & value
 	while (value.size() && ( value[0] != ' ' && value[0] != '\\t'))
 		{ tag += value[0]; value.erase(0,1); }
 	while (value.size() && ( value[0] == ' ' || value[0] == '\\t'))
 		{                  value.erase(0,1); }
+	// process specific directive tag
+	if (tag == ".module") bi_module = new biModule(value);
 }
+// /
+// \\ Module
+biModule::biModule(string V):biObject("module",V) {
+	mkdir(value.c_str());
+}
+biModule *bi_module = new biModule("tmp");
 // /
 // \\ writers
 void W(char      c) { cout <<  c; }

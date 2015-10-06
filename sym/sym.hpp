@@ -20,6 +20,20 @@
 #include <sys/stat.h>			// /
 #endif
 using namespace std;
+
+struct biObject {
+	string tag;							// object class name or data type
+	string value;						// object value
+	biObject(string,string);
+	virtual string dump(int depth=0);	// dump	object in string form
+};
+struct biDirective: biObject {
+	biDirective(string);
+};
+struct biModule: biObject {
+	biModule(string);
+};
+extern biModule *bi_module;
 								// syntax core interface
 extern int yylex();				// \ lexer
 extern char *yytext;			// 		regexp-parsed text
@@ -29,6 +43,7 @@ extern void yyerror(string);	// syntax error callback
 #include "sym.tab.hpp"			// / parser defines
 								
 void W(char);					// \ writers
-void W(string);					// //
-void W(string*);				// //
+void W(string);
+void W(string*);
+void W(biObject*);				// //
 #endif // _H_sym

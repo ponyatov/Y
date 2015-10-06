@@ -7,12 +7,15 @@
 %union {
 	char c;
 	string *s;
+	biObject *o;
 }
 %token <c> CHAR EOL
 %token <s> STR
+%token <o> DIRECTIVE
 %%
 sym :
-	| sym STR	{ W($2); }
-	| sym EOL	{ W($2); }
-	| sym CHAR	{ W($2); }
+	| sym DIRECTIVE	{ W($2); }
+	| sym STR		{ W($2); }
+	| sym EOL		{ W($2); }
+	| sym CHAR		{ W($2); }
 %%
