@@ -1,6 +1,7 @@
 *~
 *.swp
 sym.exe
+sym.elf
 sym.bIog
 /sym/
 lex.yy.c
