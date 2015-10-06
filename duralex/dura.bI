@@ -134,21 +134,25 @@ $H=dura.hpp,dura.tab.hpp
 exec: $'./',MODULE,'$(EXE)'
 	$'./',MODULE,'$(EXE)',' < ',MODULE,'.bI > ',MODULE,'.bIog'
 
-.PHONY: upgrade
-upgrade:
-	cp dura/.gitignore ./
-	cp dura/README.md ./
-	cp dura/Makefile ./
+.PHONY: all
+all: $'./',MODULE,'$(EXE)'
 
-C = $C/' '
-H = $H/' '
-
+$'C = ',MODULE,'.cpp lex.yy.c ',MODULE,'.tab.cpp'
+$'H = ',MODULE,'.hpp ',MODULE,'.tab.hpp'
 $'./',MODULE,'$(EXE)',': $(C) $(H)'
 	\$(CXX) \$(CXXFLAGS) -o \$\@ \$(C)
 lex.yy.c: $MODULE,.lpp
 	flex \$<
 $MODULE,'.tab.cpp: ',MODULE,.ypp
 	bison \$<
+
+.PHONY: upgrade
+upgrade:
+$'\tcp ',MODULE,'/README.md ./'
+$'\tcp ',MODULE,'/vimedit.bat ./'
+$'\tcp ',MODULE,'/.gitignore ./'
+$'\tcp ',MODULE,'/Makefile ./'
+
 .eof
 
 .file dura.lpp
@@ -239,5 +243,9 @@ void yyerror(string err) {
 }
 
 int main() { return yyparse(); }
+.eof
+
+.file vimedit.bat
+gvim -p $FILES/' '
 .eof
 

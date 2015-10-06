@@ -1,6 +1,8 @@
 *~
 *.swp
 pure.exe
+pure.bIog
+/pure/
 lex.yy.c
 pure.tab.cpp
 pure.tab.hpp
