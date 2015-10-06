@@ -4,7 +4,9 @@
 
 .module sym
 
-.sec+	Source files
+.sec	Kernel source file templates
+
+.sec-	Project files
 
 .file README.md
 $'# ',TITLE,'\n\n',$AUTHOR,'\n\nlicense:\t',LICENSE,'\n\ngithub:\t\t',GITHUB
@@ -24,13 +26,16 @@ $MODULE,.tab.hpp
 .eof
 
 .file Makefile
+\# $AUTOGEN
+\# <module:$MODULE,'>'
 
 .PHONY: gen
 gen: ../duralex/dura.exe
-	\$< < sym.bI > sym.bIog
+$'\t$< < ',MODULE,'.bI > ',MODULE,'.bIog'
 
 .PHONY: all
 all: $'./',MODULE,'$(EXE)'
+$'\t','./',MODULE,'$(EXE)',' < ',MODULE,'.bI > ',MODULE,'.bIog'
 
 $'C = ',MODULE,'.cpp lex.yy.c ',MODULE,'.tab.cpp'
 $'H = ',MODULE,'.hpp ',MODULE,'.tab.hpp'
@@ -55,6 +60,8 @@ $'\tcp ',MODULE,'/',MODULE,'.cpp ./'
 .eof
 
 .file sym.ypp
+$'/* ',AUTOGEN,' */'
+$'/* <module:',MODULE,'> */'
 $'%{\n#include "',MODULE,'.hpp"\n%}'
 %defines
 %union {
@@ -70,10 +77,12 @@ $'\t| ',MODULE,' CHAR\t{ W($2) }'
 .eof
 
 .file sym.lpp
+$'/* ',AUTOGEN,' */'
+$'/* <module:',MODULE,'> */'
 $'%{\n#include "',MODULE,'.hpp"'
-\#define TC(X)	{ yylval.c = yytext[0]; 			return X; }
-\#define T1(X)	{ yylval.c = yytext[1]; 			return X; }
-\#define TS(X)	{ yylval.s = new string(yytext);	return X; }
+\#define TC(X)		{ yylval.c = yytext[0]; 			return X; }
+\#define T1(X)		{ yylval.c = yytext[1]; 			return X; }
+\#define TS(X)		{ yylval.s = new string(yytext);	return X; }
 %}
 %option noyywrap
 %option yylineno
@@ -87,14 +96,49 @@ $'%{\n#include "',MODULE,'.hpp"'
 .eof
 
 .file sym.hpp
+$'/* ',AUTOGEN,' */'
+$'/* <module:',MODULE,'> */'
 \#ifndef _H_$MODULE
 \#define _H_$MODULE
+\#include <map>					// \\ required std includes
+\#include <vector>
+\#include <iostream>
+\#include <cstdlib>				// /
+\#ifdef __MINGW32__				// \\ win32 specific
+\#include <direct.h>				// /
+\#else							// \\ Linux & others POSIX-compatibles
+\#include <sys/stat.h>			// /
+\#endif
+using namespace std;
+								// syntax core interface
+extern int yylex();				// \\ lexer
+extern char *yytext;			// 		regexp-parsed text
+extern int yylineno;			// /	current line number 
+extern int yyparse();			// \\ parser
+extern void yyerror(string);	// syntax error callback
+$'#include "',MODULE,'.tab.hpp"'			// / parser defines
+								
+void W(char);					// \\ writers
+void W(string);					// //
 \#endif // _H_$MODULE
 .eof
 
+.sec-	Low-Level symbolic engine code in C++
+
 .file sym.cpp
+$'/* ',AUTOGEN,' */'
+$'/* <module:',MODULE,'> */'
 $'#include "',MODULE,'.hpp"'
+void W(char   c) { cout << c; }
+void W(string s) { cout << s; }
+void yyerror(string msg) {
+	cout << "\\n\\n" << msg << "\#" << yylineno << ":" << yytext << "\\n\\n";
+	cerr << "\\n\\n" << msg << "\#" << yylineno << ":" << yytext << "\\n\\n";
+	exit(-1); }
+int main() { return yyparse(); }
 .eof
+
+.sec-	.bat for module edit in (g)vim tabs
 
 .file vimedit.bat
 gvim -p $MODULE,'.bI ',MODULE,'.bIog ',MODULE,'.toc ',FILES/' '

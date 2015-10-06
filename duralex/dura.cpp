@@ -65,6 +65,7 @@ void env_init() {
 	env["LICENSE"] = new biObject(".license",LICENSE);
 	env["GITHUB"] = new biObject(".github",GITHUB);
 	env["FILES"] = new biObject("list","");
+	env["AUTOGEN"] = new biObject(".autogen",AUTOGEN);
 	// internal functions
 }
 

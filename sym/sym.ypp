@@ -1,3 +1,5 @@
+/* DO NOT EDIT: this file was autogened by bI language system */
+/* <module:sym> */
 %{
 #include "sym.hpp"
 %}

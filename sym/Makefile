@@ -1,3 +1,5 @@
+# DO NOT EDIT: this file was autogened by bI language system
+# <module:sym>
 
 .PHONY: gen
 gen: ../duralex/dura.exe
@@ -5,6 +7,7 @@ gen: ../duralex/dura.exe
 
 .PHONY: all
 all: ./sym$(EXE)
+	./sym$(EXE) < sym.bI > sym.bIog
 
 C = sym.cpp lex.yy.c sym.tab.cpp
 H = sym.hpp sym.tab.hpp

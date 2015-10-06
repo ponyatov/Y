@@ -1,8 +1,10 @@
+/* DO NOT EDIT: this file was autogened by bI language system */
+/* <module:sym> */
 %{
 #include "sym.hpp"
-#define TC(X)	{ yylval.c = yytext[0]; 			return X; }
-#define T1(X)	{ yylval.c = yytext[1]; 			return X; }
-#define TS(X)	{ yylval.s = new string(yytext);	return X; }
+#define TC(X)		{ yylval.c = yytext[0]; 			return X; }
+#define T1(X)		{ yylval.c = yytext[1]; 			return X; }
+#define TS(X)		{ yylval.s = new string(yytext);	return X; }
 %}
 %option noyywrap
 %option yylineno
