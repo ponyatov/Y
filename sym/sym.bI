@@ -112,6 +112,14 @@ $'/* ',AUTOGEN,' */'
 $'/* <module:',MODULE,'> */'
 \#ifndef _H_$MODULE
 \#define _H_$MODULE
+
+\#define MODULE "$MODULE,'"'
+\#define TITLE "$TITLE,'"'
+\#define AUTHOR "$AUTHOR,'"'
+\#define LICENSE "$LICENSE,'"'
+\#define GITHUB "$GITHUB,'"'
+\#define AUTOGEN "DO NOT EDIT: this file was autogened by bI language system"
+
 \#include <map>					// \\ required std includes
 \#include <vector>
 \#include <iostream>
@@ -149,7 +157,12 @@ void yyerror(string msg) {
 	cout << "\\n\\n" << msg << "\#" << yylineno << ":" << yytext << "\\n\\n";
 	cerr << "\\n\\n" << msg << "\#" << yylineno << ":" << yytext << "\\n\\n";
 	exit(-1); }
-int main() { return yyparse(); }
+int main(int argc, char *argv[]) {
+	cout << "\# " << AUTOGEN << "\\n";
+	cout << "\# <module:" << MODULE << ">\\n";
+	cout << "\# argv[0]:\\t" << argv[0] << "\\n\\n";
+	return yyparse();
+}
 .eof
 
 .sec-	.bat for module edit in (g)vim tabs

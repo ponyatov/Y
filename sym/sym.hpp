@@ -2,6 +2,14 @@
 /* <module:sym> */
 #ifndef _H_sym
 #define _H_sym
+
+#define MODULE "sym"
+#define TITLE "pure symbolic script engine"
+#define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
+#define LICENSE "http://www.gnu.org/copyleft/lesser.html"
+#define GITHUB "https://github.com/ponyatov/Y/tree/dev/sym"
+#define AUTOGEN "DO NOT EDIT: this file was autogened by bI language system"
+
 #include <map>					// \ required std includes
 #include <vector>
 #include <iostream>
