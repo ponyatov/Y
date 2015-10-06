@@ -1,3 +1,4 @@
+
 .PHONY: gen
 gen: ../duralex/dura.exe
 	$< < sym.bI > sym.bIog
@@ -5,4 +6,5 @@ gen: ../duralex/dura.exe
 .PHONY: upgrade
 upgrade:
 	cp sym/README.md ./
+	cp sym/vimedit.bat ./
 
