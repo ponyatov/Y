@@ -69,10 +69,12 @@ $'%{\n#include "',MODULE,'.hpp"\n%}'
 	string *s;
 }
 %token <c> CHAR EOL
+%token <s> STR
 %%
 $MODULE,' :'
-$'\t| ',MODULE,' EOL\t{ W($2) }'
-$'\t| ',MODULE,' CHAR\t{ W($2) }'
+$'\t| ',MODULE,' STR\t{ W($2); }'
+$'\t| ',MODULE,' EOL\t{ W($2); }'
+$'\t| ',MODULE,' CHAR\t{ W($2); }'
 %%
 .eof
 
@@ -83,13 +85,23 @@ $'%{\n#include "',MODULE,'.hpp"'
 \#define TC(X)		{ yylval.c = yytext[0]; 			return X; }
 \#define T1(X)		{ yylval.c = yytext[1]; 			return X; }
 \#define TS(X)		{ yylval.s = new string(yytext);	return X; }
+string StringBuffer;
 %}
 %option noyywrap
 %option yylineno
+
+%x ss
+
 %%
 \\r				{}				/* drop DOS 0x0D char */
 \#[^\\n]*\\n		{}				/* drop line comment */
 \\\\.				T1(CHAR)		/* escape char prefixed */
+
+'				{BEGIN(ss); StringBuffer="\'";}
+<ss>'			{BEGIN(INITIAL);
+				yylval.s = new string(StringBuffer+"\'"); return STR;}
+<ss>.			{StringBuffer += yytext;}
+
 \\n				TC(EOL)			/* end of line (CR) */
 .				TC(CHAR)		/* any other char in undetected text */
 %%
@@ -120,6 +132,7 @@ $'#include "',MODULE,'.tab.hpp"'			// / parser defines
 								
 void W(char);					// \\ writers
 void W(string);					// //
+void W(string*);				// //
 \#endif // _H_$MODULE
 .eof
 
@@ -129,8 +142,9 @@ void W(string);					// //
 $'/* ',AUTOGEN,' */'
 $'/* <module:',MODULE,'> */'
 $'#include "',MODULE,'.hpp"'
-void W(char   c) { cout << c; }
-void W(string s) { cout << s; }
+void W(char    c) { cout <<  c; }
+void W(string  s) { cout <<  s; }
+void W(string *s) { cout << *s; }
 void yyerror(string msg) {
 	cout << "\\n\\n" << msg << "\#" << yylineno << ":" << yytext << "\\n\\n";
 	cerr << "\\n\\n" << msg << "\#" << yylineno << ":" << yytext << "\\n\\n";

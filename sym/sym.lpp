@@ -5,13 +5,23 @@
 #define TC(X)		{ yylval.c = yytext[0]; 			return X; }
 #define T1(X)		{ yylval.c = yytext[1]; 			return X; }
 #define TS(X)		{ yylval.s = new string(yytext);	return X; }
+string StringBuffer;
 %}
 %option noyywrap
 %option yylineno
+
+%x ss
+
 %%
 \r				{}				/* drop DOS 0x0D char */
 #[^\n]*\n		{}				/* drop line comment */
 \\.				T1(CHAR)		/* escape char prefixed */
+
+'				{BEGIN(ss); StringBuffer="'";}
+<ss>'			{BEGIN(INITIAL);
+				yylval.s = new string(StringBuffer+"'"); return STR;}
+<ss>.			{StringBuffer += yytext;}
+
 \n				TC(EOL)			/* end of line (CR) */
 .				TC(CHAR)		/* any other char in undetected text */
 %%

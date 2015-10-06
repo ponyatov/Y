@@ -22,4 +22,5 @@ extern void yyerror(string);	// syntax error callback
 								
 void W(char);					// \ writers
 void W(string);					// //
+void W(string*);				// //
 #endif // _H_sym

@@ -9,8 +9,10 @@
 	string *s;
 }
 %token <c> CHAR EOL
+%token <s> STR
 %%
 sym :
-	| sym EOL	{ W($2) }
-	| sym CHAR	{ W($2) }
+	| sym STR	{ W($2); }
+	| sym EOL	{ W($2); }
+	| sym CHAR	{ W($2); }
 %%
