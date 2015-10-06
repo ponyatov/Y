@@ -1,4 +1,6 @@
 
+$MODULE
+
 .title		pure symbolic script engine
 .github		https://github.com/ponyatov/Y/tree/dev/sym
 
@@ -71,15 +73,18 @@ $'%{\n#include "',MODULE,'.hpp"\n%}'
 	string *s;
 	biObject *o;
 }
-%token <c> CHAR EOL
-%token <s> STR
-%token <o> DIRECTIVE
+%token <c> CHAR EOL QX SX
+%token <o> FMODULE FFILE FEOF
+%token <o> SYM STR
 %%
 $MODULE,' :'
-$'\t| ',MODULE,' DIRECTIVE\t{ W($2); }'
-$'\t| ',MODULE,' STR\t\t{ W($2); }'
-$'\t| ',MODULE,' EOL\t\t{ W($2); }'
-$'\t| ',MODULE,' CHAR\t\t{ W($2); }'
+$'\t| ',MODULE,' FMODULE EOL\t{ W($2,false); W($3,false); }'
+$'\t| ',MODULE,' FFILE EOL\t\t{ W($2,false); W($3,false); }'
+$'\t| ',MODULE,' FEOF\t\t\t{ W($2,false); }'
+$'\t| ',MODULE,' SX SYM\t\t{ W($2); W($3); }'
+$'\t| ',MODULE,' STR\t\t\t{ W($2); }'
+$'\t| ',MODULE,' EOL\t\t\t{ W($2); }'
+$'\t| ',MODULE,' CHAR\t\t\t{ W($2); }'
 %%
 .eof
 
@@ -90,29 +95,46 @@ $'%{\n#include "',MODULE,'.hpp"'
 \#define TC(X)		{ yylval.c = yytext[0]; 				return X; }
 \#define T1(X)		{ yylval.c = yytext[1]; 				return X; }
 \#define TS(X)		{ yylval.s = new string(yytext);		return X; }
-\#define TO(C,X)		{ yylval.o = new biObject(C,yytext);	return X; }
-\#define TX(C,X)		{ yylval.o = new C(yytext);				return X; }
+\#define TO(C,X)		{ if (env[yytext]) yylval.o = env[yytext]; \
+					else yylval.o = new biObject(C,yytext); return X; }
+\#define TX(C,X)		{ if (env[yytext]) yylval.o = env[yytext]; \
+					else yylval.o = new C(yytext); return X; }
 string StringBuffer;
 %}
 %option noyywrap
 %option yylineno
 
 %x ss
+%x xx
 
 %%
-\\r				{}				/* drop DOS 0x0D char */
-\#[^\\n]*\\n		{}				/* drop line comment */
-\\\\.				T1(CHAR)		/* escape char prefixed */
+\\r					{}				/* drop DOS 0x0D char */
+\\\\.					T1(CHAR)		/* escape char prefixed */
+\#[^\\n]*\\n			{}				/* drop line comment */
 
-'				{BEGIN(ss); StringBuffer="\'";}
-<ss>'			{BEGIN(INITIAL);
-				yylval.s = new string(StringBuffer+"\'"); return STR;}
-<ss>.			{StringBuffer += yytext;}
+'					{BEGIN(ss); StringBuffer="\'";}
+<ss>'				{BEGIN(INITIAL);
+					yylval.o = new biObject("str",StringBuffer+"\'"); return STR;}
+<ss>\\\\				{StringBuffer+="\\\\";}
+<ss>\\t				{StringBuffer+="\\t";}
+<ss>\\n				{StringBuffer+="\\n";}
+<ss>.				{StringBuffer += yytext;}
 
-^\\.[a-z]+[^\\n]*		TX(biDirective,DIRECTIVE)	/* directive */
+\\\$					{BEGIN(xx); TC(SX);}
+<xx>[ \\t\\n,]			{BEGIN(INITIAL); TC(EOL);}
+<xx>[a-zA-Z]+		TO("sym",SYM)
 
-\\n				TC(EOL)			/* end of line (CR) */
-.				TC(CHAR)		/* any other char in undetected text */
+^\\.module[^\\n]*		TX(biDirective,FMODULE)		/* .module */
+^\\.file[^\\n]*		TX(biDirective,FFILE)		/* .file */
+^\\.eof				TX(biDirective,FEOF)		/* .eof */
+^\\.title[^\\n]*		TX(biDirective,FMODULE)		/* .title */
+^\\.author[^\\n]*		TX(biDirective,FMODULE)		/* .author */
+^\\.github[^\\n]*		TX(biDirective,FMODULE)		/* .github */
+^\\.license[^\\n]*	TX(biDirective,FMODULE)		/* .license */
+^\\.sec[^\\n]*		TX(biDirective,FMODULE)		/* .sec */
+
+\\n					TC(EOL)			/* end of line (CR) */
+.					TC(CHAR)		/* any other char in undetected text */
 %%
 .eof
 
@@ -132,7 +154,9 @@ $'/* <module:',MODULE,'> */'
 \#include <map>					// \\ required std includes
 \#include <vector>
 \#include <iostream>
-\#include <cstdlib>				// /
+\#include <cstdlib>
+\#include <cstdio>
+\#include <cassert>				// /
 \#ifdef __MINGW32__				// \\ win32 specific
 \#include <direct.h>				// /
 \#else							// \\ Linux & others POSIX-compatibles
@@ -146,6 +170,8 @@ struct biObject {
 	biObject(string,string);
 	virtual string dump(int depth=0);	// dump	object in string form
 };
+extern map<string,biObject*> env;		// \\ environment (global var registry)
+extern void env_init();					// /
 struct biDirective: biObject {
 	biDirective(string);
 };
@@ -153,18 +179,26 @@ struct biModule: biObject {
 	biModule(string);
 };
 extern biModule *bi_module;
-								// syntax core interface
-extern int yylex();				// \\ lexer
-extern char *yytext;			// 		regexp-parsed text
-extern int yylineno;			// /	current line number 
-extern int yyparse();			// \\ parser
-extern void yyerror(string);	// syntax error callback
-$'#include "',MODULE,'.tab.hpp"'			// / parser defines
+struct biFile: biObject {
+	FILE *fh;
+	biFile(string);
+	~biFile();
+	void W(char);
+	void W(string);
+};
+extern biFile *bi_file;
+									// syntax core interface
+extern int yylex();					// \\ lexer
+extern char *yytext;				// 		regexp-parsed text
+extern int yylineno;				// /	current line number 
+extern int yyparse();				// \\ parser
+extern void yyerror(string);		// syntax error callback
+$'#include "',MODULE,'.tab.hpp"'				// / parser defines
 								
-void W(char);					// \\ writers
-void W(string);
-void W(string*);
-void W(biObject*);				// //
+void W(char     ,bool to_file=true);	// \\ writers
+void W(string   ,bool to_file=true);
+void W(string*  ,bool to_file=true);
+void W(biObject*,bool to_file=true);	// //
 \#endif // _H_$MODULE
 .eof
 
@@ -178,6 +212,22 @@ $'#include "',MODULE,'.hpp"'
 biObject::biObject(string T,string V)	{ tag = T; value = V; }
 string biObject::dump(int depth)		{ return "<"+tag+":"+value+">"; }
 // /
+// \\ Environment
+map<string,biObject*> env;
+void env_init() {
+	\#ifdef __MINGW32__
+		env["EXE"] = new biObject("const",".exe");
+	\#else
+		env["EXE"] = new biObject("const",".elf");
+	\#endif
+	env["AUTHOR"] = new biObject(".author",AUTHOR);
+	env["LICENSE"] = new biObject(".license",LICENSE);
+	env["GITHUB"] = new biObject(".github",GITHUB);
+	env["FILES"] = new biObject("list","");
+	env["AUTOGEN"] = new biObject(".autogen",AUTOGEN);
+	// internal functions
+}
+// /
 // \\ Directive
 biDirective::biDirective(string V):biObject("",V) {
 	// autogenerate tag & value
@@ -186,26 +236,46 @@ biDirective::biDirective(string V):biObject("",V) {
 	while (value.size() && ( value[0] == ' ' || value[0] == '\\t'))
 		{                  value.erase(0,1); }
 	// process specific directive tag
-	if (tag == ".module") bi_module = new biModule(value);
+	if (tag == ".module")	bi_module = new biModule(value);
+	if (tag == ".file")		bi_file = new biFile(value);
+	if (tag == ".eof")		if (bi_file) delete bi_file;
 }
 // /
 // \\ Module
 biModule::biModule(string V):biObject("module",V) {
 	mkdir(value.c_str());
+	if (bi_file) delete bi_file;
+	env["MODULE"] = this;
 }
 biModule *bi_module = new biModule("tmp");
 // /
+// \\ File
+biFile::biFile(string V):biObject("file",V) {
+	if (bi_file) delete bi_file;
+	assert ( fh = fopen((bi_module->value+"/"+value).c_str(),"w") );
+	bi_file = this;
+}
+biFile::~biFile() { fclose(fh); bi_file = NULL; }
+void biFile::W(char c)		{ fprintf(fh,"%c",c); }
+void biFile::W(string s)	{ fprintf(fh,"%s",s.c_str()); }
+biFile *bi_file = NULL;
+// /
 // \\ writers
-void W(char      c) { cout <<  c; }
-void W(string    s) { cout <<  s; }
-void W(string   *s) { cout << *s; }
-void W(biObject *o) { cout << o->dump(); }
+void W(char      c, bool to_file) { cout <<  c; 
+	if (to_file && bi_file) bi_file->W(c); }
+void W(string    s, bool to_file) { cout <<  s;
+	if (to_file && bi_file) bi_file->W(s); }
+void W(string   *s, bool to_file) { cout << *s;
+	if (to_file && bi_file) bi_file->W(*s); }
+void W(biObject *o, bool to_file) { cout << o->dump();
+	if (to_file && bi_file) bi_file->W(o->dump()); }
 // /
 void yyerror(string msg) {
 	cout << "\\n\\n" << msg << "\#" << yylineno << ":" << yytext << "\\n\\n";
 	cerr << "\\n\\n" << msg << "\#" << yylineno << ":" << yytext << "\\n\\n";
 	exit(-1); }
 int main(int argc, char *argv[]) {
+	env_init();
 	cout << "\# " << AUTOGEN << "\\n";
 	cout << "\# <module:" << MODULE << ">\\n";
 	cout << "\# argv[0]:\\t" << argv[0] << "\\n\\n";
