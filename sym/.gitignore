@@ -1,0 +1,8 @@
+*~
+*.swp
+sym.exe
+sym.bIog
+/sym/
+lex.yy.c
+sym.tab.cpp
+sym.tab.hpp

@@ -14,6 +14,8 @@ $'# ',TITLE,'\n\n',$AUTHOR,'\n\nlicense:\t',LICENSE,'\n\ngithub:\t\t',GITHUB
 *~
 *.swp
 $MODULE,EXE
+$MODULE,.bIog
+$'/',MODULE,'/'
 lex.yy.c
 $MODULE,.tab.cpp
 $MODULE,.tab.hpp

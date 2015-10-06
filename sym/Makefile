@@ -7,4 +7,5 @@ gen: ../duralex/dura.exe
 upgrade:
 	cp sym/README.md ./
 	cp sym/vimedit.bat ./
+	cp sym/.gitignore ./
 
