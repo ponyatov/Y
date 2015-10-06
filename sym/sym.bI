@@ -10,7 +10,7 @@
 
 .file README.md
 $'# ',TITLE
-\#\# (self-computed source files)
+\#\#\# (self-computed source files)
 $'\n',$AUTHOR,'\n\nlicense:\t',LICENSE,'\n\ngithub:\t\t',GITHUB
 .eof
 
