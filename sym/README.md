@@ -1,4 +1,5 @@
 # pure symbolic script engine
+## (self-computed source files)
 
 (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 

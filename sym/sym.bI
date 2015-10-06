@@ -9,7 +9,9 @@
 .sec-	Project files
 
 .file README.md
-$'# ',TITLE,'\n\n',$AUTHOR,'\n\nlicense:\t',LICENSE,'\n\ngithub:\t\t',GITHUB
+$'# ',TITLE
+\#\# (self-computed source files)
+$'\n',$AUTHOR,'\n\nlicense:\t',LICENSE,'\n\ngithub:\t\t',GITHUB
 .eof
 
 .file .gitignore
