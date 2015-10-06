@@ -3,6 +3,7 @@
 sym.exe
 sym.elf
 sym.bIog
+sym.toc
 /sym/
 /tmp/
 lex.yy.c

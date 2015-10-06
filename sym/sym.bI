@@ -4,6 +4,8 @@
 
 .module sym
 
+.sec+	Source files
+
 .file README.md
 $'# ',TITLE,'\n\n',$AUTHOR,'\n\nlicense:\t',LICENSE,'\n\ngithub:\t\t',GITHUB
 .eof
@@ -14,6 +16,7 @@ $'# ',TITLE,'\n\n',$AUTHOR,'\n\nlicense:\t',LICENSE,'\n\ngithub:\t\t',GITHUB
 $MODULE,'.exe'
 $MODULE,'.elf'
 $MODULE,.bIog
+$MODULE,.toc
 $'/',MODULE,'/','\n/tmp/'
 lex.yy.c
 $MODULE,.tab.cpp
