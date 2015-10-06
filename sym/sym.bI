@@ -170,6 +170,7 @@ int main(int argc, char *argv[]) {
 .sec-	.bat for module edit in (g)vim tabs
 
 .file vimedit.bat
+\@rem $AUTOGEN
 gvim -p $MODULE,'.bI ',MODULE,'.bIog ',MODULE,'.toc ',FILES/' '
 .eof
 
