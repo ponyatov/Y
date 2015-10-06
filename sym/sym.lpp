@@ -1,0 +1,15 @@
+%{
+#include "sym.hpp"
+#define TC(X)	{ yylval.c = yytext[0]; 			return X; }
+#define T1(X)	{ yylval.c = yytext[1]; 			return X; }
+#define TS(X)	{ yylval.s = new string(yytext);	return X; }
+%}
+%option noyywrap
+%option yylineno
+%%
+\r				{}				/* drop DOS 0x0D char */
+#[^\n]*\n		{}				/* drop line comment */
+\\.				T1(CHAR)		/* escape char prefixed */
+\n				TC(EOL)			/* end of line (CR) */
+.				TC(CHAR)		/* any other char in undetected text */
+%%

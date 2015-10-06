@@ -44,19 +44,42 @@ $'\tcp ',MODULE,'/README.md ./'
 $'\tcp ',MODULE,'/vimedit.bat ./'
 $'\tcp ',MODULE,'/.gitignore ./'
 $'\tcp ',MODULE,'/Makefile ./'
+$'\tcp ',MODULE,'/',MODULE,'.ypp ./'
+$'\tcp ',MODULE,'/',MODULE,'.lpp ./'
+$'\tcp ',MODULE,'/',MODULE,'.hpp ./'
+$'\tcp ',MODULE,'/',MODULE,'.cpp ./'
 
 .eof
 
 .file sym.ypp
+$'%{\n#include "',MODULE,'.hpp"\n%}'
 .eof
 
 .file sym.lpp
+$'%{\n#include "',MODULE,'.hpp"'
+\#define TC(X)	{ yylval.c = yytext[0]; 			return X; }
+\#define T1(X)	{ yylval.c = yytext[1]; 			return X; }
+\#define TS(X)	{ yylval.s = new string(yytext);	return X; }
+%}
+%option noyywrap
+%option yylineno
+%%
+\\r				{}				/* drop DOS 0x0D char */
+\#[^\\n]*\\n		{}				/* drop line comment */
+\\\\.				T1(CHAR)		/* escape char prefixed */
+\\n				TC(EOL)			/* end of line (CR) */
+.				TC(CHAR)		/* any other char in undetected text */
+%%
 .eof
 
 .file sym.hpp
+\#ifndef _H_$MODULE
+\#define _H_$MODULE
+\#endif // _H_$MODULE
 .eof
 
 .file sym.cpp
+$'#include "',MODULE,'.hpp"'
 .eof
 
 .file vimedit.bat

@@ -21,4 +21,8 @@ upgrade:
 	cp sym/vimedit.bat ./
 	cp sym/.gitignore ./
 	cp sym/Makefile ./
+	cp sym/sym.ypp ./
+	cp sym/sym.lpp ./
+	cp sym/sym.hpp ./
+	cp sym/sym.cpp ./
 
