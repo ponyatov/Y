@@ -14,7 +14,7 @@ $'# ',TITLE,'\n\n',$AUTHOR,'\n\nlicense:\t',LICENSE,'\n\ngithub:\t\t',GITHUB
 $MODULE,'.exe'
 $MODULE,'.elf'
 $MODULE,.bIog
-$'/',MODULE,'/'
+$'/',MODULE,'/','\n/tmp/'
 lex.yy.c
 $MODULE,.tab.cpp
 $MODULE,.tab.hpp
@@ -60,6 +60,6 @@ $'\tcp ',MODULE,'/Makefile ./'
 .eof
 
 .file vimedit.bat
-gvim -p $FILES/' '
+gvim -p $MODULE,'.bI ',FILES/' '
 .eof
 

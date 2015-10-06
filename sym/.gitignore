@@ -4,6 +4,7 @@ sym.exe
 sym.elf
 sym.bIog
 /sym/
+/tmp/
 lex.yy.c
 sym.tab.cpp
 sym.tab.hpp
