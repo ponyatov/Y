@@ -31,13 +31,13 @@ $MODULE,.tab.hpp
 \# $AUTOGEN
 \# <module:$MODULE,'>'
 
-.PHONY: gen
-gen: ../duralex/dura.exe
-$'\t$< < ',MODULE,'.bI > ',MODULE,'.bIog'
+\#.PHONY: gen
+\#gen: ../duralex/dura.exe
+\#$'\t$< < ',MODULE,'.bI > ',MODULE,'.bIog'
 
 .PHONY: all
 all: $'./',MODULE,'$(EXE)'
-$'\t','./',MODULE,'$(EXE)',' < ',MODULE,'.bI > ',MODULE,'.bIog'
+$'\t','./',MODULE,'$(EXE)',' < ../',MODULE,'.bI > ',MODULE,'.bIog'
 
 $'C = ',MODULE,'.cpp lex.yy.c ',MODULE,'.tab.cpp'
 $'H = ',MODULE,'.hpp ',MODULE,'.tab.hpp'
@@ -53,7 +53,7 @@ upgrade:
 $'\tcp ',MODULE,'/README.md ./'
 $'\tcp ',MODULE,'/vimedit.bat ./'
 $'\tcp ',MODULE,'/.gitignore ./'
-$'\tcp ',MODULE,'/Makefile ./'
+\#$'\tcp ',MODULE,'/Makefile ./'
 $'\tcp ',MODULE,'/',MODULE,'.ypp ./'
 $'\tcp ',MODULE,'/',MODULE,'.lpp ./'
 $'\tcp ',MODULE,'/',MODULE,'.hpp ./'
@@ -69,14 +69,17 @@ $'%{\n#include "',MODULE,'.hpp"\n%}'
 %union {
 	char c;
 	string *s;
+	biObject *o;
 }
 %token <c> CHAR EOL
 %token <s> STR
+%token <o> DIRECTIVE
 %%
 $MODULE,' :'
-$'\t| ',MODULE,' STR\t{ W($2); }'
-$'\t| ',MODULE,' EOL\t{ W($2); }'
-$'\t| ',MODULE,' CHAR\t{ W($2); }'
+$'\t| ',MODULE,' DIRECTIVE\t{ W($2); }'
+$'\t| ',MODULE,' STR\t\t{ W($2); }'
+$'\t| ',MODULE,' EOL\t\t{ W($2); }'
+$'\t| ',MODULE,' CHAR\t\t{ W($2); }'
 %%
 .eof
 
@@ -84,9 +87,11 @@ $'\t| ',MODULE,' CHAR\t{ W($2); }'
 $'/* ',AUTOGEN,' */'
 $'/* <module:',MODULE,'> */'
 $'%{\n#include "',MODULE,'.hpp"'
-\#define TC(X)		{ yylval.c = yytext[0]; 			return X; }
-\#define T1(X)		{ yylval.c = yytext[1]; 			return X; }
-\#define TS(X)		{ yylval.s = new string(yytext);	return X; }
+\#define TC(X)		{ yylval.c = yytext[0]; 				return X; }
+\#define T1(X)		{ yylval.c = yytext[1]; 				return X; }
+\#define TS(X)		{ yylval.s = new string(yytext);		return X; }
+\#define TO(C,X)		{ yylval.o = new biObject(C,yytext);	return X; }
+\#define TX(C,X)		{ yylval.o = new C(yytext);				return X; }
 string StringBuffer;
 %}
 %option noyywrap
@@ -103,6 +108,8 @@ string StringBuffer;
 <ss>'			{BEGIN(INITIAL);
 				yylval.s = new string(StringBuffer+"\'"); return STR;}
 <ss>.			{StringBuffer += yytext;}
+
+^\\.[a-z]+[^\\n]*		TX(biDirective,DIRECTIVE)	/* directive */
 
 \\n				TC(EOL)			/* end of line (CR) */
 .				TC(CHAR)		/* any other char in undetected text */
@@ -132,6 +139,16 @@ $'/* <module:',MODULE,'> */'
 \#include <sys/stat.h>			// /
 \#endif
 using namespace std;
+
+struct biObject {
+	string tag;							// object class name or data type
+	string value;						// object value
+	biObject(string,string);
+	virtual string dump(int depth=0);	// dump	object in string form
+};
+struct biDirective: biObject {
+	biDirective(string);
+};
 								// syntax core interface
 extern int yylex();				// \\ lexer
 extern char *yytext;			// 		regexp-parsed text
@@ -141,8 +158,9 @@ extern void yyerror(string);	// syntax error callback
 $'#include "',MODULE,'.tab.hpp"'			// / parser defines
 								
 void W(char);					// \\ writers
-void W(string);					// //
-void W(string*);				// //
+void W(string);
+void W(string*);
+void W(biObject*);				// //
 \#endif // _H_$MODULE
 .eof
 
@@ -152,9 +170,24 @@ void W(string*);				// //
 $'/* ',AUTOGEN,' */'
 $'/* <module:',MODULE,'> */'
 $'#include "',MODULE,'.hpp"'
-void W(char    c) { cout <<  c; }
-void W(string  s) { cout <<  s; }
-void W(string *s) { cout << *s; }
+// \\ Object
+biObject::biObject(string T,string V)	{ tag = T; value = V; }
+string biObject::dump(int depth)		{ return "<"+tag+":"+value+">"; }
+// /
+// \\ Directive
+biDirective::biDirective(string V):biObject("",V) {
+	while (value.size() && ( value[0] != ' ' && value[0] != '\\t'))
+		{ tag += value[0]; value.erase(0,1); }
+	while (value.size() && ( value[0] == ' ' || value[0] == '\\t'))
+		{                  value.erase(0,1); }
+}
+// /
+// \\ writers
+void W(char      c) { cout <<  c; }
+void W(string    s) { cout <<  s; }
+void W(string   *s) { cout << *s; }
+void W(biObject *o) { cout << o->dump(); }
+// /
 void yyerror(string msg) {
 	cout << "\\n\\n" << msg << "\#" << yylineno << ":" << yytext << "\\n\\n";
 	cerr << "\\n\\n" << msg << "\#" << yylineno << ":" << yytext << "\\n\\n";
