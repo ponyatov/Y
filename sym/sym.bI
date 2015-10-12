@@ -73,20 +73,31 @@ $'%{\n#include "',MODULE,'.hpp"\n%}'
 	string *s;
 	biObject *o;
 }
-%token <c> CHAR EOL SX QX
-%token <s> STR
-%token <o> DIRECTIVE FFILE FEOF SYM
-# %token <o> FMODULE FFILE FEOF
-# %token <o> STR
+%token <c> CHAR EOL SX QX COMMA
+%token <o> DIRECTIVE FFILE FEOF SYM STR
+%type <o> ex list
 %%
 $MODULE,' :'
 $'\t| ',MODULE,' DIRECTIVE\t\t{ W($2); }'
 $'\t| ',MODULE,' FFILE EOL\t\t{ W($2,false); W("\\n"); }'
 $'\t| ',MODULE,' FEOF EOL\t\t{ W($2,false); }'
-$'\t| ',MODULE,' SX SYM\t\t{ W($3->eval()->value); }'
+$'\t| ',MODULE,' QX ex\t\t\t{ W($3->dump()); }'
+$'\t| ',MODULE,' SX ex\t\t\t{ W($3->eval()->value); }'
 $'\t| ',MODULE,' STR\t\t\t{ W($2); }'
 $'\t| ',MODULE,' EOL\t\t\t{ W($2); }'
 $'\t| ',MODULE,' CHAR\t\t\t{ W($2); }'
+;
+
+ex :
+	  SYM
+	| STR
+	| list
+;
+
+list :
+	  ex COMMA ex		{ \$\$ = new biObject("list",""); 
+						  \$\$->join(\$1); \$\$->join(\$3); }
+	| list COMMA ex		{ \$\$ = \$1; \$\$->join(\$3); }
 ;
 %%
 .eof
@@ -100,11 +111,14 @@ $'%{\n#include "',MODULE,'.hpp"'
 \#define TS(X)		{ yylval.s = new string(yytext);		return X; }
 \#define TO(C,X)		{ yylval.o = new C(yytext);				return X; }
 \#define TX(C,X)		{ yylval.o = new biObject(C,yytext);	return X; }
+
+string StringBuffer;
 %}
 %option noyywrap
 %option yylineno
 
 %x xx
+%x ss
 
 %%
 \#[^\\n]*\\n		{}							/* drop line comment */
@@ -116,9 +130,18 @@ $'%{\n#include "',MODULE,'.hpp"'
 ^\\.[a-z]+[^\\n]*	TO(biDirective,DIRECTIVE)	/* .anydirective */
 
 \\\$				{BEGIN(xx); TC(SX);}		/* eXXpression mode */
-<xx>[ \\t\\n,]	{BEGIN(INITIAL); TC(EOL);}
-<xx>[a-zA-Z]+	TX("sym",SYM);				/* symbol */
-<xx>'[^']*'		TX("str",SYM);				/* string */
+\\\?				{BEGIN(xx); TC(QX);}		/* Query mode */
+<xx>[ \\t\\n]		{BEGIN(INITIAL); TC(EOL);}
+<xx>[a-zA-Z\.]+	TX("sym",SYM);				/* symbol */
+<xx>,			TC(COMMA)					/* list delimiter */
+
+<xx>'			{BEGIN(ss); StringBuffer="";}	/* string mode*/
+<ss>'			{BEGIN(xx);
+				yylval.o = new biObject("str",StringBuffer); return STR;}
+<ss>\\\\n			{StringBuffer += "\\n"; }
+<ss>\\\\t			{StringBuffer += "\\t"; }
+<ss>\\\\\			{StringBuffer += "\\\\"; }
+<ss>.			{StringBuffer += yytext[0]; }
 
 \\n				TC(EOL)						/* end of line (CR) */
 .				TC(CHAR)					/* any other char */
@@ -154,7 +177,11 @@ using namespace std;
 struct biObject {
 	string tag;							// object class name or data type
 	string value;						// object value
-	biObject(string,string);
+	biObject(string,string);			// constructor
+	vector<biObject*> nest;				// nested objects
+	void join(biObject*);				// add nested object
+	string pad(int);					// dump padding
+	string tagval();					// <tag:value>
 	virtual string dump(int depth=0);	// dump	object in string form
 	virtual biObject* eval();			// compute object symbolically
 };
@@ -162,16 +189,16 @@ struct biObject {
 extern map<string,biObject*> env;		// \\ environment (global var registry)
 extern void env_init();					// /
 
-struct biDirective: biObject {
+struct biDirective: biObject {			// \.directive
 	biDirective(string);
 };
 
-struct biModule: biObject {
+struct biModule: biObject {				// \.module
 	biModule(string);
 };
 extern biModule *bi_module;
 
-struct biFile: biObject {
+struct biFile: biObject {				// \.file ... \.eof
 	biFile(string);
 	~biFile();
 	FILE *fh;
@@ -203,7 +230,26 @@ $'#include "',MODULE,'.hpp"'
 
 // \\\\ Object
 biObject::biObject(string T,string V)	{ tag = T; value = V; }
-string biObject::dump(int depth)		{ return "<"+tag+":"+value+">"; }
+
+void biObject::join(biObject* o)		{ nest.push_back(o); }
+
+string biObject::pad(int n) {
+	string S="";
+	for (int i=0;i<n;i++) S+="\\t";
+	return S;
+}
+
+string biObject::tagval()				{ return "<"+tag+":"+value+">"; }
+
+string biObject::dump(int depth) {
+	string S = "\\n"+pad(depth)+tagval();
+	for (
+	vector<biObject*>::iterator it = nest.begin();
+	it != nest.end();
+	it++)
+		S += (*it)->dump(depth+1);
+	return S;
+}
 
 biObject* biObject::eval() {
 	if ( tag == "str" ) return this;
@@ -211,7 +257,16 @@ biObject* biObject::eval() {
 		if (!env[value]) return this;
 		else return env[value];
 	}
-	return this;
+	if ( tag == "list" ) {
+		value = "";
+		for (
+		vector<biObject*>::iterator it = nest.begin();
+		it != nest.end();
+		it++ )
+			value += (*it)->eval()->value;
+		return this;
+	}
+	return new biObject("str",tagval());
 }
 // //
 
@@ -242,6 +297,7 @@ biDirective::biDirective(string V):biObject("",V) {
 	if (tag == ".module")	bi_module = new biModule(value);
 	if (tag == ".file")		bi_file = new biFile(value);
 	if (tag == ".eof")		if (bi_file) delete bi_file;
+	if (tag == ".title")	env["TITLE"] = new biObject("str",value);
 }
 // //
 

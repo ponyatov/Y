@@ -4,7 +4,26 @@
 
 // \\ Object
 biObject::biObject(string T,string V)	{ tag = T; value = V; }
-string biObject::dump(int depth)		{ return "<"+tag+":"+value+">"; }
+
+void biObject::join(biObject* o)		{ nest.push_back(o); }
+
+string biObject::pad(int n) {
+	string S="";
+	for (int i=0;i<n;i++) S+="\t";
+	return S;
+}
+
+string biObject::tagval()				{ return "<"+tag+":"+value+">"; }
+
+string biObject::dump(int depth) {
+	string S = "\n"+pad(depth)+tagval();
+	for (
+	vector<biObject*>::iterator it = nest.begin();
+	it != nest.end();
+	it++)
+		S += (*it)->dump(depth+1);
+	return S;
+}
 
 biObject* biObject::eval() {
 	if ( tag == "str" ) return this;
@@ -12,7 +31,16 @@ biObject* biObject::eval() {
 		if (!env[value]) return this;
 		else return env[value];
 	}
-	return this;
+	if ( tag == "list" ) {
+		value = "";
+		for (
+		vector<biObject*>::iterator it = nest.begin();
+		it != nest.end();
+		it++ )
+			value += (*it)->eval()->value;
+		return this;
+	}
+	return new biObject("str",tagval());
 }
 // //
 
@@ -43,6 +71,7 @@ biDirective::biDirective(string V):biObject("",V) {
 	if (tag == ".module")	bi_module = new biModule(value);
 	if (tag == ".file")		bi_file = new biFile(value);
 	if (tag == ".eof")		if (bi_file) delete bi_file;
+	if (tag == ".title")	env["TITLE"] = new biObject("str",value);
 }
 // //
 

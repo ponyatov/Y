@@ -9,17 +9,30 @@
 	string *s;
 	biObject *o;
 }
-%token <c> CHAR EOL SX QX
-%token <s> STR
-%token <o> DIRECTIVE FFILE FEOF SYM
+%token <c> CHAR EOL SX QX COMMA
+%token <o> DIRECTIVE FFILE FEOF SYM STR
+%type <o> ex list
 %%
 sym :
 	| sym DIRECTIVE		{ W($2); }
 	| sym FFILE EOL		{ W($2,false); W("\n"); }
 	| sym FEOF EOL		{ W($2,false); }
-	| sym SX SYM		{ W($3->eval()->value); }
+	| sym QX ex			{ W($3->dump()); }
+	| sym SX ex			{ W($3->eval()->value); }
 	| sym STR			{ W($2); }
 	| sym EOL			{ W($2); }
 	| sym CHAR			{ W($2); }
+;
+
+ex :
+	  SYM
+	| STR
+	| list
+;
+
+list :
+	  ex COMMA ex		{ $$ = new biObject("list",""); 
+						  $$->join($1); $$->join($3); }
+	| list COMMA ex		{ $$ = $1; $$->join($3); }
 ;
 %%

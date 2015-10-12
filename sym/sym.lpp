@@ -7,11 +7,14 @@
 #define TS(X)		{ yylval.s = new string(yytext);		return X; }
 #define TO(C,X)		{ yylval.o = new C(yytext);				return X; }
 #define TX(C,X)		{ yylval.o = new biObject(C,yytext);	return X; }
+
+string StringBuffer;
 %}
 %option noyywrap
 %option yylineno
 
 %x xx
+%x ss
 
 %%
 #[^\n]*\n		{}							/* drop line comment */
@@ -23,9 +26,18 @@
 ^\.[a-z]+[^\n]*	TO(biDirective,DIRECTIVE)	/* .anydirective */
 
 \$				{BEGIN(xx); TC(SX);}		/* eXXpression mode */
-<xx>[ \t\n,]	{BEGIN(INITIAL); TC(EOL);}
-<xx>[a-zA-Z]+	TX("sym",SYM);				/* symbol */
-<xx>'[^']*'		TX("str",SYM);				/* string */
+\?				{BEGIN(xx); TC(QX);}		/* Query mode */
+<xx>[ \t\n]		{BEGIN(INITIAL); TC(EOL);}
+<xx>[a-zA-Z.]+	TX("sym",SYM);				/* symbol */
+<xx>,			TC(COMMA)					/* list delimiter */
+
+<xx>'			{BEGIN(ss); StringBuffer="";}	/* string mode*/
+<ss>'			{BEGIN(xx);
+				yylval.o = new biObject("str",StringBuffer); return STR;}
+<ss>\\n			{StringBuffer += "\n"; }
+<ss>\\t			{StringBuffer += "\t"; }
+<ss>\\			{StringBuffer += "\\"; }
+<ss>.			{StringBuffer += yytext[0]; }
 
 \n				TC(EOL)						/* end of line (CR) */
 .				TC(CHAR)					/* any other char */

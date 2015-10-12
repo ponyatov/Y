@@ -26,7 +26,11 @@ using namespace std;
 struct biObject {
 	string tag;							// object class name or data type
 	string value;						// object value
-	biObject(string,string);
+	biObject(string,string);			// constructor
+	vector<biObject*> nest;				// nested objects
+	void join(biObject*);				// add nested object
+	string pad(int);					// dump padding
+	string tagval();					// <tag:value>
 	virtual string dump(int depth=0);	// dump	object in string form
 	virtual biObject* eval();			// compute object symbolically
 };
@@ -34,16 +38,16 @@ struct biObject {
 extern map<string,biObject*> env;		// \ environment (global var registry)
 extern void env_init();					// /
 
-struct biDirective: biObject {
+struct biDirective: biObject {			// .directive
 	biDirective(string);
 };
 
-struct biModule: biObject {
+struct biModule: biObject {				// .module
 	biModule(string);
 };
 extern biModule *bi_module;
 
-struct biFile: biObject {
+struct biFile: biObject {				// .file ... .eof
 	biFile(string);
 	~biFile();
 	FILE *fh;
