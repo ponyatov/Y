@@ -127,5 +127,11 @@ void yyerror(string err) {
 	exit(-1);
 }
 
+void terminator() {
+	if (bi_module) delete bi_module;
+	if (bi_file) delete bi_file;
+	exit(0);
+}
+
 int main() { env_init(); return yyparse(); }
 

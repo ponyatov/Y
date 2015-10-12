@@ -22,6 +22,7 @@ string StringBuffer;
 \\.						T1(C)
 #[^\n]*\n				{}
 
+^\.end					TX(biDirective,dEND)
 ^\.module[ \t]+[^\n]+	TX(biDirective,MODULE)
 ^\.file[ \t]+[^\n]+		TX(biDirective,FFILE)
 ^\.eof					TX(biDirective,FEOF)

@@ -69,5 +69,7 @@ void W(string*,bool to_file=true);
 void W(string,bool to_file=true);
 void W(biObject*,bool to_file=true);
 
+void terminator();
+
 #endif // _H_DURA
 

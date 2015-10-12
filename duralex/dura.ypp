@@ -11,7 +11,7 @@
 }
 
 %token <c> C EOL QX SX AX LP RP COMMA 
-%token <o> SYM STR MODULE FFILE FEOF DIRECTIVE
+%token <o> SYM STR MODULE FFILE FEOF dEND DIRECTIVE
 %token <o> ADD SUB MUL DIV POW EQ
 %type <o> ex list
 
@@ -22,6 +22,7 @@
 
 %%
 dura: 
+	| dura dEND				{ terminator(); }
 	| dura MODULE EOL		{ W($2); }
 	| dura FFILE EOL		{ W($2,false); W($3,false); }
 	| dura FEOF				{ W($2->tagval(),false); }								

@@ -2,47 +2,17 @@
 /* <module:sym> */
 %{
 #include "sym.hpp"
-#define TC(X)		{ yylval.c = yytext[0]; 				return X; }
-#define T1(X)		{ yylval.c = yytext[1]; 				return X; }
-#define TS(X)		{ yylval.s = new string(yytext);		return X; }
-#define TO(C,X)		{ if (env[yytext]) yylval.o = env[yytext]; \
-					else yylval.o = new biObject(C,yytext); return X; }
-#define TX(C,X)		{ if (env[yytext]) yylval.o = env[yytext]; \
-					else yylval.o = new C(yytext); return X; }
-string StringBuffer;
+#define TC(X)		{ yylval.c = yytext[0]; 			return X; }
+#define T1(X)		{ yylval.c = yytext[1]; 			return X; }
+#define TS(X)		{ yylval.s = new string(yytext);	return X; }
+#define TO(C,X)		{ yylval.o = new C(yytext);			return X; }
 %}
 %option noyywrap
 %option yylineno
-
-%x ss
-%x xx
-
 %%
-\r					{}				/* drop DOS 0x0D char */
-\\.					T1(CHAR)		/* escape char prefixed */
-#[^\n]*\n			{}				/* drop line comment */
-
-'					{BEGIN(ss); StringBuffer="'";}
-<ss>'				{BEGIN(INITIAL);
-					yylval.o = new biObject("str",StringBuffer+"'"); return STR;}
-<ss>\\				{StringBuffer+="\\";}
-<ss>\t				{StringBuffer+="\t";}
-<ss>\n				{StringBuffer+="\n";}
-<ss>.				{StringBuffer += yytext;}
-
-\$					{BEGIN(xx); TC(SX);}
-<xx>[ \t\n,]			{BEGIN(INITIAL); TC(EOL);}
-<xx>[a-zA-Z]+		TO("sym",SYM)
-
-^\.module[^\n]*		TX(biDirective,FMODULE)		/* .module */
-^\.file[^\n]*		TX(biDirective,FFILE)		/* .file */
-^\.eof				TX(biDirective,FEOF)		/* .eof */
-^\.title[^\n]*		TX(biDirective,FMODULE)		/* .title */
-^\.author[^\n]*		TX(biDirective,FMODULE)		/* .author */
-^\.github[^\n]*		TX(biDirective,FMODULE)		/* .github */
-^\.license[^\n]*	TX(biDirective,FMODULE)		/* .license */
-^\.sec[^\n]*		TX(biDirective,FMODULE)		/* .sec */
-
-\n					TC(EOL)			/* end of line (CR) */
-.					TC(CHAR)		/* any other char in undetected text */
+\r				{}							/* drop DOS 0x0D char */
+\\.				T1(CHAR)					/* escaped char */
+^\.[a-z]+[^\n]*	TO(biDirective,DIRECTIVE)	/* .anydirective */
+\n				TC(EOL)						/* end of line (CR) */
+.				TC(CHAR)					/* any other char */
 %%

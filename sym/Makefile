@@ -9,6 +9,11 @@ gen: ../duralex/dura.exe
 all: ./sym$(EXE)
 	./sym$(EXE) < sym.bI > sym.bIog
 
+.PHONY: clean
+clean:
+	rm -rf ./sym$(EXE) *~ sym.bIog tmp sym lex.yy.c sym.tab.?pp
+	touch sym.bIog
+
 C = sym.cpp lex.yy.c sym.tab.cpp
 H = sym.hpp sym.tab.hpp
 ./sym$(EXE): $(C) $(H)
