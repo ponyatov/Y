@@ -61,7 +61,7 @@ $'sym.tab.cpp: ',MODULE,'.ypp'
 	bison \$<
 .eof
 
-.sec-	Symbolic computing core
+.sec-	Low-Level symbolic engine code in C++
 
 .file sym.ypp
 $'/* ',AUTOGEN,' */'
@@ -73,15 +73,17 @@ $'%{\n#include "',MODULE,'.hpp"\n%}'
 	string *s;
 	biObject *o;
 }
-%token <c> CHAR EOL
+%token <c> CHAR EOL SX QX
 %token <s> STR
-%token <o> DIRECTIVE
-# QX SX
+%token <o> DIRECTIVE FFILE FEOF SYM
 # %token <o> FMODULE FFILE FEOF
-# %token <o> SYM STR
+# %token <o> STR
 %%
 $MODULE,' :'
 $'\t| ',MODULE,' DIRECTIVE\t\t{ W($2); }'
+$'\t| ',MODULE,' FFILE EOL\t\t{ W($2,false); W("\\n"); }'
+$'\t| ',MODULE,' FEOF EOL\t\t{ W($2,false); }'
+$'\t| ',MODULE,' SX SYM\t\t{ W($3->eval()->value); }'
 $'\t| ',MODULE,' STR\t\t\t{ W($2); }'
 $'\t| ',MODULE,' EOL\t\t\t{ W($2); }'
 $'\t| ',MODULE,' CHAR\t\t\t{ W($2); }'
@@ -93,17 +95,31 @@ $'\t| ',MODULE,' CHAR\t\t\t{ W($2); }'
 $'/* ',AUTOGEN,' */'
 $'/* <module:',MODULE,'> */'
 $'%{\n#include "',MODULE,'.hpp"'
-\#define TC(X)		{ yylval.c = yytext[0]; 			return X; }
-\#define T1(X)		{ yylval.c = yytext[1]; 			return X; }
-\#define TS(X)		{ yylval.s = new string(yytext);	return X; }
-\#define TO(C,X)		{ yylval.o = new C(yytext);			return X; }
+\#define TC(X)		{ yylval.c = yytext[0]; 				return X; }
+\#define T1(X)		{ yylval.c = yytext[1]; 				return X; }
+\#define TS(X)		{ yylval.s = new string(yytext);		return X; }
+\#define TO(C,X)		{ yylval.o = new C(yytext);				return X; }
+\#define TX(C,X)		{ yylval.o = new biObject(C,yytext);	return X; }
 %}
 %option noyywrap
 %option yylineno
+
+%x xx
+
 %%
+\#[^\\n]*\\n		{}							/* drop line comment */
 \\r				{}							/* drop DOS 0x0D char */
 \\\\.				T1(CHAR)					/* escaped char */
+
+^\\.file[^\\n]*	TO(biDirective,FFILE)		/* .file */
+^\\.eof			TO(biDirective,FEOF)		/* .eof */
 ^\\.[a-z]+[^\\n]*	TO(biDirective,DIRECTIVE)	/* .anydirective */
+
+\\\$				{BEGIN(xx); TC(SX);}		/* eXXpression mode */
+<xx>[ \\t\\n,]	{BEGIN(INITIAL); TC(EOL);}
+<xx>[a-zA-Z]+	TX("sym",SYM);				/* symbol */
+<xx>'[^']*'		TX("str",SYM);				/* string */
+
 \\n				TC(EOL)						/* end of line (CR) */
 .				TC(CHAR)					/* any other char */
 %%
@@ -140,7 +156,11 @@ struct biObject {
 	string value;						// object value
 	biObject(string,string);
 	virtual string dump(int depth=0);	// dump	object in string form
+	virtual biObject* eval();			// compute object symbolically
 };
+
+extern map<string,biObject*> env;		// \\ environment (global var registry)
+extern void env_init();					// /
 
 struct biDirective: biObject {
 	biDirective(string);
@@ -150,6 +170,15 @@ struct biModule: biObject {
 	biModule(string);
 };
 extern biModule *bi_module;
+
+struct biFile: biObject {
+	biFile(string);
+	~biFile();
+	FILE *fh;
+	void W(char);
+	void W(string);
+};
+extern biFile *bi_file;
 
 										// syntax core interface
 extern int yylex();						// \\ lexer
@@ -175,6 +204,31 @@ $'#include "',MODULE,'.hpp"'
 // \\\\ Object
 biObject::biObject(string T,string V)	{ tag = T; value = V; }
 string biObject::dump(int depth)		{ return "<"+tag+":"+value+">"; }
+
+biObject* biObject::eval() {
+	if ( tag == "str" ) return this;
+	if ( tag == "sym" ) {
+		if (!env[value]) return this;
+		else return env[value];
+	}
+	return this;
+}
+// //
+
+// \\\\ Environment
+map<string,biObject*> env;
+void env_init() {
+	env["AUTHOR"]	= new biObject(".author",AUTHOR);
+	env["LICENSE"]	= new biObject(".license",LICENSE);
+	env["GITHUB"]	= new biObject(".github",GITHUB);
+	env["FILES"]	= new biObject("list","");
+	env["AUTOGEN"]	= new biObject(".autogen",AUTOGEN);
+	\#ifdef __MINGW32__
+		env["EXE"]	= new biObject("str",".exe");
+	\#else
+		env["EXE"]	= new biObject("str",".elf");
+	\#endif
+}
 // //
 
 // \\\\ Directive
@@ -186,25 +240,41 @@ biDirective::biDirective(string V):biObject("",V) {
 		{                  value.erase(0,1); }
 	// process specific directive tag
 	if (tag == ".module")	bi_module = new biModule(value);
+	if (tag == ".file")		bi_file = new biFile(value);
+	if (tag == ".eof")		if (bi_file) delete bi_file;
 }
 // //
 
 // \\\\ Module
 biModule::biModule(string V):biObject("module",V) {
 	mkdir(value.c_str());
+	if (bi_file) delete bi_file;
+	env["MODULE"] = this;
 }
 biModule *bi_module = new biModule("tmp");
 // //
 
+// \\\\ File
+biFile::biFile(string V):biObject("file",V) {
+	if (bi_file) delete bi_file;
+	assert ( fh = fopen((bi_module->value+"/"+value).c_str(),"w") );
+	bi_file = this;
+}
+biFile::~biFile() 			{ fclose(fh); bi_file = NULL; }
+void biFile::W(char c)		{ fprintf(fh,"%c",c); }
+void biFile::W(string s)	{ fprintf(fh,"%s",s.c_str()); }
+biFile *bi_file = NULL;
+// //
+
 // \\\\ writers
-void W(char      c, bool to_file) { cout <<  c; }
-#	if (to_file && bi_file) bi_file->W(c); }
-void W(string    s, bool to_file) { cout <<  s; }
-#	if (to_file && bi_file) bi_file->W(s); }
-void W(string   *s, bool to_file) { cout << *s; }
-#	if (to_file && bi_file) bi_file->W(*s); }
-void W(biObject *o, bool to_file) { cout << o->dump(); }
-#	if (to_file && bi_file) bi_file->W(o->dump()); }
+void W(char      c, bool to_file) { cout <<  c; 
+	if (to_file && bi_file) bi_file->W(c); }
+void W(string    s, bool to_file) { cout <<  s;
+	if (to_file && bi_file) bi_file->W(s); }
+void W(string   *s, bool to_file) { cout << *s;
+	if (to_file && bi_file) bi_file->W(*s); }
+void W(biObject *o, bool to_file) { cout << o->dump();
+	if (to_file && bi_file) bi_file->W(o->dump()); }
 // //
 
 void yyerror(string msg) {
@@ -214,7 +284,7 @@ void yyerror(string msg) {
 }
 
 int main(int argc, char *argv[]) {
-#	env_init();
+	env_init();
 #	cout << "\# " << AUTOGEN << "\\n";
 #	cout << "\# <module:" << MODULE << ">\\n";
 #	cout << "\# argv[0]:\\t" << argv[0] << "\\n\\n";
@@ -231,13 +301,6 @@ gvim -p $MODULE,'.bI ',MODULE,'.bIog ',MODULE,'.toc ',FILES/' '
 
 .end
 
-.file sym.ypp
-$'\t| ',MODULE,' FMODULE EOL\t{ W($2,false); W($3,false); }'
-$'\t| ',MODULE,' FFILE EOL\t\t{ W($2,false); W($3,false); }'
-$'\t| ',MODULE,' FEOF\t\t\t{ W($2,false); }'
-$'\t| ',MODULE,' SX SYM\t\t{ W($2); W($3); }'
-.eof
-
 .file sym.lpp
 \#define TO(C,X)		{ if (env[yytext]) yylval.o = env[yytext]; \
 					else yylval.o = new biObject(C,yytext); return X; }
@@ -248,8 +311,6 @@ string StringBuffer;
 %x ss
 %x xx
 
-\\\\.					T1(CHAR)		/* escape char prefixed */
-\#[^\\n]*\\n			{}				/* drop line comment */
 
 '					{BEGIN(ss); StringBuffer="\'";}
 <ss>'				{BEGIN(INITIAL);
@@ -259,13 +320,9 @@ string StringBuffer;
 <ss>\\n				{StringBuffer+="\\n";}
 <ss>.				{StringBuffer += yytext;}
 
-\\\$					{BEGIN(xx); TC(SX);}
-<xx>[ \\t\\n,]			{BEGIN(INITIAL); TC(EOL);}
 <xx>[a-zA-Z]+		TO("sym",SYM)
 
 ^\\.module[^\\n]*		TX(biDirective,FMODULE)		/* .module */
-^\\.file[^\\n]*		TX(biDirective,FFILE)		/* .file */
-^\\.eof				TX(biDirective,FEOF)		/* .eof */
 ^\\.title[^\\n]*		TX(biDirective,FMODULE)		/* .title */
 ^\\.author[^\\n]*		TX(biDirective,FMODULE)		/* .author */
 ^\\.github[^\\n]*		TX(biDirective,FMODULE)		/* .github */
@@ -274,74 +331,4 @@ string StringBuffer;
 
 %%
 .eof
-
-.file sym.hpp
-extern map<string,biObject*> env;		// \\ environment (global var registry)
-extern void env_init();					// /
-struct biModule: biObject {
-	biModule(string);
-};
-extern biModule *bi_module;
-struct biFile: biObject {
-	FILE *fh;
-	biFile(string);
-	~biFile();
-	void W(char);
-	void W(string);
-};
-extern biFile *bi_file;
-								
-.eof
-
-.sec-	Low-Level symbolic engine code in C++
-
-.file sym.cpp
-// \\ Environment
-map<string,biObject*> env;
-void env_init() {
-	\#ifdef __MINGW32__
-		env["EXE"] = new biObject("const",".exe");
-	\#else
-		env["EXE"] = new biObject("const",".elf");
-	\#endif
-	env["AUTHOR"] = new biObject(".author",AUTHOR);
-	env["LICENSE"] = new biObject(".license",LICENSE);
-	env["GITHUB"] = new biObject(".github",GITHUB);
-	env["FILES"] = new biObject("list","");
-	env["AUTOGEN"] = new biObject(".autogen",AUTOGEN);
-	// internal functions
-}
-// /
-
-
-	if (tag == ".file")		bi_file = new biFile(value);
-	if (tag == ".eof")		if (bi_file) delete bi_file;
-}
-
-	if (bi_file) delete bi_file;
-	env["MODULE"] = this;
-}
-// /
-// \\ File
-biFile::biFile(string V):biObject("file",V) {
-	if (bi_file) delete bi_file;
-	assert ( fh = fopen((bi_module->value+"/"+value).c_str(),"w") );
-	bi_file = this;
-}
-biFile::~biFile() { fclose(fh); bi_file = NULL; }
-void biFile::W(char c)		{ fprintf(fh,"%c",c); }
-void biFile::W(string s)	{ fprintf(fh,"%s",s.c_str()); }
-biFile *bi_file = NULL;
-// /
-void W(char      c, bool to_file) { cout <<  c; 
-	if (to_file && bi_file) bi_file->W(c); }
-void W(string    s, bool to_file) { cout <<  s;
-	if (to_file && bi_file) bi_file->W(s); }
-void W(string   *s, bool to_file) { cout << *s;
-	if (to_file && bi_file) bi_file->W(*s); }
-void W(biObject *o, bool to_file) { cout << o->dump();
-	if (to_file && bi_file) bi_file->W(o->dump()); }
-// /
-.eof
-
 

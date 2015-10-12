@@ -2,17 +2,31 @@
 /* <module:sym> */
 %{
 #include "sym.hpp"
-#define TC(X)		{ yylval.c = yytext[0]; 			return X; }
-#define T1(X)		{ yylval.c = yytext[1]; 			return X; }
-#define TS(X)		{ yylval.s = new string(yytext);	return X; }
-#define TO(C,X)		{ yylval.o = new C(yytext);			return X; }
+#define TC(X)		{ yylval.c = yytext[0]; 				return X; }
+#define T1(X)		{ yylval.c = yytext[1]; 				return X; }
+#define TS(X)		{ yylval.s = new string(yytext);		return X; }
+#define TO(C,X)		{ yylval.o = new C(yytext);				return X; }
+#define TX(C,X)		{ yylval.o = new biObject(C,yytext);	return X; }
 %}
 %option noyywrap
 %option yylineno
+
+%x xx
+
 %%
+#[^\n]*\n		{}							/* drop line comment */
 \r				{}							/* drop DOS 0x0D char */
 \\.				T1(CHAR)					/* escaped char */
+
+^\.file[^\n]*	TO(biDirective,FFILE)		/* .file */
+^\.eof			TO(biDirective,FEOF)		/* .eof */
 ^\.[a-z]+[^\n]*	TO(biDirective,DIRECTIVE)	/* .anydirective */
+
+\$				{BEGIN(xx); TC(SX);}		/* eXXpression mode */
+<xx>[ \t\n,]	{BEGIN(INITIAL); TC(EOL);}
+<xx>[a-zA-Z]+	TX("sym",SYM);				/* symbol */
+<xx>'[^']*'		TX("str",SYM);				/* string */
+
 \n				TC(EOL)						/* end of line (CR) */
 .				TC(CHAR)					/* any other char */
 %%

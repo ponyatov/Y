@@ -28,7 +28,11 @@ struct biObject {
 	string value;						// object value
 	biObject(string,string);
 	virtual string dump(int depth=0);	// dump	object in string form
+	virtual biObject* eval();			// compute object symbolically
 };
+
+extern map<string,biObject*> env;		// \ environment (global var registry)
+extern void env_init();					// /
 
 struct biDirective: biObject {
 	biDirective(string);
@@ -38,6 +42,15 @@ struct biModule: biObject {
 	biModule(string);
 };
 extern biModule *bi_module;
+
+struct biFile: biObject {
+	biFile(string);
+	~biFile();
+	FILE *fh;
+	void W(char);
+	void W(string);
+};
+extern biFile *bi_file;
 
 										// syntax core interface
 extern int yylex();						// \ lexer

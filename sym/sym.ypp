@@ -9,12 +9,15 @@
 	string *s;
 	biObject *o;
 }
-%token <c> CHAR EOL
+%token <c> CHAR EOL SX QX
 %token <s> STR
-%token <o> DIRECTIVE
+%token <o> DIRECTIVE FFILE FEOF SYM
 %%
 sym :
 	| sym DIRECTIVE		{ W($2); }
+	| sym FFILE EOL		{ W($2,false); W("\n"); }
+	| sym FEOF EOL		{ W($2,false); }
+	| sym SX SYM		{ W($3->eval()->value); }
 	| sym STR			{ W($2); }
 	| sym EOL			{ W($2); }
 	| sym CHAR			{ W($2); }
