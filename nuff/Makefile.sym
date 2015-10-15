@@ -1,6 +1,6 @@
 
-.PHONY: $MODULE
-$MODULE: ./$MODULE$(EXE)
+.PHONY: exec
+exec: ./$MODULE$(EXE)
 	mkdir -p tmp
 	./$MODULE$(EXE) < gitignore.$MODULE > tmp/.gitignore
 	./$MODULE$(EXE) < Makefile.$MODULE > tmp/Makefile
@@ -12,12 +12,12 @@ $MODULE: ./$MODULE$(EXE)
 
 .PHONY: upgrade
 upgrade: Makefile $MODULE.ypp $MODULE.hpp $MODULE.hpp $MODULE.cpp
-	cp $MODULE/.gitignore .gitignore
-	cp $MODULE/Makefile Makefile
-	cp $MODULE/$MODULE.ypp $MODULE.ypp
-	cp $MODULE/$MODULE.lpp $MODULE.lpp
-	cp $MODULE/$MODULE.hpp $MODULE.hpp
-	cp $MODULE/$MODULE.cpp $MODULE.cpp
+	cp tmp/.gitignore .gitignore
+	cp tmp/Makefile Makefile
+	cp tmp/$MODULE.ypp $MODULE.ypp
+	cp tmp/$MODULE.lpp $MODULE.lpp
+	cp tmp/$MODULE.hpp $MODULE.hpp
+	cp tmp/$MODULE.cpp $MODULE.cpp
 
 .PHONY: clean
 clean:

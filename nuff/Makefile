@@ -1,6 +1,6 @@
 
-.PHONY: sym
-sym: ./sym$(EXE)
+.PHONY: exec
+exec: ./sym$(EXE)
 	mkdir -p tmp
 	./sym$(EXE) < gitignore.sym > tmp/.gitignore
 	./sym$(EXE) < Makefile.sym > tmp/Makefile
@@ -12,12 +12,12 @@ sym: ./sym$(EXE)
 
 .PHONY: upgrade
 upgrade: Makefile sym.ypp sym.hpp sym.hpp sym.cpp
-	cp sym/.gitignore .gitignore
-	cp sym/Makefile Makefile
-	cp sym/sym.ypp sym.ypp
-	cp sym/sym.lpp sym.lpp
-	cp sym/sym.hpp sym.hpp
-	cp sym/sym.cpp sym.cpp
+	cp tmp/.gitignore .gitignore
+	cp tmp/Makefile Makefile
+	cp tmp/sym.ypp sym.ypp
+	cp tmp/sym.lpp sym.lpp
+	cp tmp/sym.hpp sym.hpp
+	cp tmp/sym.cpp sym.cpp
 
 .PHONY: clean
 clean:
