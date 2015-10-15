@@ -1,14 +1,14 @@
 
 .PHONY: sym
 sym: ./sym$(EXE)
-	mkdir -p sym
-	./sym$(EXE) < gitignore.sym > sym/.gitignore
-	./sym$(EXE) < Makefile.sym > sym/Makefile
-	./sym$(EXE) < sym.ypp.sym > sym/sym.ypp
-	./sym$(EXE) < sym.lpp.sym > sym/sym.lpp
-	./sym$(EXE) < sym.hpp.sym > sym/sym.hpp
-	./sym$(EXE) < sym.cpp.sym > sym/sym.cpp
-	cp *.sym sym/
+	mkdir -p tmp
+	./sym$(EXE) < gitignore.sym > tmp/.gitignore
+	./sym$(EXE) < Makefile.sym > tmp/Makefile
+	./sym$(EXE) < sym.ypp.sym > tmp/sym.ypp
+	./sym$(EXE) < sym.lpp.sym > tmp/sym.lpp
+	./sym$(EXE) < sym.hpp.sym > tmp/sym.hpp
+	./sym$(EXE) < sym.cpp.sym > tmp/sym.cpp
+	cp *.sym tmp/
 
 .PHONY: upgrade
 upgrade: Makefile sym.ypp sym.hpp sym.hpp sym.cpp
@@ -21,7 +21,7 @@ upgrade: Makefile sym.ypp sym.hpp sym.hpp sym.cpp
 
 .PHONY: clean
 clean:
-	rm -rf sym *~ lex.yy.c sym.tab.?pp
+	rm -rf ./sym$(EXE) *~ lex.yy.c sym.tab.?pp
 
 C = sym.cpp lex.yy.c sym.tab.cpp
 H = sym.hpp sym.tab.hpp

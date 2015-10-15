@@ -1,8 +1,9 @@
 *~
 *.swp
-*.exe
+$MODULE
+$MODULE.exe
 *.log
 lex.yy.c
 $MODULE.tab.?pp
-/$MODULE/
+/tmp/
 

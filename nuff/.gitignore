@@ -1,8 +1,9 @@
 *~
 *.swp
-*.exe
+sym
+sym.exe
 *.log
 lex.yy.c
 sym.tab.?pp
-/sym/
+/tmp/
 

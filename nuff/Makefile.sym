@@ -1,14 +1,14 @@
 
 .PHONY: $MODULE
 $MODULE: ./$MODULE$(EXE)
-	mkdir -p $MODULE
-	./$MODULE$(EXE) < gitignore.$MODULE > $MODULE/.gitignore
-	./$MODULE$(EXE) < Makefile.$MODULE > $MODULE/Makefile
-	./$MODULE$(EXE) < $MODULE.ypp.$MODULE > $MODULE/$MODULE.ypp
-	./$MODULE$(EXE) < $MODULE.lpp.$MODULE > $MODULE/$MODULE.lpp
-	./$MODULE$(EXE) < $MODULE.hpp.$MODULE > $MODULE/$MODULE.hpp
-	./$MODULE$(EXE) < $MODULE.cpp.$MODULE > $MODULE/$MODULE.cpp
-	cp *.$MODULE $MODULE/
+	mkdir -p tmp
+	./$MODULE$(EXE) < gitignore.$MODULE > tmp/.gitignore
+	./$MODULE$(EXE) < Makefile.$MODULE > tmp/Makefile
+	./$MODULE$(EXE) < $MODULE.ypp.$MODULE > tmp/$MODULE.ypp
+	./$MODULE$(EXE) < $MODULE.lpp.$MODULE > tmp/$MODULE.lpp
+	./$MODULE$(EXE) < $MODULE.hpp.$MODULE > tmp/$MODULE.hpp
+	./$MODULE$(EXE) < $MODULE.cpp.$MODULE > tmp/$MODULE.cpp
+	cp *.$MODULE tmp/
 
 .PHONY: upgrade
 upgrade: Makefile $MODULE.ypp $MODULE.hpp $MODULE.hpp $MODULE.cpp
@@ -21,7 +21,7 @@ upgrade: Makefile $MODULE.ypp $MODULE.hpp $MODULE.hpp $MODULE.cpp
 
 .PHONY: clean
 clean:
-	rm -rf $MODULE *~ lex.yy.c $MODULE.tab.?pp
+	rm -rf ./$MODULE$(EXE) *~ lex.yy.c $MODULE.tab.?pp
 
 C = $MODULE.cpp lex.yy.c $MODULE.tab.cpp
 H = $MODULE.hpp $MODULE.tab.hpp
