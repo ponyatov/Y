@@ -9,8 +9,8 @@
 %option yylineno
 %x x
 %%
-\\.			T1(CHAR)
 #[^\n]*		{}
+\\.			T1(CHAR)
 \$			{BEGIN(x); TC(SX);}
 <x>[A-Z]+	TS(SYM)
 <x>\n		{BEGIN(INITIAL); TC(CHAR); }

@@ -1,17 +1,19 @@
 %{
-\#include "$MODULE.hpp"
+$HPP
 %}
 %defines
 %union {
 	char c;
 	string *s;
+	object *o;
 }
-%token <c> CHAR SX
-%token <s> SYM
+%token <c> CHAR SX QX
+%token <o> SYM
 %%
 $MODULE :
 	| $MODULE CHAR		{ W(\$2); }
-	| $MODULE SX SYM	{ W(env[*\$3]); }
+	| $MODULE SX SYM	{ W($3->eval()->value); }
+	| $MODULE QX SYM	{ W($3->dump()); }
 	| $MODULE SX		{ W(\$2); }
 ;
 %%

@@ -1,9 +1,10 @@
-\#include "$MODULE.hpp"
+$HPP
 
 map<string,string> env;
 
 void env_init() {
 	env["MODULE"]="$MODULE";
+	env["HPP"]="\#include \\"$MODULE.hpp\\"";
 }
 
 void W(char   c)	{ cout << c; }

@@ -4,6 +4,7 @@ map<string,string> env;
 
 void env_init() {
 	env["MODULE"]="sym";
+	env["HPP"]="#include \"sym.hpp\"";
 }
 
 void W(char   c)	{ cout << c; }
