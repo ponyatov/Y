@@ -1,0 +1,8 @@
+*~
+*.swp
+*.exe
+*.log
+lex.yy.c
+nuf.tab.?pp
+/nuf/
+
