@@ -1,0 +1,18 @@
+%{
+\#include "$MODULE.hpp"
+%}
+%defines
+%union {
+	char c;
+	string *s;
+}
+%token <c> CHAR SX
+%token <s> SYM
+%%
+$MODULE :
+	| $MODULE CHAR		{ W(\$2); }
+	| $MODULE SX SYM	{ W(env[*\$3]); }
+	| $MODULE SX		{ W(\$2); }
+;
+%%
+

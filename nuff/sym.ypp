@@ -1,0 +1,18 @@
+%{
+#include "sym.hpp"
+%}
+%defines
+%union {
+	char c;
+	string *s;
+}
+%token <c> CHAR SX
+%token <s> SYM
+%%
+sym :
+	| sym CHAR		{ W($2); }
+	| sym SX SYM	{ W(env[*$3]); }
+	| sym SX		{ W($2); }
+;
+%%
+

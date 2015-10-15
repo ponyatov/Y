@@ -1,0 +1,34 @@
+
+.PHONY: $MODULE
+$MODULE: ./$MODULE$(EXE)
+	mkdir -p $MODULE
+	./$MODULE$(EXE) < gitignore.$MODULE > $MODULE/.gitignore
+	./$MODULE$(EXE) < Makefile.$MODULE > $MODULE/Makefile
+	./$MODULE$(EXE) < $MODULE.ypp.$MODULE > $MODULE/$MODULE.ypp
+	./$MODULE$(EXE) < $MODULE.lpp.$MODULE > $MODULE/$MODULE.lpp
+	./$MODULE$(EXE) < $MODULE.hpp.$MODULE > $MODULE/$MODULE.hpp
+	./$MODULE$(EXE) < $MODULE.cpp.$MODULE > $MODULE/$MODULE.cpp
+	cp *.$MODULE $MODULE/
+
+.PHONY: upgrade
+upgrade: Makefile $MODULE.ypp $MODULE.hpp $MODULE.hpp $MODULE.cpp
+	cp $MODULE/.gitignore .gitignore
+	cp $MODULE/Makefile Makefile
+	cp $MODULE/$MODULE.ypp $MODULE.ypp
+	cp $MODULE/$MODULE.lpp $MODULE.lpp
+	cp $MODULE/$MODULE.hpp $MODULE.hpp
+	cp $MODULE/$MODULE.cpp $MODULE.cpp
+
+.PHONY: clean
+clean:
+	rm -rf $MODULE *~ lex.yy.c $MODULE.tab.?pp
+
+C = $MODULE.cpp lex.yy.c $MODULE.tab.cpp
+H = $MODULE.hpp $MODULE.tab.hpp
+./$MODULE$(EXE): \$(C) \$(H)
+	\$(CXX) \$(CXXFLAGS) -o \$@ \$(C)
+lex.yy.c: $MODULE.lpp
+	flex \$<
+$MODULE.tab.cpp: $MODULE.ypp
+	bison \$<
+
