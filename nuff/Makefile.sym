@@ -4,6 +4,9 @@ exec: ./$MODULE$(EXE)
 	mkdir -p tmp
 	./$MODULE$(EXE) < gitignore.$MODULE > tmp/.gitignore
 	./$MODULE$(EXE) < Makefile.$MODULE > tmp/Makefile
+	./$MODULE$(EXE) < vimedit.$MODULE > tmp/vimedit.bat
+	./$MODULE$(EXE) < filetype.$MODULE > tmp/filetype.vim
+	./$MODULE$(EXE) < syntax.$MODULE > tmp/syntax.vim
 	./$MODULE$(EXE) < $MODULE.ypp.$MODULE > tmp/$MODULE.ypp
 	./$MODULE$(EXE) < $MODULE.lpp.$MODULE > tmp/$MODULE.lpp
 	./$MODULE$(EXE) < $MODULE.hpp.$MODULE > tmp/$MODULE.hpp
@@ -14,6 +17,9 @@ exec: ./$MODULE$(EXE)
 upgrade: Makefile $MODULE.ypp $MODULE.hpp $MODULE.hpp $MODULE.cpp
 	cp tmp/.gitignore .gitignore
 	cp tmp/Makefile Makefile
+	cp tmp/vimedit.bat vimedit.bat
+	cp tmp/filetype.vim filetype.vim
+	cp tmp/syntax.vim syntax.vim
 	cp tmp/$MODULE.ypp $MODULE.ypp
 	cp tmp/$MODULE.lpp $MODULE.lpp
 	cp tmp/$MODULE.hpp $MODULE.hpp

@@ -4,6 +4,9 @@ exec: ./sym$(EXE)
 	mkdir -p tmp
 	./sym$(EXE) < gitignore.sym > tmp/.gitignore
 	./sym$(EXE) < Makefile.sym > tmp/Makefile
+	./sym$(EXE) < vimedit.sym > tmp/vimedit.bat
+	./sym$(EXE) < filetype.sym > tmp/filetype.vim
+	./sym$(EXE) < syntax.sym > tmp/syntax.vim
 	./sym$(EXE) < sym.ypp.sym > tmp/sym.ypp
 	./sym$(EXE) < sym.lpp.sym > tmp/sym.lpp
 	./sym$(EXE) < sym.hpp.sym > tmp/sym.hpp
@@ -14,6 +17,9 @@ exec: ./sym$(EXE)
 upgrade: Makefile sym.ypp sym.hpp sym.hpp sym.cpp
 	cp tmp/.gitignore .gitignore
 	cp tmp/Makefile Makefile
+	cp tmp/vimedit.bat vimedit.bat
+	cp tmp/filetype.vim filetype.vim
+	cp tmp/syntax.vim syntax.vim
 	cp tmp/sym.ypp sym.ypp
 	cp tmp/sym.lpp sym.lpp
 	cp tmp/sym.hpp sym.hpp
