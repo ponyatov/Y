@@ -4,7 +4,7 @@ object::object(string T, string V)	{ tag=T; value=V; }
 string object::tagval()	{ return "<"+tag+":"+value+">"; }
 string object::pad(int n) { string S; for (int i=0;i<n;i++) S+="\t"; return S; }
 string object::dump(int depth) {
-	string S="\n"+pad(depth)+tagval();
+	string S; if (depth) S+="\n"+pad(depth); S+=tagval();
 	for (vector<object*>::iterator it = nest.begin();
 			it != nest.end(); it++)
 		S+= (*it)->dump(depth+1);
@@ -29,6 +29,7 @@ map<string,object*> env;
 void env_init() {
 	env["AUTHOR"] = new object("str",AUTHOR);
 	env["LICENSE"] = new object("str",LICENSE);
+	env["GITHUB"] = new object("str",GITHUB);
 	env["AUTOGEN"] = new object("str",AUTOGEN);
 	env["FILES"] = new object("list","");
 }

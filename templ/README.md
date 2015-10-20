@@ -1,4 +1,4 @@
-# templ
+# <sym:MODULE>
 ## symbolic program template
 
 (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved

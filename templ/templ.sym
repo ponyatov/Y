@@ -3,7 +3,8 @@
 .title	symbolic program template
 
 .file 'README.md'
-$'# ',MODULE,'\n## ',TITLE,'\n\n',AUTHOR,'\n\nlicense: ',LICENSE
+\# @MODULE
+$'## ',TITLE,'\n\n',AUTHOR,'\n\nlicense: ',LICENSE
 .eof
 
 .file '.gitignore'
@@ -54,6 +55,9 @@ au BufNewFile,BufRead *.sym tabf Makefile|set filetype=make
 au BufNewFile,BufRead *.sym tabn 1
 .eof
 .file 'syntax.vim'
+" Language: bI/sym
+" Maintainer: $AUTHOR
+" GitHub: $GITHUB,MODULE
 .eof
 
 .file MODULE,'.ypp'
