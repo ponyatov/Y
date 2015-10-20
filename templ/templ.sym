@@ -3,8 +3,7 @@
 .title	symbolic program template
 
 .file 'README.md'
-\# @MODULE
-$'## ',TITLE,'\n\n',AUTHOR,'\n\nlicense: ',LICENSE
+$'# ',MODULE,'\n## ',TITLE,'\n\n',AUTHOR,'\n\nlicense: ',LICENSE
 .eof
 
 .file '.gitignore'
