@@ -3,9 +3,9 @@
 
 object::object(string T, string V)	{ tag=T; value=V; }
 string object::tagval()	{ return "<"+tag+":"+value+">"; }
-string object::pad(int n) { string S; for (int i=0;i<n;i++) S+="t"; return S; }
+string object::pad(int n) { string S; for (int i=0;i<n;i++) S+="\t"; return S; }
 string object::dump(int depth) {
-	string S; if (depth) S+="n"+pad(depth); S+=tagval();
+	string S="\n"+pad(depth)+tagval();
 	for (vector<object*>::iterator it = nest.begin();
 			it != nest.end(); it++)
 		S+= (*it)->dump(depth+1);
@@ -36,10 +36,10 @@ void env_init() {
 }
 
 directive::directive(string V):object("",V) {
-	while (value.size() && ( value[0] != ' ' && value[0] != 't' ) ) {
+	while (value.size() && ( value[0] != ' ' && value[0] != '\t' ) ) {
 		tag += value[0]; value.erase(0,1);
 	}
-	while (value.size() && ( value[0] == ' ' || value[0] == 't' ) ) {
+	while (value.size() && ( value[0] == ' ' || value[0] == '\t' ) ) {
 		value.erase(0,1);
 	}
 	// direective dependent
@@ -84,8 +84,8 @@ void W(object *o,bool tofile)	{ cout << o->dump();
 	if (tofile && curr_file) fprintf(curr_file->fh,"%s",o->dump().c_str()); }
 
 void yyerror(string msg) {
-	cout << "n" << msg << " " << yylineno << ":[" << yytext << "]nn";
-	cerr << "n" << msg << " " << yylineno << ":[" << yytext << "]nn";
+	cout << "\n" << msg << " " << yylineno << ":[" << yytext << "]\n\n";
+	cerr << "\n" << msg << " " << yylineno << ":[" << yytext << "]\n\n";
 	exit(-1);
 }
 

@@ -1,5 +1,5 @@
 # sym
-## TITLE
+## pure symbolic script engine template generator
 ### (self-computed source files)
 
 (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved

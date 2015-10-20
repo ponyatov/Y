@@ -62,8 +62,8 @@ token <o> DIRECTIVE FFILE FEOF SYM STR
 %%
 $MODULE,':'
 $'\t| ',MODULE,' DIRECTIVE	{ W($2); }'
-$'\t| ',MODULE,' FFILE ex EOL\t\t{ W(new directive(".file "+$3->eval()->value),false); }'
-$'\t| ',MODULE,' FFILE list EOL	{ W(new directive(".file "+$3->eval()->value),false); }'
+$'\t| ',MODULE,' FFILE ex EOL\t\t{ W(new directive(".file "+$3->eval()->value),false); W($4,false); }'
+$'\t| ',MODULE,' FFILE list EOL	{ W(new directive(".file "+$3->eval()->value),false);  W($4,false); }'
 $'\t| ',MODULE,' FEOF EOL		{ W((new directive(".eof"))->tagval(),false); }'
 $'\t| ',MODULE,' AX ex			{ W($3->dump()); }'
 $'\t| ',MODULE,' AX list		{ W($3->dump()); }'
@@ -103,7 +103,7 @@ $'%}\n'
 %x s
 %%
 \\\\.					T1(CHAR)
-#[^\\n]*\\n			{}
+\#[^\\n]*\\n			{}
 ^\\.module[^\\n]*		TX(directive,DIRECTIVE)
 ^\\.title[^\\n]*		TX(directive,DIRECTIVE)
 ^\\.file				{BEGIN(x); TO("sym",FFILE);}
@@ -198,9 +198,9 @@ $'#include "',MODULE,'.hpp"'
 
 object::object(string T, string V)	{ tag=T; value=V; }
 string object::tagval()	{ return "<"+tag+":"+value+">"; }
-string object::pad(int n) { string S; for (int i=0;i<n;i++) S+="\t"; return S; }
+string object::pad(int n) { string S; for (int i=0;i<n;i++) S+="\\t"; return S; }
 string object::dump(int depth) {
-	string S; if (depth) S+="\n"+pad(depth); S+=tagval();
+	string S="\\n"+pad(depth)+tagval();
 	for (vector<object*>::iterator it = nest.begin();
 			it != nest.end(); it++)
 		S+= (*it)->dump(depth+1);
@@ -231,10 +231,10 @@ void env_init() {
 }
 
 directive::directive(string V):object("",V) {
-	while (value.size() && ( value[0] != ' ' && value[0] != '\t' ) ) {
+	while (value.size() && ( value[0] != ' ' && value[0] != '\\t' ) ) {
 		tag += value[0]; value.erase(0,1);
 	}
-	while (value.size() && ( value[0] == ' ' || value[0] == '\t' ) ) {
+	while (value.size() && ( value[0] == ' ' || value[0] == '\\t' ) ) {
 		value.erase(0,1);
 	}
 	// direective dependent
@@ -279,8 +279,8 @@ void W(object *o,bool tofile)	{ cout << o->dump();
 	if (tofile && curr_file) fprintf(curr_file->fh,"%s",o->dump().c_str()); }
 
 void yyerror(string msg) {
-	cout << "\n" << msg << " " << yylineno << ":[" << yytext << "]\n\n";
-	cerr << "\n" << msg << " " << yylineno << ":[" << yytext << "]\n\n";
+	cout << "\\n" << msg << " " << yylineno << ":[" << yytext << "]\\n\\n";
+	cerr << "\\n" << msg << " " << yylineno << ":[" << yytext << "]\\n\\n";
 	exit(-1);
 }
 
