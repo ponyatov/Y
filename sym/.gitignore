@@ -1,11 +1,10 @@
 *~
 *.swp
-sym.exe
 sym.elf
-sym.bIog
-sym.toc
+sym.exe
+*.log
 /sym/
 /tmp/
-lex.yy.c
-sym.tab.cpp
-sym.tab.hpp
+sym.lex.cpp
+sym.tab.?pp
+

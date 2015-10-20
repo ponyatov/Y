@@ -1,9 +1,11 @@
 
-.module templ
+.module sym
 .title	symbolic program template
 
 .file 'README.md'
 $'# ',MODULE,'\n## ',TITLE,'\n\n',AUTHOR,'\n\nlicense: ',LICENSE
+$'### pure symbolic script engine'
+$'### (self-computed source files)'
 .eof
 
 .file '.gitignore'
@@ -30,10 +32,12 @@ $'\n.PHONY: upgrade\nupgrade:'
 $'\tcp ',MODULE,'/README.md ./'
 $'\tcp ',MODULE,'/.gitignore ./'
 $'\tcp ',MODULE,'/Makefile ./'
-$'\tcp ',MODULE,'/filetype.vim ../sym/'
 $'\tcp ',MODULE,'/filetype.vim ./'
-$'\tcp ',MODULE,'/syntax.vim ../sym/'
 $'\tcp ',MODULE,'/syntax.vim ./'
+$'\tcp ',MODULE,'/',MODULE,'.ypp ./'
+$'\tcp ',MODULE,'/',MODULE,'.lpp ./'
+$'\tcp ',MODULE,'/',MODULE,'.hpp ./'
+$'\tcp ',MODULE,'/',MODULE,'.cpp ./'
 $'\nC = ',MODULE,'.cpp ',MODULE,'.tab.cpp ',MODULE,'.lex.cpp'
 $'H = ',MODULE,'.hpp ',MODULE,'.tab.hpp'
 $'./',MODULE,'$(EXE): $(C) $(H)'
@@ -57,16 +61,16 @@ token <o> DIRECTIVE FFILE FEOF SYM STR
 %type <o> ex list
 %%
 $MODULE,':'
-	| templ DIRECTIVE	{ W(\$2); }
-	| templ FFILE ex EOL	{ W(new directive(".file "+\$3->eval()->value),false); }
-	| templ FFILE list EOL	{ W(new directive(".file "+\$3->eval()->value),false); }
-	| templ FEOF EOL		{ W((new directive(".eof"))->tagval(),false); }
-	| templ AX ex		{ W(\$3->dump()); }
-	| templ AX list		{ W(\$3->dump()); }
-	| templ SX ex		{ W(\$3->eval()->value); }
-	| templ SX list		{ W(\$3->eval()->value); }
-	| templ EOL			{ W(\$2); }
-	| templ CHAR		{ W(\$2); }
+$'\t| ',MODULE,' DIRECTIVE	{ W($2); }'
+$'\t| ',MODULE,' FFILE ex EOL	{ W(new directive(".file "+$3->eval()->value),false); }'
+$'\t| ',MODULE,' FFILE list EOL	{ W(new directive(".file "+$3->eval()->value),false); }'
+$'\t| ',MODULE,' FEOF EOL		{ W((new directive(".eof"))->tagval(),false); }'
+$'\t| ',MODULE,' AX ex		{ W($3->dump()); }'
+$'\t| ',MODULE,' AX list		{ W($3->dump()); }'
+$'\t| ',MODULE,' SX ex		{ W($3->eval()->value); }'
+$'\t| ',MODULE,' SX list		{ W($3->eval()->value); }'
+$'\t| ',MODULE,' EOL			{ W($2); }'
+$'\t| ',MODULE,' CHAR		{ W($2); }'
 ;
 
 ex :
@@ -113,8 +117,8 @@ $'%}\n'
 
 <x>\\'				{BEGIN(s); StrBuf="";}
 <s>\\'				{BEGIN(x); yylval.o=new object("str",StrBuf); return STR;}
-<s>\\\\n				{StrBuf+="\n";}
-<s>\\\\t				{StrBuf+="\t";}
+<s>\\\\n				{StrBuf+="\\n";}
+<s>\\\\t				{StrBuf+="\\t";}
 <s>.				{StrBuf+=yytext[0];}
 
 \\n					TC(EOL)
@@ -282,6 +286,45 @@ void yyerror(string msg) {
 
 int main()	{ env_init(); return yyparse(); }
 .eof
+
+.file 'filetype.vim'
+au BufNewFile,BufRead *.sym set filetype=sym
+au BufNewFile,BufRead *.sym tabf %:r.log|set filetype=sym|set autoread
+au BufNewFile,BufRead *.sym tabf %:r.ypp|set filetype=yacc
+au BufNewFile,BufRead *.sym tabf %:r.lpp|set filetype=lex
+au BufNewFile,BufRead *.sym tabf %:r.hpp|set filetype=cpp
+au BufNewFile,BufRead *.sym tabf %:r.cpp|set filetype=cpp
+au BufNewFile,BufRead *.sym tabf Makefile|set filetype=make
+au BufNewFile,BufRead *.sym tabn 1
+.eof
+.file 'syntax.vim'
+" Language: bI/sym
+" Maintainer: $AUTHOR
+" GitHub: $GITHUB,MODULE
+
+" line comments
+syntax match	Comment		"\\v\#.*"
+
+" directives 
+syntax match	Todo		"\\v^\\.[a-z]+[\\+\\-]?[ \\t]*"
+
+"" literals
+
+" numbers
+syntax match	Constant	"\\v[0-9]+"
+
+" strings
+syntax region	String		start="'" end="'"
+syntax region	String		start="\\"" end="\\""
+
+" code inlines
+syntax match Keyword "\\v\\\$"
+syntax match Keyword "\\v\\\@"
+
+"let b:current_syntax = "sym"
+
+.eof
+
 
 .file 'vimedit.bat'
 \@gvim -p $FILES

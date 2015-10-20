@@ -1,72 +1,64 @@
 /* DO NOT EDIT: this file was autogened by bI language system */
-/* <module:sym> */
 #ifndef _H_sym
 #define _H_sym
 
-#define MODULE "sym"
-#define TITLE "pure symbolic script engine"
 #define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"
-#define GITHUB "https://github.com/ponyatov/Y/tree/dev/sym"
+#define GITHUB "https://github.com/ponyatov/Y/tree/dev/"
 #define AUTOGEN "DO NOT EDIT: this file was autogened by bI language system"
 
-#include <map>							// \ required std includes
 #include <vector>
-#include <iostream>
-#include <cstdlib>
+#include <map>
 #include <cstdio>
-#include <cassert>						// /
-#ifdef __MINGW32__						// \ win32 specific
-#include <direct.h>						// /
-#else									// \ Linux & others POSIX-compatibles
-#include <sys/stat.h>					// /
+#include <cstdlib>
+#include <cassert>
+#include <iostream>
+#ifdef __MINGW32__
+#include <direct.h>
 #endif
 using namespace std;
 
-struct biObject {
-	string tag;							// object class name or data type
-	string value;						// object value
-	biObject(string,string);			// constructor
-	vector<biObject*> nest;				// nested objects
-	void join(biObject*);				// add nested object
-	string pad(int);					// dump padding
-	string tagval();					// <tag:value>
-	virtual string dump(int depth=0);	// dump	object in string form
-	virtual biObject* eval();			// compute object symbolically
+struct object {
+	string tag,value;
+	object(string,string);
+	string tagval();
+	string pad(int);
+	string dump(int depth=0);
+	object* eval();
+	vector<object*> nest;
+	void join(object*);
 };
 
-extern map<string,biObject*> env;		// \ environment (global var registry)
-extern void env_init();					// /
+extern map<string,object*> env;
+void env_init();
 
-struct biDirective: biObject {			// .directive
-	biDirective(string);
+struct directive: object {
+	directive(string);
 };
 
-struct biModule: biObject {				// .module
-	biModule(string);
+struct module: object {
+	module(string);
 };
-extern biModule *bi_module;
+extern module *curr_module;
 
-struct biFile: biObject {				// .file ... .eof
-	biFile(string);
-	~biFile();
+struct file: object {
+	file(string);
+	~file();
 	FILE *fh;
-	void W(char);
-	void W(string);
 };
-extern biFile *bi_file;
+extern file *curr_file;
 
-										// syntax core interface
-extern int yylex();						// \ lexer
-extern char *yytext;					// 		regexp-parsed text
-extern int yylineno;					// /	current line number 
-extern int yyparse();					// \ parser
-extern void yyerror(string);			// syntax error callback
-#include "sym.tab.hpp"					// / parser defines
+extern int yylex();
+extern int yylineno;
+extern char *yytext;
+extern void yyerror(string);
+extern int yyparse();
+#include "sym.tab.hpp"
 
-void W(char     ,bool to_file=true);	// \ writers
-void W(string   ,bool to_file=true);
-void W(string*  ,bool to_file=true);
-void W(biObject*,bool to_file=true);	// //
+void W(char   ,bool tofile=true);
+void W(string ,bool tofile=true);
+void W(string*,bool tofile=true);
+void W(object*,bool tofile=true);
 
 #endif // _H_sym
+

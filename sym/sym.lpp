@@ -1,44 +1,40 @@
 /* DO NOT EDIT: this file was autogened by bI language system */
-/* <module:sym> */
 %{
 #include "sym.hpp"
-#define TC(X)		{ yylval.c = yytext[0]; 				return X; }
-#define T1(X)		{ yylval.c = yytext[1]; 				return X; }
-#define TS(X)		{ yylval.s = new string(yytext);		return X; }
-#define TO(C,X)		{ yylval.o = new C(yytext);				return X; }
-#define TX(C,X)		{ yylval.o = new biObject(C,yytext);	return X; }
 
-string StringBuffer;
+#define TC(X)	{ yylval.c = yytext[0]; return X; }
+#define T1(X)	{ yylval.c = yytext[1]; return X; }
+#define TS(X)	{ yylval.s = new string(yytext); return X; }
+#define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
+#define TX(C,X)	{ yylval.o = new C(yytext); return X; }
+string StrBuf;
 %}
+
 %option noyywrap
 %option yylineno
-
-%x xx
-%x ss
-
+%x x
+%x s
 %%
-#[^\n]*\n		{}							/* drop line comment */
-\r				{}							/* drop DOS 0x0D char */
-\\.				T1(CHAR)					/* escaped char */
+\\.					T1(CHAR)
+#[^\n]*\n			{}
+^\.module[^\n]*		TX(directive,DIRECTIVE)
+^\.title[^\n]*		TX(directive,DIRECTIVE)
+^\.file				{BEGIN(x); TO("sym",FFILE);}
+^\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}
 
-^\.file[^\n]*	TO(biDirective,FFILE)		/* .file */
-^\.eof			TO(biDirective,FEOF)		/* .eof */
-^\.[a-z]+[^\n]*	TO(biDirective,DIRECTIVE)	/* .anydirective */
+\@					{BEGIN(x); TC(AX);}
+\$					{BEGIN(x); TC(SX);}
+<x>\n				{BEGIN(INITIAL); TC(EOL);}
+<x>,				TC(COMMA)
+<x>[a-zA-Z0-9]+		TO("sym",SYM)
 
-\$				{BEGIN(xx); TC(SX);}		/* eXXpression mode */
-\?				{BEGIN(xx); TC(QX);}		/* Query mode */
-<xx>[ \t\n]		{BEGIN(INITIAL); TC(EOL);}
-<xx>[a-zA-Z.]+	TX("sym",SYM);				/* symbol */
-<xx>,			TC(COMMA)					/* list delimiter */
+<x>\'				{BEGIN(s); StrBuf="";}
+<s>\'				{BEGIN(x); yylval.o=new object("str",StrBuf); return STR;}
+<s>\\n				{StrBuf+="\n";}
+<s>\\t				{StrBuf+="\t";}
+<s>.				{StrBuf+=yytext[0];}
 
-<xx>'			{BEGIN(ss); StringBuffer="";}	/* string mode*/
-<ss>'			{BEGIN(xx);
-				yylval.o = new biObject("str",StringBuffer); return STR;}
-<ss>\\n			{StringBuffer += "\n"; }
-<ss>\\t			{StringBuffer += "\t"; }
-<ss>\\			{StringBuffer += "\\"; }
-<ss>.			{StringBuffer += yytext[0]; }
-
-\n				TC(EOL)						/* end of line (CR) */
-.				TC(CHAR)					/* any other char */
+\n					TC(EOL)
+.					TC(CHAR)
 %%
+

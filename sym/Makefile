@@ -1,36 +1,33 @@
-# DO NOT EDIT: this file was autogened by bI language system
-# <module:sym>
+## DO NOT EDIT: this file was autogened by bI language system ##
 
-.PHONY: gen
-gen: ../duralex/dura.exe
-	$< < sym.bI > sym.bIog
-
-.PHONY: all
-all: ./sym$(EXE)
-	./sym$(EXE) < sym.bI > sym.bIog
+.PHONY: exec
+exec: ./sym$(EXE)
+	./sym$(EXE) < sym.sym > sym.log
+	mkdir -p sym && cp *.sym sym/
 
 .PHONY: clean
 clean:
-	rm -rf ./sym$(EXE) *~ sym.bIog tmp sym lex.yy.c sym.tab.?pp
-	touch sym.bIog
-
-C = sym.cpp lex.yy.c sym.tab.cpp
-H = sym.hpp sym.tab.hpp
-./sym$(EXE): $(C) $(H)
-	$(CXX) $(CXXFLAGS) -o $@ $(C)
-lex.yy.c: sym.lpp
-	flex $<
-sym.tab.cpp: sym.ypp
-	bison $<
+	rm -rf sym tmp ./sym$(EXE) *.log 
+	rm -rf sym.lex.?pp sym.tab.?pp *~ .*~
 
 .PHONY: upgrade
 upgrade:
 	cp sym/README.md ./
-	cp sym/vimedit.bat ./
 	cp sym/.gitignore ./
-#	cp sym/Makefile ./
+	cp sym/Makefile ./
+	cp sym/filetype.vim ./
+	cp sym/syntax.vim ./
 	cp sym/sym.ypp ./
 	cp sym/sym.lpp ./
 	cp sym/sym.hpp ./
 	cp sym/sym.cpp ./
+
+C = sym.cpp sym.tab.cpp sym.lex.cpp
+H = sym.hpp sym.tab.hpp
+./sym$(EXE): $(C) $(H)
+	$(CXX) $(CXXFILES) -o $@ $(C)
+sym.tab.cpp: sym.ypp
+	bison $<
+sym.lex.cpp: sym.lpp
+	flex -o $@ $<
 

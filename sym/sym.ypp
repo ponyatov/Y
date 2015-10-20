@@ -1,38 +1,39 @@
 /* DO NOT EDIT: this file was autogened by bI language system */
-/* <module:sym> */
 %{
 #include "sym.hpp"
 %}
 %defines
 %union {
 	char c;
-	string *s;
-	biObject *o;
+	object *o;
 }
-%token <c> CHAR EOL SX QX COMMA
-%token <o> DIRECTIVE FFILE FEOF SYM STR
+%token <c> CHAR EOL SX AX COMMA
+token <o> DIRECTIVE FFILE FEOF SYM STR
 %type <o> ex list
 %%
-sym :
-	| sym DIRECTIVE		{ W($2); }
-	| sym FFILE EOL		{ W($2,false); W("\n"); }
-	| sym FEOF EOL		{ W($2,false); }
-	| sym QX ex			{ W($3->dump()); }
-	| sym SX ex			{ W($3->eval()->value); }
-	| sym STR			{ W($2); }
+sym:
+	| sym DIRECTIVE	{ W($2); }
+	| sym FFILE ex EOL	{ W(new directive(".file "+$3->eval()->value),false); }
+	| sym FFILE list EOL	{ W(new directive(".file "+$3->eval()->value),false); }
+	| sym FEOF EOL		{ W((new directive(".eof"))->tagval(),false); }
+	| sym AX ex		{ W($3->dump()); }
+	| sym AX list		{ W($3->dump()); }
+	| sym SX ex		{ W($3->eval()->value); }
+	| sym SX list		{ W($3->eval()->value); }
 	| sym EOL			{ W($2); }
-	| sym CHAR			{ W($2); }
+	| sym CHAR		{ W($2); }
 ;
 
 ex :
-	  SYM
+	  SYM				
 	| STR
-	| list
 ;
 
 list :
-	  ex COMMA ex		{ $$ = new biObject("list",""); 
-						  $$->join($1); $$->join($3); }
+	  ex COMMA ex		{ $$ = new object("list",""); $$->join($1); $$->join($3); }
 	| list COMMA ex		{ $$ = $1; $$->join($3); }
 ;
+
 %%
+
+

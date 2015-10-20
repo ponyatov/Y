@@ -1,6 +1,6 @@
 " Language: bI/sym
 " Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
-" GitHub: https://github.com/ponyatov/Y/tree/dev/templ
+" GitHub: https://github.com/ponyatov/Y/tree/dev/sym
 
 " line comments
 syntax match	Comment		"\v#.*"
@@ -22,5 +22,6 @@ syntax match Keyword "\v\$"
 syntax match Keyword "\v\@"
 
 "let b:current_syntax = "sym"
+
 
 
