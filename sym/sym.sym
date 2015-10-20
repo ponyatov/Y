@@ -1,11 +1,11 @@
 
 .module sym
-.title	symbolic program template
+.title	pure symbolic script engine template generator
 
 .file 'README.md'
-$'# ',MODULE,'\n## ',TITLE,'\n\n',AUTHOR,'\n\nlicense: ',LICENSE
-$'### pure symbolic script engine'
+$'# ',MODULE,'\n## ',TITLE
 $'### (self-computed source files)'
+$'\n',AUTHOR,'\n\nlicense: ',LICENSE
 .eof
 
 .file '.gitignore'
@@ -26,7 +26,7 @@ exec: ./$MODULE,'$(EXE)'
 $'\t./',MODULE,'$(EXE) < ',MODULE,'.sym > ',MODULE,'.log'
 $'\tmkdir -p ',MODULE,' && cp *.sym ',MODULE,'/'
 $'\n.PHONY: clean\nclean:'
-$'\trm -rf ',MODULE,' tmp ./',MODULE,'$(EXE) *.log '
+$'\trm -rf ',MODULE,' tmp ./',MODULE,'$(EXE) ',MODULE,'.log '
 $'\trm -rf ',MODULE,'.lex.?pp ',MODULE,'.tab.?pp *~ .*~'
 $'\n.PHONY: upgrade\nupgrade:'
 $'\tcp ',MODULE,'/README.md ./'
@@ -62,15 +62,15 @@ token <o> DIRECTIVE FFILE FEOF SYM STR
 %%
 $MODULE,':'
 $'\t| ',MODULE,' DIRECTIVE	{ W($2); }'
-$'\t| ',MODULE,' FFILE ex EOL	{ W(new directive(".file "+$3->eval()->value),false); }'
+$'\t| ',MODULE,' FFILE ex EOL\t\t{ W(new directive(".file "+$3->eval()->value),false); }'
 $'\t| ',MODULE,' FFILE list EOL	{ W(new directive(".file "+$3->eval()->value),false); }'
 $'\t| ',MODULE,' FEOF EOL		{ W((new directive(".eof"))->tagval(),false); }'
-$'\t| ',MODULE,' AX ex		{ W($3->dump()); }'
+$'\t| ',MODULE,' AX ex			{ W($3->dump()); }'
 $'\t| ',MODULE,' AX list		{ W($3->dump()); }'
-$'\t| ',MODULE,' SX ex		{ W($3->eval()->value); }'
+$'\t| ',MODULE,' SX ex			{ W($3->eval()->value); }'
 $'\t| ',MODULE,' SX list		{ W($3->eval()->value); }'
 $'\t| ',MODULE,' EOL			{ W($2); }'
-$'\t| ',MODULE,' CHAR		{ W($2); }'
+$'\t| ',MODULE,' CHAR			{ W($2); }'
 ;
 
 ex :
@@ -249,11 +249,11 @@ directive::directive(string V):object("",V) {
 }
 
 module::module(string V):object("module",V) { 
-#ifdef __MINGW32__
+\#ifdef __MINGW32__
 	mkdir(V.c_str());
-#else
-	#error mkdir
-#endif
+\#else
+	\#error mkdir
+\#endif
 	env["MODULE"] = this;
 }
 module *curr_module = new module("tmp");

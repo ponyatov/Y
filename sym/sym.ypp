@@ -13,15 +13,15 @@ token <o> DIRECTIVE FFILE FEOF SYM STR
 %%
 sym:
 	| sym DIRECTIVE	{ W($2); }
-	| sym FFILE ex EOL	{ W(new directive(".file "+$3->eval()->value),false); }
+	| sym FFILE ex EOL		{ W(new directive(".file "+$3->eval()->value),false); }
 	| sym FFILE list EOL	{ W(new directive(".file "+$3->eval()->value),false); }
 	| sym FEOF EOL		{ W((new directive(".eof"))->tagval(),false); }
-	| sym AX ex		{ W($3->dump()); }
+	| sym AX ex			{ W($3->dump()); }
 	| sym AX list		{ W($3->dump()); }
-	| sym SX ex		{ W($3->eval()->value); }
+	| sym SX ex			{ W($3->eval()->value); }
 	| sym SX list		{ W($3->eval()->value); }
 	| sym EOL			{ W($2); }
-	| sym CHAR		{ W($2); }
+	| sym CHAR			{ W($2); }
 ;
 
 ex :

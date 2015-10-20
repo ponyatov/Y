@@ -7,7 +7,7 @@ exec: ./sym$(EXE)
 
 .PHONY: clean
 clean:
-	rm -rf sym tmp ./sym$(EXE) *.log 
+	rm -rf sym tmp ./sym$(EXE) sym.log 
 	rm -rf sym.lex.?pp sym.tab.?pp *~ .*~
 
 .PHONY: upgrade
