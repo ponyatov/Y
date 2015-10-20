@@ -4,7 +4,7 @@ object::object(string T, string V)	{ tag=T; value=V; }
 string object::tagval()	{ return "<"+tag+":"+value+">"; }
 string object::pad(int n) { string S; for (int i=0;i<n;i++) S+="\t"; return S; }
 string object::dump(int depth) {
-	string S = "\n"+pad(depth)+tagval();
+	string S="\n"+pad(depth)+tagval();
 	for (vector<object*>::iterator it = nest.begin();
 			it != nest.end(); it++)
 		S+= (*it)->dump(depth+1);
@@ -14,8 +14,15 @@ void object::join(object*o)	{ nest.push_back(o); }
 object* object::eval()	{
 	for (vector<object*>::iterator it = nest.begin();
 			it != nest.end(); it++)
-		(*it)->eval();
-	if (env[value]) return env[value]; else return this;
+		(*it)=(*it)->eval();
+	if (env[value]) return env[value]; 
+	if (tag=="list") {
+		value="";
+		for (vector<object*>::iterator it = nest.begin();
+			it != nest.end(); it++)
+			value += (*it)->value;
+	}
+	return this;
 }
 
 map<string,object*> env;
@@ -23,6 +30,7 @@ void env_init() {
 	env["AUTHOR"] = new object("str",AUTHOR);
 	env["LICENSE"] = new object("str",LICENSE);
 	env["AUTOGEN"] = new object("str",AUTOGEN);
+	env["FILES"] = new object("list","");
 }
 
 directive::directive(string V):object("",V) {
@@ -38,6 +46,7 @@ directive::directive(string V):object("",V) {
 	}
 	if (tag == ".file") {
 		if (curr_file) delete curr_file; curr_file = new file(value);
+		env["FILES"]->join(new object("str",value));
 	}
 	if (tag == ".title") env["TITLE"] = this;
 }

@@ -2,54 +2,59 @@
 .module templ
 .title	symbolic program template
 
-.file README.md
-\# $MODULE
-\#\# $TITLE
-$'\n'$AUTHOR
-
-license: $LICENSE
+.file 'README.md'
+$'# ',MODULE,'\n## ',TITLE,'\n\n',AUTHOR,'\n\nlicense: ',LICENSE
 .eof
 
-.file .gitignore
-*~
-*.swp
-$MODULE.elf
-$MODULE.exe
-/\$MODULE$'/'
+.file '.gitignore'
+$'*~\n*.swp'
+$MODULE,'.elf'
+$MODULE,'.exe'
+$MODULE,'.log'
+$'/',MODULE,'/'
 /tmp/
-$MODULE.tab.$'?pp'
-$MODULE.lex.cpp
+$MODULE,'.lex.cpp'
+$MODULE,'.tab.?pp'
 .eof
 
 .file Makefile
-.PHONY: exec
-exec: ./templ$(EXE)
-	./templ$(EXE) < templ.sym > templ.log
-C = templ.cpp templ.tab.cpp templ.lex.cpp
-H = templ.hpp templ.tab.hpp
-./templ$(EXE): $(C) $(H)
-	\$(CXX) \$(CXXFILES) -o \$\@ \$(C)
-templ.tab.cpp: templ.ypp
-	bison \$<
-templ.lex.cpp: templ.lpp
-	flex -o \$\@ \$<
+$'## ',AUTOGEN,' ##'
+$'\n.PHONY: exec'
+exec: ./$MODULE,'$(EXE)'
+$'\t./',MODULE,'$(EXE) < ',MODULE,'.sym > ',MODULE,'.log'
+$'\n.PHONY: clean\nclean:'
+$'\trm -rf ',MODULE,' tmp ./',MODULE,'$(EXE) ',MODULE,'.log '
+$'\trm -rf ',MODULE,'.lex.?pp ',MODULE,'.tab.?pp *~ .*~'
+$'\n.PHONY: upgrade\nupgrade:'
+$'\tcp ',MODULE,'/README.md ./'
+$'\tcp ',MODULE,'/.gitignore ./'
+$'\tcp ',MODULE,'/Makefile ./'
+$'\nC = ',MODULE,'.cpp ',MODULE,'.tab.cpp ',MODULE,'.lex.cpp'
+$'H = ',MODULE,'.hpp ',MODULE,'.tab.hpp'
+$'./',MODULE,'$(EXE): $(C) $(H)'
+$'\t$(CXX) $(CXXFILES) -o $@ $(C)'
+$MODULE,'.tab.cpp: ',MODULE,'.ypp'
+$'\tbison $<'
+$MODULE,'.lex.cpp: ',MODULE,'.lpp'
+$'\tflex -o $@ $<'
 .eof
 
-.file filetype.vim
+.file 'filetype.vim'
 .eof
-.file syntax.vim
-.eof
-
-.file $MODULE.ypp
-.eof
-.file $MODULE.lpp
-.eof
-.file $MODULE.hpp
-.eof
-.file $MODULE.vpp
+.file 'syntax.vim'
 .eof
 
-.file vimedit.bat
-@gvim -p $FILES
+.file MODULE,'.ypp'
+$'/* ',AUTOGEN,' */'
+.eof
+.file MODULE,'.lpp'
+.eof
+.file MODULE,'.hpp'
+.eof
+.file MODULE,'.vpp'
+.eof
+
+.file 'vimedit.bat'
+\@gvim -p $FILES
 .eof
 

@@ -1,6 +1,20 @@
+## DO NOT EDIT: this file was autogened by bI language system ##
+
 .PHONY: exec
 exec: ./templ$(EXE)
 	./templ$(EXE) < templ.sym > templ.log
+
+.PHONY: clean
+clean:
+	rm -rf templ tmp ./templ$(EXE) templ.log 
+	rm -rf templ.lex.?pp templ.tab.?pp *~ .*~
+
+.PHONY: upgrade
+upgrade:
+	cp templ/README.md ./
+	cp templ/.gitignore ./
+	cp templ/Makefile ./
+
 C = templ.cpp templ.tab.cpp templ.lex.cpp
 H = templ.hpp templ.tab.hpp
 ./templ$(EXE): $(C) $(H)
