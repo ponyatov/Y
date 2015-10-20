@@ -1,5 +1,6 @@
 # ALYEH platform : bI
-## Динамический язык программирования Ы (чтобы никто не догадался)
+## bI dynamic language system
+### Динамический язык программирования Ы (чтобы никто не догадался)
 
 (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 

@@ -1,10 +1,15 @@
 ﻿
 .module bI
-.title	Динамический язык программирования Ы (чтобы никто не догадался)
+
+.title		bI dynamic language system
+.author		(c) Dmitry Ponyatov <dponyatov\@gmail.com>, All rights reserved
+.license	http://www.gnu.org/copyleft/lesser.html
+.github		https://github.com/ponyatov/Y
 
 .file 'README.md'
 $'# ALYEH platform : ',MODULE
 $'## ',TITLE
+\#\#\# Динамический язык программирования Ы (чтобы никто не догадался)
 $'\n',AUTHOR,'\n\nlicense: ',LICENSE
 $'\n(self-computed source files)'
 .eof
@@ -291,6 +296,7 @@ int main()	{ env_init(); return yyparse(); }
 
 .file 'filetype.vim'
 au BufNewFile,BufRead *.sym set filetype=sym
+au BufNewFile,BufRead *.bI set filetype=sym
 au BufNewFile,BufRead *.sym tabf %:r.log|set filetype=sym|set autoread
 au BufNewFile,BufRead *.sym tabf %:r.ypp|set filetype=yacc
 au BufNewFile,BufRead *.sym tabf %:r.lpp|set filetype=lex

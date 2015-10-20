@@ -35,11 +35,6 @@ class Symbol	'core class'
 Symbol Number	'any number'
 
 .tocline
-.title		bI dynamic language system
-.author		(c) Dmitry Ponyatov <dponyatov@gmail.com>, All rights reserved
-.license	http://www.gnu.org/copyleft/lesser.html
-.github		https://github.com/ponyatov/Y
-.tocline
 .about{
 	bI/sym is experimental dynamic language system targeted on embedded and
 	computing systems programming, hardware design, science data processing,
