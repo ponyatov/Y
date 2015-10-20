@@ -61,4 +61,3 @@ void W(string*,bool tofile=true);
 void W(object*,bool tofile=true);
 
 #endif // _H_bI
-

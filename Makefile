@@ -30,4 +30,3 @@ bI.tab.cpp: bI.ypp
 	bison $<
 bI.lex.cpp: bI.lpp
 	flex -o $@ $<
-

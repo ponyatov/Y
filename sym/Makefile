@@ -30,4 +30,3 @@ sym.tab.cpp: sym.ypp
 	bison $<
 sym.lex.cpp: sym.lpp
 	flex -o $@ $<
-

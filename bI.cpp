@@ -50,6 +50,7 @@ directive::directive(string V):object("",V) {
 		if (curr_file) delete curr_file; curr_file = new file(value);
 		env["FILES"]->join(new object("str",value));
 	}
+	if (tag == ".eof") if (curr_file) delete curr_file;
 	if (tag == ".title") env["TITLE"] = this;
 }
 
@@ -90,4 +91,3 @@ void yyerror(string msg) {
 }
 
 int main()	{ env_init(); return yyparse(); }
-

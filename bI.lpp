@@ -19,6 +19,7 @@ string StrBuf;
 #[^\n]*\n			{}
 ^\.module[^\n]*		TX(directive,DIRECTIVE)
 ^\.title[^\n]*		TX(directive,DIRECTIVE)
+^\.sec\+?[^\n]*		TX(directive,DIRECTIVE)
 ^\.file				{BEGIN(x); TO("sym",FFILE);}
 ^\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}
 
@@ -37,4 +38,3 @@ string StrBuf;
 \n					TC(EOL)
 .					TC(CHAR)
 %%
-
