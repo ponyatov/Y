@@ -1,6 +1,5 @@
 
 .module sym
-.module bI
 .title	pure symbolic script engine template generator
 
 .file 'README.md'

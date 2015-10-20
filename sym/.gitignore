@@ -5,6 +5,7 @@ sym.exe
 *.log
 /sym/
 /tmp/
+/sym/
 sym.lex.cpp
 sym.tab.?pp
 
