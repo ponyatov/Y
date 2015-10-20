@@ -3,7 +3,7 @@
 .PHONY: exec
 exec: ./sym$(EXE)
 	./sym$(EXE) < sym.sym > sym.log
-	mkdir -p sym && cp *.sym sym/
+	mkdir -p sym && cp *.sym sym/sym.sym
 
 .PHONY: clean
 clean:

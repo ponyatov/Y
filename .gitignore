@@ -1,12 +1,11 @@
 *~
 *.swp
+bI.elf
 bI.exe
-bI
-bI.bIog
-bI.toc
+*.log
+/bI/
 /tmp/
-/pure/
-lex.yy.c
-parser.tab.*
-/2del/
+/sym/
+bI.lex.cpp
+bI.tab.?pp
 

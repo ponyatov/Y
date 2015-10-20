@@ -1,5 +1,6 @@
 
 .module sym
+.module bI
 .title	pure symbolic script engine template generator
 
 .file 'README.md'
@@ -15,6 +16,7 @@ $MODULE,'.exe'
 *.log
 $'/',MODULE,'/'
 /tmp/
+/sym/
 $MODULE,'.lex.cpp'
 $MODULE,'.tab.?pp'
 .eof
@@ -24,7 +26,7 @@ $'## ',AUTOGEN,' ##'
 $'\n.PHONY: exec'
 exec: ./$MODULE,'$(EXE)'
 $'\t./',MODULE,'$(EXE) < ',MODULE,'.sym > ',MODULE,'.log'
-$'\tmkdir -p ',MODULE,' && cp *.sym ',MODULE,'/'
+$'\tmkdir -p ',MODULE,' ; cp *.sym ',MODULE,'/',MODULE,'.sym'
 $'\n.PHONY: clean\nclean:'
 $'\trm -rf ',MODULE,' tmp ./',MODULE,'$(EXE) ',MODULE,'.log '
 $'\trm -rf ',MODULE,'.lex.?pp ',MODULE,'.tab.?pp *~ .*~'
