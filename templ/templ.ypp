@@ -5,11 +5,14 @@
 %union {
 	char c;
 	string *s;
+	object *o;
 }
 %token <c> CHAR
+%token <o> DIRECTIVE
 %%
 templ :
-	| templ CHAR	{ W($2); }
+	| templ DIRECTIVE	{ W($2->dump()); }
+	| templ CHAR		{ W($2); }
 ;
 %%
 

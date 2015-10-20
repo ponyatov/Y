@@ -2,11 +2,14 @@
 #include "templ.hpp"
 #define TC(X)	{ yylval.c = yytext[0]; return X; }
 #define TS(X)	{ yylval.s = new string(yytext); return X; }
+#define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
+#define TX(C,X)	{ yylval.o = new C(yytext); return X; }
 %}
 %option noyywrap
 %option yylineno
 %%
-\n		TC(CHAR)
-.		TC(CHAR)
+^\.[a-z]+[^\n]*		TX(directive,DIRECTIVE)
+\n					TC(CHAR)
+.					TC(CHAR)
 %%
 

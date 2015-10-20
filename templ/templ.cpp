@@ -1,6 +1,17 @@
 #include "templ.hpp"
 
 object::object(string T, string V)	{ tag=T; value=V; }
+string object::tagval()	{ return "<"+tag+":"+value+">"; }
+string object::dump()	{ return tagval(); }
+
+directive::directive(string V):object("",V) {
+	while (value.size() && ( value[0] != ' ' && value[0] != '\t' ) ) {
+		tag += value[0]; value.erase(0,1);
+	}
+	while (value.size() && ( value[0] == ' ' || value[0] == '\t' ) ) {
+		value.erase(0,1);
+	}
+}
 
 module::module(string V):object("module",V) { 
 #ifdef __MINGW32__

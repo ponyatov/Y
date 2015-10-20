@@ -13,6 +13,12 @@ using namespace std;
 struct object {
 	string tag,value;
 	object(string,string);
+	string tagval();
+	string dump();
+};
+
+struct directive: object {
+	directive(string);
 };
 
 struct module: object {
