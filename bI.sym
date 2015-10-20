@@ -3,9 +3,10 @@
 .title	Динамический язык программирования Ы (чтобы никто не догадался)
 
 .file 'README.md'
-$'# ',MODULE,'\n## ',TITLE
-$'### (self-computed source files)'
+$'# ALYEH platform : ',MODULE
+$'## ',TITLE
 $'\n',AUTHOR,'\n\nlicense: ',LICENSE
+$'\n(self-computed source files)'
 .eof
 
 .file '.gitignore'

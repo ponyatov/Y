@@ -1,3 +1,9 @@
-п»ї# ALYEH platform
-## ALYEH:dYnamic language
-Р”РёРЅР°РјРёС‡РµСЃРєРёР№ СЏР·С‹Рє РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ Р« (С‡С‚РѕР±С‹ РЅРёРєС‚Рѕ РЅРµ РґРѕРіР°РґР°Р»СЃСЏ)
+# ALYEH platform : bI
+## Динамический язык программирования Ы (чтобы никто не догадался)
+
+(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
+
+license: http://www.gnu.org/copyleft/lesser.html
+
+(self-computed source files)
+
