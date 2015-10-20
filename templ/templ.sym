@@ -1,9 +1,12 @@
 
 .module templ
+.title	symbolic program template
 
 .file README.md
-$MODULE
-symbolic program template
+\# $MODULE
+\#\# $TITLE
+$AUTHOR
+license: $LICENSE
 .eof
 
 .file .gitignore
@@ -11,6 +14,8 @@ $MODULE.elf
 $MODULE.exe
 /$MODULE/
 /tmp/
+$MODULE.tab.?pp
+$MODULE.lex.cpp
 .eof
 
 .file Makefile
@@ -25,6 +30,11 @@ templ.tab.cpp: templ.ypp
 	bison $<
 templ.lex.cpp: templ.lpp
 	flex -o $@ $<
+.eof
+
+.file filetype.vim
+.eof
+.file syntax.vim
 .eof
 
 .file $MODULE.ypp

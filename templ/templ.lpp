@@ -1,6 +1,7 @@
 %{
 #include "templ.hpp"
 #define TC(X)	{ yylval.c = yytext[0]; return X; }
+#define T1(X)	{ yylval.c = yytext[1]; return X; }
 #define TS(X)	{ yylval.s = new string(yytext); return X; }
 #define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
 #define TX(C,X)	{ yylval.o = new C(yytext); return X; }
@@ -9,15 +10,19 @@
 %option yylineno
 %x x
 %%
+\\.					T1(CHAR)
+#[^\n]*				{}
 ^\.module[^\n]*		TX(directive,DIRECTIVE)
+^\.title[^\n]*		TX(directive,DIRECTIVE)
 ^\.file				{BEGIN(x); TO("sym",FFILE);}
 <*>^\.eof			{BEGIN(INITIAL); TO("sym",FEOF);}
+
+<*>\@				{BEGIN(x); TC(AX);}
+<*>\$				{BEGIN(x); TC(SX);}
+<x>[a-zA-Z0-9\.]+	TO("sym",SYM)
 
 <x>\n				{BEGIN(INITIAL); TC(CHAR);}
 \n					TC(CHAR)
 .					TC(CHAR)
 %%
-/*/
-^\.[a-z]+[^\n]*		TX(directive,DIRECTIVE)
-/*/
 

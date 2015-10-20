@@ -7,14 +7,23 @@
 	string *s;
 	object *o;
 }
-%token <c> CHAR
-%token <o> DIRECTIVE FFILE FEOF
+%token <c> CHAR SX AX
+%token <o> DIRECTIVE FFILE FEOF SYM
+%type <o> ex
 %%
 templ :
-	| templ FFILE		{ W($2->dump()); }
-	| templ FEOF		{ W($2->dump()); }
-	| templ DIRECTIVE	{ W($2->dump()); }
+	| templ AX ex		{ W($3->dump()); }
+	| templ SX ex		{ W($3->eval()->value); }
+	| templ ex			{ W($2->dump()); }
 	| templ CHAR		{ W($2); }
 ;
+
+ex :
+	  SYM				
+	| FFILE SYM			{ $$ = new directive(".file "+$2->eval()->value); }
+	| FEOF				{ $$ = new directive(".eof"); }
+	| DIRECTIVE
+;
+
 %%
 

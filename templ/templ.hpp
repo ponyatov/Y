@@ -1,6 +1,12 @@
 #ifndef _H_templ
 #define _H_templ
 
+#define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
+#define LICENSE "http://www.gnu.org/copyleft/lesser.html"
+#define AUTOGEN "DO NOT EDIT: this file was autogened by bI language system"
+
+#include <vector>
+#include <map>
 #include <cstdio>
 #include <cstdlib>
 #include <cassert>
@@ -14,8 +20,15 @@ struct object {
 	string tag,value;
 	object(string,string);
 	string tagval();
-	string dump();
+	string pad(int);
+	string dump(int depth=0);
+	object* eval();
+	vector<object*> nest;
+	void join(object*);
 };
+
+extern map<string,object*> env;
+void env_init();
 
 struct directive: object {
 	directive(string);
