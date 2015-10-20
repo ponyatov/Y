@@ -1,9 +1,0 @@
-*~
-*.swp
-$MODULE
-$MODULE.exe
-*.log
-lex.yy.c
-$MODULE.tab.?pp
-/tmp/
-

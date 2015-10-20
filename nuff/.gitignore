@@ -1,9 +1,0 @@
-*~
-*.swp
-sym
-sym.exe
-*.log
-lex.yy.c
-sym.tab.?pp
-/tmp/
-
