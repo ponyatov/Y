@@ -26,6 +26,13 @@ struct module: object {
 };
 extern module *curr_module;
 
+struct file: object {
+	file(string);
+	~file();
+	FILE *fh;
+};
+extern file *curr_file;
+
 extern int yylex();
 extern int yylineno;
 extern char *yytext;

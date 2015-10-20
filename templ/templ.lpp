@@ -7,9 +7,17 @@
 %}
 %option noyywrap
 %option yylineno
+%x x
 %%
-^\.[a-z]+[^\n]*		TX(directive,DIRECTIVE)
+^\.module[^\n]*		TX(directive,DIRECTIVE)
+^\.file				{BEGIN(x); TO("sym",FFILE);}
+<*>^\.eof			{BEGIN(INITIAL); TO("sym",FEOF);}
+
+<x>\n				{BEGIN(INITIAL); TC(CHAR);}
 \n					TC(CHAR)
 .					TC(CHAR)
 %%
+/*/
+^\.[a-z]+[^\n]*		TX(directive,DIRECTIVE)
+/*/
 

@@ -8,9 +8,11 @@
 	object *o;
 }
 %token <c> CHAR
-%token <o> DIRECTIVE
+%token <o> DIRECTIVE FFILE FEOF
 %%
 templ :
+	| templ FFILE		{ W($2->dump()); }
+	| templ FEOF		{ W($2->dump()); }
 	| templ DIRECTIVE	{ W($2->dump()); }
 	| templ CHAR		{ W($2); }
 ;
