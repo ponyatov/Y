@@ -5,16 +5,19 @@
 .file README.md
 \# $MODULE
 \#\# $TITLE
-$AUTHOR
+$'\n'$AUTHOR
+
 license: $LICENSE
 .eof
 
 .file .gitignore
+*~
+*.swp
 $MODULE.elf
 $MODULE.exe
-/$MODULE/
+/\$MODULE$'/'
 /tmp/
-$MODULE.tab.?pp
+$MODULE.tab.$'?pp'
 $MODULE.lex.cpp
 .eof
 
@@ -25,11 +28,11 @@ exec: ./templ$(EXE)
 C = templ.cpp templ.tab.cpp templ.lex.cpp
 H = templ.hpp templ.tab.hpp
 ./templ$(EXE): $(C) $(H)
-	$(CXX) $(CXXFILES) -o $@ $(C)
+	\$(CXX) \$(CXXFILES) -o \$\@ \$(C)
 templ.tab.cpp: templ.ypp
-	bison $<
+	bison \$<
 templ.lex.cpp: templ.lpp
-	flex -o $@ $<
+	flex -o \$\@ \$<
 .eof
 
 .file filetype.vim

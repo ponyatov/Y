@@ -53,9 +53,10 @@ extern void yyerror(string);
 extern int yyparse();
 #include "templ.tab.hpp"
 
-void W(char);
-void W(string);
-void W(string*);
+void W(char   ,bool tofile=true);
+void W(string ,bool tofile=true);
+void W(string*,bool tofile=true);
+void W(object*,bool tofile=true);
 
 #endif // _H_templ
 

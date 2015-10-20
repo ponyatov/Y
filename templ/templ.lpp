@@ -5,10 +5,12 @@
 #define TS(X)	{ yylval.s = new string(yytext); return X; }
 #define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
 #define TX(C,X)	{ yylval.o = new C(yytext); return X; }
+string StrBuf;
 %}
 %option noyywrap
 %option yylineno
 %x x
+%x s
 %%
 \\.					T1(CHAR)
 #[^\n]*				{}
@@ -21,8 +23,14 @@
 <*>\$				{BEGIN(x); TC(SX);}
 <x>[a-zA-Z0-9\.]+	TO("sym",SYM)
 
-<x>\n				{BEGIN(INITIAL); TC(CHAR);}
-\n					TC(CHAR)
+<x>\'				{BEGIN(s); StrBuf="";}
+<s>\'				{BEGIN(INITIAL); yylval.o=new object("str",StrBuf); return STR;}
+<s>\\n				{StrBuf+="\n";}
+<s>\\t				{StrBuf+="\t";}
+<s>.				{StrBuf+=yytext[0];}
+
+<x>\n				{BEGIN(INITIAL); TC(EOL);}
+\n					TC(EOL)
 .					TC(CHAR)
 %%
 

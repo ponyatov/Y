@@ -4,25 +4,26 @@
 %defines
 %union {
 	char c;
-	string *s;
 	object *o;
 }
-%token <c> CHAR SX AX
-%token <o> DIRECTIVE FFILE FEOF SYM
+%token <c> CHAR EOL SX AX
+%token <o> DIRECTIVE FFILE FEOF SYM STR
 %type <o> ex
 %%
 templ :
+	| templ FFILE SYM EOL	{ W(new directive(".file "+$3->eval()->value),false); W($4,false);}
+	| templ FEOF EOL		{ W((new directive(".eof"))->tagval(),false); }
 	| templ AX ex		{ W($3->dump()); }
 	| templ SX ex		{ W($3->eval()->value); }
 	| templ ex			{ W($2->dump()); }
+	| templ DIRECTIVE	{ W($2); }
+	| templ EOL			{ W($2); }
 	| templ CHAR		{ W($2); }
 ;
 
 ex :
 	  SYM				
-	| FFILE SYM			{ $$ = new directive(".file "+$2->eval()->value); }
-	| FEOF				{ $$ = new directive(".eof"); }
-	| DIRECTIVE
+	| STR
 ;
 
 %%

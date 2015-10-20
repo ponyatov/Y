@@ -12,6 +12,9 @@ string object::dump(int depth) {
 }
 void object::join(object*o)	{ nest.push_back(o); }
 object* object::eval()	{
+	for (vector<object*>::iterator it = nest.begin();
+			it != nest.end(); it++)
+		(*it)->eval();
 	if (env[value]) return env[value]; else return this;
 }
 
@@ -60,9 +63,14 @@ file::~file() {
 }
 file *curr_file = NULL;
 
-void W(char    c)	{ cout <<  c; }
-void W(string  s)	{ cout <<  s; }
-void W(string *s)	{ cout << *s; }
+void W(char    c,bool tofile)	{ cout <<  c;
+	if (tofile && curr_file) fprintf(curr_file->fh,"%c",c); }
+void W(string  s,bool tofile)	{ cout <<  s;
+	if (tofile && curr_file) fprintf(curr_file->fh,"%s",s.c_str()); }
+void W(string *s,bool tofile)	{ cout << *s;
+	if (tofile && curr_file) fprintf(curr_file->fh,"%s",s->c_str()); }
+void W(object *o,bool tofile)	{ cout << o->dump();
+	if (tofile && curr_file) fprintf(curr_file->fh,"%s",o->dump().c_str()); }
 
 void yyerror(string msg) {
 	cout << "\n" << msg << " " << yylineno << ":[" << yytext << "]\n\n";
