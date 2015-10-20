@@ -35,11 +35,6 @@ class Symbol	'core class'
 Symbol Number	'any number'
 
 .tocline
-.about{
-	bI/sym is experimental dynamic language system targeted on embedded and
-	computing systems programming, hardware design, science data processing,
-	and DSL compilers/translators development.
-}
 
 .sec Goal
 
