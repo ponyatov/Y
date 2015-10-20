@@ -1,0 +1,40 @@
+.module templ
+.file MODULE,'.ypp'
+$'/* ',AUTOGEN,' */'
+$'%{\n#include "',MODULE,'.hpp"\n%}'
+%defines
+%union {
+	char c;
+	object *o;
+}
+%token <c> CHAR EOL SX AX COMMA
+token <o> DIRECTIVE FFILE FEOF SYM STR
+%type <o> ex list
+%%
+$MODULE,':'
+	| templ DIRECTIVE	{ W(\$2); }
+	| templ FFILE ex EOL	{ W(new directive(".file "+\$3->eval()->value),false); }
+	| templ FFILE list EOL	{ W(new directive(".file "+\$3->eval()->value),false); }
+	| templ FEOF EOL		{ W((new directive(".eof"))->tagval(),false); }
+	| templ AX ex		{ W(\$3->dump()); }
+	| templ AX list		{ W(\$3->dump()); }
+	| templ SX ex		{ W(\$3->eval()->value); }
+	| templ SX list		{ W(\$3->eval()->value); }
+	| templ EOL			{ W(\$2); }
+	| templ CHAR		{ W(\$2); }
+;
+
+ex :
+	  SYM				
+	| STR
+;
+
+list :
+	  ex COMMA ex		{ \$\$ = new object("list",""); \$\$->join(\$1); \$\$->join(\$3); }
+	| list COMMA ex		{ \$\$ = \$1; \$\$->join(\$3); }
+;
+
+%%
+
+.eof
+
