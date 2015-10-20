@@ -1,0 +1,12 @@
+.module templ
+.file '.gitignore'
+$'*~\n*.swp'
+$MODULE,'.elf'
+$MODULE,'.exe'
+*.log
+$'/',MODULE,'/'
+/tmp/
+$MODULE,'.lex.cpp'
+$MODULE,'.tab.?pp'
+.eof
+

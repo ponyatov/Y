@@ -2,7 +2,7 @@
 *.swp
 templ.elf
 templ.exe
-templ.log
+*.log
 /templ/
 /tmp/
 templ.lex.cpp

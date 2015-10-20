@@ -3,10 +3,19 @@
 .PHONY: exec
 exec: ./templ$(EXE)
 	./templ$(EXE) < templ.sym > templ.log
+	./templ$(EXE) < Makefile.sym > Makefile.log
+	./templ$(EXE) < gitignore.sym > gitignore.log
+	./templ$(EXE) < vim.sym > vim.log
+	./templ$(EXE) < ypp.sym  > core.log
+	./templ$(EXE) < lpp.sym >> core.log
+	./templ$(EXE) < hpp.sym >> core.log
+	./templ$(EXE) < cpp.sym >> core.log
+	mkdir -p templ
+	cp *.sym templ/
 
 .PHONY: clean
 clean:
-	rm -rf templ tmp ./templ$(EXE) templ.log 
+	rm -rf templ tmp ./templ$(EXE) *.log 
 	rm -rf templ.lex.?pp templ.tab.?pp *~ .*~
 
 .PHONY: upgrade

@@ -6,67 +6,243 @@
 $'# ',MODULE,'\n## ',TITLE,'\n\n',AUTHOR,'\n\nlicense: ',LICENSE
 .eof
 
-.file '.gitignore'
-$'*~\n*.swp'
-$MODULE,'.elf'
-$MODULE,'.exe'
-$MODULE,'.log'
-$'/',MODULE,'/'
-/tmp/
-$MODULE,'.lex.cpp'
-$MODULE,'.tab.?pp'
-.eof
-
-.file Makefile
-$'## ',AUTOGEN,' ##'
-$'\n.PHONY: exec'
-exec: ./$MODULE,'$(EXE)'
-$'\t./',MODULE,'$(EXE) < ',MODULE,'.sym > ',MODULE,'.log'
-$'\n.PHONY: clean\nclean:'
-$'\trm -rf ',MODULE,' tmp ./',MODULE,'$(EXE) ',MODULE,'.log '
-$'\trm -rf ',MODULE,'.lex.?pp ',MODULE,'.tab.?pp *~ .*~'
-$'\n.PHONY: upgrade\nupgrade:'
-$'\tcp ',MODULE,'/README.md ./'
-$'\tcp ',MODULE,'/.gitignore ./'
-$'\tcp ',MODULE,'/Makefile ./'
-$'\tcp ',MODULE,'/filetype.vim ../sym/'
-$'\tcp ',MODULE,'/filetype.vim ./'
-$'\tcp ',MODULE,'/syntax.vim ../sym/'
-$'\tcp ',MODULE,'/syntax.vim ./'
-$'\nC = ',MODULE,'.cpp ',MODULE,'.tab.cpp ',MODULE,'.lex.cpp'
-$'H = ',MODULE,'.hpp ',MODULE,'.tab.hpp'
-$'./',MODULE,'$(EXE): $(C) $(H)'
-$'\t$(CXX) $(CXXFILES) -o $@ $(C)'
-$MODULE,'.tab.cpp: ',MODULE,'.ypp'
-$'\tbison $<'
-$MODULE,'.lex.cpp: ',MODULE,'.lpp'
-$'\tflex -o $@ $<'
-.eof
-
-.file 'filetype.vim'
-au BufNewFile,BufRead *.sym set filetype=sym
-au BufNewFile,BufRead *.sym tabf %:r.log|set filetype=sym|set autoread
-au BufNewFile,BufRead *.sym tabf %:r.ypp|set filetype=yacc
-au BufNewFile,BufRead *.sym tabf %:r.lpp|set filetype=lex
-au BufNewFile,BufRead *.sym tabf %:r.hpp|set filetype=cpp
-au BufNewFile,BufRead *.sym tabf %:r.cpp|set filetype=cpp
-au BufNewFile,BufRead *.sym tabf Makefile|set filetype=make
-au BufNewFile,BufRead *.sym tabn 1
-.eof
-.file 'syntax.vim'
-" Language: bI/sym
-" Maintainer: $AUTHOR
-" GitHub: $GITHUB,MODULE
-.eof
-
 .file MODULE,'.ypp'
 $'/* ',AUTOGEN,' */'
+$'%{\n#include "',MODULE,'.hpp"\n%}'
+%defines
+%union {
+	char c;
+	object *o;
+}
+%token <c> CHAR EOL SX AX COMMA
+token <o> DIRECTIVE FFILE FEOF SYM STR
+%type <o> ex list
+%%
+$MODULE,':'
+	| templ DIRECTIVE	{ W(\$2); }
+	| templ FFILE ex EOL	{ W(new directive(".file "+\$3->eval()->value),false); }
+	| templ FFILE list EOL	{ W(new directive(".file "+\$3->eval()->value),false); }
+	| templ FEOF EOL		{ W((new directive(".eof"))->tagval(),false); }
+	| templ AX ex		{ W(\$3->dump()); }
+	| templ AX list		{ W(\$3->dump()); }
+	| templ SX ex		{ W(\$3->eval()->value); }
+	| templ SX list		{ W(\$3->eval()->value); }
+	| templ EOL			{ W(\$2); }
+	| templ CHAR		{ W(\$2); }
+;
+
+ex :
+	  SYM				
+	| STR
+;
+
+list :
+	  ex COMMA ex		{ \$\$ = new object("list",""); \$\$->join(\$1); \$\$->join(\$3); }
+	| list COMMA ex		{ \$\$ = \$1; \$\$->join(\$3); }
+;
+
+%%
+
 .eof
+
 .file MODULE,'.lpp'
+$'/* ',AUTOGEN,' */'
+$'%{\n#include "',MODULE,'.hpp"\n'
+\#define TC(X)	{ yylval.c = yytext[0]; return X; }
+\#define T1(X)	{ yylval.c = yytext[1]; return X; }
+\#define TS(X)	{ yylval.s = new string(yytext); return X; }
+\#define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
+\#define TX(C,X)	{ yylval.o = new C(yytext); return X; }
+string StrBuf;
+$'%}\n'
+%option noyywrap
+%option yylineno
+%x x
+%x s
+%%
+\\\\.					T1(CHAR)
+#[^\\n]*\\n			{}
+^\\.module[^\\n]*		TX(directive,DIRECTIVE)
+^\\.title[^\\n]*		TX(directive,DIRECTIVE)
+^\\.file				{BEGIN(x); TO("sym",FFILE);}
+^\\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}
+
+\\\@					{BEGIN(x); TC(AX);}
+\\\$					{BEGIN(x); TC(SX);}
+<x>\\n				{BEGIN(INITIAL); TC(EOL);}
+<x>,				TC(COMMA)
+<x>[a-zA-Z0-9]+		TO("sym",SYM)
+
+<x>\\'				{BEGIN(s); StrBuf="";}
+<s>\\'				{BEGIN(x); yylval.o=new object("str",StrBuf); return STR;}
+<s>\\\\n				{StrBuf+="\n";}
+<s>\\\\t				{StrBuf+="\t";}
+<s>.				{StrBuf+=yytext[0];}
+
+\\n					TC(EOL)
+.					TC(CHAR)
+%%
 .eof
+
 .file MODULE,'.hpp'
+$'/* ',AUTOGEN,' */'
+$'#ifndef _H_',MODULE
+$'#define _H_',MODULE
+
+\#define AUTHOR "(c) Dmitry Ponyatov <dponyatov\@gmail.com>, all rights reserved"
+\#define LICENSE "http://www.gnu.org/copyleft/lesser.html"
+\#define GITHUB "https://github.com/ponyatov/Y/tree/dev/"
+\#define AUTOGEN "DO NOT EDIT: this file was autogened by bI language system"
+
+\#include <vector>
+\#include <map>
+\#include <cstdio>
+\#include <cstdlib>
+\#include <cassert>
+\#include <iostream>
+\#ifdef __MINGW32__
+\#include <direct.h>
+\#endif
+using namespace std;
+
+struct object {
+	string tag,value;
+	object(string,string);
+	string tagval();
+	string pad(int);
+	string dump(int depth=0);
+	object* eval();
+	vector<object*> nest;
+	void join(object*);
+};
+
+extern map<string,object*> env;
+void env_init();
+
+struct directive: object {
+	directive(string);
+};
+
+struct module: object {
+	module(string);
+};
+extern module *curr_module;
+
+struct file: object {
+	file(string);
+	~file();
+	FILE *fh;
+};
+extern file *curr_file;
+
+extern int yylex();
+extern int yylineno;
+extern char *yytext;
+extern void yyerror(string);
+extern int yyparse();
+$'#include "',MODULE,'.tab.hpp"'
+
+void W(char   ,bool tofile=true);
+void W(string ,bool tofile=true);
+void W(string*,bool tofile=true);
+void W(object*,bool tofile=true);
+
+$'#endif // _H_',MODULE
 .eof
-.file MODULE,'.vpp'
+
+.file MODULE,'.cpp'
+$'/* ',AUTOGEN,' */'
+$'#include "',MODULE,'.hpp"'
+
+object::object(string T, string V)	{ tag=T; value=V; }
+string object::tagval()	{ return "<"+tag+":"+value+">"; }
+string object::pad(int n) { string S; for (int i=0;i<n;i++) S+="\t"; return S; }
+string object::dump(int depth) {
+	string S; if (depth) S+="\n"+pad(depth); S+=tagval();
+	for (vector<object*>::iterator it = nest.begin();
+			it != nest.end(); it++)
+		S+= (*it)->dump(depth+1);
+	return S;
+}
+void object::join(object*o)	{ nest.push_back(o); }
+object* object::eval()	{
+	for (vector<object*>::iterator it = nest.begin();
+			it != nest.end(); it++)
+		(*it)=(*it)->eval();
+	if (env[value]) return env[value]; 
+	if (tag=="list") {
+		value="";
+		for (vector<object*>::iterator it = nest.begin();
+			it != nest.end(); it++)
+			value += (*it)->value;
+	}
+	return this;
+}
+
+map<string,object*> env;
+void env_init() {
+	env["AUTHOR"] = new object("str",AUTHOR);
+	env["LICENSE"] = new object("str",LICENSE);
+	env["GITHUB"] = new object("str",GITHUB);
+	env["AUTOGEN"] = new object("str",AUTOGEN);
+	env["FILES"] = new object("list","");
+}
+
+directive::directive(string V):object("",V) {
+	while (value.size() && ( value[0] != ' ' && value[0] != '\t' ) ) {
+		tag += value[0]; value.erase(0,1);
+	}
+	while (value.size() && ( value[0] == ' ' || value[0] == '\t' ) ) {
+		value.erase(0,1);
+	}
+	// direective dependent
+	if (tag == ".module") {
+		if (curr_module) delete curr_module; curr_module = new module(value);
+	}
+	if (tag == ".file") {
+		if (curr_file) delete curr_file; curr_file = new file(value);
+		env["FILES"]->join(new object("str",value));
+	}
+	if (tag == ".title") env["TITLE"] = this;
+}
+
+module::module(string V):object("module",V) { 
+#ifdef __MINGW32__
+	mkdir(V.c_str());
+#else
+	#error mkdir
+#endif
+	env["MODULE"] = this;
+}
+module *curr_module = new module("tmp");
+
+file::file(string V): object("file",V) {
+	if (curr_file) delete curr_file;
+	assert( fh = fopen((curr_module->value+"/"+value).c_str(),"w") );
+	curr_file = this;
+}
+file::~file() {
+	if (fh) fclose(fh);
+	if (curr_file) curr_file=NULL;
+}
+file *curr_file = NULL;
+
+void W(char    c,bool tofile)	{ cout <<  c;
+	if (tofile && curr_file) fprintf(curr_file->fh,"%c",c); }
+void W(string  s,bool tofile)	{ cout <<  s;
+	if (tofile && curr_file) fprintf(curr_file->fh,"%s",s.c_str()); }
+void W(string *s,bool tofile)	{ cout << *s;
+	if (tofile && curr_file) fprintf(curr_file->fh,"%s",s->c_str()); }
+void W(object *o,bool tofile)	{ cout << o->dump();
+	if (tofile && curr_file) fprintf(curr_file->fh,"%s",o->dump().c_str()); }
+
+void yyerror(string msg) {
+	cout << "\n" << msg << " " << yylineno << ":[" << yytext << "]\n\n";
+	cerr << "\n" << msg << " " << yylineno << ":[" << yytext << "]\n\n";
+	exit(-1);
+}
+
+int main()	{ env_init(); return yyparse(); }
 .eof
 
 .file 'vimedit.bat'
