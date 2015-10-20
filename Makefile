@@ -1,32 +1,33 @@
-.PHONY: default
-default: exec
+## DO NOT EDIT: this file was autogened by bI language system ##
 
 .PHONY: exec
-exec: bI.bIog
+exec: ./bI$(EXE)
+	./bI$(EXE) < bI.sym > bI.log
+	mkdir -p bI ; cp *.sym bI/bI.sym
 
 .PHONY: clean
 clean:
-	rm -rf *~ .*~ ./bI$(EXE) lex.yy.c parser.tab.?pp bI.tex tmp
-	echo -n > bI.bIog
+	rm -rf bI tmp ./bI$(EXE) bI.log 
+	rm -rf bI.lex.?pp bI.tab.?pp *~ .*~
 
-.PHONY: pdf
-pdf: tmp/bI.pdf
-bI.tex: bI.bIog
-tmp/bI.pdf: bI.tex
-	mkdir -p tmp
-	pdflatex -output-directory tmp $<
-	pdflatex -output-directory tmp $<
+.PHONY: upgrade
+upgrade:
+	cp bI/README.md ./
+	cp bI/.gitignore ./
+	cp bI/Makefile ./
+	cp bI/filetype.vim ./
+	cp bI/syntax.vim ./
+	cp bI/bI.ypp ./
+	cp bI/bI.lpp ./
+	cp bI/bI.hpp ./
+	cp bI/bI.cpp ./
 
-bI.bIog: bI.bI ./bI$(EXE)
-	./bI$(EXE) < $< > $@
-
-C = core.cpp lex.yy.c parser.tab.cpp
-H = bI.hpp
-
+C = bI.cpp bI.tab.cpp bI.lex.cpp
+H = bI.hpp bI.tab.hpp
 ./bI$(EXE): $(C) $(H)
-	$(CXX) $(CXXFLAGS) -o $@ $(C)
-lex.yy.c: lexer.lpp
-	flex $<
-parser.tab.cpp: parser.ypp
+	$(CXX) $(CXXFILES) -o $@ $(C)
+bI.tab.cpp: bI.ypp
 	bison $<
+bI.lex.cpp: bI.lpp
+	flex -o $@ $<
 
