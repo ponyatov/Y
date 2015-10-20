@@ -14,6 +14,10 @@ upgrade:
 	cp templ/README.md ./
 	cp templ/.gitignore ./
 	cp templ/Makefile ./
+	cp templ/filetype.vim ../sym/
+	cp templ/filetype.vim ./
+	cp templ/syntax.vim ../sym/
+	cp templ/syntax.vim ./
 
 C = templ.cpp templ.tab.cpp templ.lex.cpp
 H = templ.hpp templ.tab.hpp

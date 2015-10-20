@@ -29,6 +29,10 @@ $'\n.PHONY: upgrade\nupgrade:'
 $'\tcp ',MODULE,'/README.md ./'
 $'\tcp ',MODULE,'/.gitignore ./'
 $'\tcp ',MODULE,'/Makefile ./'
+$'\tcp ',MODULE,'/filetype.vim ../sym/'
+$'\tcp ',MODULE,'/filetype.vim ./'
+$'\tcp ',MODULE,'/syntax.vim ../sym/'
+$'\tcp ',MODULE,'/syntax.vim ./'
 $'\nC = ',MODULE,'.cpp ',MODULE,'.tab.cpp ',MODULE,'.lex.cpp'
 $'H = ',MODULE,'.hpp ',MODULE,'.tab.hpp'
 $'./',MODULE,'$(EXE): $(C) $(H)'
@@ -40,6 +44,14 @@ $'\tflex -o $@ $<'
 .eof
 
 .file 'filetype.vim'
+au BufNewFile,BufRead *.sym set filetype=sym
+au BufNewFile,BufRead *.sym tabf %:r.log|set filetype=sym|set autoread
+au BufNewFile,BufRead *.sym tabf %:r.ypp|set filetype=yacc
+au BufNewFile,BufRead *.sym tabf %:r.lpp|set filetype=lex
+au BufNewFile,BufRead *.sym tabf %:r.hpp|set filetype=cpp
+au BufNewFile,BufRead *.sym tabf %:r.cpp|set filetype=cpp
+au BufNewFile,BufRead *.sym tabf Makefile|set filetype=make
+au BufNewFile,BufRead *.sym tabn 1
 .eof
 .file 'syntax.vim'
 .eof
