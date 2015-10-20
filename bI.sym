@@ -6,6 +6,13 @@
 .license	http://www.gnu.org/copyleft/lesser.html
 .github		https://github.com/ponyatov/Y
 
+.sec About
+
+	bI/sym is experimental dynamic language system targeted on embedded and
+	computing systems programming, hardware design, science data processing,
+	and DSL compilers/translators development.
+
+
 .file 'README.md'
 $'# ALYEH platform : ',MODULE
 $'## ',TITLE
@@ -332,7 +339,6 @@ syntax match Keyword "\\v\\\@"
 "let b:current_syntax = "sym"
 
 .eof
-
 
 .file 'vimedit.bat'
 \@gvim -p $FILES

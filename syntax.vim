@@ -24,4 +24,3 @@ syntax match Keyword "\v\@"
 "let b:current_syntax = "sym"
 
 
-
