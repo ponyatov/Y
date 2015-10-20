@@ -1,0 +1,42 @@
+
+.module templ
+
+.file README.md
+$MODULE
+symbolic program template
+.eof
+
+.file .gitignore
+$MODULE.elf
+$MODULE.exe
+/$MODULE/
+/tmp/
+.eof
+
+.file Makefile
+.PHONY: exec
+exec: ./templ$(EXE)
+	./templ$(EXE) < templ.sym > templ.log
+C = templ.cpp templ.tab.cpp templ.lex.cpp
+H = templ.hpp templ.tab.hpp
+./templ$(EXE): $(C) $(H)
+	$(CXX) $(CXXFILES) -o $@ $(C)
+templ.tab.cpp: templ.ypp
+	bison $<
+templ.lex.cpp: templ.lpp
+	flex -o $@ $<
+.eof
+
+.file $MODULE.ypp
+.eof
+.file $MODULE.lpp
+.eof
+.file $MODULE.hpp
+.eof
+.file $MODULE.vpp
+.eof
+
+.file vimedit.bat
+@gvim -p $FILES
+.eof
+

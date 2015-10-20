@@ -1,0 +1,15 @@
+%{
+#include "templ.hpp"
+%}
+%defines
+%union {
+	char c;
+	string *s;
+}
+%token <c> CHAR
+%%
+templ :
+	| templ CHAR	{ W($2); }
+;
+%%
+

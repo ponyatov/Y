@@ -1,0 +1,12 @@
+%{
+#include "templ.hpp"
+#define TC(X)	{ yylval.c = yytext[0]; return X; }
+#define TS(X)	{ yylval.s = new string(yytext); return X; }
+%}
+%option noyywrap
+%option yylineno
+%%
+\n		TC(CHAR)
+.		TC(CHAR)
+%%
+

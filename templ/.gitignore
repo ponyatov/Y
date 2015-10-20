@@ -1,0 +1,8 @@
+templ.exe
+templ.elf
+templ.log
+/templ/
+/tmp/
+templ.tab.?pp
+templ.lex.cpp
+
