@@ -52,14 +52,6 @@ list :
 
 .file MODULE,'.lpp'
 .inc 'lexer_head.sym'
-\\\\.					T1(CHAR)
-\#[^\\n]*\\n			{}
-
-^\\.inc				{BEGIN(x); TO("sym",FINC);}
-<<EOF>> 			{
-	yypop_buffer_state();
-	if ( !YY_CURRENT_BUFFER ) yyterminate();
-}
 
 ^\\.module[^\\n]*		TX(directive,DIRECTIVE)
 ^\\.title[^\\n]*		TX(directive,DIRECTIVE)
@@ -79,9 +71,7 @@ list :
 <s>\\\\t				{StrBuf+="\\t";}
 <s>.				{StrBuf+=yytext[0];}
 
-\\n					TC(EOL)
-.					TC(CHAR)
-%%
+.inc 'lexer_foot.sym'
 .eof
 
 .file MODULE,'.hpp'

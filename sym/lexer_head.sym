@@ -16,10 +16,24 @@ void incFileName(object* o) {
 	yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE ));
 }
 $'%}\n'
-%option noyywrap
-%option yylineno
-%x x
-%x s
+
+$'\t\t\t\t\t/* options */\n%option noyywrap'
+$'\t\t\t\t\t/* enable line numbers info in lexer */\n%option yylineno'
+$'\t\t\t\t\t/* lexer states */'
+$'\t\t\t\t\t/* bI/sym expresssion mode */\n%x x'
+$'\t\t\t\t\t/* string parsing */\n%x s'
+
 /***** lexer_head.sym *****/
+
 %%
+
+\\\\.					T1(CHAR)						/* escape prefixed char */
+\#[^\\n]*\\n			{}								/* line comment */
+
+^\.inc				{BEGIN(x); TO("sym",FINC);}		/* .inc lude */
+<<EOF>> 			{								/* pop statate in included */
+	yypop_buffer_state();
+	if ( !YY_CURRENT_BUFFER ) yyterminate();
+}
+
 

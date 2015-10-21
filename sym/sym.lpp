@@ -19,21 +19,31 @@ void incFileName(object* o) {
 }
 %}
 
+
+					/* options */
 %option noyywrap
+					/* enable line numbers info in lexer */
 %option yylineno
+					/* lexer states */
+					/* bI/sym expresssion mode */
 %x x
+					/* string parsing */
 %x s
+
 /***** lexer_head.sym *****/
+
 %%
 
-\\.					T1(CHAR)
-#[^\n]*\n			{}
+\\.					T1(CHAR)						/* escape prefixed char */
+#[^\n]*\n			{}								/* line comment */
 
-^\.inc				{BEGIN(x); TO("sym",FINC);}
-<<EOF>> 			{
+^.inc				{BEGIN(x); TO("sym",FINC);}		/* .inc lude */
+<<EOF>> 			{								/* pop statate in included */
 	yypop_buffer_state();
 	if ( !YY_CURRENT_BUFFER ) yyterminate();
 }
+
+
 
 ^\.module[^\n]*		TX(directive,DIRECTIVE)
 ^\.title[^\n]*		TX(directive,DIRECTIVE)
@@ -53,6 +63,9 @@ void incFileName(object* o) {
 <s>\\t				{StrBuf+="\t";}
 <s>.				{StrBuf+=yytext[0];}
 
-\n					TC(EOL)
-.					TC(CHAR)
+\n					TC(EOL)							/* end line <CR> */
+.					TC(CHAR)						/* any undetected char */
 %%
+/***** lexer_foot.sym *****/
+/***** lexer_foot.sym *****/
+
