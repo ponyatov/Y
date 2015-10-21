@@ -63,7 +63,7 @@ module::module(string V):object("module",V) {
 \#ifdef __MINGW32__
 	mkdir(V.c_str());
 \#else
-	\#error mkdir
+	mkdir(V.c_str(),0700);
 \#endif
 	env["MODULE"] = this;
 }

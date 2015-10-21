@@ -19,6 +19,7 @@ upgrade:
 	cp bI/filetype.vim ./
 	cp bI/syntax.vim ./
 	cp bI/vimedit.bat ./
+	cp bI/vimedit.rc ./
 	cp bI/bI.ypp ./
 	cp bI/bI.lpp ./
 	cp bI/bI.hpp ./
