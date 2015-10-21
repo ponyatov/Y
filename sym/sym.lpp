@@ -3,23 +3,31 @@
 %{
 #include "sym.hpp"
 
+/* single char */
 #define TC(X)	{ yylval.c = yytext[0]; return X; }
-#define T1(X)	{ yylval.c = yytext[1]; return X; }
-#define TS(X)	{ yylval.s = new string(yytext); return X; }
-#define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
-#define TX(C,X)	{ yylval.o = new C(yytext); return X; }
-string StrBuf;
 
-void incFileName(object* o) {
-	string filename = o->eval()->value;
-	W(new directive(".inc "+filename),false);  
-	yyin = fopen(filename.c_str(),"r");
-	if (!yyin) yyerror(".inc "+filename);
-	yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE ));
+/* escaped single char */
+#define T1(X)	{ yylval.c = yytext[1]; return X; }
+
+/* simple string */
+#define TS(X)	{ yylval.s = new string(yytext); return X; }
+
+/* dynamic engine basic object (tag+value) */
+#define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
+
+/* dynamic engine class inherited from basic object */
+#define TX(C,X)	{ yylval.o = new C(yytext); return X; }
+
+string StrBuf;								/* buffer for string parser mode */
+
+void incFileName(object* o) {						/* process included .sym */
+	string filename = o->eval()->value;		/* eval(o) as filename parameter */
+	W(new directive(".inc "+filename),false);  		/* dump directive to log */
+	yyin = fopen(filename.c_str(),"r");			  /* open included .sym file */
+	if (!yyin) yyerror(".inc "+filename);			   /* check file open ok */
+	yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE )); /* switch lex */
 }
 %}
-
-
 					/* options */
 %option noyywrap
 					/* enable line numbers info in lexer */
@@ -29,27 +37,25 @@ void incFileName(object* o) {
 %x x
 					/* string parsing */
 %x s
-
 /***** lexer_head.sym *****/
-
 %%
 
 \\.					T1(CHAR)						/* escape prefixed char */
 #[^\n]*\n			{}								/* line comment */
 
-^.inc				{BEGIN(x); TO("sym",FINC);}		/* .inc lude */
-<<EOF>> 			{								/* pop statate in included */
+^.inc				{BEGIN(x); TO("sym",FINC);}		/* .inc lude .sym */
+<<EOF>> 			{								/* pop state in included */
 	yypop_buffer_state();
 	if ( !YY_CURRENT_BUFFER ) yyterminate();
 }
+													/* documenting directives */
+^\.title[^\n]*		TX(directive,DIRECTIVE)			/* curr.module title */
+^\.sec\+?[^\n]*		TX(directive,DIRECTIVE)			/* doc sectioning */
 
+^\.module[^\n]*		TX(directive,DIRECTIVE)				/* set current module */
+^\.file				{BEGIN(x); TO("sym",FFILE);}		/* switch output file */
+^\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}	/* end output file */
 
-
-^\.module[^\n]*		TX(directive,DIRECTIVE)
-^\.title[^\n]*		TX(directive,DIRECTIVE)
-^\.sec\+?[^\n]*		TX(directive,DIRECTIVE)
-^\.file				{BEGIN(x); TO("sym",FFILE);}
-^\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}
 
 \@					{BEGIN(x); TC(AX);}
 \$					{BEGIN(x); TC(SX);}
@@ -66,6 +72,5 @@ void incFileName(object* o) {
 \n					TC(EOL)							/* end line <CR> */
 .					TC(CHAR)						/* any undetected char */
 %%
-/***** lexer_foot.sym *****/
 /***** lexer_foot.sym *****/
 

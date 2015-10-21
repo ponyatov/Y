@@ -1,39 +1,52 @@
 $'/* ',AUTOGEN,' */'
 /***** lexer_head.sym *****/
 $'%{\n#include "',MODULE,'.hpp"\n'
+/* single char */
 \#define TC(X)	{ yylval.c = yytext[0]; return X; }
+
+/* escaped single char */
 \#define T1(X)	{ yylval.c = yytext[1]; return X; }
+
+/* simple string */
 \#define TS(X)	{ yylval.s = new string(yytext); return X; }
+
+/* dynamic engine basic object (tag+value) */
 \#define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
+
+/* dynamic engine class inherited from basic object */
 \#define TX(C,X)	{ yylval.o = new C(yytext); return X; }
-string StrBuf;
 
-void incFileName(object* o) {
-	string filename = o->eval()->value;
-	W(new directive(".inc "+filename),false);  
-	yyin = fopen(filename.c_str(),"r");
-	if (!yyin) yyerror(".inc "+filename);
-	yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE ));
+string StrBuf;								/* buffer for string parser mode */
+
+void incFileName(object* o) {						/* process included .sym */
+	string filename = o->eval()->value;		/* eval(o) as filename parameter */
+	W(new directive(".inc "+filename),false);  		/* dump directive to log */
+	yyin = fopen(filename.c_str(),"r");			  /* open included .sym file */
+	if (!yyin) yyerror(".inc "+filename);			   /* check file open ok */
+	yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE )); /* switch lex */
 }
-$'%}\n'
-
+$'%}'
 $'\t\t\t\t\t/* options */\n%option noyywrap'
 $'\t\t\t\t\t/* enable line numbers info in lexer */\n%option yylineno'
 $'\t\t\t\t\t/* lexer states */'
 $'\t\t\t\t\t/* bI/sym expresssion mode */\n%x x'
 $'\t\t\t\t\t/* string parsing */\n%x s'
-
 /***** lexer_head.sym *****/
-
 %%
 
 \\\\.					T1(CHAR)						/* escape prefixed char */
 \#[^\\n]*\\n			{}								/* line comment */
 
-^\.inc				{BEGIN(x); TO("sym",FINC);}		/* .inc lude */
-<<EOF>> 			{								/* pop statate in included */
+^\.inc				{BEGIN(x); TO("sym",FINC);}		/* .inc lude .sym */
+<<EOF>> 			{								/* pop state in included */
 	yypop_buffer_state();
 	if ( !YY_CURRENT_BUFFER ) yyterminate();
 }
+													/* documenting directives */
+^\\.title[^\\n]*		TX(directive,DIRECTIVE)			/* curr.module title */
+^\\.sec\\+?[^\\n]*		TX(directive,DIRECTIVE)			/* doc sectioning */
 
+^\\.module[^\\n]*		TX(directive,DIRECTIVE)				/* set current module */
+^\\.file				{BEGIN(x); TO("sym",FFILE);}		/* switch output file */
+^\\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}	/* end output file */
 

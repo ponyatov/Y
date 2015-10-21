@@ -53,12 +53,6 @@ list :
 .file MODULE,'.lpp'
 .inc 'lexer_head.sym'
 
-^\\.module[^\\n]*		TX(directive,DIRECTIVE)
-^\\.title[^\\n]*		TX(directive,DIRECTIVE)
-^\\.sec\\+?[^\\n]*		TX(directive,DIRECTIVE)
-^\\.file				{BEGIN(x); TO("sym",FFILE);}
-^\\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}
-
 \\\@					{BEGIN(x); TC(AX);}
 \\\$					{BEGIN(x); TC(SX);}
 <x>\\n				{BEGIN(INITIAL); TC(EOL);}

@@ -2,5 +2,4 @@
 .					TC(CHAR)						/* any undetected char */
 %%
 /***** lexer_foot.sym *****/
-/***** lexer_foot.sym *****/
 
