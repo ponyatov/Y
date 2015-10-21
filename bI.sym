@@ -68,51 +68,8 @@ bI/next (next generation) is realized in bI themself.
 .inc 'sym/hpp.sym'
 .inc 'sym/cpp.sym'
 
-.end
-
 .sec+ (g)Vim support files
 
-.file 'filetype.vim'
-au BufNewFile,BufRead *.sym set filetype=sym
-au BufNewFile,BufRead *.bI set filetype=sym
-au BufNewFile,BufRead *.sym tabf %:r.log|set filetype=sym|set autoread
-au BufNewFile,BufRead *.sym tabf %:r.toc|set filetype=sym|set autoread
-au BufNewFile,BufRead *.sym tabf %:r.ypp|set filetype=yacc
-au BufNewFile,BufRead *.sym tabf %:r.lpp|set filetype=lex
-au BufNewFile,BufRead *.sym tabf %:r.hpp|set filetype=cpp
-au BufNewFile,BufRead *.sym tabf %:r.cpp|set filetype=cpp
-au BufNewFile,BufRead *.sym tabf Makefile|set filetype=make
-au BufNewFile,BufRead *.sym tabn 1
-.eof
-.file 'syntax.vim'
-" Language: bI/sym
-" Maintainer: $AUTHOR
-" GitHub: $GITHUB,MODULE
-
-" line comments
-syntax match	Comment		"\\v\#.*"
-
-" directives 
-syntax match	Todo		"\\v^\\.[a-z]+[\\+\\-]?[ \\t]*"
-
-"" literals
-
-" numbers
-syntax match	Constant	"\\v[0-9]+"
-
-" strings
-syntax region	String		start="'" end="'"
-syntax region	String		start="\\"" end="\\""
-
-" code inlines
-syntax match Keyword "\\v\\\$"
-syntax match Keyword "\\v\\\@"
-
-"let b:current_syntax = "sym"
-
-.eof
-
-.file 'vimedit.bat'
-\@gvim -p $FILES
-.eof
+.inc 'sym/vim.sym'
+.inc 'sym/vimedit.sym'
 

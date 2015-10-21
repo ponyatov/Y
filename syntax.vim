@@ -2,24 +2,21 @@
 " Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 " GitHub: https://github.com/ponyatov/Y/tree/dev/bI
 
-" line comments
+" # line comments
 syntax match	Comment		"\v#.*"
 
-" directives 
+" .directive
 syntax match	Todo		"\v^\.[a-z]+[\+\-]?[ \t]*"
 
-"" literals
-
-" numbers
-syntax match	Constant	"\v[0-9]+"
-
-" strings
-syntax region	String		start="'" end="'"
-syntax region	String		start="\"" end="\""
-
-" code inlines
+" code inlines (X-expressions based on AST-like objects)
 syntax match Keyword "\v\$"
 syntax match Keyword "\v\@"
 
-"let b:current_syntax = "sym"
+" number (not supported by bI language, only color highligh for easy reading)
+syntax match	Constant	"\v[0-9]+"
 
+" 'string'
+syntax region	String		start="'" end="'"
+syntax region	String		start="\"" end="\""
+
+let b:current_syntax = "bI"

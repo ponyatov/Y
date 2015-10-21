@@ -15,9 +15,9 @@ clean:
 upgrade:
 	cp bI/README.md ./
 	cp bI/.gitignore ./
-#	cp bI/Makefile ./
-#	cp bI/filetype.vim ./
-#	cp bI/syntax.vim ./
+	cp bI/Makefile ./
+	cp bI/filetype.vim ./
+	cp bI/syntax.vim ./
 	cp bI/bI.ypp ./
 	cp bI/bI.lpp ./
 	cp bI/bI.hpp ./
@@ -33,4 +33,3 @@ bI.lex.cpp: bI.lpp
 	flex -o $@ $<
 
 ##### makefile.sym #####
-
