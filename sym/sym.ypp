@@ -12,11 +12,11 @@ token <o> DIRECTIVE FINC FFILE FEOF SYM STR
 %type <o> ex list
 %%
 sym:
-	| sym DIRECTIVE	{ W($2); }
-	| sym FINC ex EOL		{ incFileName($3); W($4,false); }
-	| sym FINC list EOL		{ incFileName($3); W($4,false); }
-	| sym FFILE ex EOL		{ W(new directive(".file "+$3->eval()->value),false); W($4,false); }
-	| sym FFILE list EOL	{ W(new directive(".file "+$3->eval()->value),false);  W($4,false); }
+	| sym DIRECTIVE		{ W($2); }
+	| sym FINC ex EOL	{ incFileName($3); W($4,false); }
+	| sym FINC list EOL	{ incFileName($3); W($4,false); }
+	| sym FFILE ex EOL	{ W(new directive(".file "+$3->eval()->value),false); W($4,false); }
+	| sym FFILE list EOL{ W(new directive(".file "+$3->eval()->value),false);  W($4,false); }
 	| sym FEOF EOL		{ W((new directive(".eof"))->tagval(),false); }
 	| sym AX ex			{ W($3->dump()); }
 	| sym AX list		{ W($3->dump()); }
