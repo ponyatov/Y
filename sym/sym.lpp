@@ -71,4 +71,3 @@ void incFileName(object* o) {						/* process included .sym */
 .					TC(CHAR)					/* any undetected char */
 %%
 /***** lexer_foot.sym *****/
-

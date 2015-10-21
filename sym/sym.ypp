@@ -30,7 +30,5 @@ list :
 	  ex COMMA ex		{ $$ = new object("list",""); $$->join($1); $$->join($3); }
 	| list COMMA ex		{ $$ = $1; $$->join($3); }
 ;
-
 %%
 /***** parser_foot.sym *****/
-

@@ -1,3 +1,4 @@
+.file MODULE,'.lpp'
 $'/* ',AUTOGEN,' */'
 /***** lexer_head.sym *****/
 $'%{\n#include "',MODULE,'.hpp"'

@@ -2,4 +2,5 @@
 .					TC(CHAR)					/* any undetected char */
 %%
 /***** lexer_foot.sym *****/
+.eof
 
