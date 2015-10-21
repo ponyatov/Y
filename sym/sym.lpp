@@ -48,6 +48,10 @@ void incFileName(object* o) {						/* process included .sym */
 }
 													/* documenting directives */
 ^\.title[^\n]*		TX(directive,DIRECTIVE)			/* curr.module title */
+^\.author[^\n]*		TX(directive,DIRECTIVE)
+^\.license[^\n]*	TX(directive,DIRECTIVE)
+^\.github[^\n]*		TX(directive,DIRECTIVE)
+
 ^\.sec\+?[^\n]*		TX(directive,DIRECTIVE)			/* doc sectioning */
 
 ^\.module[^\n]*		TX(directive,DIRECTIVE)				/* set current module */

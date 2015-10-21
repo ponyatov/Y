@@ -1,6 +1,6 @@
 " Language: bI/sym
-" Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
-" GitHub: https://github.com/ponyatov/Y/tree/dev/bI
+" Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, All rights reserved
+" GitHub: https://github.com/ponyatov/YbI
 
 " # line comments
 syntax match	Comment		"\v#.*"
@@ -17,6 +17,8 @@ syntax match	Constant	"\v[0-9]+"
 
 " 'string'
 syntax region	String		start="'" end="'"
-syntax region	String		start="\"" end="\""
+
+" <object:dump>
+syntax match	Constant	"\v\<.+\:.+\>"
 
 let b:current_syntax = "bI"

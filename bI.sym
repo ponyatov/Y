@@ -2,7 +2,7 @@
 .module bI
 
 .title		bI dynamic language system
-.author		(c) Dmitry Ponyatov <dponyatov\@gmail.com>, All rights reserved
+.author		(c) Dmitry Ponyatov <dponyatov@gmail.com>, All rights reserved
 .license	http://www.gnu.org/copyleft/lesser.html
 .github		https://github.com/ponyatov/Y
 

@@ -18,6 +18,7 @@ upgrade:
 	cp sym/Makefile ./
 	cp sym/filetype.vim ./
 	cp sym/syntax.vim ./
+	cp sym/vimedit.bat ./
 	cp sym/sym.ypp ./
 	cp sym/sym.lpp ./
 	cp sym/sym.hpp ./

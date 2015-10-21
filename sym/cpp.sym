@@ -53,7 +53,10 @@ directive::directive(string V):object("",V) {
 		env["FILES"]->join(new object("str",value));
 	}
 	if (tag == ".eof") if (curr_file) delete curr_file;
-	if (tag == ".title") env["TITLE"] = this;
+	if (tag == ".title")   env["TITLE"] = this;
+	if (tag == ".author")  env["AUTHOR"] = this;
+	if (tag == ".license") env["LICENSE"] = this;
+	if (tag == ".github")  env["GITHUB"] = this;
 }
 
 module::module(string V):object("module",V) { 
