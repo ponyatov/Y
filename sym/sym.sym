@@ -18,6 +18,10 @@
 .inc 'hpp.sym'
 .inc 'cpp.sym'
 
+.inc 'vim.sym'
+
+.end
+
 .file 'filetype.vim'
 au BufNewFile,BufRead *.sym set filetype=sym
 au BufNewFile,BufRead *.sym tabf %:r.log|set filetype=sym|set autoread
