@@ -1,0 +1,12 @@
+.file '.gitignore'
+$'*~\n*.swp'
+$MODULE,'.elf'
+$MODULE,'.exe'
+*.log
+$'/',MODULE,'/'
+/tmp/
+/sym/
+$MODULE,'.lex.cpp'
+$MODULE,'.tab.?pp'
+.eof
+

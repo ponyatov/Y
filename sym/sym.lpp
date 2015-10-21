@@ -17,6 +17,18 @@ string StrBuf;
 %%
 \\.					T1(CHAR)
 #[^\n]*\n			{}
+
+^\.inc[^\n]+		{
+	yylval.o = new directive(yytext);
+	assert ( yyin = fopen(yylval.o->value.c_str(),"r") );
+	yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE ));
+	return DIRECTIVE;
+}
+<<EOF>> 			{
+	yypop_buffer_state();
+	if ( !YY_CURRENT_BUFFER ) yyterminate();
+}
+
 ^\.module[^\n]*		TX(directive,DIRECTIVE)
 ^\.title[^\n]*		TX(directive,DIRECTIVE)
 ^\.sec\+?[^\n]*		TX(directive,DIRECTIVE)
