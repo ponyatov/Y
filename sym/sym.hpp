@@ -56,11 +56,11 @@ struct file: object {				// \\ output .file
 extern file *curr_file;				// //
 
 extern int yylex();					// \\ lexer/parser specific (flex/bison)
-extern int yylineno;
-extern char *yytext;
-extern void incFileName(object*);
-extern void yyerror(string);
-extern int yyparse();
+extern int yylineno;				// current line number (for error reports)
+extern char *yytext;				// current detected text in lexer
+extern void incFileName(object*);	// .include nested file
+extern void yyerror(string);		// syntax error processing function
+extern int yyparse();				// syntax parser
 #include "sym.tab.hpp"				// //
 
 void W(char   ,bool tofile=true);	// \\ writers
