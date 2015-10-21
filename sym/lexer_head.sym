@@ -1,0 +1,25 @@
+$'/* ',AUTOGEN,' */'
+/***** lexer_head.sym *****/
+$'%{\n#include "',MODULE,'.hpp"\n'
+\#define TC(X)	{ yylval.c = yytext[0]; return X; }
+\#define T1(X)	{ yylval.c = yytext[1]; return X; }
+\#define TS(X)	{ yylval.s = new string(yytext); return X; }
+\#define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
+\#define TX(C,X)	{ yylval.o = new C(yytext); return X; }
+string StrBuf;
+
+void incFileName(object* o) {
+	string filename = o->eval()->value;
+	W(new directive(".inc "+filename),false);  
+	yyin = fopen(filename.c_str(),"r");
+	if (!yyin) yyerror(".inc "+filename);
+	yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE ));
+}
+$'%}\n'
+%option noyywrap
+%option yylineno
+%x x
+%x s
+/***** lexer_head.sym *****/
+%%
+

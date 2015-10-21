@@ -1,5 +1,6 @@
 .file Makefile
 $'## ',AUTOGEN,' ##'
+$'##### makefile.sym #####'
 $'\n.PHONY: exec'
 exec: ./$MODULE,'$(EXE)'
 $'\t./',MODULE,'$(EXE) < ',MODULE,'.sym > ',MODULE,'.log'
@@ -24,6 +25,7 @@ $'\t$(CXX) $(CXXFILES) -o $@ $(C)'
 $MODULE,'.tab.cpp: ',MODULE,'.ypp'
 $'\tbison $<'
 $MODULE,'.lex.cpp: ',MODULE,'.lpp'
-$'\tflex -o $@ $<'
+$'\tflex -o $@ $<\n'
+$'##### makefile.sym #####'
 .eof
 

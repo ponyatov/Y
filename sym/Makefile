@@ -1,4 +1,5 @@
 ## DO NOT EDIT: this file was autogened by bI language system ##
+##### makefile.sym #####
 
 .PHONY: exec
 exec: ./sym$(EXE)
@@ -30,3 +31,5 @@ sym.tab.cpp: sym.ypp
 	bison $<
 sym.lex.cpp: sym.lpp
 	flex -o $@ $<
+
+##### makefile.sym #####

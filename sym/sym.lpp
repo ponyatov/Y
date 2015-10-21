@@ -8,6 +8,14 @@
 #define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
 #define TX(C,X)	{ yylval.o = new C(yytext); return X; }
 string StrBuf;
+
+void incFileName(object* o) {
+	string filename = o->eval()->value;
+	W(new directive(".inc "+filename),false);  
+	yyin = fopen(filename.c_str(),"r");
+	if (!yyin) yyerror(".inc "+filename);
+	yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE ));
+}
 %}
 
 %option noyywrap
@@ -18,20 +26,16 @@ string StrBuf;
 \\.					T1(CHAR)
 #[^\n]*\n			{}
 
-^\.inc[^\n]+		{
-	yylval.o = new directive(yytext);
-	assert ( yyin = fopen(yylval.o->value.c_str(),"r") );
-	yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE ));
-	return DIRECTIVE;
-}
+^\.module[^\n]*		TX(directive,DIRECTIVE)
+^\.title[^\n]*		TX(directive,DIRECTIVE)
+^\.sec\+?[^\n]*		TX(directive,DIRECTIVE)
+
+^\.inc				{BEGIN(x); TO("sym",FINC);}
 <<EOF>> 			{
 	yypop_buffer_state();
 	if ( !YY_CURRENT_BUFFER ) yyterminate();
 }
 
-^\.module[^\n]*		TX(directive,DIRECTIVE)
-^\.title[^\n]*		TX(directive,DIRECTIVE)
-^\.sec\+?[^\n]*		TX(directive,DIRECTIVE)
 ^\.file				{BEGIN(x); TO("sym",FFILE);}
 ^\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}
 
@@ -50,3 +54,4 @@ string StrBuf;
 \n					TC(EOL)
 .					TC(CHAR)
 %%
+

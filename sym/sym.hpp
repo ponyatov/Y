@@ -51,6 +51,7 @@ extern file *curr_file;
 extern int yylex();
 extern int yylineno;
 extern char *yytext;
+extern void incFileName(object*);
 extern void yyerror(string);
 extern int yyparse();
 #include "sym.tab.hpp"
