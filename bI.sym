@@ -16,7 +16,7 @@
 $'# ALYEH platform : ',MODULE
 $'## ',TITLE
 \#\#\# Динамический язык программирования Ы (чтобы никто не догадался)
-$'\n',AUTHOR,'\n\nlicense: ',LICENSE
+$'\n',AUTHOR,'\n\nlicense: ',LICENSE,'\n\n',GITHUB
 $'\n(self-computed source files)'
 .eof
 
@@ -50,17 +50,13 @@ bI/next (next generation) is realized in bI themself.
 
 .sec+ Core system model
 
-.file '.gitignore'
-$'*~\n*.swp'
-$MODULE,'.elf'
-$MODULE,'.exe'
-*.log
-$'/',MODULE,'/'
-/tmp/
+.inc 'sym/gitignore.sym'
 /sym/
-$MODULE,'.lex.cpp'
-$MODULE,'.tab.?pp'
 .eof
+
+.end
+
+.sec
 
 .file Makefile
 $'## ',AUTOGEN,' ##'

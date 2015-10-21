@@ -1,38 +1,34 @@
-/* DO NOT EDIT: this file was autogened by bI language system */
+/* DO NOT EDIT: this file was autogened by bI/sym language system */
+/***** parser_head.sym *****/
 %{
 #include "bI.hpp"
 %}
 %defines
 %union {
-	char c;
-	object *o;
+	char c;			/* single char */
+	string *s;		/* simple string */
+	object *o;		/* bI/sym engine dynamic object (AST-based data element) */
 }
-%token <c> CHAR EOL SX AX COMMA
-token <o> DIRECTIVE FFILE FEOF SYM STR
-%type <o> ex list
+%token	<c>		CHAR EOL SX AX COMMA
+%token	<o>		DIRECTIVE FINC FFILE FEOF SYM STR
+%type	<o>		ex list elem
 %%
-bI:
-	| bI DIRECTIVE	{ W($2); }
-	| bI FFILE ex EOL		{ W(new directive(".file "+$3->eval()->value),false); W($4,false); }
-	| bI FFILE list EOL	{ W(new directive(".file "+$3->eval()->value),false);  W($4,false); }
-	| bI FEOF EOL		{ W((new directive(".eof"))->tagval(),false); }
-	| bI AX ex			{ W($3->dump()); }
-	| bI AX list		{ W($3->dump()); }
-	| bI SX ex			{ W($3->eval()->value); }
-	| bI SX list		{ W($3->eval()->value); }
-	| bI EOL			{ W($2); }
-	| bI CHAR			{ W($2); }
+sym:
+	| sym DIRECTIVE			{ W($2); }
+	| sym FINC elem EOL		{ incFileName($3); W($4,false); }
+	| sym FFILE elem EOL	{
+		W(new directive(".file "+$3->eval()->value),false); W($4,false); }
+	| sym FEOF EOL			{ W((new directive(".eof"))->tagval(),false); }
+	| sym AX elem			{ W($3->dump()); }
+	| sym SX elem			{ W($3->eval()->value); }
+	| sym EOL				{ W($2); }
+	| sym CHAR				{ W($2); }
 ;
-
-ex :
-	  SYM				
-	| STR
-;
-
+elem : ex | list ;
+ex : SYM | STR ;
 list :
 	  ex COMMA ex		{ $$ = new object("list",""); $$->join($1); $$->join($3); }
 	| list COMMA ex		{ $$ = $1; $$->join($3); }
 ;
-
 %%
-
+/***** parser_foot.sym *****/

@@ -6,4 +6,6 @@
 
 license: http://www.gnu.org/copyleft/lesser.html
 
+https://github.com/ponyatov/Y/tree/dev/
+
 (self-computed source files)

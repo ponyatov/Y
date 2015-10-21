@@ -1,4 +1,5 @@
-/* DO NOT EDIT: this file was autogened by bI language system */
+/* DO NOT EDIT: this file was autogened by bI/sym language system */
+/***** cpp.sym *****/
 #include "bI.hpp"
 
 object::object(string T, string V)	{ tag=T; value=V; }
@@ -91,3 +92,4 @@ void yyerror(string msg) {
 }
 
 int main()	{ env_init(); return yyparse(); }
+/***** cpp.sym *****/

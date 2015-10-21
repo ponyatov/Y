@@ -5,6 +5,6 @@ bI.exe
 *.log
 /bI/
 /tmp/
-/sym/
 bI.lex.cpp
 bI.tab.?pp
+/sym/

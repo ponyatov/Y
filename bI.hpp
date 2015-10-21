@@ -1,11 +1,13 @@
-/* DO NOT EDIT: this file was autogened by bI language system */
-#ifndef _H_bI
-#define _H_bI
+/* DO NOT EDIT: this file was autogened by bI/sym language system */
+/***** hpp.sym *****/
+
+#ifndef _H_sym
+#define _H_sym
 
 #define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"
 #define GITHUB "https://github.com/ponyatov/Y/tree/dev/"
-#define AUTOGEN "DO NOT EDIT: this file was autogened by bI language system"
+#define AUTOGEN "DO NOT EDIT: this file was autogened by bI/sym language system"
 
 #include <vector>
 #include <map>
@@ -51,6 +53,7 @@ extern file *curr_file;
 extern int yylex();
 extern int yylineno;
 extern char *yytext;
+extern void incFileName(object*);
 extern void yyerror(string);
 extern int yyparse();
 #include "bI.tab.hpp"
@@ -60,4 +63,6 @@ void W(string ,bool tofile=true);
 void W(string*,bool tofile=true);
 void W(object*,bool tofile=true);
 
-#endif // _H_bI
+#endif // _H_sym
+
+/***** hpp.sym *****/

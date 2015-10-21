@@ -1,4 +1,4 @@
-/* DO NOT EDIT: this file was autogened by bI language system */
+/* DO NOT EDIT: this file was autogened by bI/sym language system */
 /***** hpp.sym *****/
 
 #ifndef _H_sym
