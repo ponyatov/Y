@@ -56,9 +56,13 @@ bI/next (next generation) is realized in bI themself.
 
 .inc 'sym/makefile.sym'
 
-.sec Lexer
+.sec- Lexer (flex)
 .inc 'sym/lexer_head.sym'
 .inc 'sym/lexer_foot.sym'
+
+.sec- Parser (bison)
+.inc 'sym/parser_head.sym'
+.inc 'sym/parser_foot.sym'
 
 .sec- C++ core
 .inc 'sym/hpp.sym'

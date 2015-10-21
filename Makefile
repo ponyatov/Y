@@ -18,7 +18,7 @@ upgrade:
 #	cp bI/Makefile ./
 #	cp bI/filetype.vim ./
 #	cp bI/syntax.vim ./
-#	cp bI/bI.ypp ./
+	cp bI/bI.ypp ./
 	cp bI/bI.lpp ./
 	cp bI/bI.hpp ./
 	cp bI/bI.cpp ./

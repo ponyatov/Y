@@ -13,16 +13,16 @@
 %token	<o>		DIRECTIVE FINC FFILE FEOF SYM STR
 %type	<o>		ex list elem
 %%
-sym:
-	| sym DIRECTIVE			{ W($2); }
-	| sym FINC elem EOL		{ incFileName($3); W($4,false); }
-	| sym FFILE elem EOL	{
+bI:
+	| bI DIRECTIVE			{ W($2); }
+	| bI FINC elem EOL		{ incFileName($3); W($4,false); }
+	| bI FFILE elem EOL	{
 		W(new directive(".file "+$3->eval()->value),false); W($4,false); }
-	| sym FEOF EOL			{ W((new directive(".eof"))->tagval(),false); }
-	| sym AX elem			{ W($3->dump()); }
-	| sym SX elem			{ W($3->eval()->value); }
-	| sym EOL				{ W($2); }
-	| sym CHAR				{ W($2); }
+	| bI FEOF EOL			{ W((new directive(".eof"))->tagval(),false); }
+	| bI AX elem			{ W($3->dump()); }
+	| bI SX elem			{ W($3->eval()->value); }
+	| bI EOL				{ W($2); }
+	| bI CHAR				{ W($2); }
 ;
 elem : ex | list ;
 ex : SYM | STR ;
