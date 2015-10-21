@@ -1,8 +1,12 @@
 
 @date()
+$date()
+
 @sqrt(2)
 @sin(pi)
+
 @class(Comment)
+$class(Comment)
 
 .module sym
 .title	pure symbolic script engine template generator

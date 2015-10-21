@@ -40,6 +40,11 @@ struct object {						// \\\\ generic AST-like dynamic object
 extern map<string,object*> env;		// \\\\ global environment: objects registry
 void env_init();					// //
 
+typedef object* (*fn)(object*);		// \\\\ system functions
+extern map<string,fn> sysfn;		
+extern void fn_init();
+extern object* fn_date(object*);	// //
+
 struct directive: object {			// \\\\ .directive
 	directive(string);
 };									// //
