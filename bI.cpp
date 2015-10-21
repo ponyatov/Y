@@ -2,6 +2,8 @@
 /***** cpp.sym *****/
 #include "bI.hpp"
 
+// \\ generic AST-like dynamic object
+
 object::object(string T, string V)	{ tag=T; value=V; }
 string object::tagval()	{ return "<"+tag+":"+value+">"; }
 string object::pad(int n) { string S; for (int i=0;i<n;i++) S+="\t"; return S; }
@@ -27,6 +29,10 @@ object* object::eval()	{
 	return this;
 }
 
+// // generic AST-like dynamic object
+
+// \\ global environment: objects registry
+
 map<string,object*> env;
 void env_init() {
 	env["AUTHOR"] = new object("str",AUTHOR);
@@ -35,6 +41,10 @@ void env_init() {
 	env["AUTOGEN"] = new object("str",AUTOGEN);
 	env["FILES"] = new object("list","");
 }
+
+// // global environment: objects registry
+
+// \\ .module
 
 directive::directive(string V):object("",V) {
 	while (value.size() && ( value[0] != ' ' && value[0] != '\t' ) ) {
@@ -68,6 +78,10 @@ module::module(string V):object("module",V) {
 }
 module *curr_module = new module("tmp");
 
+// // .module
+
+// \\ output .file
+
 file::file(string V): object("file",V) {
 	if (curr_file) delete curr_file;
 	assert( fh = fopen((curr_module->value+"/"+value).c_str(),"w") );
@@ -79,6 +93,10 @@ file::~file() {
 }
 file *curr_file = NULL;
 
+// // output .file
+
+// \\ writers
+
 void W(char    c,bool tofile)	{ cout <<  c;
 	if (tofile && curr_file) fprintf(curr_file->fh,"%c",c); }
 void W(string  s,bool tofile)	{ cout <<  s;
@@ -88,11 +106,14 @@ void W(string *s,bool tofile)	{ cout << *s;
 void W(object *o,bool tofile)	{ cout << o->dump();
 	if (tofile && curr_file) fprintf(curr_file->fh,"%s",o->dump().c_str()); }
 
+// // writers
+
+// syntax error processing function
 void yyerror(string msg) {
 	cout << "\n" << msg << " " << yylineno << ":[" << yytext << "]\n\n";
 	cerr << "\n" << msg << " " << yylineno << ":[" << yytext << "]\n\n";
 	exit(-1);
 }
 
-int main()	{ env_init(); return yyparse(); }
+int main() { env_init(); return yyparse(); }		// _main() entry point
 /***** cpp.sym *****/
