@@ -2,20 +2,16 @@
 /***** lexer_head.sym *****/
 %{
 #include "sym.hpp"
-
-/* single char */
+														/* token macroses */
+	/* single char */
 #define TC(X)	{ yylval.c = yytext[0]; return X; }
-
-/* escaped single char */
+	/* escaped single char */
 #define T1(X)	{ yylval.c = yytext[1]; return X; }
-
-/* simple string */
+	/* simple string */
 #define TS(X)	{ yylval.s = new string(yytext); return X; }
-
-/* dynamic engine basic object (tag+value) */
+	/* dynamic engine basic object (tag+value) */
 #define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
-
-/* dynamic engine class inherited from basic object */
+	/* dynamic engine class inherited from basic object */
 #define TX(C,X)	{ yylval.o = new C(yytext); return X; }
 
 string StrBuf;								/* buffer for string parser mode */
@@ -56,21 +52,23 @@ void incFileName(object* o) {						/* process included .sym */
 ^\.file				{BEGIN(x); TO("sym",FFILE);}		/* switch output file */
 ^\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}	/* end output file */
 
+												/* bI/sym expressions mode */
+\@					{BEGIN(x); TC(AX);}			/* dump AST */
+\$					{BEGIN(x); TC(SX);}			/* evaluate (compute) AST */
+<x>\n				{BEGIN(INITIAL); TC(EOL);}	/* EOL is end of expression */
+<x>,				TC(COMMA)					/* list separator */
+<x>[a-zA-Z0-9]+		TO("sym",SYM)				/* generic bI language symbol */
 
-\@					{BEGIN(x); TC(AX);}
-\$					{BEGIN(x); TC(SX);}
-<x>\n				{BEGIN(INITIAL); TC(EOL);}
-<x>,				TC(COMMA)
-<x>[a-zA-Z0-9]+		TO("sym",SYM)
+												/* string parsing mode */
+<x>\'				{BEGIN(s); StrBuf="";}		/* go from X-mode: start str */
+<s>\'				{BEGIN(x); 					/* end string marker */
+					yylval.o=new object("str",StrBuf); return STR;}
+<s>\\n				{StrBuf+="\n";}				/* \n EOL in string */
+<s>\\t				{StrBuf+="\t";}				/* \t TAB in string */
+<s>.				{StrBuf+=yytext[0];}		/* any other char as is */
 
-<x>\'				{BEGIN(s); StrBuf="";}
-<s>\'				{BEGIN(x); yylval.o=new object("str",StrBuf); return STR;}
-<s>\\n				{StrBuf+="\n";}
-<s>\\t				{StrBuf+="\t";}
-<s>.				{StrBuf+=yytext[0];}
-
-\n					TC(EOL)							/* end line <CR> */
-.					TC(CHAR)						/* any undetected char */
+\n					TC(EOL)						/* end line <CR> */
+.					TC(CHAR)					/* any undetected char */
 %%
 /***** lexer_foot.sym *****/
 

@@ -10,61 +10,12 @@
 .inc 'makefile.sym'
 
 .file MODULE,'.ypp'
-$'/* ',AUTOGEN,' */'
-$'%{\n#include "',MODULE,'.hpp"\n%}'
-%defines
-%union {
-	char c;
-	object *o;
-}
-%token <c> CHAR EOL SX AX COMMA
-token <o> DIRECTIVE FINC FFILE FEOF SYM STR
-%type <o> ex list
-%%
-$MODULE,':'
-$'\t| ',MODULE,' DIRECTIVE\t\t{ W($2); }'
-$'\t| ',MODULE,' FINC ex EOL\t{ incFileName($3); W($4,false); }'
-$'\t| ',MODULE,' FINC list EOL\t{ incFileName($3); W($4,false); }'
-$'\t| ',MODULE,' FFILE ex EOL\t{ W(new directive(".file "+$3->eval()->value),false); W($4,false); }'
-$'\t| ',MODULE,' FFILE list EOL{ W(new directive(".file "+$3->eval()->value),false);  W($4,false); }'
-$'\t| ',MODULE,' FEOF EOL		{ W((new directive(".eof"))->tagval(),false); }'
-$'\t| ',MODULE,' AX ex			{ W($3->dump()); }'
-$'\t| ',MODULE,' AX list		{ W($3->dump()); }'
-$'\t| ',MODULE,' SX ex			{ W($3->eval()->value); }'
-$'\t| ',MODULE,' SX list		{ W($3->eval()->value); }'
-$'\t| ',MODULE,' EOL			{ W($2); }'
-$'\t| ',MODULE,' CHAR			{ W($2); }'
-;
-
-ex :
-	  SYM				
-	| STR
-;
-
-list :
-	  ex COMMA ex		{ \$\$ = new object("list",""); \$\$->join(\$1); \$\$->join(\$3); }
-	| list COMMA ex		{ \$\$ = \$1; \$\$->join(\$3); }
-;
-
-%%
-
+.inc 'parser_head.sym'
+.inc 'parser_foot.sym'
 .eof
 
 .file MODULE,'.lpp'
 .inc 'lexer_head.sym'
-
-\\\@					{BEGIN(x); TC(AX);}
-\\\$					{BEGIN(x); TC(SX);}
-<x>\\n				{BEGIN(INITIAL); TC(EOL);}
-<x>,				TC(COMMA)
-<x>[a-zA-Z0-9]+		TO("sym",SYM)
-
-<x>\\'				{BEGIN(s); StrBuf="";}
-<s>\\'				{BEGIN(x); yylval.o=new object("str",StrBuf); return STR;}
-<s>\\\\n				{StrBuf+="\\n";}
-<s>\\\\t				{StrBuf+="\\t";}
-<s>.				{StrBuf+=yytext[0];}
-
 .inc 'lexer_foot.sym'
 .eof
 
