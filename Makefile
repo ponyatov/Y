@@ -1,9 +1,10 @@
-## DO NOT EDIT: this file was autogened by bI language system ##
+## DO NOT EDIT: this file was autogened by bI/sym language system ##
+##### makefile.sym #####
 
 .PHONY: exec
 exec: ./bI$(EXE)
 	./bI$(EXE) < bI.sym > bI.log
-	mkdir -p bI ; cp *.sym bI/bI.sym
+	cp *.sym bI/
 
 .PHONY: clean
 clean:
@@ -14,10 +15,10 @@ clean:
 upgrade:
 	cp bI/README.md ./
 	cp bI/.gitignore ./
-	cp bI/Makefile ./
-	cp bI/filetype.vim ./
-	cp bI/syntax.vim ./
-	cp bI/bI.ypp ./
+#	cp bI/Makefile ./
+#	cp bI/filetype.vim ./
+#	cp bI/syntax.vim ./
+#	cp bI/bI.ypp ./
 	cp bI/bI.lpp ./
 	cp bI/bI.hpp ./
 	cp bI/bI.cpp ./
@@ -30,3 +31,6 @@ bI.tab.cpp: bI.ypp
 	bison $<
 bI.lex.cpp: bI.lpp
 	flex -o $@ $<
+
+##### makefile.sym #####
+

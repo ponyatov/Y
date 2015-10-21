@@ -39,7 +39,9 @@ void incFileName(object* o) {						/* process included .sym */
 \\.					T1(CHAR)						/* escape prefixed char */
 #[^\n]*\n			{}								/* line comment */
 
-^.inc				{BEGIN(x); TO("sym",FINC);}		/* .inc lude .sym */
+^\.end				{yyterminate();}				/* emergency .end program */
+
+^\.inc				{BEGIN(x); TO("sym",FINC);}		/* .inc lude .sym */
 <<EOF>> 			{								/* pop state in included */
 	yypop_buffer_state();
 	if ( !YY_CURRENT_BUFFER ) yyterminate();

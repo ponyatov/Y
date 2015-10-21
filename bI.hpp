@@ -1,8 +1,8 @@
 /* DO NOT EDIT: this file was autogened by bI/sym language system */
 /***** hpp.sym *****/
 
-#ifndef _H_sym
-#define _H_sym
+#ifndef _H_bI
+#define _H_bI
 
 #define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"
@@ -63,6 +63,6 @@ void W(string ,bool tofile=true);
 void W(string*,bool tofile=true);
 void W(object*,bool tofile=true);
 
-#endif // _H_sym
+#endif // _H_bI
 
 /***** hpp.sym *****/
