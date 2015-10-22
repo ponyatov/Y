@@ -83,7 +83,7 @@ directive::directive(string V):object("",V) {
 		if (curr_file) delete curr_file; curr_file = new file(value);
 		env["FILES"]->join(new object("str",value));
 	}
-	if (tag == ".eof") if (curr_file) delete curr_file;
+	if (tag == ".eof")		if (curr_file) { delete curr_file; curr_file=NULL; }
 	if (tag == ".title")   env["TITLE"] = this;
 	if (tag == ".author")  env["AUTHOR"] = this;
 	if (tag == ".license") env["LICENSE"] = this;
@@ -107,11 +107,9 @@ module *curr_module = new module("tmp");
 file::file(string V): object("file",V) {
 	if (curr_file) delete curr_file;
 	assert( fh = fopen((curr_module->value+"/"+value).c_str(),"w") );
-	curr_file = this;
 }
 file::~file() {
 	if (fh) fclose(fh);
-	if (curr_file) curr_file=NULL;
 }
 file *curr_file = NULL;
 
