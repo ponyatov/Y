@@ -8,9 +8,9 @@ $'%{\n#include "',MODULE,'.hpp"\n%}'
 	string *s;		/* simple string */
 	object *o;		/* bI/sym engine dynamic object (AST-based data element) */
 }
-$'%token\t<c>\t\tCHAR EOL SX AX COMMA LP RP'
+$'%token\t<c>\t\tCHAR EOL SX AX COMMA LP RP LB RB'
 $'%token\t<o>\t\tDIRECTIVE FINC FFILE FEOF SYM STR'
-$'%type\t<o>\t\tex list elem'
+$'%type\t<o>\t\tex list elem block'
 %%
 $MODULE,':'
 $'\t| ',MODULE,' DIRECTIVE\t\t\t{ W($2); }'
@@ -22,13 +22,21 @@ $'\t| ',MODULE,' AX elem\t\t\t{ W($3->dump()); }'
 $'\t| ',MODULE,' SX elem\t\t\t{ W($3->eval()->value); }'
 $'\t| ',MODULE,' EOL\t\t\t\t{ W($2); }'
 $'\t| ',MODULE,' CHAR\t\t\t\t{ W($2); }\n;'
-elem : ex | list ;
+elem : ex | list | block ;
 ex : 
-      SYM LP ex RP			{ \$\$ = \$1; \$\$->tag="fn"; \$\$->join(\$3); }
-    | SYM LP RP				{ \$\$ = \$1; \$\$->tag="fn"; }
+      SYM LP ex RP block	{ \$\$ = \$1; \$\$->tag="fn"; 
+								\$\$->join(\$3); \$\$->join(\$5); }
+    | SYM LP ex RP 			{ \$\$ = \$1; \$\$->tag="fn"; 
+								\$\$->join(\$3);                  }
+    | SYM LP RP	block		{ \$\$ = \$1; \$\$->tag="fn"; \$\$->join(\$4); }
+    | SYM LP RP				{ \$\$ = \$1; \$\$->tag="fn";               }
 	| SYM | STR 
 ;
 list :
 	  ex COMMA ex		{ \$\$ = new object("list",""); \$\$->join(\$1); \$\$->join(\$3); }
 	| list COMMA ex		{ \$\$ = \$1; \$\$->join(\$3); }
+;
+block : 
+	  LB RB 		{ \$\$ = new object("block","{}"); 					}
+	| LB elem RB	{ \$\$ = new object("block","{}"); \$\$->join(\$2); }
 ;

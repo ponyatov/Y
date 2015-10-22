@@ -57,7 +57,12 @@ extern module *curr_module;			// //
 struct file: object {				// \\\\ output .file
 	file(string);
 	~file();
-	FILE *fh;
+	static void curr_close();		// close current file (directive-evented)
+	FILE *fh;						// std FILE* handler
+	void W(char);
+	void W(string);
+	void W(string*);
+	void W(object*);
 };
 extern file *curr_file;				// //
 

@@ -28,7 +28,6 @@ upgrade:
 
 C = sym.cpp sym.tab.cpp sym.lex.cpp
 H = sym.hpp sym.tab.hpp
-RES ?= sym.res
 ./sym$(EXE): $(C) $(H) $(RES)
 	$(CXX) $(CXXFILES) -o $@ $(C) $(RES)
 sym.tab.cpp: sym.ypp

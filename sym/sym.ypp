@@ -9,9 +9,9 @@
 	string *s;		/* simple string */
 	object *o;		/* bI/sym engine dynamic object (AST-based data element) */
 }
-%token	<c>		CHAR EOL SX AX COMMA LP RP
+%token	<c>		CHAR EOL SX AX COMMA LP RP LB RB
 %token	<o>		DIRECTIVE FINC FFILE FEOF SYM STR
-%type	<o>		ex list elem
+%type	<o>		ex list elem block
 %%
 sym:
 	| sym DIRECTIVE			{ W($2); }
@@ -24,15 +24,23 @@ sym:
 	| sym EOL				{ W($2); }
 	| sym CHAR				{ W($2); }
 ;
-elem : ex | list ;
+elem : ex | list | block ;
 ex : 
-      SYM LP ex RP			{ $$ = $1; $$->tag="fn"; $$->join($3); }
-    | SYM LP RP				{ $$ = $1; $$->tag="fn"; }
+      SYM LP ex RP block	{ $$ = $1; $$->tag="fn"; 
+								$$->join($3); $$->join($5); }
+    | SYM LP ex RP 			{ $$ = $1; $$->tag="fn"; 
+								$$->join($3);                  }
+    | SYM LP RP	block		{ $$ = $1; $$->tag="fn"; $$->join($4); }
+    | SYM LP RP				{ $$ = $1; $$->tag="fn";               }
 	| SYM | STR 
 ;
 list :
 	  ex COMMA ex		{ $$ = new object("list",""); $$->join($1); $$->join($3); }
 	| list COMMA ex		{ $$ = $1; $$->join($3); }
+;
+block : 
+	  LB RB 		{ $$ = new object("block","{}"); 					}
+	| LB elem RB	{ $$ = new object("block","{}"); $$->join($2); }
 ;
 %%
 /***** parser_foot.sym *****/

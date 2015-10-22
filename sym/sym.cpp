@@ -20,7 +20,7 @@ object* object::eval()	{
 			it != nest.end(); it++)
 		(*it)=(*it)->eval();
 	if (env[value]) return env[value]; 
-	if (tag=="list") {
+	if (tag=="list" or tag=="block") {
 		value="";
 		for (vector<object*>::iterator it = nest.begin();
 			it != nest.end(); it++)
@@ -28,7 +28,14 @@ object* object::eval()	{
 	}
 	if (tag=="fn") {
 		if (value=="class") {
-			tag=value; value=nest[0]->value; value=tagval();
+			tag=value; value=nest[0]->value;
+			file *cpp = new file(value+".cpp");
+			file *hpp = new file(value+".hpp");
+			for (vector<object*>::iterator it = nest.begin();
+				it != nest.end(); it++)
+				hpp->W((*it)->value);
+			delete cpp,hpp;
+			value=tagval();
 		}
 		if (sysfn[value]) {
 			if (nest.size()==0) value = sysfn[value](new object("",""))->dump();
@@ -80,7 +87,7 @@ directive::directive(string V):object("",V) {
 		if (curr_module) delete curr_module; curr_module = new module(value);
 	}
 	if (tag == ".file") {
-		if (curr_file) delete curr_file; curr_file = new file(value);
+		file::curr_close(); curr_file = new file(value);
 		env["FILES"]->join(new object("str",value));
 	}
 	if (tag == ".eof")		if (curr_file) { delete curr_file; curr_file=NULL; }
@@ -111,6 +118,11 @@ file::file(string V): object("file",V) {
 file::~file() {
 	if (fh) fclose(fh);
 }
+void file::W(char    c)	{ fprintf(fh,"%c",c); }
+void file::W(string  s)	{ fprintf(fh,"%s",s.c_str()); }
+void file::W(string* s)	{ fprintf(fh,"%s",s->c_str()); }
+void file::W(object* o)	{ fprintf(fh,"%s",o->dump().c_str()); }
+void file::curr_close()	{ if (curr_file) { delete curr_file; curr_file=NULL; }}
 file *curr_file = NULL;
 
 // // output .file
@@ -118,13 +130,13 @@ file *curr_file = NULL;
 // \\ writers
 
 void W(char    c,bool tofile)	{ cout <<  c;
-	if (tofile && curr_file) fprintf(curr_file->fh,"%c",c); }
+	if (tofile && curr_file) curr_file->W(c); }
 void W(string  s,bool tofile)	{ cout <<  s;
-	if (tofile && curr_file) fprintf(curr_file->fh,"%s",s.c_str()); }
+	if (tofile && curr_file) curr_file->W(s); }
 void W(string *s,bool tofile)	{ cout << *s;
-	if (tofile && curr_file) fprintf(curr_file->fh,"%s",s->c_str()); }
+	if (tofile && curr_file) curr_file->W(s); }
 void W(object *o,bool tofile)	{ cout << o->dump();
-	if (tofile && curr_file) fprintf(curr_file->fh,"%s",o->dump().c_str()); }
+	if (tofile && curr_file) curr_file->W(o); }
 
 // // writers
 

@@ -62,6 +62,8 @@ $'\t\t\t\t\t/* string parsing */\n%x s'
 <x>,				TC(COMMA)					/* list separator */
 <x>\\(				TC(LP)						/* ( */
 <x>\\)				TC(RP)						/* ) */
+<x>\\{				TC(LB)						/* { */
+<x>\\}				TC(RB)						/* } */
 <x>[a-zA-Z0-9]+		TO("sym",SYM)				/* generic bI language symbol */
 
 												/* string parsing mode */

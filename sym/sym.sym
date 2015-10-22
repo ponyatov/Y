@@ -1,3 +1,4 @@
+.module sym
 
 @date()
 $date()
@@ -5,8 +6,8 @@ $date()
 @sqrt(2)
 @sin(pi)
 
-@class(Comment)
-$class(Comment)
+@class(Comment){'// ',AUTOGEN}
+$class(Comment){'// ',AUTOGEN}
 
 .module sym
 .title	pure symbolic script engine template generator
