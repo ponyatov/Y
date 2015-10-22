@@ -28,8 +28,9 @@ upgrade:
 
 C = sym.cpp sym.tab.cpp sym.lex.cpp
 H = sym.hpp sym.tab.hpp
-./sym$(EXE): $(C) $(H) sym.res
-	$(CXX) $(CXXFILES) -o $@ $(C) sym.res
+RES ?= sym.res
+./sym$(EXE): $(C) $(H) $(RES)
+	$(CXX) $(CXXFILES) -o $@ $(C) $(RES)
 sym.tab.cpp: sym.ypp
 	bison $<
 sym.lex.cpp: sym.lpp
