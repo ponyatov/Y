@@ -17,9 +17,7 @@ upgrade:
 	cp sym/.gitignore ./
 	cp sym/Makefile ./
 	cp sym/filetype.vim ./
-	cp sym/filetype.vim ../
 	cp sym/syntax.vim ./
-	cp sym/syntax.vim ../
 	cp sym/vimedit.bat ./
 	cp sym/vimedit.rc ./
 	cp sym/sym.ypp ./
