@@ -19,6 +19,6 @@ syntax match	Constant	"\v[0-9]+"
 syntax region	String		start="'" end="'"
 
 " <object:dump>
-syntax match	Constant	"\v\<.+\:.+\>"
+syntax match	Constant	"\v\<.+\:.*\>"
 
 let b:current_syntax = "sym"

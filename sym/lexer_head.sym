@@ -53,6 +53,7 @@ $'\t\t\t\t\t/* string parsing */\n%x s'
 ^\\.module[^\\n]*		TX(directive,DIRECTIVE)				/* set current module */
 ^\\.file				{BEGIN(x); TO("sym",FFILE);}		/* switch output file */
 ^\\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}	/* end output file */
+^\\.bib[a-z]*[^\\n]*	TX(directive,DIRECTIVE)				/* .bibliography */
 
 												/* bI/sym expressions mode */
 \\\@					{BEGIN(x); TC(AX);}			/* dump AST */

@@ -30,3 +30,7 @@ $class(Comment)
 .inc 'vim.sym'
 .inc 'vimedit.sym'
 
+.inc 'win32res.sym'
+
+.bibliography
+.bib 

@@ -20,6 +20,7 @@ upgrade:
 	cp sym/syntax.vim ./
 	cp sym/vimedit.bat ./
 	cp sym/vimedit.rc ./
+	cp sym/sym.rcwin32 ./
 	cp sym/sym.ypp ./
 	cp sym/sym.lpp ./
 	cp sym/sym.hpp ./
@@ -27,11 +28,12 @@ upgrade:
 
 C = sym.cpp sym.tab.cpp sym.lex.cpp
 H = sym.hpp sym.tab.hpp
-./sym$(EXE): $(C) $(H)
-	$(CXX) $(CXXFILES) -o $@ $(C)
+./sym$(EXE): $(C) $(H) sym.res
+	$(CXX) $(CXXFILES) -o $@ $(C) sym.res
 sym.tab.cpp: sym.ypp
 	bison $<
 sym.lex.cpp: sym.lpp
 	flex -o $@ $<
-
+sym.res: sym.rcwin32
+	windres sym.rcwin32 -O coff -o $@
 ##### makefile.sym #####
