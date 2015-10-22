@@ -21,8 +21,11 @@ $'\tcp ',MODULE,'/',MODULE,'.ypp ./'
 $'\tcp ',MODULE,'/',MODULE,'.lpp ./'
 $'\tcp ',MODULE,'/',MODULE,'.hpp ./'
 $'\tcp ',MODULE,'/',MODULE,'.cpp ./'
+$UP_FILES
 $'\nC = ',MODULE,'.cpp ',MODULE,'.tab.cpp ',MODULE,'.lex.cpp'
+$C_FILES
 $'H = ',MODULE,'.hpp ',MODULE,'.tab.hpp'
+$H_FILES
 #$'RES ?= ',MODULE,'.res'
 $'./',MODULE,'$(EXE): $(C) $(H) $(RES)'
 $'\t$(CXX) $(CXXFILES) -o $@ $(C) $(RES)'

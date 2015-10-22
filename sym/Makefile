@@ -25,9 +25,15 @@ upgrade:
 	cp sym/sym.lpp ./
 	cp sym/sym.hpp ./
 	cp sym/sym.cpp ./
+	cp sym/Comment.?pp ./
+
 
 C = sym.cpp sym.tab.cpp sym.lex.cpp
+C += Comment.cpp
+
 H = sym.hpp sym.tab.hpp
+H += Comment.hpp
+
 ./sym$(EXE): $(C) $(H) $(RES)
 	$(CXX) $(CXXFILES) -o $@ $(C) $(RES)
 sym.tab.cpp: sym.ypp

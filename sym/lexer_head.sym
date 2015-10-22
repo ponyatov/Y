@@ -64,7 +64,7 @@ $'\t\t\t\t\t/* string parsing */\n%x s'
 <x>\\)				TC(RP)						/* ) */
 <x>\\{				TC(LB)						/* { */
 <x>\\}				TC(RB)						/* } */
-<x>[a-zA-Z0-9]+		TO("sym",SYM)				/* generic bI language symbol */
+<x>[a-zA-Z0-9_]+	TO("sym",SYM)				/* generic bI language symbol */
 
 												/* string parsing mode */
 <x>\\'				{BEGIN(s); StrBuf="";}		/* go from X-mode: start str */

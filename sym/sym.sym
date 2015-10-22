@@ -6,8 +6,8 @@ $date()
 @sqrt(2)
 @sin(pi)
 
-@class(Comment){'// ',AUTOGEN}
-$class(Comment){'// ',AUTOGEN}
+@class(Comment){'// ',AUTOGEN,'\n// module:',MODULE,'\n\n'}
+$class(Comment){'// ',AUTOGEN,'\n// module:',MODULE,'\n\n'}
 
 .module sym
 .title	pure symbolic script engine template generator
