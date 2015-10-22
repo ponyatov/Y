@@ -9,7 +9,7 @@
 	string *s;		/* simple string */
 	object *o;		/* bI/sym engine dynamic object (AST-based data element) */
 }
-%token	<c>		CHAR EOL SX AX COMMA
+%token	<c>		CHAR EOL SX AX COMMA LP RP
 %token	<o>		DIRECTIVE FINC FFILE FEOF SYM STR
 %type	<o>		ex list elem
 %%
@@ -25,7 +25,11 @@ bI:
 	| bI CHAR				{ W($2); }
 ;
 elem : ex | list ;
-ex : SYM | STR ;
+ex : 
+      SYM LP ex RP			{ $$ = $1; $$->tag="fn"; $$->join($3); }
+    | SYM LP RP				{ $$ = $1; $$->tag="fn"; }
+	| SYM | STR 
+;
 list :
 	  ex COMMA ex		{ $$ = new object("list",""); $$->join($1); $$->join($3); }
 	| list COMMA ex		{ $$ = $1; $$->join($3); }

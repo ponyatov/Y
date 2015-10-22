@@ -26,6 +26,14 @@ object* object::eval()	{
 			it != nest.end(); it++)
 			value += (*it)->value;
 	}
+	if (tag=="fn") {
+		if (value=="class") {
+			tag=value; value=nest[0]->value; value=tagval();
+		}
+		if (sysfn[value]) {
+			if (nest.size()==0) value = sysfn[value](new object("",""))->dump();
+		}
+	}
 	return this;
 }
 
@@ -44,6 +52,20 @@ void env_init() {
 
 // // global environment: objects registry
 
+// \\ system functions
+
+map<string,fn> sysfn;		
+
+void fn_init() {
+	sysfn["date"]=fn_date;
+}
+
+object* fn_date(object* o) {
+	return new object("date","so:me:date");
+}
+
+// // system functions
+
 // \\ .module
 
 directive::directive(string V):object("",V) {
@@ -53,7 +75,7 @@ directive::directive(string V):object("",V) {
 	while (value.size() && ( value[0] == ' ' || value[0] == '\t' ) ) {
 		value.erase(0,1);
 	}
-	// direective dependent
+	// directive dependent
 	if (tag == ".module") {
 		if (curr_module) delete curr_module; curr_module = new module(value);
 	}
@@ -115,5 +137,13 @@ void yyerror(string msg) {
 	exit(-1);
 }
 
-int main() { env_init(); return yyparse(); }		// _main() entry point
+// \\ _main() entry point
+
+int main(int argc, char *argv[]) {
+	env_init();
+	fn_init();
+	return yyparse();
+}
+
+// // _main() entry point
 /***** cpp.sym *****/

@@ -61,7 +61,7 @@ void fn_init() {
 }
 
 object* fn_date(object* o) {
-	return new object("date","so:me:date");
+	return new object("date","so/me/date");
 }
 
 // // system functions

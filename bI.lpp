@@ -63,6 +63,8 @@ void incFileName(object* o) {						/* process included .sym */
 \$					{BEGIN(x); TC(SX);}			/* evaluate (compute) AST */
 <x>\n				{BEGIN(INITIAL); TC(EOL);}	/* EOL is end of expression */
 <x>,				TC(COMMA)					/* list separator */
+<x>\(				TC(LP)						/* ( */
+<x>\)				TC(RP)						/* ) */
 <x>[a-zA-Z0-9]+		TO("sym",SYM)				/* generic bI language symbol */
 
 												/* string parsing mode */
