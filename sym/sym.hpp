@@ -11,7 +11,7 @@
 #define GITHUB "https://github.com/ponyatov/Y/tree/dev/"
 #define AUTOGEN "DO NOT EDIT: this file was autogened by bI/sym language system"
 
-#include <vector>				// \\ standart includes
+#include <vector>					// \\ standart includes
 #include <map>
 #include <cstdio>
 #include <cstdlib>
