@@ -1,27 +1,31 @@
 
-.sec- Variables
+.sec+ Simple Script
 
-pi=999		?pi=999		$pi=999		
-pi			?pi			$pi
-si=999		?si=999		$si=999		
-si			?si		$si
+Simple Script (SS) is scripting language with bI-compliant syntax.
 
-sym $sym ?sym 
+class Number
 
-.sec- Science constants
+.sec Symbols
+
+This ?is $a symbol.
 
 bI has some constants:
 
-pi		?pi		$pi		# Pi
-e		?e		$e		# e
-c		?c		$c		# light speed
-G		?G		$G		# gravity const
-g		?g		$g		# gravitational acceleration
-h		?h		$h		# Plank constant
+pi		?pi		$pi
+e		?e		$e
+g		?g		$g
+h		?h		$h
 
-.end
+.sec Infix expression
 
-.sec- Standart math functions
+15/7		?15/7		$15/7
+1+15/7		?1+15/7		$1+15/7
+
+1+2			?1+2		$1+2
+2/3			?2/3		$2/3
+1+2/3		?1+2/3		$1+2/3
+
+.sec Simpe math
 
 (1)
 sin (1)
@@ -35,6 +39,44 @@ class Symbol	'core class'
 Symbol Number	'any number'
 
 .tocline
+.title		bI dynamic language system
+.author		(c) Dmitry Ponyatov <dponyatov@gmail.com>, All rights reserved
+.license	http://www.gnu.org/copyleft/lesser.html
+.github		https://github.com/ponyatov/Y
+.tocline
+.about{
+	bI/sym is experimental dynamic language system targeted on embedded and
+	computing systems programming, hardware design, science data processing,
+	and DSL compilers/translators development.
+}
+
+.sec Goal
+
+.list The goal of bI language design is
+.li ultra high level scripting, programming and design system, supports
+.li dynamic metaprogramming on large computers,
+.li statical cross-compilation for tiny embedded systems,
+.li hardware design including CAD/CAM/CAE/EDA functions,
+.li science data crunching and visualization and
+.li text data processing including DSL translation and compilers design.
+
+.sec Literate programming
+
+Documentation is program, program must be selfdocumented.
+
+.sec Free Syntax Programming
+
+Language syntax is under your control, bI it mutable DSL for your own tasks.
+
+.sec Composition
+
+bI is composite language, mix of OOP, functional, literate programming,...,
+and all modern programming languages.
+
+.sec Bootstrapping
+
+Core language system written in flex, bison and C++,
+bI/next (next generation) is realized in bI themself.
 
 .sec+ Core syntax
 
@@ -79,14 +121,7 @@ class Comment
 
 class LineComment:Comment	regexp = '#[^\\n]*\\n'
 
-.sec Infix expressions
-
-15/7		?15/7		$15/7
-1+15/7		?1+15/7		$1+15/7
-
-1+2			?1+2		$1+2
-2/3			?2/3		$2/3
-1+2/3		?1+2/3		$1+2/3
+.end
 
 .sec Directives
 
@@ -184,11 +219,11 @@ generation.
 
 .sec- i1: bool
 
-clazz bool:		i1
-clazz byte:		i8
-clazz short:	i16
-clazz word:		i32
-clazz long:		i64
+class bool:		i1
+class byte:		i8
+class short:	i16
+class word:		i32
+class long:		i64
 
 .sec Number
 
@@ -218,11 +253,11 @@ Number float		'float'						regexp = '[0-9]+[eE][+-]?[0-9]+'
 
 .sec- char: 8-bit classic C char (byte)
 
-clazz char:byte		'8-bit classic C char'		regexp 'any char' =  '.'	
+class char:byte		'8-bit classic C char'		regexp 'any char' =  '.'	
 
 .sec- uchar: unicode character
 
-clazz uchar:char
+class uchar:char
 
 .sec- str: string
 
@@ -235,10 +270,6 @@ String str			'string'					regexp = "'[^']*'"
 
 .sec+ Object subsystem
 
-.sec Symbols
-
-This ?is $a symbol.
-
 All elements in bI system based on Symbol class:
 
 class Symbol
@@ -247,7 +278,7 @@ class Symbol
 
 .sec core Object class
 
-clazz Object 'core bI data'
+class Object 'core bI data'
 	tag		'class/data type marker'
 	value	'string value'
 	attr	'attributes'

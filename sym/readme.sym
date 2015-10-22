@@ -1,0 +1,6 @@
+.file 'README.md'
+$'# ',MODULE,'\n## ',TITLE
+$'### (self-computed source files)'
+$'\n',AUTHOR,'\n\nlicense: ',LICENSE
+.eof
+

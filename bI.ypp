@@ -1,0 +1,38 @@
+/* DO NOT EDIT: this file was autogened by bI/sym language system */
+/***** parser_head.sym *****/
+%{
+#include "bI.hpp"
+%}
+%defines
+%union {
+	char c;			/* single char */
+	string *s;		/* simple string */
+	object *o;		/* bI/sym engine dynamic object (AST-based data element) */
+}
+%token	<c>		CHAR EOL SX AX COMMA LP RP
+%token	<o>		DIRECTIVE FINC FFILE FEOF SYM STR
+%type	<o>		ex list elem
+%%
+bI:
+	| bI DIRECTIVE			{ W($2); }
+	| bI FINC elem EOL		{ incFileName($3); W($4,false); }
+	| bI FFILE elem EOL	{
+		W(new directive(".file "+$3->eval()->value),false); W($4,false); }
+	| bI FEOF EOL			{ W((new directive(".eof"))->tagval(),false); }
+	| bI AX elem			{ W($3->dump()); }
+	| bI SX elem			{ W($3->eval()->value); }
+	| bI EOL				{ W($2); }
+	| bI CHAR				{ W($2); }
+;
+elem : ex | list ;
+ex : 
+      SYM LP ex RP			{ $$ = $1; $$->tag="fn"; $$->join($3); }
+    | SYM LP RP				{ $$ = $1; $$->tag="fn"; }
+	| SYM | STR 
+;
+list :
+	  ex COMMA ex		{ $$ = new object("list",""); $$->join($1); $$->join($3); }
+	| list COMMA ex		{ $$ = $1; $$->join($3); }
+;
+%%
+/***** parser_foot.sym *****/

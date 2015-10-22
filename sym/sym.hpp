@@ -1,8 +1,8 @@
 /* DO NOT EDIT: this file was autogened by bI/sym language system */
 /***** hpp.sym *****/
 
-#ifndef _H_bI
-#define _H_bI
+#ifndef _H_sym
+#define _H_sym
 
 // metainfo constants
 
@@ -66,13 +66,13 @@ extern char *yytext;				// current detected text in lexer
 extern void incFileName(object*);	// .include nested file
 extern void yyerror(string);		// syntax error processing function
 extern int yyparse();				// syntax parser
-#include "bI.tab.hpp"				// //
+#include "sym.tab.hpp"				// //
 
 void W(char   ,bool tofile=true);	// \\ writers
 void W(string ,bool tofile=true);
 void W(string*,bool tofile=true);
 void W(object*,bool tofile=true);	// //
 
-#endif // _H_bI
+#endif // _H_sym
 
 /***** hpp.sym *****/

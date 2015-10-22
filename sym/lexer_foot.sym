@@ -1,0 +1,6 @@
+\\n					TC(EOL)						/* end line <CR> */
+.					TC(CHAR)					/* any undetected char */
+%%
+/***** lexer_foot.sym *****/
+.eof
+

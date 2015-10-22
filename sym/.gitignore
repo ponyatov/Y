@@ -1,0 +1,9 @@
+*~
+*.swp
+sym.elf
+sym.exe
+*.log
+/sym/
+/tmp/
+sym.lex.cpp
+sym.tab.?pp
