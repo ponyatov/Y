@@ -1,0 +1,75 @@
+﻿
+.module bI
+
+.title		bI dynamic language system
+.author		(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
+.license	http://www.gnu.org/copyleft/lesser.html
+.github		https://github.com/ponyatov/Y
+
+.sec About
+
+	bI/sym is experimental dynamic language system targeted on embedded and
+	computing systems programming, hardware design, science data processing,
+	and DSL compilers/translators development.
+
+.file 'README.md'
+$'# ALYEH platform : ',MODULE
+$'## ',TITLE
+\#\#\# Динамический язык программирования Ы (чтобы никто не догадался)
+$'\n',AUTHOR,'\n\nlicense: ',LICENSE,'\n\n',GITHUB
+$'\n(self-computed source files)'
+.eof
+
+.sec Goal
+
+.list The goal of bI language design is
+.li ultra high level scripting, programming and design system, supports
+.li dynamic metaprogramming on large computers,
+.li statical cross-compilation for tiny embedded systems,
+.li hardware design including CAD/CAM/CAE/EDA functions,
+.li science data crunching and visualization and
+.li text data processing including DSL translation and compilers design.
+
+.sec Literate programming
+
+Documentation is program, program must be selfdocumented.
+
+.sec Free Syntax Programming
+
+Language syntax is under your control, bI it mutable DSL for your own tasks.
+
+.sec Composition
+
+bI is composite language, mix of OOP, functional, literate programming,...,
+and all modern programming languages.
+
+.sec Bootstrapping
+
+Core language system written in flex, bison and C++,
+bI/next (next generation) is realized in bI themself.
+
+.sec+ Core system model
+
+.inc 'sym/gitignore.sym'
+/sym/
+.eof
+
+.inc 'sym/makefile.sym'
+
+.sec- Lexer (flex)
+.inc 'sym/lexer_head.sym'
+.inc 'sym/lexer_foot.sym'
+
+.sec- Parser (bison)
+.inc 'sym/parser_head.sym'
+.inc 'sym/parser_foot.sym'
+
+.sec- C++ core
+.inc 'sym/hpp.sym'
+.inc 'sym/cpp.sym'
+
+.sec+ (g)Vim support files
+
+.inc 'sym/vim.sym'
+.inc 'sym/vimedit.sym'
+
