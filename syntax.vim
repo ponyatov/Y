@@ -1,59 +1,24 @@
-" Language: bI
-" Maintainer: Dmitry Ponyatov <dponyatov@gmail.com>
-" GitHub: [https://github.com/ponyatov/Y/blob/dev/syntax.vim]
-" add to: $WINHOME/vimfiles/syntax/bI.vim: source D:\w\Y\syntax.vim
+" Language: bI/sym
+" Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
+" GitHub: https://github.com/ponyatov/YbI
 
-"if exists("b:current_"syntax")
-"    finish
-"endif
-
-" line comments
+" # line comments
 syntax match	Comment		"\v#.*"
 
-" directives 
+" .directive
 syntax match	Todo		"\v^\.[a-z]+[\+\-]?[ \t]*"
-syntax region	Comment		start=".about{" end="}"
 
-"" literals
+" code inlines (X-expressions based on AST-like objects)
+syntax match Keyword "\v\$"
+syntax match Keyword "\v\@"
 
-" email
-syntax match	Constant	"\v[a-z]+\@[a-z]+(\.[a-z]+)+"
-" url
-syntax match	Constant	"\vhttps?:\/\/[a-z]+(\.[a-z]+)+(\/[a-zA-Z_\.]+)+"
-" file
-syntax match	Constant	"\v[a-z\*\?]+(\.[a-z\*\?]+)+"
-
-" strings
-syntax region	String		start="'" end="'"
-syntax region	String		start="\"" end="\""
-" numbers
+" number (not supported by bI language, only color highligh for easy reading)
 syntax match	Constant	"\v[0-9]+"
 
-"" core language
+" 'string'
+syntax region	String		start="'" end="'"
 
-" tags part
-syntax match	Function	"\v\<?\.?[a-z\+\-]+:"
-syntax match	Keyword		"\v\<\@:"
-" core class inheritance
-syntax match	Keyword		"\v^class"
-" core class fields and signals
-syntax keyword	Function	regexp
-" operators
-syntax match	Keyword		"[=?$]"
+" <object:dump>
+syntax match	Constant	"\v\<.+\:.+\>"
 
-" numbers
-"syntax match Number "\v0b[01]+"
-"syntax match Number "\v0x[0-9A-F]+"
-"syntax match Number "\v[\+\-]{0,1}[0-9]+"
-"syntax match Number "\v[\+\-]{0,1}[0-9]+\.[0-9]+"
-
-" composite and classes
-"syntax match Function "\v[a-z]+:"
-
-" code inlines
-"syntax match Keyword "\v\$"
-"syntax match Keyword "\v\?"
-"syntax match Keyword "\v(class|lexer) "
-
-"let b:current_syntax = "bI"
-
+let b:current_syntax = "bI"
