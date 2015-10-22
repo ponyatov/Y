@@ -33,4 +33,6 @@ $class(Comment)
 .inc 'win32res.sym'
 
 .bibliography
-.bib 
+.sec- Win32 API
+.bib http://www.functionx.com/win32/
+
