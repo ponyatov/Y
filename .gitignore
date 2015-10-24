@@ -1,10 +1,8 @@
 *~
 *.swp
-bI.elf
-bI.exe
+sym.elf
+sym.exe
 *.log
-/bI/
 /tmp/
-bI.lex.cpp
-bI.tab.?pp
-/sym/
+sym.lex.cpp
+sym.tab.?pp

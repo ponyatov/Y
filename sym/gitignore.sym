@@ -3,7 +3,7 @@ $'*~\n*.swp'
 $MODULE,'.elf'
 $MODULE,'.exe'
 *.log
-$'/',MODULE,'/'
+$MODULE
 /tmp/
 $MODULE,'.lex.cpp'
 $MODULE,'.tab.?pp'

@@ -3,7 +3,7 @@
 sym.elf
 sym.exe
 *.log
-/sym/
+sym
 /tmp/
 sym.lex.cpp
 sym.tab.?pp
