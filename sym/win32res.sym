@@ -1,0 +1,6 @@
+.file $MODULE,'.rcwin32'
+logo	ICON	"../logo/logo64x64.ico"
+warning	ICON	"../logo/warning64x64.ico"
+tux		ICON	"../logo/tux64x64.ico"
+.eof
+
