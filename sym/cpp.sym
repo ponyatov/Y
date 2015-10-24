@@ -76,7 +76,7 @@ void fn_init() {
 }
 
 object* fn_date(object* o) {
-	return new object("date","so:me:date");
+	return new object("date","so/me/date");
 }
 
 // // system functions
@@ -103,6 +103,15 @@ directive::directive(string V):object("",V) {
 	if (tag == ".author")  env["AUTHOR"] = this;
 	if (tag == ".license") env["LICENSE"] = this;
 	if (tag == ".github")  env["GITHUB"] = this;
+	// class definition
+	if (tag == "class") {
+		file *cpp = new file(value+".cpp");
+		env["C_FILES"]->value += "C += "+value+".cpp\\n";
+		file *hpp = new file(value+".hpp");
+		env["H_FILES"]->value += "H += "+value+".hpp\\n";
+		env["UP_FILES"]->value += "\\tcp "+env["MODULE"]->value+"/"+value+".?pp ./\\n";
+		delete cpp,hpp;
+	}
 }
 
 module::module(string V):object("module",V) { 

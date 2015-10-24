@@ -21,4 +21,7 @@ syntax region	String		start="'" end="'"
 " <object:dump>
 syntax match	Constant	"\v\<.+\:.*\>"
 
+" class def
+syntax match	todo		"\v^class.+"
+
 let b:current_syntax = "sym"

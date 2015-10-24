@@ -29,6 +29,7 @@ $'\t\t\t\t\t/* enable line numbers info in lexer */\n%option yylineno'
 $'\t\t\t\t\t/* lexer states */'
 $'\t\t\t\t\t/* bI/sym expresssion mode */\n%x x'
 $'\t\t\t\t\t/* string parsing */\n%x s'
+$'\t\t\t\t\t/* class definition */\n%x cls'
 /***** lexer_head.sym *****/
 %%
 
@@ -55,6 +56,10 @@ $'\t\t\t\t\t/* string parsing */\n%x s'
 ^\\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}	/* end output file */
 ^\\.bib[a-z]*[^\\n]*	TX(directive,DIRECTIVE)				/* .bibliography */
 
+^class[ \\t]+[^\\n]+	{BEGIN(cls); TX(directive,CLS);}	/* class definition */
+<cls>\\n\\n			{BEGIN(INITIAL);}					/* end class def */
+#<cls>\\n				{}
+
 												/* bI/sym expressions mode */
 \\\@					{BEGIN(x); TC(AX);}			/* dump AST */
 \\\$					{BEGIN(x); TC(SX);}			/* evaluate (compute) AST */
@@ -64,7 +69,7 @@ $'\t\t\t\t\t/* string parsing */\n%x s'
 <x>\\)				TC(RP)						/* ) */
 <x>\\{				TC(LB)						/* { */
 <x>\\}				TC(RB)						/* } */
-<x>[a-zA-Z0-9_]+	TO("sym",SYM)				/* generic bI language symbol */
+<x,cls>[a-zA-Z0-9_]+	TO("sym",SYM)				/* generic bI language symbol */
 
 												/* string parsing mode */
 <x>\\'				{BEGIN(s); StrBuf="";}		/* go from X-mode: start str */
