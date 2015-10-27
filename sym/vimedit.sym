@@ -1,7 +1,7 @@
 .file 'vimedit.bat'
-$'@gvim -p ',MODULE,'.sym ',MODULE,'.log ',MODULE,'.ypp ',MODULE,'.lpp ',MODULE,'.hpp ',MODULE,'.cpp Makefile'
+$'@gvim -p ',MODULE,'.sym ',MODULE,'.log ',MODULE,'.ypp ',MODULE,'.lpp ',MODULE,'.hpp ',MODULE,'.cpp Makefile vimedit.bat ',FILES
 .eof
 .file 'vimedit.sh'
 \#!/bin/sh
-$'gvim -p ',MODULE,'.sym ',MODULE,'.log ',MODULE,'.ypp ',MODULE,'.lpp ',MODULE,'.hpp ',MODULE,'.cpp Makefile'
+$'gvim -p ',MODULE,'.sym ',MODULE,'.log ',MODULE,'.ypp ',MODULE,'.lpp ',MODULE,'.hpp ',MODULE,'.cpp Makefile vimedit.bat ',FILES
 .eof

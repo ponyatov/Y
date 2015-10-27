@@ -61,6 +61,8 @@ void incFileName(object* o) {						/* process included .sym */
 ^\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}	/* end output file */
 ^\.bib[a-z]*[^\n]*	TX(directive,DIRECTIVE)				/* .bibliography */
 
+^class[ \t]+[^\n]+	{BEGIN(cls); TX(directive,CLS);}	/* class definition */
+<cls>\n\n			{BEGIN(INITIAL);}					/* end class def */
 
 												/* bI/sym expressions mode */
 \@					{BEGIN(x); TC(AX);}			/* dump AST */

@@ -35,6 +35,7 @@ object* object::eval()	{
 			file *hpp = new file(value+".hpp");
 			env["H_FILES"]->value += "H += "+value+".hpp\n";
 			env["UP_FILES"]->value += "\tcp "+env["MODULE"]->value+"/"+value+".?pp ./\n";
+			env["FILES"]->value += value+".hpp,";
 			for (vector<object*>::iterator it = nest.begin();
 				it != nest.end(); it++)
 				hpp->W((*it)->value),cpp->W((*it)->value);
@@ -58,7 +59,7 @@ void env_init() {
 	env["LICENSE"] = new object("str",LICENSE);
 	env["GITHUB"] = new object("str",GITHUB);
 	env["AUTOGEN"] = new object("str",AUTOGEN);
-	env["FILES"] = new object("list","");
+	env["FILES"] = new object("str","files:");
 	env["C_FILES"] = new object("str","");
 	env["H_FILES"] = new object("str","");
 	env["UP_FILES"] = new object("str","");

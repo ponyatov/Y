@@ -10,8 +10,8 @@
 	object *o;		/* bI/sym engine dynamic object (AST-based data element) */
 }
 %token	<c>		CHAR EOL SX AX COMMA LP RP LB RB
-%token	<o>		DIRECTIVE FINC FFILE FEOF SYM STR
-%type	<o>		ex list elem block
+%token	<o>		DIRECTIVE FINC FFILE FEOF SYM STR CLS
+%type	<o>		ex list elem block classdef
 %%
 sym:
 	| sym DIRECTIVE			{ W($2); }
@@ -21,17 +21,17 @@ sym:
 	| sym FEOF EOL			{ W((new directive(".eof"))->tagval(),false); }
 	| sym AX elem			{ W($3->dump()); }
 	| sym SX elem			{ W($3->eval()->value); }
+	| sym CLS classdef		{ W($2->dump()); W($3->eval()->value); }
 	| sym EOL				{ W($2); }
 	| sym CHAR				{ W($2); }
 ;
 elem : ex | list | block ;
 ex : 
       SYM LP ex RP block	{ $$ = $1; $$->tag="fn"; 
-								$$->join($3); $$->join($5); }
-    | SYM LP ex RP 			{ $$ = $1; $$->tag="fn"; 
-								$$->join($3);                  }
-    | SYM LP RP	block		{ $$ = $1; $$->tag="fn"; $$->join($4); }
-    | SYM LP RP				{ $$ = $1; $$->tag="fn";               }
+								$$->join($3); $$->join($5); 		}
+    | SYM LP ex RP 			{ $$ = $1; $$->tag="fn"; $$->join($3);	}
+    | SYM LP RP	block		{ $$ = $1; $$->tag="fn"; $$->join($4);	}
+    | SYM LP RP				{ $$ = $1; $$->tag="fn";              	}
 	| SYM | STR 
 ;
 list :
@@ -39,8 +39,11 @@ list :
 	| list COMMA ex		{ $$ = $1; $$->join($3); }
 ;
 block : 
-	  LB RB 		{ $$ = new object("block","{}"); 					}
-	| LB elem RB	{ $$ = new object("block","{}"); $$->join($2); }
+	  LB RB 			{ $$ = new object("block","{}"); 				}
+	| LB elem RB		{ $$ = new object("block","{}"); $$->join($2);	}
+;
+classdef :
+	SYM
 ;
 %%
 /***** parser_foot.sym *****/

@@ -3,6 +3,8 @@
 class Comment
 AUTOGEN
 
+$FILES
+
 #@class(Comment){'// ',AUTOGEN,'\n// module:',MODULE,'\n\n'}
 #$class(Comment){'// ',AUTOGEN,'\n// module:',MODULE,'\n\n'}
 
@@ -33,6 +35,7 @@ $date()
 
 .inc 'vim.sym'
 .inc 'vimedit.sym'
+$FILES
 
 .inc 'win32res.sym'
 
