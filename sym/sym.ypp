@@ -21,7 +21,7 @@ sym:
 	| sym FEOF EOL			{ W((new directive(".eof"))->tagval(),false); }
 	| sym AX elem			{ W($3->dump()); }
 	| sym SX elem			{ W($3->eval()->value); }
-	| sym CLS classdef		{ W($2->dump()); W($3->eval()->value); }
+	| sym classdef			{ W($2->dump()); W($2->eval()->dump()); }
 	| sym EOL				{ W($2); }
 	| sym CHAR				{ W($2); }
 ;
@@ -43,7 +43,8 @@ block :
 	| LB elem RB		{ $$ = new object("block","{}"); $$->join($2);	}
 ;
 classdef :
-	SYM
+	  CLS				{ $$ = $1; }
+	| classdef SYM		{ $$ = $1; $$->join($2); }
 ;
 %%
 /***** parser_foot.sym *****/
