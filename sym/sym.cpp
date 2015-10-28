@@ -59,7 +59,7 @@ void env_init() {
 	env["LICENSE"] = new object("str",LICENSE);
 	env["GITHUB"] = new object("str",GITHUB);
 	env["AUTOGEN"] = new object("str",AUTOGEN);
-	env["FILES"] = new object("str","files:");
+	env["FILES"] = new object("str","");
 	env["C_FILES"] = new object("str","");
 	env["H_FILES"] = new object("str","");
 	env["UP_FILES"] = new object("str","");
