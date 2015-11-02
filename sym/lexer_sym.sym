@@ -1,26 +1,3 @@
-$'\t/* dynamic engine basic object (tag+value) */'
-\#define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
-$'\t/* dynamic engine class inherited from basic object */'
-\#define TX(C,X)	{ yylval.o = new C(yytext); return X; }
-
-string StrBuf;								/* buffer for string parser mode */
-
-void incFileName(object* o) {						/* process included .sym */
-	string filename = o->eval()->value;		/* eval(o) as filename parameter */
-	W(new directive(".inc "+filename),false);  		/* dump directive to log */
-	yyin = fopen(filename.c_str(),"r");			  /* open included .sym file */
-	if (!yyin) yyerror(".inc "+filename);			   /* check file open ok */
-	yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE )); /* switch lex */
-}
-$'%}'
-$'\t\t\t\t\t/* options */\n%option noyywrap'
-$'\t\t\t\t\t/* enable line numbers info in lexer */\n%option yylineno'
-$'\t\t\t\t\t/* lexer states */'
-$'\t\t\t\t\t/* bI/sym expresssion mode */\n%x x'
-$'\t\t\t\t\t/* string parsing */\n%x s'
-$'\t\t\t\t\t/* class definition */\n%x cls'
-/***** lexer_head.sym *****/
-%%
 
 \\\\.					T1(CHAR)						/* escape prefixed char */
 \#[^\\n]*\\n			{}								/* line comment */
@@ -68,3 +45,4 @@ $'\t\t\t\t\tyylval.o=new object("str",StrBuf); return STR;}'
 <s>\\\\t				{StrBuf+="\\t";}				/* \\t TAB in string */
 <s>.				{StrBuf+=yytext[0];}		/* any other char as is */
 
+\\n					TC(EOL)						/* end line <CR> */
