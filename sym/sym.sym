@@ -1,20 +1,4 @@
 
-.module calc
-.title tiny algebraic calculator language
-.inc 'readme.sym'
-.inc 'gitignore.sym'
-.eof
-.inc 'makefile.sym'
-.inc 'parser_head.sym'
-.inc 'parser_foot.sym'
-.inc 'lexer_head.sym'
-.eof
-#.inc 'lexer_head.sym'
-#.inc 'lexer_foot.sym'
-.inc 'hpp.sym'
-.inc 'cpp.sym'
-.inc 'vimedit.sym'
-
 .module sym
 
 class Comment
@@ -43,6 +27,7 @@ calc
 .inc 'makefile.sym'
 
 .inc 'parser_head.sym'
+.inc 'parser_sym.sym'
 .inc 'parser_foot.sym'
 
 .inc 'lexer_head.sym'

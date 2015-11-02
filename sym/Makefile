@@ -4,6 +4,7 @@
 .PHONY: exec
 exec: ./sym$(EXE)
 	./sym$(EXE) < sym.sym > sym.log
+	./sym$(EXE) < calc.sym > calc.log
 	cp *.sym sym/
 
 .PHONY: clean
