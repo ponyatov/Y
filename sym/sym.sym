@@ -1,6 +1,8 @@
 
 .module calc
 .inc 'readme.sym'
+.inc 'gitignore.sym'
+.eof
 .inc 'vimedit.sym'
 
 .module sym
@@ -25,6 +27,7 @@ $date()
 .inc 'readme.sym'
 
 .inc 'gitignore.sym'
+calc
 .eof
 
 .inc 'makefile.sym'

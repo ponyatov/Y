@@ -7,5 +7,3 @@ $MODULE
 /tmp/
 $MODULE,'.lex.cpp'
 $MODULE,'.tab.?pp'
-calc
-
