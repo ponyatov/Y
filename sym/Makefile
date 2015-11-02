@@ -5,12 +5,13 @@
 exec: ./sym$(EXE)
 	./sym$(EXE) < sym.sym > sym.log
 	./sym$(EXE) < calc.sym > calc.log
-	cp *.sym sym/
+	mkdir -p sym ; cp *.sym sym/
 
 .PHONY: clean
 clean:
 	rm -rf sym tmp ./sym$(EXE) sym.log 
 	rm -rf sym.lex.?pp sym.tab.?pp *~ .*~
+	rm -rf calc calc.exe calc.log
 
 .PHONY: upgrade
 upgrade:
