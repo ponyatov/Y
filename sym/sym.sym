@@ -1,3 +1,8 @@
+
+.module calc
+.inc 'readme.sym'
+.inc 'vimedit.sym'
+
 .module sym
 
 class Comment

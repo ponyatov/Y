@@ -1,6 +1,6 @@
 .file 'vimedit.bat'
 \@start .
-\@start git gui
+#\@start git gui
 #\@start sym/vimedit.bat
 $'@start gvim -p ',MODULE,'.sym ',MODULE,'.log ',MODULE,'.ypp ',MODULE,'.lpp ',MODULE,'.hpp ',MODULE,'.cpp Makefile vimedit.bat ',FILES
 .eof
