@@ -8,38 +8,4 @@ $'%{\n#include "',MODULE,'.hpp"\n%}'
 	string *s;		/* simple string */
 	object *o;		/* bI/sym engine dynamic object (AST-based data element) */
 }
-$'%token\t<c>\t\tCHAR EOL SX AX COMMA LP RP LB RB'
-$'%token\t<o>\t\tDIRECTIVE FINC FFILE FEOF SYM STR CLS'
-$'%type\t<o>\t\tex list elem block classdef'
-%%
-$MODULE,':'
-$'\t| ',MODULE,' DIRECTIVE\t\t\t{ W($2); }'
-$'\t| ',MODULE,' FINC elem EOL\t\t{ incFileName($3); W($4,false); }'
-$'\t| ',MODULE,' FFILE elem EOL\t{'
-$'\t\tW(new directive(".file "+$3->eval()->value),false); W($4,false); }'
-$'\t| ',MODULE,' FEOF EOL\t\t\t{ W((new directive(".eof"))->tagval(),false); }'
-$'\t| ',MODULE,' AX elem\t\t\t{ W($3->dump()); }'
-$'\t| ',MODULE,' SX elem\t\t\t{ W($3->eval()->value); }'
-$'\t| ',MODULE,' CLS classdef\t\t{ W($2->dump()); W($3->eval()->value); }'
-$'\t| ',MODULE,' EOL\t\t\t\t{ W($2); }'
-$'\t| ',MODULE,' CHAR\t\t\t\t{ W($2); }\n;'
-elem : ex | list | block ;
-ex : 
-      SYM LP ex RP block	{ \$\$ = \$1; \$\$->tag="fn"; 
-								\$\$->join(\$3); \$\$->join(\$5); 		}
-    | SYM LP ex RP 			{ \$\$ = \$1; \$\$->tag="fn"; \$\$->join(\$3);	}
-    | SYM LP RP	block		{ \$\$ = \$1; \$\$->tag="fn"; \$\$->join(\$4);	}
-    | SYM LP RP				{ \$\$ = \$1; \$\$->tag="fn";              	}
-	| SYM | STR 
-;
-list :
-	  ex COMMA ex		{ \$\$ = new object("list",""); \$\$->join(\$1); \$\$->join(\$3); }
-	| list COMMA ex		{ \$\$ = \$1; \$\$->join(\$3); }
-;
-block : 
-	  LB RB 			{ \$\$ = new object("block","{}"); 				}
-	| LB elem RB		{ \$\$ = new object("block","{}"); \$\$->join(\$2);	}
-;
-classdef :
-	SYM
-;
+$'%token\t<c>\t\tCHAR'

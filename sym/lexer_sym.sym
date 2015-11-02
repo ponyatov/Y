@@ -1,11 +1,3 @@
-$'%{\n#include "',MODULE,'.hpp"'
-$'\t\t\t\t\t\t\t\t\t\t\t\t\t\t/* token macroses */'
-$'\t/* single char */'
-\#define TC(X)	{ yylval.c = yytext[0]; return X; }
-$'\t/* escaped single char */'
-\#define T1(X)	{ yylval.c = yytext[1]; return X; }
-$'\t/* simple string */'
-\#define TS(X)	{ yylval.s = new string(yytext); return X; }
 $'\t/* dynamic engine basic object (tag+value) */'
 \#define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
 $'\t/* dynamic engine class inherited from basic object */'

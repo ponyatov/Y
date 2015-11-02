@@ -1,4 +1,11 @@
 .file MODULE,'.lpp'
 $'/* ',AUTOGEN,' */'
 /***** lexer_head.sym *****/
-
+$'%{\n#include "',MODULE,'.hpp"'
+$'\t\t\t\t\t\t\t\t\t\t\t\t\t\t/* token macroses */'
+$'\t/* single char */'
+\#define TC(X)	{ yylval.c = yytext[0]; return X; }
+$'\t/* escaped single char */'
+\#define T1(X)	{ yylval.c = yytext[1]; return X; }
+$'\t/* simple string */'
+\#define TS(X)	{ yylval.s = new string(yytext); return X; }
