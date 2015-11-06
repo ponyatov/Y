@@ -3,14 +3,15 @@
 
 .PHONY: exec
 exec: ./sym$(EXE)
-	./sym$(EXE) < sym.sym > sym.log
+	./sym$(EXE) < sym.sym  > sym.log
 	./sym$(EXE) < calc.sym > calc.log
-	cp *.sym sym/
+	mkdir -p sym ; cp *.sym sym/
 
 .PHONY: clean
 clean:
 	rm -rf sym tmp ./sym$(EXE) sym.log 
 	rm -rf sym.lex.?pp sym.tab.?pp *~ .*~
+	rm -rf calc calc.exe calc.log
 
 .PHONY: upgrade
 upgrade:
@@ -26,15 +27,9 @@ upgrade:
 	cp sym/sym.lpp ./
 	cp sym/sym.hpp ./
 	cp sym/sym.cpp ./
-	cp sym/Comment.?pp ./
-
 
 C = sym.cpp sym.tab.cpp sym.lex.cpp
-C += Comment.cpp
-
 H = sym.hpp sym.tab.hpp
-H += Comment.hpp
-
 ./sym$(EXE): $(C) $(H) $(RES)
 	$(CXX) $(CXXFILES) -o $@ $(C) $(RES)
 sym.tab.cpp: sym.ypp

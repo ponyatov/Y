@@ -3,12 +3,13 @@ $'## ',AUTOGEN,' ##'
 $'##### makefile.sym #####'
 $'\n.PHONY: exec'
 exec: ./$MODULE,'$(EXE)'
-$'\t./',MODULE,'$(EXE) < ',MODULE,'.sym > ',MODULE,'.log'
+$'\t./',MODULE,'$(EXE) < ',MODULE,'.sym  > ',MODULE,'.log'
 $'\t./',MODULE,'$(EXE) < ','calc','.sym > ','calc','.log'
 $'\tmkdir -p ',MODULE,' ; cp *.sym ',MODULE,'/'
 $'\n.PHONY: clean\nclean:'
 $'\trm -rf ',MODULE,' tmp ./',MODULE,'$(EXE) ',MODULE,'.log '
 $'\trm -rf ',MODULE,'.lex.?pp ',MODULE,'.tab.?pp *~ .*~'
+$'\trm -rf calc calc.exe calc.log'
 $'\n.PHONY: upgrade\nupgrade:'
 $'\tcp ',MODULE,'/README.md ./'
 $'\tcp ',MODULE,'/.gitignore ./'
@@ -22,11 +23,11 @@ $'\tcp ',MODULE,'/',MODULE,'.ypp ./'
 $'\tcp ',MODULE,'/',MODULE,'.lpp ./'
 $'\tcp ',MODULE,'/',MODULE,'.hpp ./'
 $'\tcp ',MODULE,'/',MODULE,'.cpp ./'
-$UP_FILES
+#$UP_FILES
 $'\nC = ',MODULE,'.cpp ',MODULE,'.tab.cpp ',MODULE,'.lex.cpp'
-$C_FILES
+#$C_FILES
 $'H = ',MODULE,'.hpp ',MODULE,'.tab.hpp'
-$H_FILES
+#$H_FILES
 #$'RES ?= ',MODULE,'.res'
 $'./',MODULE,'$(EXE): $(C) $(H) $(RES)'
 $'\t$(CXX) $(CXXFILES) -o $@ $(C) $(RES)'
