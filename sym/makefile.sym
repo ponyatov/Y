@@ -34,7 +34,7 @@ $MODULE,'.tab.cpp: ',MODULE,'.ypp'
 $'\tbison $<'
 $MODULE,'.lex.cpp: ',MODULE,'.lpp'
 $'\tflex -o $@ $<'
-$MODULE,'.res: ',MODULE,'.rc\n\twindres ',MODULE,'.rc -O coff -o $@'
+$MODULE,'.res: ',MODULE,'.rc\n\twindres $< -O coff -o $@'
 $'##### makefile.sym #####'
 .eof
 
