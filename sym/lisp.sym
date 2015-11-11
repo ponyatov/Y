@@ -1,4 +1,10 @@
-.module		lisp
+.module	lisp
 .title		Generic LISP engine in bI/sym script
 .inc 'module.sym'
+
+.using 
+
+http://stackoverflow.com/questions/3431998/a-small-lisp-like-dsl-that-gets-compiled-into-c-c-code-antlr-a-good-choice
+
+http://blog.databigbang.com/tag/lisp/
 
