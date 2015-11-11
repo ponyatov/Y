@@ -3,9 +3,10 @@
 
 .PHONY: exec
 exec: ./sym$(EXE)
-	./sym$(EXE) < sym.sym  > sym.log
-	./sym$(EXE) < calc.sym > calc.log
-	mkdir -p sym ; cp *.sym sym/
+	./sym$(EXE) < lisp.sym > lisp.log
+#	./sym$(EXE) < sym.sym  > sym.log
+#	./sym$(EXE) < calc.sym > calc.log
+#	mkdir -p sym ; cp *.sym sym/
 
 .PHONY: clean
 clean:
