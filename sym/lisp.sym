@@ -1,4 +1,4 @@
-.module lisp
-.title Generic LISP engine in bI/sym script
+.module		lisp
+.title		Generic LISP engine in bI/sym script
 .inc 'module.sym'
 
