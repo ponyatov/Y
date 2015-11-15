@@ -26,3 +26,11 @@ GitHub: https://github.com/ponyatov/PIL
 * symbolic and numeric computations
 * complex engeneering systems design
 
+### LISP-like evaluator
+
+System includes experimantal list evaluator tested with some Lisp tutorials:
+
+[dana]
+Dana Nau
+[Introduction to (Allegro) Lisp](http://www.cs.umd.edu/~nau/cmsc421/lisp-intro.pdf)
+
