@@ -1,13 +1,4 @@
-.file README.md
-\# $LOGO$ $MODULE$: $TITLE$
-\#\#\# $ABOUT$
-
-$AUTHOR$
-
-license: $LICENSE$
-
-GitHub: $GITHUB$
-
+.inc sym/README.pil
 
 \#\#\# includes:
 * dynamic symbolic object subsystem 

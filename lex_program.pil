@@ -6,7 +6,6 @@
 #.author (c) Jonh Doe <jd@mail.com>
 #.github
 
-.inc README.pil
 .inc gitignore.pil
 .file bat.bat
 .file sh.sh
@@ -19,3 +18,4 @@
 
 .file cpp.cpp
 .inc makefile.pil # includes lexic makefile template
+.inc README.pil
