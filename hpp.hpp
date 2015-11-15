@@ -3,20 +3,6 @@
 
 #include "PIL/hpp.hpp"
 
-struct Directive:sym { Directive(string); };
-
-struct Module:sym { Module(string); };
-struct File:sym {File(string); FILE *fh; ~File(); };
-
-extern Module *curr_module;
-extern File *curr_file;
-
-struct Int:sym { Int(string); sym* eval(); };
-struct Num:sym { Num(string); sym* eval(); };
-
-struct List:sym { List(); };
-struct Op:sym {Op(string);};
-
 extern int yylex();
 extern int yylineno;
 extern char* yytext;

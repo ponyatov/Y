@@ -39,9 +39,24 @@ struct sym {
 	vector<sym*> nest;			// nested objects tree
 	void join(sym*);			// add nested object
 };
-
 extern map<string,sym*> env;	// \\ global environment: objects registry
 extern void env_init();			// //
+
+// dynamic symbolic object subsystem
+
+struct Directive:sym { Directive(string); };					// .directive
+
+struct Module:sym { Module(string); };							// .module
+struct File:sym {File(string); FILE *fh; ~File(); };			// .file
+
+extern Module *curr_module;		// current module
+extern File *curr_file;			// current output file or NULL
+
+struct Int:sym { Int(string); sym* eval(); };					// integer
+struct Num:sym { Num(string); sym* eval(); };					// float number
+
+struct List:sym { List(); };									// [list]
+struct Op:sym {Op(string);};									// operator
 
 
 #endif // _H_PILH

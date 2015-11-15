@@ -6,6 +6,7 @@
 .inc sym/meta.pil
 .inc sym/stdinc.pil
 .inc sym/sym.pil
+.inc sym/dyna.pil
 \#endif // _H_$MODULE$H
 .eof
 
