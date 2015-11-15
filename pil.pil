@@ -1,0 +1,7 @@
+# (source) file templates
+.file README.md
+.file .gitignore
+# numbers
+-01 002 +003 0x12AF 0b1101
++04.5 +006e-07
+# comment
