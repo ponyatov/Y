@@ -14,7 +14,7 @@
 PIL :
 	| PIL CHAR			{ W($2); }
 	| PIL DIRECTIVE		{ W($2); }
-	| PIL ex			{ W($2); }
+	| PIL ex			{ W($2); W($2->eval()); W("\n================="); }
 ;
 ex : SYM | NUM | STR ;
 %%

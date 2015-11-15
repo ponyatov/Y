@@ -17,11 +17,18 @@ string sym::dump(int depth) {
 	return S;
 }
 
+sym* sym::eval()	{ return this; }
+
 Directive::Directive(string V):sym("",V) {
 	while (value.size()&&(value[0]!='\t'&&value[0]!=' ')) {
 		tag += value[0]; value.erase(0,1); }
 	while (value.size()&&(value[0]=='\t'||value[0]==' '))
 		                 value.erase(0,1);
+	// inline eval
+	if (tag==".file") { value = curr_module->value+"/"+value;
+		if (curr_file) delete curr_file; curr_file=new File(value); }
+	if (tag==".eof") {
+		if (curr_file) delete curr_file; curr_file=NULL; }
 }
 
 Module::Module(string V):sym("module",V)	{
@@ -31,6 +38,9 @@ Module::Module(string V):sym("module",V)	{
 	mkdir(V.c_str(),0700);
 	#endif
 }
+
+File::File(string V):sym("file",V) { assert(fh=fopen(V.c_str(),"w"));}
+File::~File() { fclose(fh); }
 
 Module *curr_module = new Module("next");
 File *curr_file = NULL;

@@ -18,7 +18,8 @@ struct sym {
 	string value;
 	sym(string,string);
 	string dump(int depth=0);
-	sym* eval();
+	virtual sym* eval();
+protected:
 	string tagval();
 	string pad(int);
 };
