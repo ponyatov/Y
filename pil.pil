@@ -2,19 +2,8 @@
 .module PIL
 .title bI/PIL
 .about Program In Line
-
-.inc README.pil
-.inc gitignore.pil
-.file bat.bat
-.file sh.sh
-.file filetype.vim
-.file syntax.vim
-.file ypp.ypp
-.file lpp.lpp
-.file hpp.hpp
-.file cpp.cpp
-.inc makefile.pil # includes lexic makefile template
+.inc lex_program.pil
 # numbers and list
-?-01 [] 002 [ +003 0x12AF ] 0b1101
+?-01 [] 002 [[ +003 0x12AF ] 0b1101]
 ?+04.5 +006e-07
 # comment

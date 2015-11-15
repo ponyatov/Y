@@ -1,0 +1,19 @@
+# lexical program module template
+
+#.module PIL
+#.title bI/PIL
+#.about Program In Line
+#.author (c) Jonh Doe <jd@mail.com>
+#.github
+
+.inc README.pil
+.inc gitignore.pil
+.file bat.bat
+.file sh.sh
+.file filetype.vim
+.file syntax.vim
+.file ypp.ypp
+.file lpp.lpp
+.file hpp.hpp
+.file cpp.cpp
+.inc makefile.pil # includes lexic makefile template
