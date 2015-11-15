@@ -1,0 +1,27 @@
+%{
+#include "hpp.hpp"
+%}
+
+%option noyywrap
+%option yylineno
+
+DR	[ \t]*[^\n]*
+S	[\+\-]?
+D	[0-9]+
+
+%%
+#[^\n]*\n	W(yytext);
+
+^\.module{DR}		TX(Directive,DIRECTIVE)
+^\.file{DR}			TX(Directive,DIRECTIVE)
+^\.eof				TX(Directive,DIRECTIVE)
+
+{S}{D}				TO("int",NUM)
+0x[0-9A-F]+			TO("hex",NUM)
+0b[01]+				TO("bin",NUM)
+{S}{D}\.{D}			TO("num",NUM)
+{S}{D}[eE]{S}{D}	TO("num",NUM)
+
+\n			TC(CHAR)
+.			TC(CHAR)
+%%

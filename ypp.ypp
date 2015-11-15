@@ -1,0 +1,20 @@
+%{
+#include "hpp.hpp"
+%}
+%defines
+%union {
+	char c;
+	string *s;
+	sym *o;
+}
+%token <c> CHAR
+%token <o> DIRECTIVE SYM NUM STR
+%type <o> ex
+%%
+PIL :
+	| PIL CHAR			{ W($2); }
+	| PIL DIRECTIVE		{ W($2); }
+	| PIL ex			{ W($2); }
+;
+ex : SYM | NUM | STR ;
+%%
