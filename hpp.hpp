@@ -1,6 +1,9 @@
 #ifndef _H_PIL
 #define _H_PIL
 
+#include "PIL/hpp.hpp"
+
+/*
 #define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"
 #define GITHUB "https://github.com/ponyatov/PIL"
@@ -20,6 +23,7 @@
 #include <vector>
 #include <map>
 using namespace std;
+*/
 
 struct sym {
 	string tag;

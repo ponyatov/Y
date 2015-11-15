@@ -1,3 +1,4 @@
+# DO NOT EDIT: this file was autogened by PIL
 .PHONY: exec
 exec: ./PIL$(EXE)
 	./PIL$(EXE) < pil.pil > log.pilog

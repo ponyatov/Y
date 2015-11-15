@@ -39,6 +39,7 @@ void env_init() {
 	env["LOGO"]=new sym("logo",LOGO);
 	env["LICENSE"]=new sym("license",LICENSE);
 	env["GITHUB"]=new sym("github",GITHUB);
+	env["AUTOGEN"]=new sym("autogen",AUTOGEN);
 	env["MODULE"]=curr_module;
 }
 

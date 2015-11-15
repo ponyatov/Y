@@ -1,4 +1,5 @@
 .file Makefile
+\# $AUTOGEN$
 .PHONY: exec
 exec: ./$MODULE$\$(EXE)
 	./$MODULE$\$(EXE) < pil.pil > log.pilog

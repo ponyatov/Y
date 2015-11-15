@@ -14,6 +14,8 @@
 .file syntax.vim
 .file ypp.ypp
 .file lpp.lpp
-.file hpp.hpp
+
+.inc sym/hpp.pil
+
 .file cpp.cpp
 .inc makefile.pil # includes lexic makefile template

@@ -24,7 +24,7 @@ D	[0-9]+
 ^\.module{DF}		TX(Directive,MODULE)
 ^\.file{DF}			TX(Directive,FFILE)
 ^\.eof				TX(Directive,FEOF)
-^\.inc{DF}			TX(Directive,DIRECTIVE)
+^\.inc{DF}			TX(Directive,INC)
 ^\.(title|about){DR}			TX(Directive,DIRECTIVE)
 
 \@					{BEGIN(x);TC(AX);}

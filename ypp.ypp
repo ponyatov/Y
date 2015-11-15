@@ -8,7 +8,7 @@
 	sym *o;
 }
 %token <c> CHAR AX SX QX
-%token <o> DIRECTIVE MODULE FFILE FEOF SYM NUM STR
+%token <o> DIRECTIVE MODULE FFILE FEOF INC SYM NUM STR
 %token <o> LQ RQ
 %type <o> ex xx list
 %%
@@ -19,6 +19,7 @@ PIL :
 						curr_module = new Module($2->value); env["MODULE"]=curr_module; }
 	| PIL FFILE CHAR	{ W($2,false); }
 	| PIL FEOF CHAR		{ W($2,false); }
+	| PIL INC 			{ W($2,false); }
 	| PIL DIRECTIVE		{ W($2); }
 	| PIL AX xx			{ W($3,false); }
 	| PIL SX xx			{ W($3->eval()->value); }
