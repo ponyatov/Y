@@ -52,6 +52,7 @@ void env_init() {
 	env["%E"]=new sym("error","%E");
 	// low-level fu()nctions
 	env["+"]=new Fn("add",add);
+	env["print"]=new Fn("print",print);
 }
 
 Directive::Directive(string V):sym("",V) {
@@ -96,6 +97,8 @@ sym* Num::eval() {
 	char S[0x100]; sprintf(S,"%E",atof(value.c_str())); value=S;
 	return this; }
 
+Str::Str(string V):sym("str",V)	{}
+
 List::List():sym("list","[]") {}
 Op::Op(string V):sym("op",V) {}
 
@@ -111,3 +114,5 @@ sym* List::add(sym*o)	{ join(o); return this; }
 sym* Int::add(sym*o)	{ assert(o->tag=="int");
 	ostringstream os; os << atoi(value.c_str()) + atoi(o->value.c_str());
 	value=os.str(); return this; }
+
+sym* print(sym*o) { sym* T = new Str(o->nest[1]->value); W(T->value); return T; }

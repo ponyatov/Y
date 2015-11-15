@@ -56,6 +56,7 @@ extern File *curr_file;					// current output file
 
 struct Int:sym { Int(string); sym* eval(); sym* add(sym*); };	// integer
 struct Num:sym { Num(string); sym* eval(); };					// float number
+struct Str:sym { Str(string); };								// string
 
 struct List:sym { List(); sym* add(sym*); };					// [list]
 struct Op:sym {Op(string);};									// operator
@@ -63,7 +64,9 @@ struct Op:sym {Op(string);};									// operator
 typedef sym* (*FN)(sym*);										// ptr to fn()
 struct Fn:sym { Fn(string,FN); };								// function
 
-extern sym* add(sym*o);				// \ low-level fu()nctions
+										// low-level fu()nctions
+extern sym* add(sym*o);
+extern sym* print(sym*o);
 
 // lexer/parser interface (flex/bison)
 
