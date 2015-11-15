@@ -6,3 +6,10 @@
 license: http://www.gnu.org/copyleft/lesser.html
 
 GitHub: https://github.com/ponyatov/PIL
+
+
+### includes:
+* a
+* b
+* c
+

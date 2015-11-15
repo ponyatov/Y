@@ -7,4 +7,11 @@ $AUTHOR$
 license: $LICENSE$
 
 GitHub: $GITHUB$
+
+
+\#\#\# includes:
+* a
+* b
+* c
+
 .eof
