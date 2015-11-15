@@ -2,12 +2,16 @@
 
 #define YYERR "\n\n"<<msg<<" #"<<yylineno<<" ["<<yytext<<"]\n\n"
 void yyerror(string msg) { cerr<<YYERR; cout<<YYERR; exit(-1); }
-int main() { return yyparse(); }
+int main() { env_init(); return yyparse(); }
 
-void W(char    c,bool to_file)	{ cout << c ; }
-void W(string  s,bool to_file)	{ cout <<  s; }
-void W(string *s,bool to_file)	{ cout << *s; }
-void W(sym    *o,bool to_file)	{ cout << o->dump(); }
+void W(char    c,bool to_file)	{ cout << c ;
+	if (to_file&&curr_file) fprintf(curr_file->fh,"%c",c); }
+void W(string  s,bool to_file)	{ cout <<  s;
+	if (to_file&&curr_file) fprintf(curr_file->fh,"%s",s.c_str()); }
+void W(string *s,bool to_file)	{ cout << *s;
+	if (to_file&&curr_file) fprintf(curr_file->fh,"%s",s->c_str()); }
+void W(sym    *o,bool to_file)	{ cout << o->dump();
+	if (to_file&&curr_file) fprintf(curr_file->fh,"%s",o->dump().c_str()); }
 
 sym::sym(string T,string V)	{ tag=T; value=V; }
 void sym::join(sym*o)	{ nest.push_back(o); }
@@ -22,7 +26,17 @@ string sym::dump(int depth) {
 	return S;
 }
 
-sym* sym::eval()	{ return this; }
+sym* sym::eval()	{
+	for (vector<sym*>::iterator it=nest.begin(); it!=nest.end(); it++)
+		(*it) = (*it)->eval();
+	if (env[value]) return env[value];
+	else return this;
+}
+
+map<string,sym*> env;
+void env_init() {
+	env["MODULE"]=curr_module;
+}
 
 Directive::Directive(string V):sym("",V) {
 	while (value.size()&&(value[0]!='\t'&&value[0]!=' ')) {

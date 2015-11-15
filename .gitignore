@@ -2,7 +2,9 @@
 *.swp
 PIL.elf
 PIL.exe
+*.log
 *.pilog
 ypp.tab.?pp
 lex.yy.c
 next
+PIL

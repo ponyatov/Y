@@ -1,6 +1,13 @@
 .PHONY: exec
 exec: ./PIL$(EXE)
 	./PIL$(EXE) < pil.pil > log.pilog
+.PHONY: clean
+clean:
+	rm -rf *~ .*~ *.log ./PIL$(EXE) *.pilog ypp.tab.?pp lex.yy.c
+.PHONY: upgrade
+upgrade:
+	cp PIL/Makefile ./
+	cp PIL/.gitignore ./
 C = cpp.cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp ypp.tab.hpp
 ./PIL$(EXE): $(C) $(H)

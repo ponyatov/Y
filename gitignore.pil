@@ -1,0 +1,12 @@
+.file .gitignore
+*~
+*.swp
+$MODULE$.elf
+$MODULE$.exe
+*.log
+*.pilog
+ypp.tab.\?pp
+lex.yy.c
+next
+$MODULE$
+.eof

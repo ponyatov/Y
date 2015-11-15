@@ -1,3 +1,20 @@
 .file Makefile
-.PHONY: ./\$MODILE\$(EXE)
+.PHONY: exec
+exec: ./$MODULE$\$(EXE)
+	./$MODULE$\$(EXE) < pil.pil > log.pilog
+.PHONY: clean
+clean:
+	rm -rf *~ .*~ *.log ./$MODULE$\$(EXE) *.pilog ypp.tab.\?pp lex.yy.c
+.PHONY: upgrade
+upgrade:
+	cp $MODULE$/Makefile ./
+	cp $MODULE$/.gitignore ./
+C = cpp.cpp ypp.tab.cpp lex.yy.c
+H = hpp.hpp ypp.tab.hpp
+./$MODULE$\$(EXE): \$(C) \$(H)
+	\$(CXX) \$(CXXFLAGS) -o \$\@ \$(C)
+ypp.tab.cpp: ypp.ypp
+	bison \$<
+lex.yy.c: lpp.lpp
+	flex \$<
 .eof
