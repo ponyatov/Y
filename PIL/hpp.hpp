@@ -26,5 +26,18 @@
 #include <map>
 using namespace std;
 
+// generic AST-like dynamic object
+
+struct sym {
+	string tag;					// object class or data type
+	string value;				// object value in string form
+	sym(string,string);			// constructor from string form tag:value
+	string dump(int depth=0);	// dump object in string form
+	virtual sym* eval();		// evaluate (compute) object
+	string tagval();			// <tag:value> string
+	string pad(int);			// pad tagval with tabs
+	vector<sym*> nest;			// nested objects tree
+	void join(sym*);			// add nested object
+};
 
 #endif // _H_PILH

@@ -3,16 +3,9 @@
 \#ifndef _H_$MODULE$H
 \#define _H_$MODULE$H
 
-// metainfo constants
-
-\#define AUTHOR "$AUTHOR$"
-\#define LICENSE "$LICENSE$"
-\#define GITHUB "https://github.com/ponyatov/$MODULE$"
-\#define AUTOGEN "DO NOT EDIT: this file was autogened by $MODULE$"
-\#define LOGO "$LOGO$"
-
+.inc sym/meta.pil
 .inc sym/stdinc.pil
-
+.inc sym/sym.pil
 \#endif // _H_$MODULE$H
 .eof
 

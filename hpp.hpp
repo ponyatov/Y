@@ -3,40 +3,6 @@
 
 #include "PIL/hpp.hpp"
 
-/*
-#define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
-#define LICENSE "http://www.gnu.org/copyleft/lesser.html"
-#define GITHUB "https://github.com/ponyatov/PIL"
-#define AUTOGEN "DO NOT EDIT: this file was autogened by bI/PIL metasystem"
-#define LOGO "![logo](logo64x64.png)"
-
-#include <iostream>
-#include <sstream>
-#include <cstdlib>
-#include <cstdio>
-#include <cassert>
-#ifdef __MINGW32__
-	#include <direct.h>
-#else
-	#include <sys/stat.h>
-#endif
-#include <vector>
-#include <map>
-using namespace std;
-*/
-
-struct sym {
-	string tag;
-	string value;
-	sym(string,string);
-	string dump(int depth=0);
-	virtual sym* eval();
-	string tagval();
-	string pad(int);
-	vector<sym*> nest;
-	void join(sym*);
-};
-
 extern map<string,sym*> env;
 extern void env_init();
 
