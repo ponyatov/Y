@@ -19,7 +19,8 @@ D	[0-9]+
 %x x
 %%
 \\.					T1(CHAR)
-#[^\n]*\n			W(yytext,false);
+#[^\n]*\n			{W(yytext,false);}
+<x>#[^\n]*\n		{W(yytext,false);BEGIN(INITIAL);}
 
 ^\.module{DF}		TX(Directive,MODULE)
 ^\.file{DF}			TX(Directive,FFILE)

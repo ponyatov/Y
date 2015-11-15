@@ -1,6 +1,6 @@
 # [dana] test suite
-?[ + 2 3 5 ]
-#.end
+?[ + 2 3 5 ]	# dana p.15 (1)
+.end
 # lexical program module template
 .module PIL
 .title bI/PIL
