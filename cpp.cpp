@@ -42,6 +42,10 @@ void env_init() {
 	env["GITHUB"]=new sym("github",GITHUB);
 	env["AUTOGEN"]=new sym("autogen",AUTOGEN);
 	env["MODULE"]=curr_module;
+	env["%T"]=new sym("true","%T");
+	env["%F"]=new sym("false","%F");
+	env["%N"]=new sym("nil","%N");
+	env["%E"]=new sym("error","%E");
 }
 
 Directive::Directive(string V):sym("",V) {

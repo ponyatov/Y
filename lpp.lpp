@@ -41,7 +41,14 @@ D	[0-9]+
 <x>{S}{D}\.{D}		TX(Num,NUM)
 <x>{S}{D}[eE]{S}{D}	TX(Num,NUM)
 
+<x>\+				TX(Op,ADD)
+<x>\-				TX(Op,SUB)
+<x>\*				TX(Op,MUL)
+<x>\/				TX(Op,DIV)
+<x>\^				TX(Op,POW)
+
 <x>[a-zA-Z0-9_]+	TO("sym",SYM)
+<x>\%[TFNE]			TO("sym",SYM)
 
 <x>\[		TX(Op,LQ)
 <x>\]		TX(Op,RQ)

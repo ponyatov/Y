@@ -10,7 +10,8 @@
 %token <c> CHAR AX SX QX
 %token <o> DIRECTIVE MODULE FFILE FEOF INC SYM NUM STR
 %token <o> LQ RQ
-%type <o> ex xx list
+%token <o> ADD SUB MUL DIV POW
+%type <o> ex xx list op
 %%
 PIL :
 	| PIL CHAR			{ W($2); }
@@ -23,9 +24,13 @@ PIL :
 	| PIL DIRECTIVE		{ W($2); }
 	| PIL AX xx			{ W($3,false); }
 	| PIL SX xx			{ W($3->eval()->value); }
-	| PIL QX xx			{ W($3,false); W("\n----------",false); W($3->eval()); }
+	| PIL QX xx			{ W($3,false);
+						  W("\n----------",false);
+						  W($3->eval());
+						  W("\n=========================",false);
+						}
 ;
-ex : SYM | NUM | STR
+ex : SYM | NUM | STR | op
 	| LQ RQ				{ $$ = new List(); }
 	| LQ xx RQ			{ $$ = $2; }
 ;
@@ -34,4 +39,5 @@ list :
 	| list ex			{ $$ = $1; $$->join($2); }
 ;
 xx : ex | list ;
+op : ADD | SUB | MUL | DIV | POW ;
 %%
