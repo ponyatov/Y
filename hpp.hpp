@@ -16,6 +16,8 @@
 #else
 	#include <sys/stat.h>
 #endif
+#include <vector>
+#include <map>
 using namespace std;
 
 struct sym {
@@ -24,9 +26,10 @@ struct sym {
 	sym(string,string);
 	string dump(int depth=0);
 	virtual sym* eval();
-protected:
 	string tagval();
 	string pad(int);
+	vector<sym*> nest;
+	void join(sym*);
 };
 
 struct Directive:sym { Directive(string); };
@@ -37,9 +40,16 @@ struct File:sym {File(string); FILE *fh; ~File(); };
 extern Module *curr_module;
 extern File *curr_file;
 
+struct Int:sym { Int(string); sym* eval(); };
+struct Num:sym { Num(string); sym* eval(); };
+
+struct List:sym { List(); };
+struct Op:sym {Op(string);};
+
 extern int yylex();
 extern int yylineno;
 extern char* yytext;
+extern void incFile(sym*);
 extern int yyparse();
 extern void yyerror(string);
 #include "ypp.tab.hpp"

@@ -7,14 +7,22 @@
 	string *s;
 	sym *o;
 }
-%token <c> CHAR
+%token <c> CHAR AX SX QX
 %token <o> DIRECTIVE SYM NUM STR
-%type <o> ex
+%token <o> LQ RQ
+%type <o> ex xx list
 %%
 PIL :
 	| PIL CHAR			{ W($2); }
 	| PIL DIRECTIVE		{ W($2); }
-	| PIL ex			{ W($2); W($2->eval()); W("\n================="); }
+	| PIL AX xx			{ W($3,false); }
+	| PIL SX xx			{ W($3->eval()); }
+	| PIL QX xx			{ W($3,false); W("_",false); W($3->eval()); }
 ;
-ex : SYM | NUM | STR ;
+ex : SYM | NUM | STR | LQ RQ {$$=new List();};
+list :					
+	  ex ex				{ $$ = new List(); $$->join($1); $$->join($2); }
+	| list ex			{ $$ = $1; $$->join($2); }
+;
+xx : ex | list ;
 %%

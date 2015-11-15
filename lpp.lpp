@@ -1,5 +1,11 @@
 %{
 #include "hpp.hpp"
+
+void incFile(sym* inc) {
+	yyin = fopen(inc->value.c_str(),"r");
+	if (!yyin) yyerror(inc->tagval());
+	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));
+}
 %}
 
 %option noyywrap
@@ -9,20 +15,33 @@ DR	[ \t]*[^\n]*
 S	[\+\-]?
 D	[0-9]+
 
+%x x
 %%
-#[^\n]*\n	W(yytext);
+\\.					T1(CHAR)
+#[^\n]*\n			W(yytext,false);
 
 ^\.module{DR}		TX(Directive,DIRECTIVE)
 ^\.file{DR}			TX(Directive,DIRECTIVE)
 ^\.eof				TX(Directive,DIRECTIVE)
 ^\.inc{DR}			TX(Directive,DIRECTIVE)
 
-{S}{D}				TO("int",NUM)
-0x[0-9A-F]+			TO("hex",NUM)
-0b[01]+				TO("bin",NUM)
-{S}{D}\.{D}			TO("num",NUM)
-{S}{D}[eE]{S}{D}	TO("num",NUM)
+\@					{BEGIN(x);TC(AX);}
+\$					{BEGIN(x);TC(SX);}
+\?					{BEGIN(x);TC(QX);}
+<x>\n				{BEGIN(INITIAL);}
+<x>[ \t\r]+			W(yytext,false);
+
+<x>{S}{D}			TX(Int,NUM)
+<x>0x[0-9A-F]+		TO("hex",NUM)
+<x>0b[01]+			TO("bin",NUM)
+<x>{S}{D}\.{D}		TX(Num,NUM)
+<x>{S}{D}[eE]{S}{D}	TX(Num,NUM)
+
+<x>\[		TX(Op,LQ)
+<x>\]		TX(Op,RQ)
 
 \n			TC(CHAR)
 .			TC(CHAR)
+
+<<EOF>>	{ yypop_buffer_state(); if ( !YY_CURRENT_BUFFER ) yyterminate();}
 %%
