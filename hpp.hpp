@@ -9,6 +9,7 @@
 #define GITHUB "https://github.com/ponyatov/PIL"
 #define AUTOGEN "DO NOT EDIT: this file was autogened by PIL"
 #define LOGO "![logo](logo/logo64x64.png)"
+#define LISP "![logo](logo/warning64x64.png)"
 
 // standart includes
 
