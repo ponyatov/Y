@@ -20,7 +20,7 @@ GitHub: https://github.com/ponyatov/PIL
 * TODO: clustering subsystem for cloud computing
 * TODO: symbolic math engine
 
-### targets:
+### goals:
 * metaprogramming
 * programming language design and translator development
 * symbolic and numeric computations
