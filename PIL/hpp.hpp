@@ -40,4 +40,8 @@ struct sym {
 	void join(sym*);			// add nested object
 };
 
+extern map<string,sym*> env;	// \\ global environment: objects registry
+extern void env_init();			// //
+
+
 #endif // _H_PILH

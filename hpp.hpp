@@ -3,9 +3,6 @@
 
 #include "PIL/hpp.hpp"
 
-extern map<string,sym*> env;
-extern void env_init();
-
 struct Directive:sym { Directive(string); };
 
 struct Module:sym { Module(string); };
