@@ -1,4 +1,4 @@
 # PIL
 ### Program In Line
 
-Forth-derived script language with drop-down evaluation machanics
+Forth-derived script language with simplified evaluation machanics
