@@ -19,7 +19,10 @@ PIL :
 	| PIL SX xx			{ W($3->eval()); }
 	| PIL QX xx			{ W($3,false); W("_",false); W($3->eval()); }
 ;
-ex : SYM | NUM | STR | LQ RQ {$$=new List();};
+ex : SYM | NUM | STR
+	| LQ RQ				{ $$ = new List(); }
+	| LQ xx RQ			{ $$ = $2; }
+;
 list :					
 	  ex ex				{ $$ = new List(); $$->join($1); $$->join($2); }
 	| list ex			{ $$ = $1; $$->join($2); }

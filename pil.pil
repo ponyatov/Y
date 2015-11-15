@@ -11,6 +11,6 @@
 .file cpp.cpp
 .inc makefile.pil
 # numbers and list
-@-01 [] 002 +003 0x12AF 0b1101
+@-01 [] 002 [ +003 0x12AF ] 0b1101
 #?+04.5 ?+006e-07
 # comment
