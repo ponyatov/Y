@@ -8,6 +8,7 @@ clean:
 upgrade:
 	cp PIL/Makefile ./
 	cp PIL/.gitignore ./
+	cp PIL/README.md ./
 C = cpp.cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp ypp.tab.hpp
 ./PIL$(EXE): $(C) $(H)

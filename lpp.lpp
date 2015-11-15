@@ -11,7 +11,8 @@ void incFile(sym* inc) {
 %option noyywrap
 %option yylineno
 
-DR	[ \t]*[^ #\n]*
+DF	[ \t]*[^ #\n]*
+DR	[ \t]*[^#\n]*
 S	[\+\-]?
 D	[0-9]+
 
@@ -20,10 +21,11 @@ D	[0-9]+
 \\.					T1(CHAR)
 #[^\n]*\n			W(yytext,false);
 
-^\.module{DR}		TX(Directive,MODULE)
-^\.file{DR}			TX(Directive,FFILE)
+^\.module{DF}		TX(Directive,MODULE)
+^\.file{DF}			TX(Directive,FFILE)
 ^\.eof				TX(Directive,FEOF)
-^\.inc{DR}			TX(Directive,DIRECTIVE)
+^\.inc{DF}			TX(Directive,DIRECTIVE)
+^\.(title|about){DR}			TX(Directive,DIRECTIVE)
 
 \@					{BEGIN(x);TC(AX);}
 \$					{BEGIN(x);TC(SX);}

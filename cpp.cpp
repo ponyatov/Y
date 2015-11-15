@@ -35,6 +35,10 @@ sym* sym::eval()	{
 
 map<string,sym*> env;
 void env_init() {
+	env["AUTHOR"]=new sym("author",AUTHOR);
+	env["LOGO"]=new sym("logo",LOGO);
+	env["LICENSE"]=new sym("license",LICENSE);
+	env["GITHUB"]=new sym("github",GITHUB);
 	env["MODULE"]=curr_module;
 }
 
@@ -49,6 +53,11 @@ Directive::Directive(string V):sym("",V) {
 	if (tag==".eof") {
 		if (curr_file) delete curr_file; curr_file=NULL; }
 	if (tag==".inc") incFile(this);
+	if (tag==".title")	env["TITLE"]	=new sym("title",value);
+	if (tag==".about")	env["ABOUT"]	=new sym("about",value);
+	if (tag==".author")	env["AUTHOR"]	=new sym("author",value);
+	if (tag==".license")env["LICENSE"]	=new sym("license",value);
+	if (tag==".github")	env["GUTHUB"]	=new sym("github",value);
 }
 
 Module::Module(string V):sym("module",V)	{

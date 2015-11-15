@@ -1,6 +1,9 @@
 # lexical program module template
 .module PIL
-.file README.md
+.title bI/PIL
+.about Program In Line
+
+.inc README.pil
 .inc gitignore.pil
 .file bat.bat
 .file sh.sh

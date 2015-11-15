@@ -9,6 +9,7 @@ clean:
 upgrade:
 	cp $MODULE$/Makefile ./
 	cp $MODULE$/.gitignore ./
+	cp $MODULE$/README.md ./
 C = cpp.cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp ypp.tab.hpp
 ./$MODULE$\$(EXE): \$(C) \$(H)

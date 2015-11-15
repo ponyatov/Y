@@ -5,6 +5,7 @@
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"
 #define GITHUB "https://github.com/ponyatov/PIL"
 #define AUTOGEN "DO NOT EDIT: this file was autogened by bI/PIL metasystem"
+#define LOGO "![logo](logo64x64.png)"
 
 #include <iostream>
 #include <sstream>
