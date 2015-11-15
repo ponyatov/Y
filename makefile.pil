@@ -11,10 +11,11 @@ upgrade:
 	cp $MODULE$/Makefile ./
 	cp $MODULE$/.gitignore ./
 	cp $MODULE$/README.md ./
+	cp $MODULE$/hpp.hpp ./
 C = cpp.cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp ypp.tab.hpp
 ./$MODULE$\$(EXE): \$(C) \$(H)
-	\$(CXX) \$(CXXFLAGS) -o \$\@ \$(C)
+	\$(CXX) -I. \$(CXXFLAGS) -o \$\@ \$(C)
 ypp.tab.cpp: ypp.ypp
 	bison \$<
 lex.yy.c: lpp.lpp

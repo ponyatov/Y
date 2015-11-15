@@ -10,10 +10,11 @@ upgrade:
 	cp PIL/Makefile ./
 	cp PIL/.gitignore ./
 	cp PIL/README.md ./
+	cp PIL/hpp.hpp ./
 C = cpp.cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp ypp.tab.hpp
 ./PIL$(EXE): $(C) $(H)
-	$(CXX) $(CXXFLAGS) -o $@ $(C)
+	$(CXX) -I. $(CXXFLAGS) -o $@ $(C)
 ypp.tab.cpp: ypp.ypp
 	bison $<
 lex.yy.c: lpp.lpp
