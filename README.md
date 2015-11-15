@@ -11,6 +11,7 @@ GitHub: https://github.com/ponyatov/PIL
 ### includes:
 * dynamic symbolic object subsystem 
 * simple metaprogrammingin language
+* LISP-inspired list evaluator
 * TODO: omtimizing translator into C++ for target static cross-compilation
 * TODO: rich GUI/CAD/Visualization environment with MVC architecture
 * TODO: clustering subsystem for cloud computing
