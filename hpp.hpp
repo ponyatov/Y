@@ -39,6 +39,9 @@ struct sym {
 	string pad(int);			// pad tagval with tabs
 	vector<sym*> nest;			// nested objects tree
 	void join(sym*);			// add nested object
+	sym*(*fn)(sym*);			// for functions: pointer to lowlevel C++ fn()
+// predefined low-level functions defined on symbols and inherited objects
+	virtual sym* add(sym*);		// + to current object
 };
 extern map<string,sym*> env;	// \\ global environment: objects registry
 extern void env_init();			// //
@@ -51,11 +54,16 @@ extern Module *curr_module;				// current module
 struct File:sym {File(string); FILE *fh; ~File(); };			// .file
 extern File *curr_file;					// current output file
 
-struct Int:sym { Int(string); sym* eval(); };					// integer
+struct Int:sym { Int(string); sym* eval(); sym* add(sym*); };	// integer
 struct Num:sym { Num(string); sym* eval(); };					// float number
 
-struct List:sym { List(); };									// [list]
+struct List:sym { List(); sym* add(sym*); };					// [list]
 struct Op:sym {Op(string);};									// operator
+
+typedef sym* (*FN)(sym*);										// ptr to fn()
+struct Fn:sym { Fn(string,FN); };								// function
+
+extern sym* add(sym*o);				// \ low-level fu()nctions
 
 // lexer/parser interface (flex/bison)
 

@@ -6,8 +6,13 @@ extern Module *curr_module;				// current module
 struct File:sym {File(string); FILE *fh; ~File(); };			// .file
 extern File *curr_file;					// current output file
 
-struct Int:sym { Int(string); sym* eval(); };					// integer
+struct Int:sym { Int(string); sym* eval(); sym* add(sym*); };	// integer
 struct Num:sym { Num(string); sym* eval(); };					// float number
 
-struct List:sym { List(); };									// [list]
+struct List:sym { List(); sym* add(sym*); };					// [list]
 struct Op:sym {Op(string);};									// operator
+
+typedef sym* (*FN)(sym*);										// ptr to fn()
+struct Fn:sym { Fn(string,FN); };								// function
+
+extern sym* add(sym*o);				// \\ low-level fu()nctions

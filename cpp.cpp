@@ -30,11 +30,14 @@ sym* sym::eval()	{
 	for (vector<sym*>::iterator it=nest.begin(); it!=nest.end(); it++)
 		(*it) = (*it)->eval();
 	if (env[value]) return env[value];
+	if (tag=="list" && nest.size() && nest[0]->tag=="fn")
+		return (Fn*)nest[0]->fn(this);
 	else return this;
 }
 
 map<string,sym*> env;
 void env_init() {
+	// meta constants
 	env["AUTHOR"]=new sym("author",AUTHOR);
 	env["LOGO"]=new sym("logo",LOGO);
 	env["LISP"]=new sym("lisp",LISP);
@@ -42,10 +45,13 @@ void env_init() {
 	env["GITHUB"]=new sym("github",GITHUB);
 	env["AUTOGEN"]=new sym("autogen",AUTOGEN);
 	env["MODULE"]=curr_module;
+	// special symbols
 	env["%T"]=new sym("true","%T");
 	env["%F"]=new sym("false","%F");
 	env["%N"]=new sym("nil","%N");
 	env["%E"]=new sym("error","%E");
+	// low-level fu()nctions
+	env["+"]=new Fn("add",add);
 }
 
 Directive::Directive(string V):sym("",V) {
@@ -90,5 +96,18 @@ sym* Num::eval() {
 	char S[0x100]; sprintf(S,"%E",atof(value.c_str())); value=S;
 	return this; }
 
-List::List():sym("[","]") {}
+List::List():sym("list","[]") {}
 Op::Op(string V):sym("op",V) {}
+
+Fn::Fn(string V, FN F):sym("fn",V)	{ fn=F; }
+
+sym* add(sym*o)	{
+	sym* S=o->nest[1];
+	for (vector<sym*>::iterator it=o->nest.begin()+2; it!=o->nest.end(); it++)
+		S = S->add(*it);
+	return S; }
+sym* sym::add(sym*o) { sym* L = new List(); L->join(this); L->join(o); return L; }
+sym* List::add(sym*o)	{ join(o); return this; }
+sym* Int::add(sym*o)	{ assert(o->tag=="int");
+	ostringstream os; os << atoi(value.c_str()) + atoi(o->value.c_str());
+	value=os.str(); return this; }

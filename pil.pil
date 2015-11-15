@@ -1,13 +1,13 @@
 # [dana] test suite
-# special symbols: true false nil error
-?%T %F %N %E
 ?[ + 2 3 5 ]
-.end
+#.end
 # lexical program module template
 .module PIL
 .title bI/PIL
 .about Program In Line
 .inc lex_program.pil
+# special symbols: true false nil error
+?%T %F %N %E
 # numbers and list
 ?-01 [] 002 [[ +003 0x12AF ] 0b1101]
 ?+04.5 +006e-07
