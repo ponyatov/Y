@@ -67,6 +67,7 @@ struct Fn:sym { Fn(string,FN); };								// function
 										// low-level fu()nctions
 extern sym* add(sym*o);
 extern sym* print(sym*o);
+extern sym* exit(sym*o);
 
 // lexer/parser interface (flex/bison)
 

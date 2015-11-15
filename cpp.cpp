@@ -30,7 +30,7 @@ sym* sym::eval()	{
 	for (vector<sym*>::iterator it=nest.begin(); it!=nest.end(); it++)
 		(*it) = (*it)->eval();
 	if (env[value]) return env[value];
-	if (tag=="list" && nest.size() && nest[0]->tag=="fn")
+	if (tag=="list" && nest[0]->tag=="fn")
 		return (Fn*)nest[0]->fn(this);
 	else return this;
 }
@@ -53,6 +53,7 @@ void env_init() {
 	// low-level fu()nctions
 	env["+"]=new Fn("add",add);
 	env["print"]=new Fn("print",print);
+	env["exit"]=new Fn("exit",exit);
 }
 
 Directive::Directive(string V):sym("",V) {
@@ -105,10 +106,11 @@ Op::Op(string V):sym("op",V) {}
 Fn::Fn(string V, FN F):sym("fn",V)	{ fn=F; }
 
 sym* add(sym*o)	{
+	if (o->nest.size()>=3) {
 	sym* S=o->nest[1];
 	for (vector<sym*>::iterator it=o->nest.begin()+2; it!=o->nest.end(); it++)
 		S = S->add(*it);
-	return S; }
+	return S; } else return env["%E"]; }
 sym* sym::add(sym*o) { sym* L = new List(); L->join(this); L->join(o); return L; }
 sym* List::add(sym*o)	{ join(o); return this; }
 sym* Int::add(sym*o)	{ assert(o->tag=="int");
@@ -116,3 +118,5 @@ sym* Int::add(sym*o)	{ assert(o->tag=="int");
 	value=os.str(); return this; }
 
 sym* print(sym*o) { sym* T = new Str(o->nest[1]->value); W(T->value); return T; }
+
+sym* exit(sym*o)	{ return new sym("code","done"); }
