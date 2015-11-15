@@ -37,6 +37,7 @@ map<string,sym*> env;
 void env_init() {
 	env["AUTHOR"]=new sym("author",AUTHOR);
 	env["LOGO"]=new sym("logo",LOGO);
+	env["LISP"]=new sym("lisp",LISP);
 	env["LICENSE"]=new sym("license",LICENSE);
 	env["GITHUB"]=new sym("github",GITHUB);
 	env["AUTOGEN"]=new sym("autogen",AUTOGEN);

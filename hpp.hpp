@@ -8,7 +8,7 @@
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"
 #define GITHUB "https://github.com/ponyatov/PIL"
 #define AUTOGEN "DO NOT EDIT: this file was autogened by PIL"
-#define LOGO "![logo](logo64x64.png)"
+#define LOGO "![logo](logo/logo64x64.png)"
 
 // standart includes
 

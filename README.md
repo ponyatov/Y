@@ -1,4 +1,4 @@
-# ![logo](logo64x64.png) PIL: bI/PIL
+# ![logo](logo/logo64x64.png) PIL: bI/PIL
 ### Program In Line
 
 (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
@@ -12,6 +12,7 @@ GitHub: https://github.com/ponyatov/PIL
 * dynamic symbolic object subsystem 
 * simple metaprogrammingin language
 * LISP-inspired list evaluator
+![logo](logo/warning64x64.png)
 * TODO: omtimizing translator into C++ for target static cross-compilation
 * TODO: rich GUI/CAD/Visualization environment with MVC architecture
 * TODO: clustering subsystem for cloud computing
