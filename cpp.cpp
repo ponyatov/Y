@@ -100,6 +100,7 @@ sym* Num::eval() {
 Str::Str(string V):sym("str",V)	{}
 
 List::List():sym("list","[]") {}
+Vector::Vector():sym("vector","<>") {}
 Op::Op(string V):sym("op",V) {}
 
 Fn::Fn(string V, FN F):sym("fn",V)	{ fn=F; }

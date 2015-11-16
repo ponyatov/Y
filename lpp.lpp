@@ -47,6 +47,8 @@ D	[0-9]+
 <x>\*				TX(Op,MUL)
 <x>\/				TX(Op,DIV)
 <x>\^				TX(Op,POW)
+<x>\<				TX(Op,LL)
+<x>\>				TX(Op,GG)
 
 <x>\'[^\']*\'		TX(Str,STR)
 <x>\"[^\"]*\"		TX(Str,STR)

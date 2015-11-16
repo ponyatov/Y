@@ -59,6 +59,7 @@ struct Num:sym { Num(string); sym* eval(); };					// float number
 struct Str:sym { Str(string); };								// string
 
 struct List:sym { List(); sym* add(sym*); };					// [list]
+struct Vector:sym { Vector(); };								// <vector>
 struct Op:sym {Op(string);};									// operator
 
 typedef sym* (*FN)(sym*);										// ptr to fn()
