@@ -13,9 +13,12 @@ upgrade:
 	cp PIL/hpp.hpp ./
 C = cpp.cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp ypp.tab.hpp
-./PIL$(EXE): $(C) $(H)
-	$(CXX) -I. $(CXXFLAGS) -o $@ $(C)
+#RES = res.res
+./PIL$(EXE): $(C) $(H) $(RES)
+	$(CXX) -I. $(CXXFLAGS) -o $@ $(C) $(RES)
 ypp.tab.cpp: ypp.ypp
 	bison $<
 lex.yy.c: lpp.lpp
 	flex $<
+res.res: rc.rc
+	windres $< -O coff -o $@	

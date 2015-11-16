@@ -2,6 +2,7 @@
 *.swp
 PIL.elf
 PIL.exe
+*.res
 *.log
 *.pilog
 ypp.tab.?pp

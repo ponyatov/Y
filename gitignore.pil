@@ -3,6 +3,7 @@
 *.swp
 $MODULE$.elf
 $MODULE$.exe
+*.res
 *.log
 *.pilog
 ypp.tab.\?pp
