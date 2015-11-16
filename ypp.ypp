@@ -34,6 +34,7 @@ ex : SYM | NUM | STR | op
 	| LQ RQ				{ $$ = new List(); }
 	| LQ ex RQ			{ $$ = new List(); $$->join($2); }
 	| LQ list RQ		{ $$ = $2; }
+	| ex op ex			{ $$ = $2; $$->join($1); $$->join($3); }
 ;
 list :					
 	  ex ex				{ $$ = new List(); $$->join($1); $$->join($2); }
