@@ -1,37 +1,24 @@
-## DO NOT EDIT: this file was autogened by bI/sym language system ##
-##### makefile.sym #####
-
+# DO NOT EDIT: this file was autogened by bI
 .PHONY: exec
 exec: ./bI$(EXE)
-	./bI$(EXE) < bI.sym > bI.log
-	cp *.sym bI/
-
+	./bI$(EXE) < pil.pil > pil.blog
 .PHONY: clean
 clean:
-	rm -rf bI tmp ./bI$(EXE) bI.log 
-	rm -rf bI.lex.?pp bI.tab.?pp *~ .*~
-
+	rm -rf *~ .*~ *.*log ./bI$(EXE) *.tab.?pp lex.yy.c
 .PHONY: upgrade
 upgrade:
-	cp bI/README.md ./
-	cp bI/.gitignore ./
 	cp bI/Makefile ./
-	cp bI/filetype.vim ./
-	cp bI/syntax.vim ./
-	cp bI/vimedit.bat ./
-	cp bI/vimedit.rc ./
-	cp bI/bI.ypp ./
-	cp bI/bI.lpp ./
-	cp bI/bI.hpp ./
-	cp bI/bI.cpp ./
-
-C = bI.cpp bI.tab.cpp bI.lex.cpp
-H = bI.hpp bI.tab.hpp
-./bI$(EXE): $(C) $(H)
-	$(CXX) $(CXXFILES) -o $@ $(C)
-bI.tab.cpp: bI.ypp
+	cp bI/.gitignore ./
+	cp bI/README.md ./
+	cp bI/hpp.hpp ./
+C = cpp.cpp ypp.tab.cpp lex.yy.c
+H = hpp.hpp ypp.tab.hpp
+#RES = res.res
+./bI$(EXE): $(C) $(H) $(RES)
+	$(CXX) -I. -std=gnu++11 $(CXXFLAGS) -o $@ $(C) $(RES)
+ypp.tab.cpp: ypp.ypp
 	bison $<
-bI.lex.cpp: bI.lpp
-	flex -o $@ $<
-
-##### makefile.sym #####
+lex.yy.c: lpp.lpp
+	flex $<
+res.res: rc.rc
+	windres $< -O coff -o $@

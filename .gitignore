@@ -2,9 +2,7 @@
 *.swp
 bI.elf
 bI.exe
-*.log
-/bI/
-/tmp/
-bI.lex.cpp
-bI.tab.?pp
-/sym/
+*.blog
+*.tab.?pp
+lex.yy.c
+*.res
