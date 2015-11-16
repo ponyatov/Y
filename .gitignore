@@ -6,3 +6,4 @@ bI.exe
 *.tab.?pp
 lex.yy.c
 *.res
+bI

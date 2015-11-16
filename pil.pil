@@ -30,7 +30,7 @@
 ? [exit]			# (4)
 
 # lexical program module template (PIL itself bootstrapping)
-.module PIL
+.module bI
 .title bI/PIL
 .about Program In Line
 .inc lex_program.pil
