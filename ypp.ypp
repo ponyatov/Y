@@ -10,7 +10,7 @@
 %token <c> CHAR AX SX QX
 %token <o> DIRECTIVE MODULE FFILE FEOF INC SYM NUM STR
 %token <o> LQ RQ LL GG
-%token <o> ADD SUB MUL DIV POW
+%token <o> ADD SUB MUL DIV POW COLON
 %type <o> ex xx list op
 %%
 PIL :
@@ -38,6 +38,7 @@ ex : SYM | NUM | STR | op
 	| LL list GG		{ $$ = new Vector();
 						  for (auto it=$2->nest.begin();it!=$2->nest.end();it++)
 						    $$->join(*it); }
+	| ex COLON ex		{ $$ = new Pair(); $$->join($1); $$->join($3); }
 	| ex op ex			{ $$ = $2; $$->join($1); $$->join($3); }
 ;
 list :					

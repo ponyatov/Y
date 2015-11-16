@@ -2,8 +2,7 @@
 
 # p.16
 ? [235.4 [2e10 2/3] "Hello, there!" <1 4.5 -7>]
-
-.end
+? [foo [bar [[baz]] asdf] x:keyword]
 
 # p.15
 ? [ + 2 3 5 ]		# (1)
