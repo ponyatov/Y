@@ -106,10 +106,12 @@ Fn::Fn(string V, FN F):sym("fn",V)	{ fn=F; }
 
 sym* add(sym*o)	{
 	if (o->nest.size()>=3) {
-	sym* S=o->nest[1];
-	for (auto it=o->nest.begin()+2; it!=o->nest.end(); it++)
-		S = S->add(*it);
-	return S; } else return env["%E"]; }
+		sym* S=o->nest[1];
+		for (auto it=o->nest.begin()+2; it!=o->nest.end(); it++)
+			S = S->add(*it);
+		return S;
+	} else return env["%E"];
+}
 
 sym* sym::add(sym*o) { sym* L = new List(); L->join(this); L->join(o); return L; }
 sym* List::add(sym*o)	{ join(o); return this; }
