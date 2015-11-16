@@ -48,7 +48,8 @@ D	[0-9]+
 <x>\/				TX(Op,DIV)
 <x>\^				TX(Op,POW)
 
-<x>'[^']*'			TX(Str,STR)
+<x>\'[^\']*\'		TX(Str,STR)
+<x>\"[^\"]*\"		TX(Str,STR)
 <x>[a-zA-Z0-9_]+	TO("sym",SYM)
 <x>\%[TFNE]			TO("sym",SYM)
 

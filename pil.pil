@@ -1,7 +1,9 @@
 # [dana] test suite
 
 # p.16
-#.end
+? [235.4 [2e10 2/3] "Hello, there!" <1 4.5 -7>]
+
+.end
 
 # p.15
 ? [ + 2 3 5 ]		# (1)
