@@ -9,6 +9,7 @@ au BufNewFile,BufRead *.bI  colorscheme peachpuff
 au BufNewFile,BufRead *.pil set filetype=bI
 au BufNewFile,BufRead *.pil colorscheme peachpuff
 au BufNewFile,BufRead *.log   set autoread
+au BufNewFile,BufRead *.blog  set filetype=bI
 au BufNewFile,BufRead *.blog  set autoread
 au BufNewFile,BufRead *.pilog set autoread
 au BufNewFile,BufRead *.ypp set autoread
