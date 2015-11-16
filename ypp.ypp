@@ -32,7 +32,8 @@ PIL :
 ;
 ex : SYM | NUM | STR | op
 	| LQ RQ				{ $$ = new List(); }
-	| LQ xx RQ			{ $$ = new List(); $$->join($2); }
+	| LQ ex RQ			{ $$ = new List(); $$->join($2); }
+	| LQ list RQ		{ $$ = $2; }
 ;
 list :					
 	  ex ex				{ $$ = new List(); $$->join($1); $$->join($2); }
