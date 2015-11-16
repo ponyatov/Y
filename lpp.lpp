@@ -50,6 +50,7 @@ D	[0-9]+
 <x>\<				TX(Op,LL)
 <x>\>				TX(Op,GG)
 <x>\:				TX(Op,COLON)
+<x>\.				TX(Op,DOT)
 
 <x>\'[^\']*\'		TX(Str,STR)
 <x>\"[^\"]*\"		TX(Str,STR)

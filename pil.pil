@@ -1,5 +1,10 @@
 # [dana] test suite
 
+# p.18
+? [235.4 [2e10 2/3] "Hello, there!" <1 4.5 -7> . foobar]
+
+#.end
+
 # p.17
 ? [235.4 [2e10 2/3] "Hello, there!" <1 4.5 -7>]
 ? [foo [bar [[baz]] asdf] x:keyword]

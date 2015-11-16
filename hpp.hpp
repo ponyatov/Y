@@ -61,6 +61,7 @@ struct Str:sym { Str(string); };								// string
 struct List:sym { List(); sym* add(sym*); };					// [list]
 struct Vector:sym { Vector(); };								// <vector>
 struct Pair:sym { Pair(); };									// pa:ir
+struct Dot:sym { Dot(); };										// some.dot
 struct Op:sym {Op(string);};									// operator
 
 typedef sym* (*FN)(sym*);										// ptr to fn()
