@@ -3,6 +3,7 @@
 ? [ + 2 3 5 ]		# (1)
 ? 5					# (2)
 ? [print [+ 2 3 5]]	# (3)
+? [exit]			# (4)
 #.end
 # lexical program module template
 .module PIL
