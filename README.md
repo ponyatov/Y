@@ -37,3 +37,6 @@ Dana Nau
 [home]
 [Short Lisp intro (ru)](http://homelisp.ru/help/lisp.html)
 
+[LTHW]
+[Learn Lisp The Hard Way](http://learnlispthehardway.org/)
+
