@@ -1,18 +1,25 @@
 # [dana] test suite
+
+# p.16
+#.end
+
 # p.15
 ? [ + 2 3 5 ]		# (1)
 ? 5					# (2)
 ? [print [+ 2 3 5]]	# (3)
 ? [exit]			# (4)
-#.end
-# lexical program module template
+
+# lexical program module template (PIL itself bootstrapping)
 .module PIL
 .title bI/PIL
 .about Program In Line
 .inc lex_program.pil
+
+# core language elements
+
 # special symbols: true false nil error
 ? %T %F %N %E
-# numbers and list
-? -01 [] 002 [[ +003 0x12AF ] 0b1101]
+# numbers, symbols, lists and strings
+? -01 [] 002 [[ +003 0x12AF ] 0b1101 ['this' is a 'string']]
 ? +04.5 +006e-07
 # comment
