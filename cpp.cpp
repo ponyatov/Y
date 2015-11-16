@@ -19,7 +19,6 @@ string sym::pad(int n) {string S; for (int i=0;i<n;i++) S+="\t"; return S;}
 string sym::tagval()	{ return "<"+tag+":"+value+">"; }
 
 string sym::dump(int depth) {
-//	if (nest.size()==0) return tagval(); else {
 	string S = "\n"+pad(depth)+tagval();
 	for (vector<sym*>::iterator it=nest.begin(); it!=nest.end(); it++)
 		S += (*it)->dump(depth+1);
@@ -30,7 +29,7 @@ sym* sym::eval()	{
 	for (vector<sym*>::iterator it=nest.begin(); it!=nest.end(); it++)
 		(*it) = (*it)->eval();
 	if (env[value]) return env[value];
-	if (tag=="list" && nest[0]->tag=="fn")
+	if (tag=="list" && nest.size() && nest[0]->tag=="fn")	// apply
 		return (Fn*)nest[0]->fn(this);
 	else return this;
 }
@@ -95,7 +94,7 @@ sym* Int::eval() {
 
 Num::Num(string V):sym("num",V) {}
 sym* Num::eval() {
-	char S[0x100]; sprintf(S,"%E",atof(value.c_str())); value=S;
+	char S[0x100]; sprintf(S,"%e",atof(value.c_str())); value=S;
 	return this; }
 
 Str::Str(string V):sym("str",V)	{}
@@ -111,6 +110,7 @@ sym* add(sym*o)	{
 	for (vector<sym*>::iterator it=o->nest.begin()+2; it!=o->nest.end(); it++)
 		S = S->add(*it);
 	return S; } else return env["%E"]; }
+
 sym* sym::add(sym*o) { sym* L = new List(); L->join(this); L->join(o); return L; }
 sym* List::add(sym*o)	{ join(o); return this; }
 sym* Int::add(sym*o)	{ assert(o->tag=="int");
@@ -118,5 +118,4 @@ sym* Int::add(sym*o)	{ assert(o->tag=="int");
 	value=os.str(); return this; }
 
 sym* print(sym*o) { sym* T = new Str(o->nest[1]->value); W(T->value); return T; }
-
-sym* exit(sym*o)	{ return new sym("code","done"); }
+sym* exit(sym*o)  { return new sym("exit","0"); }
