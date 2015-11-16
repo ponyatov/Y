@@ -16,7 +16,7 @@ C = cpp.cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp ypp.tab.hpp
 \#RES = res.res
 ./$MODULE$\$(EXE): \$(C) \$(H) \$(RES)
-	\$(CXX) -I. \$(CXXFLAGS) -o \$\@ \$(C) \$(RES)
+	\$(CXX) -I. -std=gnu++11 \$(CXXFLAGS) -o \$\@ \$(C) \$(RES)
 ypp.tab.cpp: ypp.ypp
 	bison \$<
 lex.yy.c: lpp.lpp

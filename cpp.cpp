@@ -20,13 +20,13 @@ string sym::tagval()	{ return "<"+tag+":"+value+">"; }
 
 string sym::dump(int depth) {
 	string S = "\n"+pad(depth)+tagval();
-	for (vector<sym*>::iterator it=nest.begin(); it!=nest.end(); it++)
+	for (auto it=nest.begin(); it!=nest.end(); it++)
 		S += (*it)->dump(depth+1);
 	return S;
 }
 
 sym* sym::eval()	{
-	for (vector<sym*>::iterator it=nest.begin(); it!=nest.end(); it++)
+	for (auto it=nest.begin(); it!=nest.end(); it++)
 		(*it) = (*it)->eval();
 	if (env[value]) return env[value];
 	if (tag=="list" && nest.size() && nest[0]->tag=="fn")	// apply
@@ -107,7 +107,7 @@ Fn::Fn(string V, FN F):sym("fn",V)	{ fn=F; }
 sym* add(sym*o)	{
 	if (o->nest.size()>=3) {
 	sym* S=o->nest[1];
-	for (vector<sym*>::iterator it=o->nest.begin()+2; it!=o->nest.end(); it++)
+	for (auto it=o->nest.begin()+2; it!=o->nest.end(); it++)
 		S = S->add(*it);
 	return S; } else return env["%E"]; }
 
