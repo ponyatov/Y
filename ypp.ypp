@@ -12,6 +12,12 @@
 %token <o> LQ RQ LL GG
 %token <o> ADD SUB MUL DIV POW COLON
 %type <o> ex xx list op
+
+%left COLON
+%left ADD SUB
+%left MUL DIV
+%left POW
+
 %%
 PIL :
 	| PIL CHAR			{ W($2); }
@@ -39,7 +45,11 @@ ex : SYM | NUM | STR | op
 						  for (auto it=$2->nest.begin();it!=$2->nest.end();it++)
 						    $$->join(*it); }
 	| ex COLON ex		{ $$ = new Pair(); $$->join($1); $$->join($3); }
-	| ex op ex			{ $$ = $2; $$->join($1); $$->join($3); }
+	| ex ADD ex			{ $$ = $2; $$->join($1); $$->join($3); }
+	| ex SUB ex			{ $$ = $2; $$->join($1); $$->join($3); }
+	| ex MUL ex			{ $$ = $2; $$->join($1); $$->join($3); }
+	| ex DIV ex			{ $$ = $2; $$->join($1); $$->join($3); }
+	| ex POW ex			{ $$ = $2; $$->join($1); $$->join($3); }
 ;
 list :					
 	  ex ex				{ $$ = new List(); $$->join($1); $$->join($2); }

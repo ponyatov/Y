@@ -1,8 +1,22 @@
 # [dana] test suite
 
-# p.16
+# p.17
 ? [235.4 [2e10 2/3] "Hello, there!" <1 4.5 -7>]
 ? [foo [bar [[baz]] asdf] x:keyword]
+
+# p.16
+# numbers
+? -1234 235.4 2e10 0x16 0b1101 # integer number number hex bin 
+# symbols
+? foo 2nd-place *foo
+# specials
+? %T %F %N %E # true false nil error
+# strings
+? "Str" 'ings'
+# vectors (arrays)
+? <1 "foo" A> <<A B C> <1 2 3>>
+# structores
+? <person first-name:dana last-name:nau>
 
 # p.15
 ? [ + 2 3 5 ]		# (1)
