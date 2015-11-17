@@ -1,7 +1,7 @@
 # DO NOT EDIT: this file was autogened by bI
 .PHONY: exec
 exec: ./bI$(EXE)
-	./bI$(EXE) < pil.pil > pil.blog
+	./bI$(EXE) < bI.bI > bI.blog
 .PHONY: clean
 clean:
 	rm -rf *~ .*~ *.*log ./bI$(EXE) *.tab.?pp lex.yy.c
