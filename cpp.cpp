@@ -44,6 +44,7 @@ void env_init() {
 	env["GITHUB"]=new sym("github",GITHUB);
 	env["AUTOGEN"]=new sym("autogen",AUTOGEN);
 	env["MODULE"]=curr_module;
+	env["FILES"]=new Str("");
 	// special symbols
 	env["%T"]=new sym("true","%T");
 	env["%F"]=new sym("false","%F");
@@ -61,7 +62,9 @@ Directive::Directive(string V):sym("",V) {
 	while (value.size()&&(value[0]=='\t'||value[0]==' '))
 		                 value.erase(0,1);
 	// inline eval
-	if (tag==".file") { value = curr_module->value+"/"+value;
+	if (tag==".file") { 
+		env["FILES"]->value+=value+" ";
+		value = curr_module->value+"/"+value;
 		if (curr_file) delete curr_file; curr_file=new File(value); }
 	if (tag==".eof") {
 		if (curr_file) delete curr_file; curr_file=NULL; }

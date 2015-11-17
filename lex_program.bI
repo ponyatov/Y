@@ -7,6 +7,9 @@
 #.github
 
 .inc gitignore.pil
+ST
+.eof
+
 .file bat.bat
 .file sh.sh
 .file filetype.vim

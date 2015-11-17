@@ -1,9 +1,14 @@
 # dynamic class description
 
 .module ST
-.title	SmallTalk
-.about	SmallTalk-inspired object engine
+.title	SmallTalk-inspired object engine
+.about	some experiments with OOP based on dynamic objects
+
 .inc sym/readme.bI
+.inc gitignore.bI
+.inc makefile.bI
+.inc sym/hpp.bI
+.inc sym/bat.bI
 .end
 
 

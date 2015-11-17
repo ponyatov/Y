@@ -9,5 +9,4 @@ lex.yy.c
 *.res
 next
 $MODULE$
-ST
 .eof
