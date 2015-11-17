@@ -6,8 +6,10 @@
 
 .inc sym/readme.bI
 .inc gitignore.bI
-.inc sym/makefile.bI
 .inc sym/hpp.bI
+.inc cpp.bI
+.inc res.bI
+.inc makefile.bI
 .inc sym/bat.bI
 .end
 

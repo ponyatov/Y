@@ -45,6 +45,8 @@ void env_init() {
 	env["AUTOGEN"]=new sym("autogen",AUTOGEN);
 	env["MODULE"]=curr_module;
 	env["FILES"]=new Str("");
+	env["CFILES"]=new Str("cpp.cpp");
+	env["HFILES"]=new Str("hpp.hpp");
 	// special symbols
 	env["%T"]=new sym("true","%T");
 	env["%F"]=new sym("false","%F");
