@@ -12,10 +12,17 @@ void W(sym *o,bool)	{ cerr << o->dump(); }
 
 // simplified sym realization
 sym::sym(string T,string V)	{ tag=T; value=V; }
-string sym::dump(int)		{ return tagval(); }
-string sym::tagval()		{ return "<"+tag+":"+value+">"; }
 sym* sym::eval()			{ return this; }
 sym* sym::add(sym*o)		{ return o; }
+void sym::join(sym*o)		{ nest.push_back(o); }
+string sym::pad(int n) 		{string S; for (int i=0;i<n;i++) S+="\\t"; return S;}
+string sym::tagval()		{ return "<"+tag+":"+value+">"; }
+string sym::dump(int depth) {
+	string S = "\\n"+pad(depth)+tagval();
+	for (auto it=nest.begin(); it!=nest.end(); it++)
+		S += (*it)->dump(depth+1);
+	return S;
+}
 
 // global env[]ironment used for program / config script engine data exchange
 map<string,sym*> env;

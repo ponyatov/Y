@@ -6,7 +6,8 @@
 .inc gen_program.bI
 .file ST.config
 \# $MODULE$ config file
-123 4.5 -6e+7 some 'string'
+123 [ 4.5 [ -6e+7 some] [] 'string' ]
+TITLE = '[$MODULE$] $TITLE$'
 .eof
 .end
 
