@@ -6,7 +6,7 @@
 
 .inc sym/readme.bI
 .inc gitignore.bI
-.inc makefile.bI
+.inc sym/makefile.bI
 .inc sym/hpp.bI
 .inc sym/bat.bI
 .end
@@ -47,7 +47,7 @@
 .module bI
 .title bI/PIL
 .about Program In Line
-.inc lex_program.pil
+.inc lex_program.bI
 
 # core language elements
 
