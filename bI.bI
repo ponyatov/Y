@@ -6,11 +6,18 @@
 .inc gen_program.bI
 .file ST.config
 \# $MODULE$ config file
+\# config language supports int/float numbers, symbols, strings and nested lists
 123 [ 4.5 [ -6e+7 some] [] 'string' ]
-TITLE = '[$MODULE$] $TITLE$'
+\# = operator can be used for assigning values
+TITLE = '[$MODULE$] $TITLE$' = xxx
+	= ( '= supports multiple assignment' = 'left associativity' )
+\# multiple assignent can be used for constructing complex objects
+FORM('About')
+	= 'About $MODULE$'
+	= Button 'OK'
 .eof
-.end
 
+.end
 
 # [dana] test suite
 

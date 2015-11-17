@@ -6,8 +6,10 @@
 %defines
 %union { char c; sym*o; }
 %token <c> CHAR
-%token <o> SYM NUM STR EQ LL RR
+%token <o> SYM NUM STR EQ LL RR LP RP
 %type <o> ex list
+
+%left EQ
 %%
 $MODULE$:
 	| $MODULE$ CHAR			{ W(\$2); } 
@@ -16,6 +18,8 @@ $MODULE$:
 ex:	SYM | NUM | STR
 	| ex EQ ex			{ \$\$=\$1; \$\$->join(\$3); }
 	| LL list RR		{ \$\$ = \$2; }
+	| SYM LP ex RP		{ \$\$ = new sym("fn",\$1->value); \$\$ = \$3; }
+	| LP ex RP			{ \$\$ = \$2; }
 ;
 list :					{ \$\$ = new sym("[","]"); }
 	| list ex			{ \$\$ = \$1; \$\$->join(\$2); }
@@ -42,6 +46,8 @@ D [0-9]+
 \\=					TO("op",EQ)
 \\\[					TO("op",LL)
 \\\]					TO("op",RR)
+\\(					TO("op",LP)
+\\)					TO("op",RP)
 [ \\t\\r\\n]+			{}				/* drop spaces */
 \\n					TC(CHAR)		/* end of line */
 .					TC(CHAR)		/* any other char */
