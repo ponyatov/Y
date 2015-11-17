@@ -1,16 +1,21 @@
 # universal Makefile template, lexical programs uses special sym/Makefile.bI
 .file Makefile
 \# $AUTOGEN$
+\# parameters: EXE=.(exe|elf) RES=(res.res|)
 .PHONY: exec
 exec: ./$MODULE$\$(EXE)
-	./$MODULE$\$(EXE)
+	./$MODULE$\$(EXE) < $MODULE$.config
 .PHONY: clean
 clean:
-	rm -rf *~ .*~ ./$MODULE$\$(EXE) *.*log
+	rm -rf *~ .*~ ./$MODULE$\$(EXE) \$(RES) *.*log
 C = $CFILES$
 H = $HFILES$
 ./$MODULE$\$(EXE): \$(C) \$(H) \$(RES)
 	\$(CXX) -I. -std=gnu++11 \$(CXXFILES) -o \$\@ \$(C) \$(RES)
-res.res: rc.rc
+ypp.tab.cpp: ypp.ypp
+	bison \$<
+lex.yy.c: lpp.lpp
+	flex \$<
+\$(RES): rc.rc
 	windres \$< -O coff -o \$\@
 .eof

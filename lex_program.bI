@@ -10,8 +10,7 @@
 ST
 .eof
 
-.file bat.bat
-.file sh.sh
+.inc app/gvim.bI
 .file filetype.vim
 .file syntax.vim
 .file ypp.ypp
@@ -21,4 +20,4 @@ ST
 
 .file cpp.cpp
 .inc makefile.pil # includes lexic makefile template
-.inc README.pil
+.inc app/readme.bI

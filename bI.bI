@@ -4,13 +4,15 @@
 .title	SmallTalk-inspired object engine
 .about	some experiments with OOP based on dynamic objects
 
-.inc sym/readme.bI
+.inc app/readme.bI
 .inc gitignore.bI
 .inc sym/hpp.bI
-.inc cpp.bI
-.inc res.bI
-.inc makefile.bI
-.inc sym/bat.bI
+.inc app/cpp.bI
+.inc app/res.bI
+.inc app/makefile.bI
+.inc app/gvim.bI
+.file ST.config
+.eof
 .end
 
 
