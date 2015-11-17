@@ -1,4 +1,5 @@
 # lexical program module template
+# uses sym/ template subtree
 
 #.module PIL
 #.title bI/PIL
@@ -6,7 +7,7 @@
 #.author (c) Jonh Doe <jd@mail.com>
 #.github
 
-.inc gitignore.pil
+.inc app/gitignore.pil
 ST
 .eof
 
