@@ -1,4 +1,4 @@
-.inc sym/README.pil
+.inc sym/readme.bI
 
 \#\#\# includes:
 * dynamic symbolic object subsystem 

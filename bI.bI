@@ -3,7 +3,7 @@
 .module ST
 .title	SmallTalk
 .about	SmallTalk-inspired object engine
-.inc readme.bI
+.inc sym/readme.bI
 .end
 
 
