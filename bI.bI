@@ -5,6 +5,8 @@
 .about	some experiments with OOP based on dynamic objects
 .inc gen_program.bI
 .file ST.config
+\# $MODULE$ config file
+123 4.5 -6e+7 some 'string'
 .eof
 .end
 

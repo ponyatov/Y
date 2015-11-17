@@ -8,8 +8,8 @@ exec: ./$MODULE$\$(EXE)
 .PHONY: clean
 clean:
 	rm -rf *~ .*~ ./$MODULE$\$(EXE) \$(RES) *.*log
-C = $CFILES$
-H = $HFILES$
+C = $CFILES$ ypp.tab.cpp lex.yy.c
+H = $HFILES$ ypp.tab.hpp
 ./$MODULE$\$(EXE): \$(C) \$(H) \$(RES)
 	\$(CXX) -I. -std=gnu++11 \$(CXXFILES) -o \$\@ \$(C) \$(RES)
 ypp.tab.cpp: ypp.ypp
