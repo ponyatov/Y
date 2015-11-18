@@ -16,11 +16,12 @@ DR	[ \t]*[^#\n]*
 S	[\+\-]?
 D	[0-9]+
 
-%x x
+		/* expression state */
+%x xx
 %%
 \\.					T1(CHAR)
-#[^\n]*\n			{W(yytext,false);}
-<x>#[^\n]*\n		{W(yytext,false);BEGIN(INITIAL);}
+<*>^#[^\n]*\n		{}
+<*>#[^\n]*			{}
 
 ^\.module{DF}		TX(Directive,MODULE)
 ^\.file{DF}			TX(Directive,FFILE)
@@ -29,36 +30,36 @@ D	[0-9]+
 ^\.(title|about|github|color){DR}			TX(Directive,DIRECTIVE)
 ^\.end				{yyterminate();}
 
-\@					{BEGIN(x);TC(AX);}
-\$					{BEGIN(x);TC(SX);}
-\?					{BEGIN(x);TC(QX);}
-<x>\n				{BEGIN(INITIAL);}
-<x>[ \t\r]+			W(yytext,false);
-<x>[@$?]			{BEGIN(INITIAL);}
+\@					{BEGIN(xx);TC(AX);}
+\$					{BEGIN(xx);TC(SX);}
+\?					{BEGIN(xx);TC(QX);}
+<xx>\n				{BEGIN(INITIAL);}
+<xx>[ \t\r]+			W(yytext,false);
+<xx>[@$?]			{BEGIN(INITIAL);}
 
-<x>{S}{D}			TX(Int,NUM)
-<x>0x[0-9A-F]+		TO("hex",NUM)
-<x>0b[01]+			TO("bin",NUM)
-<x>{S}{D}\.{D}		TX(Num,NUM)
-<x>{S}{D}[eE]{S}{D}	TX(Num,NUM)
+<xx>{S}{D}			TX(Int,NUM)
+<xx>0x[0-9A-F]+		TO("hex",NUM)
+<xx>0b[01]+			TO("bin",NUM)
+<xx>{S}{D}\.{D}		TX(Num,NUM)
+<xx>{S}{D}[eE]{S}{D}	TX(Num,NUM)
 
-<x>\+				TX(Op,ADD)
-<x>\-				TX(Op,SUB)
-<x>\*				TX(Op,MUL)
-<x>\/				TX(Op,DIV)
-<x>\^				TX(Op,POW)
-<x>\<				TX(Op,LL)
-<x>\>				TX(Op,GG)
-<x>\:				TX(Op,COLON)
-<x>\.				TX(Op,DOT)
+<xx>\+				TX(Op,ADD)
+<xx>\-				TX(Op,SUB)
+<xx>\*				TX(Op,MUL)
+<xx>\/				TX(Op,DIV)
+<xx>\^				TX(Op,POW)
+<xx>\<				TX(Op,LL)
+<xx>\>				TX(Op,GG)
+<xx>\:				TX(Op,COLON)
+<xx>\.				TX(Op,DOT)
 
-<x>\'[^\']*\'		TX(Str,STR)
-<x>\"[^\"]*\"		TX(Str,STR)
-<x>[a-zA-Z0-9_]+	TO("sym",SYM)
-<x>\%[TFNE]			TO("sym",SYM)
+<xx>\'[^\']*\'		TX(Str,STR)
+<xx>\"[^\"]*\"		TX(Str,STR)
+<xx>[a-zA-Z0-9_]+	TO("sym",SYM)
+<xx>\%[TFNE]			TO("sym",SYM)
 
-<x>\[		TX(Op,LQ)
-<x>\]		TX(Op,RQ)
+<xx>\[		TX(Op,LQ)
+<xx>\]		TX(Op,RQ)
 
 \n			TC(CHAR)
 .			TC(CHAR)
