@@ -34,11 +34,14 @@ $AUTOGEN$
 $bICONFIG$
 %{
 \#include "hpp.hpp"
+string StrBuf;
 %}
 %option noyywrap
 %option yylineno
 S [\-\+]\?
 D [0-9]+
+			/* string state */
+%x ss
 %%
 ^\#[^\\n]*\\n+			{W(yytext);}	/* full comment line: skip with EOLs */
 \#[^\\n]*				{W(yytext);}	/* end line comment */
@@ -51,7 +54,14 @@ D [0-9]+
 0x[0-9A-F]+			TO("hex",NUM)	/* hexadecimal int */
 0b[01]+				TO("bin",NUM)	/* binary int */
 
-\\'[^\\']*\\'			TO("str",STR)	/* string */
+'\\n				{BEGIN(ss);StrBuf="'";}
+'					{BEGIN(ss);StrBuf="'";}
+<ss>'				{BEGIN(INITIAL);yylval.o=new sym("str",StrBuf+"'");return STR;}
+<ss>\\n				{StrBuf+="\\\\n";}
+<ss>\\t				{StrBuf+="\\\\t";}
+<ss>.				{StrBuf+=yytext;}
+
+#\\'[^\\']*\\'			TO("str",STR)	/* string */
 [a-zA-Z0-9_]+		TO("sym",SYM)	/* symbol */
 \\%[TFNE\\%]			TO("sym",SYM)	/* special symbol */
 

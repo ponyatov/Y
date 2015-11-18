@@ -42,6 +42,10 @@ sym* sym::add(sym*o)		{ return o; }
 // global env[]ironment used for program/script data exchange
 map<string,sym*> env;
 void env_init() {
+	env["AUTOGEN"]=new sym("autogen",AUTOGEN);
+	env["bICONFIG"]=new sym("bIconfig",bICONFIG);
+	env["MODULE"]=new sym("module","$MODULE$");
+	env["ABOUT"]=new sym("about","$MODULE$: $ABOUT$");
 	env["%T"] = new sym("%","T");
 	env["%F"] = new sym("%","F");
 	env["%N"] = new sym("%","N");
