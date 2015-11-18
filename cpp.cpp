@@ -47,6 +47,7 @@ void env_init() {
 	env["FILES"]=new Str("");
 	env["CFILES"]=new Str("cpp.cpp");
 	env["HFILES"]=new Str("hpp.hpp");
+	env["COLOR"]=new Str("peachpuff");
 	// special symbols
 	env["%T"]=new sym("true","%T");
 	env["%F"]=new sym("false","%F");
@@ -76,6 +77,7 @@ Directive::Directive(string V):sym("",V) {
 	if (tag==".author")	env["AUTHOR"]	=new sym("author",value);
 	if (tag==".license")env["LICENSE"]	=new sym("license",value);
 	if (tag==".github")	env["GUTHUB"]	=new sym("github",value);
+	if (tag==".color")	env["COLOR"]	=new Str(value);
 }
 
 Module::Module(string V):sym("module",V)	{
