@@ -14,13 +14,17 @@ syntax match Keyword "\v\@"
 syntax match Keyword "\v\?"
 
 " numbers
+syntax match	Constant	"\v[\+\-]?[0-9]+[eE][\+\-]?[0-9]+"
 syntax match	Constant	"\v[0-9]+"
 
 " 'string'
 syntax region	String		start="'" end="'"
 
 " symbols
-syntax match	Todo		"\v\%[TFNE\%]"
-syntax match	Keyword		"\v[a-zA-Z]+"
+syntax match	Identifier		"\v\%[TFNE\%]"
+syntax match	Special	"\v[a-zA-Z_]+"
+
+" operators
+syntax match	Type		"\v[\[\]\(\)\=]"
 
 let b:current_syntax = "bI"

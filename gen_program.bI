@@ -7,12 +7,10 @@
 #.author (c) Jonh Doe <jd@mail.com>
 #.github
 
+.inc app/config.bI
 .inc app/readme.bI
 .inc app/gitignore.bI
-
-.inc app/config_grammar.bI
-
-.inc sym/hpp.bI
+.inc app/script.bI
 .inc app/cpp.bI
 .inc app/res.bI
 .inc app/makefile.bI

@@ -7,9 +7,10 @@
 #define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"
 #define GITHUB "https://github.com/ponyatov/Y"
-#define AUTOGEN "DO NOT EDIT: this file was autogened by bI"
-#define LOGO "![logo](logo/logo64x64.png)"
-#define LISP "![logo](logo/warning64x64.png)"
+#define AUTOGEN  "/***** DO NOT EDIT: this file was autogened by bI *****/"
+#define bICONFIG "/************ bI language abridged dialect ************/"
+#define LOGO "logo64x64"
+#define LISP "warning64x64"
 
 // standart includes
 

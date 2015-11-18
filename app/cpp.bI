@@ -3,28 +3,30 @@
 // $AUTOGEN$
 \#include "hpp.hpp"
 \#define YYERR "\\n\\n"<<msg<<" \#"<<yylineno<<" ["<<yytext<<"]\\n\\n"
-void yyerror(string msg) { cerr<<YYERR; cout<<YYERR; exit(-1); }
-int main() { env_init(); return yyparse(); }
+void yyerror(string msg) { cerr<<YYERR; cout<<YYERR; exit(-1); }	// error()
+int main() { env_init(); return yyparse(); }						// main()
 
 // generic writers
-void W(char c,bool)	{ cerr << c; }
-void W(sym *o,bool)	{ cerr << o->dump(); }
+void W(char c,bool)	{ cerr << c; }						// write single char
+void W(sym *o,bool)	{ cerr << o->dump(); }				// write symbolic object
 
 // simplified sym realization
-sym::sym(string T,string V)	{ tag=T; value=V; }
-sym* sym::eval()			{ return this; }
-sym* sym::add(sym*o)		{ return o; }
-void sym::join(sym*o)		{ nest.push_back(o); }
+sym::sym(string T,string V)	{ tag=T; value=V; }			// symbol constructor
+void sym::join(sym*o)		{ nest.push_back(o); }		// add nested object
+sym* sym::eval()			{ return this; }			// object evaluator
 string sym::pad(int n) 		{string S; for (int i=0;i<n;i++) S+="\\t"; return S;}
 string sym::tagval()		{ return "<"+tag+":"+value+">"; }
-string sym::dump(int depth) {
-	string S = "\\n"+pad(depth)+tagval();
-	for (auto it=nest.begin(); it!=nest.end(); it++)
-		S += (*it)->dump(depth+1);
+string sym::dump(int depth) {							// dump symbol object
+	string S = "\\n"+pad(depth)+tagval();				// header
+	for (auto it=nest.begin(); it!=nest.end(); it++)	// walk over nest[]ed
+		S += (*it)->dump(depth+1);						// recurse with pad++
 	return S;
 }
 
-// global env[]ironment used for program / config script engine data exchange
+// dummies for abridged operators and functions
+sym* sym::add(sym*o)		{ return o; }				
+
+// global env[]ironment used for program/script data exchange
 map<string,sym*> env;
 void env_init(){}
 .eof

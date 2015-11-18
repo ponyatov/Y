@@ -1,7 +1,7 @@
 # universal Makefile template, lexical programs uses special sym/Makefile.bI
 .file Makefile
 \# $AUTOGEN$
-\# parameters: EXE=.(exe|elf) RES=(res.res|)
+\# make parameters: EXE=.(exe|elf) RES=(res.res|)
 .PHONY: exec
 exec: ./$MODULE$\$(EXE)
 	./$MODULE$\$(EXE) < $MODULE$.config

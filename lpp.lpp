@@ -27,8 +27,8 @@ D	[0-9]+
 ^\.file{DF}			TX(Directive,FFILE)
 ^\.eof				TX(Directive,FEOF)
 ^\.inc{DF}			TX(Directive,INC)
-^\.(title|about|github|color){DR}			TX(Directive,DIRECTIVE)
 ^\.end				{yyterminate();}
+^\.[a-z]+{DR}		TX(Directive,DIRECTIVE)
 
 \@					{BEGIN(xx);TC(AX);}
 \$					{BEGIN(xx);TC(SX);}

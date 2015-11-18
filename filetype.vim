@@ -12,6 +12,7 @@ au BufNewFile,BufRead *.log   set autoread
 au BufNewFile,BufRead *.blog  set filetype=bI
 au BufNewFile,BufRead *.blog  set autoread
 au BufNewFile,BufRead *.pilog set autoread
+au BufNewFile,BufRead *.config set filetype=bI
 au BufNewFile,BufRead *.ypp set autoread
 au BufNewFile,BufRead *.lpp set autoread
 au BufNewFile,BufRead *.hpp set autoread

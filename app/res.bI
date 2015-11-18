@@ -1,4 +1,5 @@
 .file rc.rc
 // $AUTOGEN$
-logo ICON "../logo/logo64x64.ico"
+logo ICON "../logo/$LOGO$.ico"
+lisp ICON "../logo/$LISP$.ico"
 .eof
