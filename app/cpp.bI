@@ -29,8 +29,10 @@ sym* sym::eval() {										// object evaluator
 	ostringstream os;						// \\\\ normalize numeric types
 	if (tag=="int") { os << atoll(value.c_str()); value=os.str(); }
 	if (tag=="num") { os <<  atof(value.c_str()); value=os.str(); }
-	if (tag=="hex") { os << strtoll(&value.c_str()[2],NULL,0x10); value=os.str(); }
-	if (tag=="bin") { os << strtoll(&value.c_str()[2],NULL,0x02); value=os.str(); }
+	if (tag=="hex") { tag="int";
+		os << strtoll(&value.c_str()[2],NULL,0x10); value=os.str(); }
+	if (tag=="bin") { tag="int";
+		os << strtoll(&value.c_str()[2],NULL,0x02); value=os.str(); }
 	return this;
 }
 

@@ -9,7 +9,7 @@ $bICONFIG$
 %token <c> CHAR
 %token <o> SYM NUM STR EQ LQ RQ LP RP	/* symbol number string = [ ] ( ) */
 %type <o> ex list
-#%left EQ
+%left EQ
 %%
 $MODULE$ :
 	| $MODULE$ CHAR 			{ W(\$2); }			/* any undetected char */
@@ -19,8 +19,10 @@ $MODULE$ :
 						  W("\\n========================================");
 						}
 ;
-ex : SYM | NUM | STR						/* atomic language elements */
-	| LQ list RQ		{ \$\$=\$2; }			/* [list] */
+ex : SYM | NUM | STR							/* atomic language elements */
+	| LQ list RQ		{ \$\$=\$2; }				/* [list] */
+	| LP ex RP			{ \$\$=\$2; }				/* (parens) */
+	| ex EQ ex			{ \$\$=\$1; \$\$->join(\$3); }/* SOME = OTHER */
 ;
 list :			{ \$\$=new sym("[","]"); }	/* create new list */
 	| list ex	{ \$\$=\$1; \$\$->join(\$2); }	/* add next element */
