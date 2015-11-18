@@ -7,13 +7,13 @@ void yyerror(string msg) { cerr<<YYERR; cout<<YYERR; exit(-1); }	// error()
 int main() { env_init(); return yyparse(); }						// main()
 
 // generic writers
-void W(char c,bool)	{ cerr << c; }						// write single char
-void W(sym *o,bool)	{ cerr << o->dump(); }				// write symbolic object
+void W(char    c,bool)	{ cout << c; }					// write single char
+void W(string  s,bool)	{ cout << s; }					// string
+void W(sym    *o,bool)	{ cout << o->dump(); }			// symbolic object
 
 // simplified sym realization
 sym::sym(string T,string V)	{ tag=T; value=V; }			// symbol constructor
 void sym::join(sym*o)		{ nest.push_back(o); }		// add nested object
-sym* sym::eval()			{ return this; }			// object evaluator
 string sym::pad(int n) 		{string S; for (int i=0;i<n;i++) S+="\\t"; return S;}
 string sym::tagval()		{ return "<"+tag+":"+value+">"; }
 string sym::dump(int depth) {							// dump symbol object
@@ -22,11 +22,29 @@ string sym::dump(int depth) {							// dump symbol object
 		S += (*it)->dump(depth+1);						// recurse with pad++
 	return S;
 }
+sym* sym::eval() {										// object evaluator
+	for (auto it=nest.begin(); it!=nest.end(); it++)	// walk over nest[]ed
+		(*it) = (*it)->eval();							// recurse compute
+	if (env[value]) return env[value];					// look up in env[]
+	ostringstream os;						// \\\\ normalize numeric types
+	if (tag=="int") { os << atoll(value.c_str()); value=os.str(); }
+	if (tag=="num") { os <<  atof(value.c_str()); value=os.str(); }
+	if (tag=="hex") { os << strtoll(&value.c_str()[2],NULL,0x10); value=os.str(); }
+	if (tag=="bin") { os << strtoll(&value.c_str()[2],NULL,0x02); value=os.str(); }
+	return this;
+}
 
 // dummies for abridged operators and functions
 sym* sym::add(sym*o)		{ return o; }				
 
 // global env[]ironment used for program/script data exchange
 map<string,sym*> env;
-void env_init(){}
+void env_init() {
+	env["%T"] = new sym("%","T");
+	env["%F"] = new sym("%","F");
+	env["%N"] = new sym("%","N");
+	env["%E"] = new sym("%","E");
+	env["%%"] = new sym("%","%");
+	env["exit"] = new sym("fn","EXIT");//Fn(exit);
+}
 .eof

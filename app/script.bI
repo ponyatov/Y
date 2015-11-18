@@ -13,7 +13,11 @@ $bICONFIG$
 %%
 $MODULE$ :
 	| $MODULE$ CHAR 			{ W(\$2); }			/* any undetected char */
-	| $MODULE$ ex				{ W(\$2); }			/* bI language expression */
+	| $MODULE$ ex				{ W(\$2); 			/* bI language expression */
+						  W("\\n-------------------");
+						  W(\$2->eval());
+						  W("\\n========================================");
+						}
 ;
 ex : SYM | NUM | STR						/* atomic language elements */
 	| LQ list RQ		{ \$\$=\$2; }			/* [list] */
@@ -34,9 +38,9 @@ $bICONFIG$
 S [\-\+]\?
 D [0-9]+
 %%
-^\#[^\\n]*\\n+			{}				/* full comment line: skip with EOLs */
-\#[^\\n]*				{}				/* end line comment */
-[ \\t\\r]+			{}				/* drop all spaces */
+^\#[^\\n]*\\n+			{W(yytext);}	/* full comment line: skip with EOLs */
+\#[^\\n]*				{W(yytext);}	/* end line comment */
+[ \\t\\r\\n]+			{W(yytext);}	/* drop all spaces */
 
 									/* numbers */
 {S}{D}[eE]{S}{D}	TO("num",NUM)	/* float */
@@ -47,7 +51,7 @@ D [0-9]+
 
 \\'[^\\']*\\'			TO("str",STR)	/* string */
 [a-zA-Z0-9_]+		TO("sym",SYM)	/* symbol */
-\\%[TFNE]			TO("sym",SYM)	/* special symbol */
+\\%[TFNE\\%]			TO("sym",SYM)	/* special symbol */
 
 \\\=					TO("op",EQ)		/* operators */
 \\\[					TO("op",LQ)
@@ -55,7 +59,6 @@ D [0-9]+
 \\\(					TO("op",LP)
 \\\)					TO("op",RP)
 
-\\n					TC(CHAR)		/* end of line */
 .					TC(CHAR)		/* any other char */
 %%
 .eof
