@@ -1,5 +1,11 @@
 # dynamic class description
 
+.module	minimal
+.title	Minimal bI Program
+.color	darkblue
+.inc minimal_program.bI
+.end
+
 .module ST
 .title	SmallTalk-inspired object engine
 .about	some experiments with OOP based on dynamic objects

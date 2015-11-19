@@ -8,3 +8,4 @@ lex.yy.c
 *.res
 bI
 ST
+minimal
