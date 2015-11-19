@@ -3,6 +3,7 @@
 .module	minimal
 .title	Minimal bI Program
 .color	darkblue
+$main = 'int main() {}'
 .inc minimal_program.bI
 .end
 

@@ -1,0 +1,52 @@
+\\.					T1(CHAR)
+<*>^#[^\n]*\n+		{W(yytext);}	/* full comment line: skip with EOLs */
+<*>#[^\n]*			{W(yytext);}	/* end line comment */
+
+^\.module{DF}		TX(Directive,MODULE)
+^\.file{DF}			TX(Directive,FFILE)
+^\.eof				TX(Directive,FEOF)
+^\.inc{DF}			TX(Directive,INC)
+^\.end				{yyterminate();}
+^\.[a-z]+{DR}		TX(Directive,DIRECTIVE)
+
+\@					{BEGIN(xx);TC(AX);}
+\$					{BEGIN(xx);TC(SX);}
+\?					{BEGIN(xx);TC(QX);}
+<xx>\n				{BEGIN(INITIAL);}
+<xx>[ \t\r]+		W(yytext,false);
+<xx>[@$?]			{BEGIN(INITIAL);}
+
+										/* numbers */
+<xx>{S}{D}[eE]{S}{D}	TX(Num,NUM)		/* float */
+<xx>{S}{D}\.{D}			TX(Num,NUM)		/* exponential */
+<xx>{S}{D}				TX(Int,NUM)		/* integer */
+<xx>0x[0-9A-F]+			TO("hex",NUM)	/* hexadecimal int */
+<xx>0b[01]+				TO("bin",NUM)	/* binary int */
+
+<xx>\=				TX(Op,EQ)
+<xx>\[				TX(Op,LQ)
+<xx>\]				TX(Op,RQ)
+<xx>\(				TX(Op,LP)
+<xx>\)				TX(Op,RP)
+
+<xx>\+				TX(Op,ADD)
+<xx>\-				TX(Op,SUB)
+<xx>\*				TX(Op,MUL)
+<xx>\/				TX(Op,DIV)
+<xx>\^				TX(Op,POW)
+<xx>\<				TX(Op,LL)
+<xx>\>				TX(Op,GG)
+<xx>\:				TX(Op,COLON)
+<xx>\.				TX(Op,DOT)
+
+<xx>\'[^\']*\'		TX(Str,STR)
+<xx>\"[^\"]*\"		TX(Str,STR)
+<xx>[a-zA-Z0-9_]+	TO("sym",SYM)
+<xx>\%[TFNE\%]		TO("sym",SYM)
+
+
+\n			TC(CHAR)
+.			TC(CHAR)
+
+<<EOF>>	{ yypop_buffer_state(); if ( !YY_CURRENT_BUFFER ) yyterminate();}
+%%

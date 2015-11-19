@@ -8,6 +8,4 @@ license: $LICENSE$
 
 GitHub: $GITHUB$
 
-\#\#\# ![warning](logo/$LISP$.png) Powered by bI
-
-$AUTOGEN$
+\#\#\# ![warning](logo/$LISP$.png) This program was autogened by bI

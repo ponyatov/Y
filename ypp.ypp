@@ -7,10 +7,20 @@
 	string *s;
 	sym *o;
 }
+%token <c> CHAR
+%%
+PIL :
+	| PIL CHAR			{ W($2); }
+;
+%%
+/*/
+%token <o> EQ LQ RQ LP RP
+%token <o> SYM NUM STR
+%token <o> ADD SUB MUL DIV POW COLON DOT
+
 %token <c> CHAR AX SX QX
 %token <o> DIRECTIVE MODULE FFILE FEOF INC SYM NUM STR
-%token <o> LQ RQ LL GG
-%token <o> ADD SUB MUL DIV POW COLON DOT
+%token <o> EQ LQ RQ LP RP LL GG
 %type <o> ex xx list op
 
 %left COLON DOT
@@ -18,9 +28,6 @@
 %left MUL DIV
 %left POW
 
-%%
-PIL :
-	| PIL CHAR			{ W($2); }
 	| PIL MODULE CHAR	{ W($2,false);
 						if (curr_module) delete curr_module;
 						curr_module = new Module($2->value); env["MODULE"]=curr_module; }
@@ -51,6 +58,7 @@ ex : SYM | NUM | STR | op
 	| ex MUL ex			{ $$ = $2; $$->join($1); $$->join($3); }
 	| ex DIV ex			{ $$ = $2; $$->join($1); $$->join($3); }
 	| ex POW ex			{ $$ = $2; $$->join($1); $$->join($3); }
+	| ex EQ ex			{ $$ = $1; $$->join($2); }
 ;
 list :					
 	  ex ex				{ $$ = new List(); $$->join($1); $$->join($2); }
@@ -59,3 +67,4 @@ list :
 xx : ex | list ;
 op : ADD | SUB | MUL | DIV | POW ;
 %%
+/*/

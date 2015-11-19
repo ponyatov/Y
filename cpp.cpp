@@ -49,6 +49,7 @@ void env_init() {
 	env["CFILES"]=new Str("cpp.cpp");
 	env["HFILES"]=new Str("hpp.hpp");
 	env["COLOR"]=new Str("peachpuff");
+	env["ABOUT"]=new Str("");
 	// special symbols
 	env["%T"]=new sym("true","%T");
 	env["%F"]=new sym("false","%F");

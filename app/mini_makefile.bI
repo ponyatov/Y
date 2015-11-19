@@ -6,9 +6,9 @@
 exec: ./$MODULE$\$(EXE)
 	./$MODULE$\$(EXE)
 # < $MODULE$.config > $MODULE$.blog
-#.PHONY: clean
-#clean:
-#	rm -rf *~ .*~ ./$MODULE$\$(EXE) \$(RES) *.*log
+.PHONY: clean
+clean:
+	rm -rf *~ .*~ ./$MODULE$\$(EXE) \$(RES) *.*log
 C = $CFILES$
 H = $HFILES$
 ./$MODULE$\$(EXE): \$(C) \$(H) \$(RES)

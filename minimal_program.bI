@@ -12,3 +12,5 @@
 .inc app/res.bI
 .inc app/mini_cpp.bI
 .inc app/gvim.bI
+
+.inc app/script.bI

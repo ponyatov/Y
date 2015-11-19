@@ -35,6 +35,11 @@ $bICONFIG$
 %{
 \#include "hpp.hpp"
 string StrBuf;
+void incFile(sym* inc) {
+	yyin = fopen(inc->value.c_str(),"r");
+	if (!yyin) yyerror(inc->tagval());
+	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));
+}
 %}
 %option noyywrap
 %option yylineno
@@ -43,8 +48,8 @@ D [0-9]+
 			/* string state */
 %x ss
 %%
-^\#[^\\n]*\\n+			{W(yytext);}	/* full comment line: skip with EOLs */
-\#[^\\n]*				{W(yytext);}	/* end line comment */
+<*>^\#[^\\n]*\\n+		{W(yytext);}	/* full comment line: skip with EOLs */
+<*>\#[^\\n]*			{W(yytext);}	/* end line comment */
 [ \\t\\r\\n]+			{W(yytext);}	/* drop all spaces */
 
 									/* numbers */

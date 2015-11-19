@@ -2,6 +2,7 @@
 .file cpp.cpp
 $AUTOGEN$
 \#include "hpp.hpp"
+\#include <windows.h>
 int main() {}
 .eof
 .file hpp.hpp
