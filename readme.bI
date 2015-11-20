@@ -13,10 +13,10 @@
 
 \#\#\# TODO
 
-* optimizing translator into C++ for target static cross-compilation
-* rich GUI/CAD/Visualization environment with MVC architecture
-* clustering subsystem for cloud computing
-* symbolic math engine
+* [ ] optimizing translator into C++ for target static cross-compilation
+* [ ] rich GUI/CAD/Visualization environment with MVC architecture
+* [ ] clustering subsystem for cloud computing
+* [ ] symbolic math engine
 
 \#\#\# LISP-like evaluator
 
