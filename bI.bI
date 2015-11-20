@@ -4,7 +4,7 @@
 .title	Minimal bI Program
 .color	darkblue
 .inc app/readme.bI
-.inc readme.bI
+#.inc readme.bI
 .eof
 .inc app/makefile.bI
 .inc app/gvim.bI
