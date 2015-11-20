@@ -2,23 +2,44 @@
 #include "hpp.hpp"
 %}
 %defines %union { char c; sym *o; }
-%token <c> CHAR SX
+%token <c> CHAR SX QX
 %token <o> DIRECTIVE MODULE FFILE FEOF
 %token <o> SYM NUM STR
-%token <o> EQ LQ RQ LP RP
-%type <o> ex
+%token <o> EQ LQ RQ LP RP LL GG COLON
+%token <o> ADD SUB MUL DIV POW
+%type <o> ex list vector
+														/* operators priority */
+%left EQ
+%left COLON
+%left ADD SUB
 %%
 bI :
-	| bI CHAR		{ W($2); }
-	| bI DIRECTIVE	{ W($2); }
+	| bI CHAR		{ W($2); }							/* any undetected char */
+	| bI DIRECTIVE CHAR	{ W($2); }
 	| bI MODULE		{ W($2);
 					  if (curr_module) delete curr_module;
 					  curr_module = new Module($2->value);
-					  env["MODULE"]=curr_module; }
-	| bI FFILE CHAR	{ W($2,false); W($3,false); }
-	| bI FEOF  CHAR	{ W($2,false); W($3,false); }
-	| bI SX ex		{ W($3->eval()->value); }
+					  env["MODULE"] = curr_module; }
+	| bI FFILE CHAR	{ W($2,false); W($3,false); }			/* drop <.file:..>*/
+	| bI FEOF  CHAR	{ W($2,false); W($3,false); }			/* drop <.eof:..> */
+	| bI SX ex		{ W($3->eval()->value); }		/* insert computed string */
+	| bI QX ex		{ W($3);						/* dump AST and eval result*/
+					  W("\n----------------");
+					  W($3->eval());
+					  W("\n============================\n"); }
 ;
-ex:	SYM | NUM | STR
+ex:	SYM | NUM | STR								/* atomic language elements */
+  	| ex COLON ex	{ $$ = new Pair($1,$3); }	/* pa:ir */
+  	| LQ list RQ	{ $$ = $2; }				/* [list] */
+  	| LL vector GG	{ $$ = $2; }				/* <vector> */
+	| LP ex RP		{ $$ = $2; }				/* (parens) */
+	| ex EQ ex		{ $$ = $1; $$->join($3); }	/* some = other */
+	| ex ADD ex		{ $$ = $2; $$->join($1); $$->join($3); }
+;
+list:				{ $$ = new List(); }		/* create new list */
+	| list ex		{ $$ = $1; $$->join($2); }	/* add next element */
+;
+vector:				{ $$ = new Vector(); }		/* create new vector */
+	| vector ex		{ $$ = $1; $$->join($2); }	/* add next element */
 ;
 %%

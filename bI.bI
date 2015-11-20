@@ -1,10 +1,12 @@
 # dynamic class description
 
-$LOGO$
-
 .module	minimal
 .title	Minimal bI Program
+
+.end
+
 .color	darkblue
+.inc app/config.bI
 .inc app/readme.bI
 #fsdfds
 .end
@@ -57,7 +59,82 @@ $main = 'int main() {}'
 .about Program In Line
 .inc lex_program.bI
 
-# core language elements
+.sec+	core language elements
+
+.sec-	comments
+# bI has line comment : required for UNIX script file header '#!/bin/sh'
+
+.sec	source files
+
+Source files is plain text with inlined bI expresssions, marked with:
+\$ expression \$	evaluate and put calculated object string:value inline
+\? expression \?	dump parsed input as AST syntax tree and calculated object
+
+Paired markers and ignoring all spaces (including end of line)
+gives multiline expression syntax.
+
+bI system parses all data from stdin, bypass all undetected chars as-is into
+stdout, but processes inlined expressions.
+
+Use \.inc directive for including other source files.
+
+.sec-	modules
+
+\.module directive creates module: separate subdirectory, will be used for 
+\.file creation.
+
+Every module has some metadata controls module processing 
+in code and documentation generation, and builded software deployment.
+
+.sec-	files
+
+If some text marked with .file .eof pair, all stdout data will be copied into
+selected file. If .eof omitted, file will be closed until nest .file .eof 
+or .module.
+
+.sec	directives
+
+All directives starts with .dot at first line position.
+
+Directives used for source files markup, control bI system work,
+define files and modules,...
+
+.list Directives
+.li \.sec \.sec+ \.sec-			doc	sectioning
+.li \.list \.li					doc	lists
+.li \.module \.file \.eof		src	define module and files in current module
+.li \.title \.about \.author	src set module parameters
+.li \.license \.github			src
+.li \.color 					src set (g)vim colorsheme for generated module
+.li \.inc						src include other source file
+
+.sec	scalar data types
+# bI language supports int/float numbers, symbols, strings, <vectors> and lists
+? [ 1299999999999999993 04.5 [ -06e+77 some_sym]
+[] [quit=exit] 'string' [0x12AFFFFFFFFFFFF 0b1101] [%T %F %N %E %%] ] ?
+
+? < -01 [] 002 [[ +003 0x12AF ] 0b1101 ['this' is a 'string']]
+  +04.5 +006e-07 > ?
+
+# special symbols: true false nil error default
+? [ [ %T %F ] %N %E %% ] ?
+
+.sec	aggregate data types
+# compound data types: [list] pa:ir nested=item <vector>
+?[ list [] ='can be':empty nested=item <x y z> ]?
+
+# = operator can be used for assigning values
+?TITLE = '[minimal] Minimal bI Program' = xxx
+	= ( '= supports multiple assignment' = 'left associativity' )?
+
+# multiple assignment can be used for constructing complex objects
+?form:About
+	= ( Title = 'About ' + MODULE )
+	= ABOUT
+	= ( Buttons 
+		= button:OK 
+		= button:UPDATE 
+	)?
 
 # special symbols: true false nil error
 ? %T %F %N %E

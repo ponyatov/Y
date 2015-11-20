@@ -1,40 +1,50 @@
 #include "hpp.hpp"
 
 #define YYERR "\n\n"<<msg<<" #"<<yylineno<<" ["<<yytext<<"]\n\n"
-void yyerror(string msg) { cerr<<YYERR; cout<<YYERR; exit(-1); }
-int main() { env_init(); return yyparse(); }
+void yyerror(string msg) { cerr<<YYERR; cout<<YYERR; exit(-1); }	// error()
+int main() { env_init(); return yyparse(); }						// main()
 
-void W(char    c,bool to_file)	{ cout << c ;
+// writers
+void W(char    c,bool to_file)	{ cout << c ;					// single char
 	if (to_file&&curr_file) fprintf(curr_file->fh,"%c",c); }
-void W(string  s,bool to_file)	{ cout <<  s;
+void W(string  s,bool to_file)	{ cout <<  s;					// string
 	if (to_file&&curr_file) fprintf(curr_file->fh,"%s",s.c_str()); }
-void W(string *s,bool to_file)	{ cout << *s;
+void W(string *s,bool to_file)	{ cout << *s;					// string ptr
 	if (to_file&&curr_file) fprintf(curr_file->fh,"%s",s->c_str()); }
-void W(sym    *o,bool to_file)	{ cout << o->dump();
+void W(sym    *o,bool to_file)	{ cout << o->dump();			// symb.object
 	if (to_file&&curr_file) fprintf(curr_file->fh,"%s",o->dump().c_str()); }
 
-sym::sym(string T,string V)	{ tag=T; value=V; }
-void sym::join(sym*o)	{ nest.push_back(o); }
+// symbolic object realization
+
+sym::sym(string T,string V)	{ tag=T; value=V; }			// symbol constructor
+void sym::join(sym*o)	{ nest.push_back(o); }			// add nested object
+
 string sym::pad(int n) {string S; for (int i=0;i<n;i++) S+="\t"; return S;}
 string sym::tagval()	{ return "<"+tag+":"+value+">"; }
-
-string sym::dump(int depth) {
-	string S = "\n"+pad(depth)+tagval();
-	for (auto it=nest.begin(); it!=nest.end(); it++)
-		S += (*it)->dump(depth+1);
+string sym::dump(int depth) {							// dump symbol object
+	string S = "\n"+pad(depth)+tagval();				// header
+	for (auto it=nest.begin(); it!=nest.end(); it++)	// walk over nest[]ed
+		S += (*it)->dump(depth+1);						// recurse with pad++
 	return S;
 }
 
-sym* sym::eval()	{
-	for (auto it=nest.begin(); it!=nest.end(); it++)
-		(*it) = (*it)->eval();
-	if (env[value]) return env[value];
-	if (tag=="list" && nest.size() && nest[0]->tag=="fn")	// apply
-		return (Fn*)nest[0]->fn(this);
-	else return this;
+sym* sym::eval()	{									// object evaluator
+	for (auto it=nest.begin(); it!=nest.end(); it++)	// walk over nest[]ed
+		(*it) = (*it)->eval();							// recurse compute
+	sym *E = env[value];								// look up in env[]
+	if (E) {
+		if (nest.size())
+			for (auto it=nest.begin(); it!=nest.end(); it++)	// copy nested
+				E->join(*it);
+		return E;
+	}
+//	if (tag=="list" && nest.size() && nest[0]->tag=="fn")	// function apply
+//		return (Fn*)nest[0]->fn(this);
+//	else return this;
+	return this;										// default return
 }
 
-map<string,sym*> env;
+map<string,sym*> env;									// global env[]ironment
 void env_init() {
 	// meta constants
 	env["AUTHOR"]=new sym("author",AUTHOR);
@@ -55,9 +65,10 @@ void env_init() {
 	env["%F"]=new sym("false","%F");
 	env["%N"]=new sym("nil","%N");
 	env["%E"]=new sym("error","%E");
+	env["%%"]=new sym("default","%%");
 	// low-level fu()nctions
 	env["+"]=new Fn("add",add);
-	env["print"]=new Fn("print",print);
+//	env["print"]=new Fn("print",print);
 	env["exit"]=new Fn("exit",exit);
 }
 
@@ -98,19 +109,19 @@ File *curr_file = NULL;
 
 Int::Int(string V):sym("int",V)	{}
 sym* Int::eval() {
-	char S[0x100]; sprintf(S,"%i",atol(value.c_str())); value=S;
+	ostringstream os; os << atoll(value.c_str()); value=os.str();
 	return this; }
 
 Num::Num(string V):sym("num",V) {}
 sym* Num::eval() {
-	char S[0x100]; sprintf(S,"%e",atof(value.c_str())); value=S;
+	ostringstream os; os << strtold(value.c_str(),NULL); value=os.str();
 	return this; }
 
 Str::Str(string V):sym("str",V)	{}
 
-List::List():sym("list","[]") {}
-Vector::Vector():sym("vector","<>") {}
-Pair::Pair():sym("pair",":") {}
+List::List():sym("[","]") {}
+Vector::Vector():sym("","") {}
+Pair::Pair(sym*A,sym*B):sym(A->value,B->value) {}
 Dot::Dot():sym("dot",".") {}
 Op::Op(string V):sym("op",V) {}
 

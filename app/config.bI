@@ -14,12 +14,12 @@
 TITLE = '[$MODULE$] $TITLE$' = xxx
 	= ( '= supports multiple assignment' = 'left associativity' )
 \# multiple assignment can be used for constructing complex objects
-form_About
-	= ( Title = 'About $MODULE$' )
+form:About
+	= ( Title = 'About ' + MODULE )
 	= ABOUT
 	= ( Buttons 
-		= button_OK 
-		= button_UPDATE 
+		= button:OK 
+		= button:UPDATE 
 	)
 .eof
 .file ST.blog

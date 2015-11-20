@@ -16,6 +16,8 @@
 
 #include <iostream>
 #include <sstream>
+#include <iomanip>
+#include <string>
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
@@ -61,7 +63,7 @@ struct Str:sym { Str(string); };								// string
 
 struct List:sym { List(); sym* add(sym*); };					// [list]
 struct Vector:sym { Vector(); };								// <vector>
-struct Pair:sym { Pair(); };									// pa:ir
+struct Pair:sym { Pair(sym*,sym*); };							// pa:ir
 struct Dot:sym { Dot(); };										// some.dot
 struct Op:sym {Op(string);};									// operator
 

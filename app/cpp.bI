@@ -2,6 +2,7 @@
 .file cpp.cpp
 // $AUTOGEN$
 \#include "hpp.hpp"
+
 \#define YYERR "\\n\\n"<<msg<<" \#"<<yylineno<<" ["<<yytext<<"]\\n\\n"
 void yyerror(string msg) { cerr<<YYERR; cout<<YYERR; exit(-1); }	// error()
 int main() { env_init(); return yyparse(); }						// main()
@@ -14,6 +15,7 @@ void W(sym    *o,bool)	{ cout << o->dump(); }			// symbolic object
 // simplified sym realization
 sym::sym(string T,string V)	{ tag=T; value=V; }			// symbol constructor
 void sym::join(sym*o)		{ nest.push_back(o); }		// add nested object
+
 string sym::pad(int n) 		{string S; for (int i=0;i<n;i++) S+="\\t"; return S;}
 string sym::tagval()		{ return "<"+tag+":"+value+">"; }
 string sym::dump(int depth) {							// dump symbol object
@@ -33,7 +35,7 @@ sym* sym::eval() {										// object evaluator
 		os << strtoll(&value.c_str()[2],NULL,0x10); value=os.str(); }
 	if (tag=="bin") { tag="int";
 		os << strtoll(&value.c_str()[2],NULL,0x02); value=os.str(); }
-	return this;
+	return this;										// default return
 }
 
 // dummies for abridged operators and functions
