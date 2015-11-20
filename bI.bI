@@ -3,10 +3,16 @@
 .module	minimal
 .title	Minimal bI Program
 .color	darkblue
+.file minimal.config
+.eof
 .inc app/readme.bI
-.inc readme.bI
+#.inc readme.bI
 .eof
 .inc app/makefile.bI
+.inc app/ypp.bI
+.inc app/lpp.bI
+.inc app/hpp.bI
+.inc app/cpp.bI
 .inc app/gvim.bI
 .end
 
