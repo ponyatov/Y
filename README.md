@@ -24,7 +24,7 @@ and dynamic data types C++ class tree for internal use in generated program.
 ### includes:
 
 * [x] dynamic symbolic object subsystem 
-* [?] simple Lisp-inspired metaprogramming language
+* [x] simple Lisp-inspired metaprogramming language
 * [ ] optimizing translator into C++ for target static cross-compilation
 * [ ] rich GUI/CAD/Visualization environment with MVC architecture
 * [ ] parallel programming subsystem for clustering and cloud computing
