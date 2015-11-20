@@ -14,7 +14,7 @@
 * [ ] rich GUI/CAD/Visualization environment with MVC architecture
 * [ ] parallel programming subsystem for clustering and cloud computing
 * [ ] symbolic math engine
-* [ ] FFI: .dll and [D]COM integration
+* [ ] FFI: .so/.dll and [D]COM integration
 
 \#\#\# LISP-like evaluator
 
