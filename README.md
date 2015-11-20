@@ -23,15 +23,13 @@ and dynamic data types C++ class tree for internal use in generated program.
 
 ### includes:
 
-* dynamic symbolic object subsystem 
-* simple Lisp-inspired metaprogramming language
-
-### TODO
-
+* [x] dynamic symbolic object subsystem 
+* [?] simple Lisp-inspired metaprogramming language
 * [ ] optimizing translator into C++ for target static cross-compilation
 * [ ] rich GUI/CAD/Visualization environment with MVC architecture
-* [ ] clustering subsystem for cloud computing
+* [ ] parallel programming subsystem for clustering and cloud computing
 * [ ] symbolic math engine
+* [ ] FFI: .dll and [D]COM integration
 
 ### LISP-like evaluator
 
