@@ -5,13 +5,11 @@ $AUTOGEN$
 .inc sym/meta.pil
 .inc sym/stdinc.pil
 
-?ctype:string='std::string'?
-
 ?class:Symbol
-	= string:tag
+	= str:tag
 	= string:value
-	= (init =<tag,value>)
 ?
+$[hpp Symbol]$
 
 .inc sym/sym.pil
 \#endif // _H_$MODULE$

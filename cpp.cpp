@@ -27,6 +27,15 @@ string sym::dump(int depth) {							// dump symbol object
 		S += (*it)->dump(depth+1);						// recurse with pad++
 	return S;
 }
+string sym::hpp(int depth)	{
+	string S = pad(depth)+"//"+tagval()+"\n";
+	if (tag=="class") S="struct "+value+" {\n";
+	for (auto it=nest.begin();it!=nest.end();it++)
+		S+=(*it)->hpp(depth+1);
+	if (tag=="class") return S+"};\n";
+	return S;
+}
+string sym::cpp(int depth)	{ return pad(depth)+"//C++: "+tagval(); }
 
 sym* sym::eval()	{									// object evaluator
 	for (auto it=nest.begin(); it!=nest.end(); it++)	// walk over nest[]ed
@@ -35,7 +44,7 @@ sym* sym::eval()	{									// object evaluator
 	sym *EV = env[value];								// look up val in env[]
 //	sym *RR;											// resulting object
 	if (ET) {											// eval RR class tag
-		tag = ET->value;
+		if (ET->tag=="fn") return ET->fn(this);				// process class tag
 	} //else RR->tag=tag;									// copy this tag
 	if (EV) {
 		if (nest.size())
@@ -43,8 +52,9 @@ sym* sym::eval()	{									// object evaluator
 				EV->join(*it);
 		return EV;
 	} //else RR->value=value;								// copy this value
-//	if (tag=="list" && nest.size() && nest[0]->tag=="fn")	// function apply
-//		return (Fn*)nest[0]->fn(this);
+	if (tag=="["&&value=="]"								// function apply
+	&& nest.size() && nest[0]->tag=="fn")	
+		return (Fn*)nest[0]->fn(this);
 //	else return this;
 	return this;											// default return
 }
@@ -72,13 +82,16 @@ void env_init() {
 	env["%E"]=new sym("error","%E");
 	env["%%"]=new sym("default","%%");
 	// low-level fu()nctions
+	env["env"]=new Fn("env",setenv);				// env[] update functions
+	env["class"]=new Fn("class",defclass);			// class definition
 	env["+"]=new Fn("add",add);
 //	env["print"]=new Fn("print",print);
 	env["exit"]=new Fn("exit",exit);
 	// C++ generator functions
-	env["ctype"]=new sym("fn","ctype");
-	env["string"]=new Str("String");
-	env["sym"]=new sym("alias","Symbol");
+	env["hpp"]=new Fn("hpp",hpp);
+//	env["ctype"]=new sym("fn","ctype");
+	env["str"]=new Fn("str",str);
+//	env["sym"]=new sym("alias","Symbol");
 }
 
 Directive::Directive(string V):sym("",V) {
@@ -127,10 +140,11 @@ sym* Num::eval() {
 	return this; }
 
 Str::Str(string V):sym("str",V)	{}
+string Str::hpp()	{ return "std::string\t"+value+"\n"; }
 
 List::List():sym("[","]") {}
 Vector::Vector():sym("","") {}
-Pair::Pair(sym*A,sym*B):sym(A->value,B->value) {}
+Pair::Pair(sym*A,sym*B):sym(A->value,B->value) {}// join(A); join(B); }
 Dot::Dot():sym("dot",".") {}
 Op::Op(string V):sym("op",V) {}
 
@@ -153,3 +167,16 @@ sym* Int::add(sym*o)	{ assert(o->tag=="int");
 
 sym* print(sym*o) { sym* T = new Str(o->nest[1]->value); W(T->value); return T; }
 sym* exit(sym*o)  { return new sym("exit","0"); }
+
+sym* setenv(sym*o) {
+	return env["%%"];
+}
+sym* defclass(sym*o) { env[o->value]=o; return o; }
+sym* hpp(sym*o)		{
+	sym *S=new Str("");
+	for (auto it=o->nest.begin()+1;it!=o->nest.end();it++)
+		S->value += (*it)->hpp();
+	return S;
+}
+sym* cpp(sym*o)		{ return new Str(o->cpp()); }
+sym* str(sym*o)		{ return new Str(o->value); }

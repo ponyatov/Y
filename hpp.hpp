@@ -45,6 +45,9 @@ struct sym {
 	sym*(*fn)(sym*);			// for functions: pointer to lowlevel C++ fn()
 // predefined low-level functions defined on symbols and inherited objects
 	virtual sym* add(sym*);		// + to current object
+										// codegens
+	virtual string hpp(int depht=0);	// .hpp C++
+	virtual string cpp(int depht=0);	// .cpp C++
 };
 extern map<string,sym*> env;	// \\ global environment: objects registry
 extern void env_init();			// //
@@ -59,7 +62,7 @@ extern File *curr_file;					// current output file
 
 struct Int:sym { Int(string); sym* eval(); sym* add(sym*); };	// integer
 struct Num:sym { Num(string); sym* eval(); };					// float number
-struct Str:sym { Str(string); };								// string
+struct Str:sym { Str(string); string hpp(); };					// string
 
 struct List:sym { List(); sym* add(sym*); };					// [list]
 struct Vector:sym { Vector(); };								// <vector>
@@ -71,9 +74,15 @@ typedef sym* (*FN)(sym*);										// ptr to fn()
 struct Fn:sym { Fn(string,FN); };								// function
 
 										// low-level fu()nctions
+extern sym* setenv(sym*);				// env update function
+extern sym* defclass(sym*);				// class definition
 extern sym* add(sym*o);
 extern sym* print(sym*o);
 extern sym* exit(sym*o);
+extern sym* hpp(sym*o);
+extern sym* cpp(sym*o);
+										// std.constructors
+extern sym* str(sym*o);
 
 // lexer/parser interface (flex/bison)
 
