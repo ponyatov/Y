@@ -31,17 +31,22 @@ string sym::dump(int depth) {							// dump symbol object
 sym* sym::eval()	{									// object evaluator
 	for (auto it=nest.begin(); it!=nest.end(); it++)	// walk over nest[]ed
 		(*it) = (*it)->eval();							// recurse compute
-	sym *E = env[value];								// look up in env[]
-	if (E) {
+	sym *ET = env[tag];									// look up tag in env[]
+	sym *EV = env[value];								// look up val in env[]
+//	sym *RR;											// resulting object
+	if (ET) {											// eval RR class tag
+		tag = ET->value;
+	} //else RR->tag=tag;									// copy this tag
+	if (EV) {
 		if (nest.size())
 			for (auto it=nest.begin(); it!=nest.end(); it++)	// copy nested
-				E->join(*it);
-		return E;
-	}
+				EV->join(*it);
+		return EV;
+	} //else RR->value=value;								// copy this value
 //	if (tag=="list" && nest.size() && nest[0]->tag=="fn")	// function apply
 //		return (Fn*)nest[0]->fn(this);
 //	else return this;
-	return this;										// default return
+	return this;											// default return
 }
 
 map<string,sym*> env;									// global env[]ironment
@@ -70,6 +75,10 @@ void env_init() {
 	env["+"]=new Fn("add",add);
 //	env["print"]=new Fn("print",print);
 	env["exit"]=new Fn("exit",exit);
+	// C++ generator functions
+	env["ctype"]=new sym("fn","ctype");
+	env["string"]=new Str("String");
+	env["sym"]=new sym("alias","Symbol");
 }
 
 Directive::Directive(string V):sym("",V) {

@@ -4,16 +4,17 @@
 .title	Minimal bI Program
 .color	darkblue
 .file minimal.config
-\# $AUTOGEN$
-.eof
+.inc app/config.bI
+.file minimal.blog
 .inc app/readme.bI
 #.inc readme.bI
 .eof
-.inc app/makefile.bI
 .inc app/ypp.bI
 .inc app/lpp.bI
 .inc app/hpp.bI
 .inc app/cpp.bI
+.inc app/makefile.bI
+.inc app/res.bI
 .inc app/gvim.bI
 .end
 
