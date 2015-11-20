@@ -8,8 +8,7 @@
 \#\#\# includes:
 
 * dynamic symbolic object subsystem 
-* simple metaprogrammingin language
-* LISP-inspired list evaluator
+* simple Lisp-inspired metaprogramming language
 
 \#\#\# TODO
 

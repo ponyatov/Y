@@ -24,8 +24,7 @@ and dynamic data types C++ class tree for internal use in generated program.
 ### includes:
 
 * dynamic symbolic object subsystem 
-* simple metaprogrammingin language
-* LISP-inspired list evaluator
+* simple Lisp-inspired metaprogramming language
 
 ### TODO
 
