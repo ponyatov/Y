@@ -3,7 +3,7 @@
 %}
 %defines %union { char c; sym *o; }
 %token <c> CHAR SX QX
-%token <o> DIRECTIVE MODULE FFILE FEOF
+%token <o> DIRECTIVE MODULE FFILE FEOF INC
 %token <o> SYM NUM STR
 %token <o> EQ LQ RQ LP RP LL GG COLON
 %token <o> ADD SUB MUL DIV POW
@@ -15,13 +15,14 @@
 %%
 bI :
 	| bI CHAR		{ W($2); }							/* any undetected char */
-	| bI DIRECTIVE CHAR	{ W($2); }
+	| bI DIRECTIVE 	{ W($2); }
 	| bI MODULE		{ W($2);
 					  if (curr_module) delete curr_module;
 					  curr_module = new Module($2->value);
 					  env["MODULE"] = curr_module; }
 	| bI FFILE CHAR	{ W($2,false); W($3,false); }			/* drop <.file:..>*/
 	| bI FEOF  CHAR	{ W($2,false); W($3,false); }			/* drop <.eof:..> */
+	| bI INC   		{ W($2,false); }						/* drop <.inc:..> */
 	| bI SX ex		{ W($3->eval()->value); }		/* insert computed string */
 	| bI QX ex		{ W($3);						/* dump AST and eval result*/
 					  W("\n----------------");

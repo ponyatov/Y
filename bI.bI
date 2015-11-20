@@ -2,12 +2,15 @@
 
 .module	minimal
 .title	Minimal bI Program
-
+.color	darkblue
+.inc app/readme.bI
+.inc readme.bI
+.eof
+.inc app/makefile.bI
+.inc app/gvim.bI
 .end
 
-.color	darkblue
 .inc app/config.bI
-.inc app/readme.bI
 #fsdfds
 .end
 

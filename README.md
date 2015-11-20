@@ -15,23 +15,24 @@ Any program MUST HAVE scripting ability for CONFIGS and user EXTENSIONS.
 bI system provides universal script engine for bI language abridged dialect
 and dynamic data types C++ class tree for internal use in generated program.
 
-### includes:
-* dynamic symbolic object subsystem 
-* simple metaprogrammingin language
-* LISP-inspired list evaluator
-
-![logo](logo/warning64x64.png)
-
-* TODO: omtimizing translator into C++ for target static cross-compilation
-* TODO: rich GUI/CAD/Visualization environment with MVC architecture
-* TODO: clustering subsystem for cloud computing
-* TODO: symbolic math engine
-
 ### goals:
 * metaprogramming
 * programming language design and translator development
 * symbolic and numeric computations
 * complex engeneering systems design
+
+### includes:
+
+* dynamic symbolic object subsystem 
+* simple metaprogrammingin language
+* LISP-inspired list evaluator
+
+### TODO
+
+* optimizing translator into C++ for target static cross-compilation
+* rich GUI/CAD/Visualization environment with MVC architecture
+* clustering subsystem for cloud computing
+* symbolic math engine
 
 ### LISP-like evaluator
 
@@ -46,3 +47,4 @@ Dana Nau
 
 [LTHW]
 [Learn Lisp The Hard Way](http://learnlispthehardway.org/)
+

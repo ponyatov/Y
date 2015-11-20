@@ -25,6 +25,7 @@ X [ \t]*[^\n]*
 ^\.module{X}			TX(Directive,MODULE)
 ^\.file{X}				TX(Directive,FFILE)
 ^\.eof					TX(Directive,FEOF)
+^\.inc{X}				TX(Directive,INC)
 ^\.[a-z]+{X}			TX(Directive,DIRECTIVE)
 
 \$						{BEGIN(xx);TC(SX);}	/* expression mode on: inline str*/
