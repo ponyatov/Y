@@ -1,2 +1,1 @@
-.file ypp.ypp
-.eof
+.inc sym/ypp.bI

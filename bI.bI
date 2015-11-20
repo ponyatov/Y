@@ -4,6 +4,7 @@
 .title	Minimal bI Program
 .color	darkblue
 .file minimal.config
+\# $AUTOGEN$
 .eof
 .inc app/readme.bI
 #.inc readme.bI

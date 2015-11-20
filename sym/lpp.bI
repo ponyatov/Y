@@ -1,3 +1,3 @@
-.file ypp.ypp
+.file lpp.lpp
 $AUTOGEN$
 .eof

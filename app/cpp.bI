@@ -1,2 +1,1 @@
-.file cpp.cpp
-.eof
+.inc sym/cpp.bI

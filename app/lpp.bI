@@ -1,2 +1,1 @@
-.file lpp.lpp
-.eof
+.inc sym/lpp.bI
