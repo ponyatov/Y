@@ -1,0 +1,44 @@
+%token <o> ADD SUB MUL DIV POW COLON DOT AX QX
+%token <o> EQ LQ RQ LP RP LL GG
+%type <o> ex xx list op
+
+%left COLON DOT
+%left ADD SUB
+%left MUL DIV
+%left POW
+
+	| PIL MODULE CHAR	{ W($2,false);
+	| PIL FFILE CHAR	{ W($2,false); }
+	| PIL FEOF CHAR		{ W($2,false); }
+	| PIL INC 			{ W($2,false); }
+	| PIL AX xx			{ W($3,false); }
+	| PIL SX xx			{ W($3->eval()->value); }
+	| PIL QX xx			{ W($3,false);
+						  W("\n----------",false);
+						  W($3->eval());
+						  W("\n=========================",false);
+						}
+;
+ex : SYM | NUM | STR | op
+	| LQ RQ				{ $$ = new List(); }
+	| LQ ex RQ			{ $$ = new List(); $$->join($2); }
+	| LQ list RQ		{ $$ = $2; }
+	| LL ex GG			{ $$ = new Vector(); $$->join($2); }
+	| LL list GG		{ $$ = new Vector();
+						  for (auto it=$2->nest.begin();it!=$2->nest.end();it++)
+						    $$->join(*it); }
+	| ex COLON ex		{ $$ = new Pair(); $$->join($1); $$->join($3); }
+	| ex DOT ex			{ $$ = new Dot();  $$->join($1); $$->join($3); }
+	| ex ADD ex			{ $$ = $2; $$->join($1); $$->join($3); }
+	| ex SUB ex			{ $$ = $2; $$->join($1); $$->join($3); }
+	| ex MUL ex			{ $$ = $2; $$->join($1); $$->join($3); }
+	| ex DIV ex			{ $$ = $2; $$->join($1); $$->join($3); }
+	| ex POW ex			{ $$ = $2; $$->join($1); $$->join($3); }
+	| ex EQ ex			{ $$ = $1; $$->join($2); }
+;
+list :					
+	  ex ex				{ $$ = new List(); $$->join($1); $$->join($2); }
+	| list ex			{ $$ = $1; $$->join($2); }
+;
+xx : ex | list ;
+op : ADD | SUB | MUL | DIV | POW ;

@@ -1,70 +1,24 @@
 %{
 #include "hpp.hpp"
 %}
-%defines
-%union {
-	char c;
-	string *s;
-	sym *o;
-}
-%token <c> CHAR
-%%
-PIL :
-	| PIL CHAR			{ W($2); }
-;
-%%
-/*/
-%token <o> EQ LQ RQ LP RP
+%defines %union { char c; sym *o; }
+%token <c> CHAR SX
+%token <o> DIRECTIVE MODULE FFILE FEOF
 %token <o> SYM NUM STR
-%token <o> ADD SUB MUL DIV POW COLON DOT
-
-%token <c> CHAR AX SX QX
-%token <o> DIRECTIVE MODULE FFILE FEOF INC SYM NUM STR
-%token <o> EQ LQ RQ LP RP LL GG
-%type <o> ex xx list op
-
-%left COLON DOT
-%left ADD SUB
-%left MUL DIV
-%left POW
-
-	| PIL MODULE CHAR	{ W($2,false);
-						if (curr_module) delete curr_module;
-						curr_module = new Module($2->value); env["MODULE"]=curr_module; }
-	| PIL FFILE CHAR	{ W($2,false); }
-	| PIL FEOF CHAR		{ W($2,false); }
-	| PIL INC 			{ W($2,false); }
-	| PIL DIRECTIVE		{ W($2); }
-	| PIL AX xx			{ W($3,false); }
-	| PIL SX xx			{ W($3->eval()->value); }
-	| PIL QX xx			{ W($3,false);
-						  W("\n----------",false);
-						  W($3->eval());
-						  W("\n=========================",false);
-						}
-;
-ex : SYM | NUM | STR | op
-	| LQ RQ				{ $$ = new List(); }
-	| LQ ex RQ			{ $$ = new List(); $$->join($2); }
-	| LQ list RQ		{ $$ = $2; }
-	| LL ex GG			{ $$ = new Vector(); $$->join($2); }
-	| LL list GG		{ $$ = new Vector();
-						  for (auto it=$2->nest.begin();it!=$2->nest.end();it++)
-						    $$->join(*it); }
-	| ex COLON ex		{ $$ = new Pair(); $$->join($1); $$->join($3); }
-	| ex DOT ex			{ $$ = new Dot();  $$->join($1); $$->join($3); }
-	| ex ADD ex			{ $$ = $2; $$->join($1); $$->join($3); }
-	| ex SUB ex			{ $$ = $2; $$->join($1); $$->join($3); }
-	| ex MUL ex			{ $$ = $2; $$->join($1); $$->join($3); }
-	| ex DIV ex			{ $$ = $2; $$->join($1); $$->join($3); }
-	| ex POW ex			{ $$ = $2; $$->join($1); $$->join($3); }
-	| ex EQ ex			{ $$ = $1; $$->join($2); }
-;
-list :					
-	  ex ex				{ $$ = new List(); $$->join($1); $$->join($2); }
-	| list ex			{ $$ = $1; $$->join($2); }
-;
-xx : ex | list ;
-op : ADD | SUB | MUL | DIV | POW ;
+%token <o> EQ LQ RQ LP RP
+%type <o> ex
 %%
-/*/
+bI :
+	| bI CHAR		{ W($2); }
+	| bI DIRECTIVE	{ W($2); }
+	| bI MODULE		{ W($2);
+					  if (curr_module) delete curr_module;
+					  curr_module = new Module($2->value);
+					  env["MODULE"]=curr_module; }
+	| bI FFILE CHAR	{ W($2,false); W($3,false); }
+	| bI FEOF  CHAR	{ W($2,false); W($3,false); }
+	| bI SX ex		{ W($3->eval()->value); }
+;
+ex:	SYM | NUM | STR
+;
+%%

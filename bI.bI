@@ -1,8 +1,14 @@
 # dynamic class description
 
+$LOGO$
+
 .module	minimal
 .title	Minimal bI Program
 .color	darkblue
+.inc app/readme.bI
+#fsdfds
+.end
+
 $main = 'int main() {}'
 .inc minimal_program.bI
 .end

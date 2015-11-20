@@ -1,4 +1,3 @@
-/***** DO NOT EDIT: this file was autogened by bI *****/
 %{
 #include "hpp.hpp"
 string StrBuf;
@@ -10,16 +9,30 @@ void incFile(sym* inc) {
 %}
 %option noyywrap
 %option yylineno
-
-DF [ \t]*[^ #\n]*
-DR [ \t]*[^#\n]*
-S [-+]?
+S [\-\+]?
 D [0-9]+
-
-			/* expression state */
+X [ \t]*[^\n]*
+					/* expression parsing state */
 %x xx
-			/* string state */
+					/* string parsing state */
 %x ss
 %%
-%%
+\\.					T1(CHAR)
+<*>^#[^\n]*\n+		{W(yytext,false);}	/* full comment line: skip with EOLs */
+<*>#[^\n]*			{W(yytext,false);}	/* end line comment */
 
+^\.end				{W(new Directive(yytext),false);yyterminate();}
+^\.module{X}		TX(Directive,MODULE)
+^\.file{X}			TX(Directive,FFILE)
+^\.eof				TX(Directive,FEOF)
+^\.[a-z]+{X}		TX(Directive,DIRECTIVE)
+
+\$					{BEGIN(xx);TC(SX);}			/* expression mode on */
+<xx>\n				{BEGIN(INITIAL);}			/* expression mode off */
+<xx>\$				{BEGIN(INITIAL);}			/* expression mode off */
+<xx>[ \t\r]+		{W(yytext,false);}			/* bypass spaces */
+
+\n			TC(CHAR)
+.			TC(CHAR)
+<<EOF>>		{ yypop_buffer_state(); if ( !YY_CURRENT_BUFFER ) yyterminate();}
+%%
