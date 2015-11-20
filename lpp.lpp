@@ -1,0 +1,64 @@
+%{
+#include "hpp.hpp"
+string StrBuf;
+void incFile(sym* inc) {
+	yyin = fopen(inc->value.c_str(),"r");
+	if (!yyin) yyerror(inc->tagval());
+	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));
+}
+%}
+%option noyywrap
+%option yylineno
+S [\-\+]?
+D [0-9]+
+X [ \t]*[^\n]*
+					/* expression parsing state */
+%x xx
+					/* string parsing state */
+%x ss
+%%
+\\.						T1(CHAR)
+<*>^#[^\n]*\n+			{W(yytext,false);}	/* full line comment with EOLs */
+<*>#[^\n]*				{W(yytext,false);}	/* comment at rest line */
+
+^\.end					{W(new Directive(yytext),false);yyterminate();}
+^\.module{X}			TX(Directive,MODULE)
+^\.file{X}				TX(Directive,FFILE)
+^\.eof					TX(Directive,FEOF)
+^\.inc{X}				TX(Directive,INC)
+^\.[a-z]+{X}			TX(Directive,DIRECTIVE)
+
+\$						{BEGIN(xx);TC(SX);}	/* expression mode on: inline str*/
+\?						{BEGIN(xx);TC(QX);}	/* expression mode on: debug dump */
+<xx>[\$\?]				{BEGIN(INITIAL);}	/* expression mode off (inline) */
+<xx>[ \t\r\n]+			{}					/* drop spaces in expression mode */
+
+											/* numbers */
+<xx>{S}{D}[eE]{S}{D}	TX(Num,NUM)			/* float */
+<xx>{S}{D}\.{D}			TX(Num,NUM)			/* exponential */
+<xx>{S}{D}				TX(Int,NUM)			/* integer */
+<xx>0x[0-9A-F]+			TO("hex",NUM)		/* hexadecimal int */
+<xx>0b[01]+				TO("bin",NUM)		/* binary int */
+
+<xx>'[^']*'				TX(Str,STR)			/* string */
+<xx>[a-zA-Z0-9_]+		TO("sym",SYM)		/* symbol */
+<xx>\%[TFNE\%]			TO("sym",SYM)		/* specials */
+
+<xx>\=					TX(Op,EQ)			/* operators */
+<xx>\[					TX(Op,LQ)			/* [list begin */
+<xx>\]					TX(Op,RQ)			/* list end] */
+<xx>\(					TX(Op,LP)
+<xx>\)					TX(Op,RP)
+<xx>\<					TX(Op,LL)
+<xx>\>					TX(Op,GG)
+<xx>\:					TX(Op,COLON)		/* some:pair */
+<xx>\+					TX(Op,ADD)
+<xx>\-					TX(Op,SUB)
+<xx>\*					TX(Op,MUL)
+<xx>\/					TX(Op,DIV)
+<xx>\^					TX(Op,POW)
+
+\n			TC(CHAR)
+.			TC(CHAR)
+<<EOF>>		{ yypop_buffer_state(); if ( !YY_CURRENT_BUFFER ) yyterminate();}
+%%

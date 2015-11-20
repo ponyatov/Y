@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 .module sym
 
 class Comment
@@ -9,29 +10,46 @@ $FILES
 #@class(Comment){'// ',AUTOGEN,'\n// module:',MODULE,'\n\n'}
 #$class(Comment){'// ',AUTOGEN,'\n// module:',MODULE,'\n\n'}
 
+=======
+>>>>>>> PIL
 @date()
 $date()
 
 @sqrt(2)
 @sin(pi)
 
+<<<<<<< HEAD
+=======
+@class(Comment)
+$class(Comment)
+
+>>>>>>> PIL
 .module sym
 .title	pure symbolic script engine template generator
 
 .inc 'readme.sym'
 
 .inc 'gitignore.sym'
+<<<<<<< HEAD
 calc
+=======
+>>>>>>> PIL
 .eof
 
 .inc 'makefile.sym'
 
 .inc 'parser_head.sym'
+<<<<<<< HEAD
 .inc 'parser_sym.sym'
 .inc 'parser_foot.sym'
 
 .inc 'lexer_head.sym'
 .inc 'lexer_sym.sym'
+=======
+.inc 'parser_foot.sym'
+
+.inc 'lexer_head.sym'
+>>>>>>> PIL
 .inc 'lexer_foot.sym'
 
 .inc 'hpp.sym'
@@ -39,6 +57,7 @@ calc
 
 .inc 'vim.sym'
 .inc 'vimedit.sym'
+<<<<<<< HEAD
 $FILES
 
 .inc 'win32res.sym'
@@ -46,4 +65,6 @@ $FILES
 .bibliography
 .sec- Win32 API
 .bib http://www.functionx.com/win32/
+=======
+>>>>>>> PIL
 

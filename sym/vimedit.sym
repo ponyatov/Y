@@ -1,4 +1,5 @@
 .file 'vimedit.bat'
+<<<<<<< HEAD
 \@start .
 #\@start git gui
 #\@start sym/vimedit.bat
@@ -7,4 +8,11 @@ $'@start gvim -p ',MODULE,'.sym ',MODULE,'.log ',MODULE,'.ypp ',MODULE,'.lpp ',M
 .file 'vimedit.sh'
 \#!/bin/sh
 $'gvim -p ',MODULE,'.sym ',MODULE,'.log ',MODULE,'.ypp ',MODULE,'.lpp ',MODULE,'.hpp ',MODULE,'.cpp Makefile vimedit.sh ',FILES
+=======
+$'@gvim -p ',MODULE,'.sym ',MODULE,'.log ',MODULE,'.ypp ',MODULE,'.lpp ',MODULE,'.hpp ',MODULE,'.cpp Makefile'
+.eof
+.file 'vimedit.rc'
+\#!/bin/sh
+$'gvim -p ',MODULE,'.sym ',MODULE,'.log ',MODULE,'.ypp ',MODULE,'.lpp ',MODULE,'.hpp ',MODULE,'.cpp Makefile'
+>>>>>>> PIL
 .eof

@@ -33,8 +33,11 @@ void incFileName(object* o) {						/* process included .sym */
 %x x
 					/* string parsing */
 %x s
+<<<<<<< HEAD
 					/* class definition */
 %x cls
+=======
+>>>>>>> PIL
 /***** lexer_head.sym *****/
 %%
 
@@ -59,10 +62,13 @@ void incFileName(object* o) {						/* process included .sym */
 ^\.module[^\n]*		TX(directive,DIRECTIVE)				/* set current module */
 ^\.file				{BEGIN(x); TO("sym",FFILE);}		/* switch output file */
 ^\.eof				{BEGIN(INITIAL); TO("sym",FEOF);}	/* end output file */
+<<<<<<< HEAD
 ^\.bib[a-z]*[^\n]*	TX(directive,DIRECTIVE)				/* .bibliography */
 
 ^class[ \t]+[^\n]+	{BEGIN(cls); TX(directive,CLS);}	/* class definition */
 <cls>\n\n			{BEGIN(INITIAL);}					/* end class def */
+=======
+>>>>>>> PIL
 
 												/* bI/sym expressions mode */
 \@					{BEGIN(x); TC(AX);}			/* dump AST */
@@ -71,9 +77,13 @@ void incFileName(object* o) {						/* process included .sym */
 <x>,				TC(COMMA)					/* list separator */
 <x>\(				TC(LP)						/* ( */
 <x>\)				TC(RP)						/* ) */
+<<<<<<< HEAD
 <x>\{				TC(LB)						/* { */
 <x>\}				TC(RB)						/* } */
 <x,cls>[a-zA-Z0-9_]+	TO("sym",SYM)				/* generic bI language symbol */
+=======
+<x>[a-zA-Z0-9]+		TO("sym",SYM)				/* generic bI language symbol */
+>>>>>>> PIL
 
 												/* string parsing mode */
 <x>\'				{BEGIN(s); StrBuf="";}		/* go from X-mode: start str */

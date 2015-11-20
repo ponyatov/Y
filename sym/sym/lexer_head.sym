@@ -1,0 +1,44 @@
+.file MODULE,'.lpp'
+$'/* ',AUTOGEN,' */'
+/***** lexer_head.sym *****/
+$'%{\n#include "',MODULE,'.hpp"'
+$'\t\t\t\t\t\t\t\t\t\t\t\t\t\t/* token macroses */'
+$'\t/* single char */'
+\#define TC(X)	{ yylval.c = yytext[0]; return X; }
+$'\t/* escaped single char */'
+\#define T1(X)	{ yylval.c = yytext[1]; return X; }
+$'\t/* simple string */'
+\#define TS(X)	{ yylval.s = new string(yytext); return X; }
+$'\t/* dynamic engine basic object (tag+value) */'
+\#define TO(C,X)	{ yylval.o = new object(C,yytext); return X; }
+$'\t/* dynamic engine class inherited from basic object */'
+\#define TX(C,X)	{ yylval.o = new C(yytext); return X; }
+
+string StrBuf;								/* buffer for string parser mode */
+
+void inc(string filename) {							/* process included .sym */
+#	string filename = o->eval()->value;		/* eval(o) as filename parameter */
+#	W(new directive(".inc "+filename),false);  		/* dump directive to log */
+	yyin = fopen(filename.c_str(),"r");			  /* open included .sym file */
+	if (!yyin) yyerror(".inc "+filename);			   /* check file open ok */
+	yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE )); /* switch lex */
+}
+
+void incFileName(object* o) {						/* process included .sym */
+	string filename = o->eval()->value;		/* eval(o) as filename parameter */
+	W(new directive(".inc "+filename),false);  		/* dump directive to log */
+	inc(filename);
+#	yyin = fopen(filename.c_str(),"r");			  /* open included .sym file */
+#	if (!yyin) yyerror(".inc "+filename);			   /* check file open ok */
+#	yypush_buffer_state(yy_create_buffer( yyin, YY_BUF_SIZE )); /* switch lex */
+}
+$'%}'
+$'\t\t\t\t\t/* options */\n%option noyywrap'
+$'\t\t\t\t\t/* enable line numbers info in lexer */\n%option yylineno'
+$'\t\t\t\t\t/* lexer states */'
+$'\t\t\t\t\t/* bI/sym expresssion mode */\n%x x'
+$'\t\t\t\t\t/* string parsing */\n%x s'
+$'\t\t\t\t\t/* class definition */\n%x cls'
+/***** lexer_head.sym *****/
+%%
+

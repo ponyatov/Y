@@ -3,7 +3,11 @@ $'*~\n*.swp'
 $MODULE,'.elf'
 $MODULE,'.exe'
 *.log
+<<<<<<< HEAD
 $MODULE
+=======
+$'/',MODULE,'/'
+>>>>>>> PIL
 /tmp/
 $MODULE,'.lex.cpp'
 $MODULE,'.tab.?pp'

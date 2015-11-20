@@ -12,7 +12,11 @@ $'#define _H_',MODULE
 \#define GITHUB "https://github.com/ponyatov/Y/tree/dev/"
 \#define AUTOGEN "DO NOT EDIT: this file was autogened by bI/sym language system"
 
+<<<<<<< HEAD
 \#include <vector>					// \\\\ standart includes
+=======
+\#include <vector>				// \\\\ standart includes
+>>>>>>> PIL
 \#include <map>
 \#include <cstdio>
 \#include <cstdlib>
@@ -57,12 +61,16 @@ extern module *curr_module;			// //
 struct file: object {				// \\\\ output .file
 	file(string);
 	~file();
+<<<<<<< HEAD
 	static void curr_close();		// close current file (directive-evented)
 	FILE *fh;						// std FILE* handler
 	void W(char);
 	void W(string);
 	void W(string*);
 	void W(object*);
+=======
+	FILE *fh;
+>>>>>>> PIL
 };
 extern file *curr_file;				// //
 

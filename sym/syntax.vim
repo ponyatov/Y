@@ -19,9 +19,13 @@ syntax match	Constant	"\v[0-9]+"
 syntax region	String		start="'" end="'"
 
 " <object:dump>
+<<<<<<< HEAD
 syntax match	Constant	"\v\<.+\:.*\>"
 
 " class def
 syntax match	todo		"\v^class.+"
+=======
+syntax match	Constant	"\v\<.+\:.+\>"
+>>>>>>> PIL
 
 let b:current_syntax = "sym"

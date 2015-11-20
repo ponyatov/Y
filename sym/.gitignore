@@ -4,7 +4,7 @@ sym.elf
 sym.exe
 *.log
 sym
-/tmp/
+tmp
 sym.lex.cpp
-sym.tab.?pp
+*.tab.?pp
 calc

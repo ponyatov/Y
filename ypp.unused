@@ -1,0 +1,19 @@
+%left COLON DOT
+%left ADD SUB
+%left MUL DIV
+%left POW
+
+ex : 
+	| LQ ex RQ			{ $$ = new List(); $$->join($2); }
+	| LQ list RQ		{ $$ = $2; }
+	| LL ex GG			{ $$ = new Vector(); $$->join($2); }
+	| LL list GG		{ $$ = new Vector();
+						  for (auto it=$2->nest.begin();it!=$2->nest.end();it++)
+						    $$->join(*it); }
+;
+list :					
+	  ex ex				{ $$ = new List(); $$->join($1); $$->join($2); }
+	| list ex			{ $$ = $1; $$->join($2); }
+;
+xx : ex | list ;
+op : ADD | SUB | MUL | DIV | POW ;

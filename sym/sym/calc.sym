@@ -1,0 +1,22 @@
+
+.module	calc
+.title	tiny algebraic calculator language
+
+.inc 'readme.sym'
+.inc 'gitignore.sym'
+.eof
+.inc 'makefile.sym'
+
+.inc 'parser_head.sym'
+%%
+$MODULE,':'
+$'\t| ',MODULE,' CHAR\t\t\t\t{ W($2); }\n;'
+.inc 'parser_foot.sym'
+
+.inc 'lexer_head.sym'
+.inc 'lexer_foot.sym'
+
+.inc 'hpp.sym'
+.inc 'cpp.sym'
+.inc 'vimedit.sym'
+

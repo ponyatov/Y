@@ -1,0 +1,11 @@
+.file MODULE,'.ypp'
+$'/* ',AUTOGEN,' */'
+/***** parser_head.sym *****/
+$'%{\n#include "',MODULE,'.hpp"\n%}'
+%defines
+%union {
+	char c;			/* single char */
+	string *s;		/* simple string */
+	object *o;		/* bI/sym engine dynamic object (AST-based data element) */
+}
+$'%token\t<c>\t\tCHAR'

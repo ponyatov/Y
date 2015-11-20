@@ -1,0 +1,49 @@
+
+.module sym
+
+class Comment
+AUTOGEN
+
+$FILES
+
+#@class(Comment){'// ',AUTOGEN,'\n// module:',MODULE,'\n\n'}
+#$class(Comment){'// ',AUTOGEN,'\n// module:',MODULE,'\n\n'}
+
+@date()
+$date()
+
+@sqrt(2)
+@sin(pi)
+
+.module sym
+.title	pure symbolic script engine template generator
+
+.inc 'readme.sym'
+
+.inc 'gitignore.sym'
+calc
+.eof
+
+.inc 'makefile.sym'
+
+.inc 'parser_head.sym'
+.inc 'parser_sym.sym'
+.inc 'parser_foot.sym'
+
+.inc 'lexer_head.sym'
+.inc 'lexer_sym.sym'
+.inc 'lexer_foot.sym'
+
+.inc 'hpp.sym'
+.inc 'cpp.sym'
+
+.inc 'vim.sym'
+.inc 'vimedit.sym'
+$FILES
+
+.inc 'win32res.sym'
+
+.bibliography
+.sec- Win32 API
+.bib http://www.functionx.com/win32/
+

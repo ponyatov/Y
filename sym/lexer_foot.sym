@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+\\n					TC(EOL)						/* end line <CR> */
+>>>>>>> PIL
 .					TC(CHAR)					/* any undetected char */
 %%
 /***** lexer_foot.sym *****/
