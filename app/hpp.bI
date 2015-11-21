@@ -1,16 +1,19 @@
 .file hpp.hpp
 $AUTOGEN$
+$bICONFIG$
 \#ifndef _H_$MODULE$
 \#define _H_$MODULE$
-.inc sym/meta.pil
-.inc sym/stdinc.pil
 
-?class:Symbol
+namespace bI {
+
+/*?class:AST
 	= str:tag
 	= string:value
-?
-$[hpp Symbol]$
+?*/
+$[hpp AST]$
 
-.inc sym/sym.pil
+}
+
+.inc sym/hpp/all.bI
 \#endif // _H_$MODULE$
 .eof

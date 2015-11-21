@@ -44,7 +44,7 @@ struct sym {
 	void join(sym*);			// add nested object
 	sym*(*fn)(sym*);			// for functions: pointer to lowlevel C++ fn()
 // predefined low-level functions defined on symbols and inherited objects
-	virtual sym* add(sym*);		// + to current object
+//	virtual sym* add(sym*);		// + to current object
 										// codegens
 	virtual string hpp(int depht=0);	// .hpp C++
 	virtual string cpp(int depht=0);	// .cpp C++
@@ -56,9 +56,9 @@ extern void env_init();			// //
 
 struct Directive:sym { Directive(string); };					// .directive
 struct Module:sym { Module(string); };							// .module
-extern Module *curr_module;				// current module
-struct File:sym {File(string); FILE *fh; ~File(); };			// .file
-extern File *curr_file;					// current output file
+extern Module *curr_module;									// current module
+struct File:sym {File(string,string M="r"); FILE *fh; ~File(); };	// .file
+extern File *curr_file;									// current output file
 
 struct Int:sym { Int(string); sym* eval(); sym* add(sym*); };	// integer
 struct Num:sym { Num(string); sym* eval(); };					// float number

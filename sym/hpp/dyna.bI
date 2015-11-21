@@ -2,9 +2,9 @@
 
 struct Directive:sym { Directive(string); };					// .directive
 struct Module:sym { Module(string); };							// .module
-extern Module *curr_module;				// current module
-struct File:sym {File(string); FILE *fh; ~File(); };			// .file
-extern File *curr_file;					// current output file
+extern Module *curr_module;									// current module
+struct File:sym {File(string,string M="r"); FILE *fh; ~File(); };	// .file
+extern File *curr_file;									// current output file
 
 struct Int:sym { Int(string); sym* eval(); sym* add(sym*); };	// integer
 struct Num:sym { Num(string); sym* eval(); };					// float number

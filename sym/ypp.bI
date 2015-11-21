@@ -4,7 +4,7 @@ $AUTOGEN$
 \#include "hpp.hpp"
 %}
 %defines %union { char c; sym *o; }
-%token <c> CHAR SX QX
+%token <c> CHAR #SX QX
 #%type <o> ex list vector
 %%
 $MODULE$:

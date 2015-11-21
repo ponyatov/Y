@@ -15,8 +15,8 @@ S [\\-\\+]\?
 D [0-9]+
 X [ \\t]*[^\\n]*
 %%
-%%
 \\n			TC(CHAR)
 .			TC(CHAR)
 #<<EOF>>		{ yypop_buffer_state(); if ( !YY_CURRENT_BUFFER ) yyterminate();}
+%%
 .eof

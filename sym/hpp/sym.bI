@@ -10,9 +10,9 @@ struct sym {
 	string pad(int);			// pad tagval with tabs
 	vector<sym*> nest;			// nested objects tree
 	void join(sym*);			// add nested object
-	sym*(*fn)(sym*);			// for functions: pointer to lowlevel C++ fn()
-// predefined low-level functions defined on symbols and inherited objects
-	virtual sym* add(sym*);		// + to current object
+#	sym*(*fn)(sym*);			// for functions: pointer to lowlevel C++ fn()
+#// predefined low-level functions defined on symbols and inherited objects
+#	virtual sym* add(sym*);		// + to current object
 };
 extern map<string,sym*> env;	// \\\\ global environment: objects registry
 extern void env_init();			// //
