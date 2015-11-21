@@ -26,7 +26,7 @@ void sym::join(sym*o)	{ nest.push_back(o); }			// add nested object
 string sym::pad(int n)	{string S; for (int i=0;i<n;i++) S+="\t"; return S;}
 string sym::tagval()	{ return "<"+tag+":"+value+">"; }
 string sym::dump(int depth) {							// dump symbol object
-	string S = "n"+pad(depth)+tagval();					// header
+	string S = "\n"+pad(depth)+tagval();				// header
 	for (auto it=nest.begin(); it!=nest.end(); it++)	// walk over nest[]ed
 		S += (*it)->dump(depth+1);						// recurse with pad++
 	return S;
@@ -136,6 +136,10 @@ File::File(string V,string M):sym("file",V) {		// create file [Mode="r/w"]
 File::~File() { fclose(fh); }						// close file
 File *curr_file = NULL;								// current out file for W()
 
+// dynamic objects
+
+List::List():sym("[","]") {}
+
 Int::Int(string V):sym("int",V)	{}
 sym* Int::eval() {
 	ostringstream os; os << atoll(value.c_str()); value=os.str();
@@ -149,13 +153,13 @@ sym* Num::eval() {
 Str::Str(string V):sym("str",V)	{}
 string Str::hpp()	{ return "std::string\t"+value+"\n"; }
 
-List::List():sym("[","]") {}
 Vector::Vector():sym("","") {}
 Pair::Pair(sym*A,sym*B):sym(A->value,B->value) {}// join(A); join(B); }
 Dot::Dot():sym("dot",".") {}
 Op::Op(string V):sym("op",V) {}
 
 Fn::Fn(string V, FN F):sym("fn",V)	{ fn=F; }
+
 
 /*
 sym* add(sym*o)	{

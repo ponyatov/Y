@@ -33,12 +33,13 @@ X [ \t]*[^\n]*
 <xx>[\$\?]				{BEGIN(INITIAL);}	/* expression mode off (inline) */
 <xx>[ \t\r\n]+			{}					/* drop spaces in expression mode */
 
-											/* numbers */
-<xx>{S}{D}[eE]{S}{D}	TX(Num,NUM)			/* float */
-<xx>{S}{D}\.{D}			TX(Num,NUM)			/* exponential */
-<xx>{S}{D}				TX(Int,NUM)			/* integer */
-<xx>0x[0-9A-F]+			TO("hex",NUM)		/* hexadecimal int */
-<xx>0b[01]+				TO("bin",NUM)		/* binary int */
+												/* numbers */
+<xx>{S}{D}\.{D}[eE]{S}{D}	TO("num",NUM)		/* exponential */
+<xx>{S}{D}[eE]{S}{D}		TO("num",NUM)		/* exponential */
+<xx>{S}{D}\.{D}				TO("num",NUM)		/* float */
+<xx>{S}{D}					TO("int",NUM)		/* integer */
+<xx>0x[0-9A-F]+				TO("hex",NUM)		/* hexadecimal int */
+<xx>0b[01]+					TO("bin",NUM)		/* binary int */
 
 <xx>'[^']*'				TX(Str,STR)			/* string */
 <xx>[a-zA-Z0-9_]+		TO("sym",SYM)		/* symbol */

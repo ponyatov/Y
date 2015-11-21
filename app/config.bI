@@ -3,6 +3,7 @@
 \# $MODULE$ config file
 
 .inc test/comment.bI
+.inc test/numbers.bI
 
 #\# bI language supports int/float numbers, symbols, strings and nested lists
 #[ 1299999999999999993 4.5 [ -6e+77 some_sym]

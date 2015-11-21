@@ -6,5 +6,6 @@ $bICONFIG$
 .inc sym/cpp/writers.bI
 .inc sym/cpp/sym.bI
 .inc sym/cpp/file.bI
+.inc sym/cpp/dyna.bI
 #.inc sym/cpp/operators.bI
 .eof
