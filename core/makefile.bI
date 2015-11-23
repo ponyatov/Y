@@ -1,4 +1,3 @@
-# universal Makefile template, lexical programs uses special sym/Makefile.bI
 .file Makefile
 \# $AUTOGEN$
 \# make parameters: EXE=.(exe|elf) RES=(res.res|)

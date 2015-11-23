@@ -6,6 +6,12 @@
 .color		darkblue
 .inc readme.bI
 .inc core/gitignore.bI
+.inc core/ypp.bI
+.inc core/lpp.bI
+.inc core/hpp.bI
+.inc core/cpp.bI
+.inc core/res.bI
+.inc core/makefile.bI
 .inc core/gvim.bI
 .end
 
@@ -18,12 +24,6 @@
 .inc app/readme.bI
 #.inc readme.bI
 .eof
-.inc app/ypp.bI
-.inc app/lpp.bI
-.inc app/hpp.bI
-.inc app/cpp.bI
-.inc app/makefile.bI
-.inc app/res.bI
 .inc app/gvim.bI
 .end
 
