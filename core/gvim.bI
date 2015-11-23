@@ -3,7 +3,6 @@
 " Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 " GitHub: https://github.com/ponyatov/Y
 au BufNewFile,BufRead *.bI  set filetype=bI
-#au BufNewFile,BufRead *.bI  colorscheme $COLOR$
 au BufNewFile,BufRead *.log   set filetype=bI
 au BufNewFile,BufRead *.log   set autoread
 au BufNewFile,BufRead *.blog  set filetype=bI
