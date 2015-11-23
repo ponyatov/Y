@@ -1,0 +1,2 @@
+$AUTOGEN$
+\#include "hpp.hpp"
