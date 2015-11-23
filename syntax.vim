@@ -1,21 +1,12 @@
 " Language: bI
 " Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 " GitHub: https://github.com/ponyatov/Y
-
-" # line comments
-syntax match	Comment		"\v#.*"
-
-" .directive
-syntax match	Todo		"\v^\.[a-z]+[\+\-]?[ \t]*"
-
-" code inlines (X-expressions based on AST-like objects)
-syntax match Keyword "\v\$"
-syntax match Keyword "\v\?"
-"syntax match Keyword "\v\@"
-
-" numbers
-syntax match	Constant	"\v[\+\-]?[0-9]+[eE][\+\-]?[0-9]+"
-syntax match	Constant	"\v[0-9]+"
+syntax match Comment	"\v#.*"						" # line comment
+syntax match Todo		"\v^\.[a-z]+[\+\-]?[ \t]*"	" .directive
+syntax match Keyword	"\v\$"						" $ inline expression
+syntax match Keyword	"\v\?"						" ? inline expression
+syntax match Constant	"\v[\+\-]?[0-9]+[eE][\+\-]?[0-9]+"	" num
+syntax match Constant	"\v[0-9]+"							" int
 
 " 'string'
 syntax region	String		start="'" end="'"

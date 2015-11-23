@@ -3,7 +3,7 @@
 " Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 " GitHub: https://github.com/ponyatov/Y
 au BufNewFile,BufRead *.bI  set filetype=bI
-au BufNewFile,BufRead *.bI  colorscheme $COLOR$
+#au BufNewFile,BufRead *.bI  colorscheme $COLOR$
 au BufNewFile,BufRead *.log   set filetype=bI
 au BufNewFile,BufRead *.log   set autoread
 au BufNewFile,BufRead *.blog  set filetype=bI
@@ -17,6 +17,16 @@ au BufNewFile,BufRead Makefile set autoread
 .eof
 
 .file syntax.vim
+" Language: bI
+" Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
+" GitHub: https://github.com/ponyatov/Y
+syntax match Comment	"\\v\#.*"						" \# line comment
+syntax match Todo		"\\v^\\.[a-z]+[\\+\\-]\?[ \\t]*"	" .directive
+syntax match Keyword	"\\v\\\$"						" \$ inline expression
+syntax match Keyword	"\\v\\\?"						" \? inline expression
+syntax match Constant	"\\v[\\+\\-]\?[0-9]+[eE][\\+\\-]\?[0-9]+"	" num
+syntax match Constant	"\\v[0-9]+"							" int
+
 .eof
 
 .file src.bat
