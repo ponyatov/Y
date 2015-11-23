@@ -1,7 +1,6 @@
 " Language: bI
 " Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 " GitHub: https://github.com/ponyatov/Y
-
 au BufNewFile,BufRead *.bI  set filetype=bI
 au BufNewFile,BufRead *.bI  colorscheme peachpuff
 au BufNewFile,BufRead *.log   set filetype=bI
