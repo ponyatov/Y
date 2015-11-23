@@ -41,6 +41,11 @@ sym* Int::eval() {
 	ostringstream os; os << atoll(value.c_str()); value=os.str();
 	return this; }
 
+Hex::Hex(string V):sym("hex",V) {}
+sym* Hex::eval() { return this; }
+Bin::Bin(string V):sym("bin",V) {}
+sym* Bin::eval() { return this; }
+
 Num::Num(string V):sym("num",V) {}					// float point number
 sym* Num::eval() {
 	ostringstream os; os << strtold(value.c_str(),NULL); value=os.str();
