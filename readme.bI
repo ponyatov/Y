@@ -1,4 +1,4 @@
-#.inc sym/readme.bI
+.inc core/readme.bI
 \#\#\# goals:
 
 * metaprogramming
