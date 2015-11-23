@@ -7,6 +7,6 @@ bI.exe
 lex.yy.c
 *.res
 tmp
-bI
+bIz
 ST
 minimal

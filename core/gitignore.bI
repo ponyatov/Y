@@ -7,6 +7,6 @@ $MODULE$.exe
 *.tab.\?pp
 lex.yy.c
 *.res
-next
-$MODULE$
+#next
+#$MODULE$
 .eof

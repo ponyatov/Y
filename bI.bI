@@ -1,5 +1,14 @@
 # dynamic class description
 
+.module		bI
+.title		dynamic language system
+.about		Program In Line
+.color		darkblue
+.inc readme.bI
+.inc core/gitignore.bI
+.inc core/gvim.bI
+.end
+
 .module	minimal
 .title	Minimal bI Program
 .color	darkblue
