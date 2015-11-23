@@ -1,5 +1,5 @@
 # ![logo](logo/logo64x64.png) ALYEH platform : bI
-## bI dynamic language system
+## bI: dynamic language system
 ### Program In Line
 ### Динамический язык программирования Ы (чтобы никто не догадался)
 
@@ -16,6 +16,7 @@ bI system provides universal script engine for bI language abridged dialect
 and dynamic data types C++ class tree for internal use in generated program.
 
 ### goals:
+
 * metaprogramming
 * programming language design and translator development
 * symbolic and numeric computations
@@ -44,3 +45,4 @@ Dana Nau
 
 [LTHW]
 [Learn Lisp The Hard Way](http://learnlispthehardway.org/)
+
