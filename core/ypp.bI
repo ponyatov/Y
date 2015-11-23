@@ -1,0 +1,10 @@
+.file ypp.ypp
+.inc core/ypp/head.bI
+.inc core/ypp/tokens.bI
+.inc core/ypp/prio.bI
+.inc core/ypp/main.bI
+.inc core/ypp/ex.bI
+.inc core/ypp/list.bI
+.inc core/ypp/vector.bI
+%%
+.eof
