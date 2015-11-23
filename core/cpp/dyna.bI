@@ -22,6 +22,8 @@ Directive::Directive(string V):sym("",V) {
 	if (tag==".color")	env["COLOR"]	=new Str(value);
 }
 
+// file management
+
 Module::Module(string V):sym("module",V) {					// define .module
 	\#ifdef __MINGW32__
 		mkdir(V.c_str());									// create win32 dir
@@ -36,9 +38,11 @@ File::File(string V,string M):sym("file",V) {		// create file [Mode="r/w"]
 File::~File() { fclose(fh); }						// close file
 File *curr_file = NULL;								// current out file for W()
 
+// scalar data types
+
 Int::Int(string V):sym("int",V)	{}					// integer number
 sym* Int::eval() {
-	ostringstream os; os << atoll(value.c_str()); value=os.str();
+	ostringstream os; os << atol(value.c_str()); value=os.str();
 	return this; }
 
 Hex::Hex(string V):sym("hex",V) {}
@@ -48,12 +52,13 @@ sym* Bin::eval() { return this; }
 
 Num::Num(string V):sym("num",V) {}					// float point number
 sym* Num::eval() {
-	ostringstream os; os << strtold(value.c_str(),NULL); value=os.str();
+	ostringstream os; os << atof(value.c_str()); value=os.str();
 	return this; }
 
 Str::Str(string V):sym("str",V)	{}					// string
 
-													// compound data types
+// aggregate data types
+
 List::List():sym("[","]") {}						// [list]
 Vector::Vector():sym("","") {}						// <vector>
 Pair::Pair(sym*A,sym*B):sym(A->value,B->value) {}	// pa:ir

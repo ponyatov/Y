@@ -12,7 +12,28 @@ string sym::dump(int depth) {							// dump symbol object
 	return S;
 }
 map<string,sym*> env;									// global env[]ironment
-void env_init() {}
+void env_init() {
+	// meta constants
+	env["LOGO"]=new sym("logo",LOGO);
+	env["LISP"]=new sym("lisp",LISP);
+	env["AUTHOR"]=new sym("author",AUTHOR);
+	env["LICENSE"]=new sym("license",LICENSE);
+	env["GITHUB"]=new sym("github",GITHUB);
+	env["AUTOGEN"]=new sym("autogen",AUTOGEN);
+	env["bICONFIG"]=new sym("bIconfig",bICONFIG);
+	env["MODULE"]=curr_module;
+	env["FILES"]=new Str("");
+	env["CFILES"]=new Str("cpp.cpp");
+	env["HFILES"]=new Str("hpp.hpp");
+	env["COLOR"]=new Str("$COLOR$");
+	env["ABOUT"]=new Str("");
+	// special symbols
+	env["%T"]=new sym("true","%T");
+	env["%F"]=new sym("false","%F");
+	env["%N"]=new sym("nil","%N");
+	env["%E"]=new sym("error","%E");
+	env["%%"]=new sym("default","%%");
+}
 
 sym* sym::eval()	{									// object evaluator
 	if (env[value]) return env[value];					// lookup in env[]

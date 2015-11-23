@@ -67,9 +67,9 @@ sym* sym::eval()	{									// object evaluator
 map<string,sym*> env;									// global env[]ironment
 void env_init() {
 	// meta constants
-	env["AUTHOR"]=new sym("author",AUTHOR);
 	env["LOGO"]=new sym("logo",LOGO);
 	env["LISP"]=new sym("lisp",LISP);
+	env["AUTHOR"]=new sym("author",AUTHOR);
 	env["LICENSE"]=new sym("license",LICENSE);
 	env["GITHUB"]=new sym("github",GITHUB);
 	env["AUTOGEN"]=new sym("autogen",AUTOGEN);
@@ -150,7 +150,7 @@ sym* Num::eval() {
 Str::Str(string V):sym("str",V)	{}					// string
 string Str::hpp()	{ return "std::string\t"+value+"\n"; }
 
-													// compound data types
+													// aggregate data types
 List::List():sym("[","]") {}						// [list]
 Vector::Vector():sym("","") {}						// <vector>
 Pair::Pair(sym*A,sym*B):sym(A->value,B->value) {}	// pa:ir

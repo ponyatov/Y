@@ -6,5 +6,6 @@
 .inc core/lpp/xmode.bI
 .inc core/lpp/number.bI
 .inc core/lpp/symstr.bI
+.inc core/lpp/operator.bI
 .inc core/lpp/tail.bI
 .eof
