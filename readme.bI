@@ -30,4 +30,7 @@ Dana Nau
 [LTHW]
 [Learn Lisp The Hard Way](http://learnlispthehardway.org/)
 
+[kvalle]
+[DIY Lisp](https://github.com/kvalle/diy-lisp)
+
 .eof
