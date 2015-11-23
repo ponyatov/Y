@@ -16,26 +16,6 @@
 .inc core/gvim.bI
 .end
 
-.module	minimal
-.title	Minimal bI Program
-.color	darkblue
-.file minimal.config
-.inc app/config.bI
-.file minimal.blog
-.inc app/readme.bI
-#.inc readme.bI
-.eof
-.inc app/gvim.bI
-.end
-
-.inc app/config.bI
-#fsdfds
-.end
-
-$main = 'int main() {}'
-.inc minimal_program.bI
-.end
-
 .module ST
 .title	SmallTalk-inspired object engine
 .about	some experiments with OOP based on dynamic objects
