@@ -20,7 +20,6 @@ void env_init() {
 	env["LICENSE"]=new sym("license",LICENSE);
 	env["GITHUB"]=new sym("github",GITHUB);
 	env["AUTOGEN"]=new sym("autogen",AUTOGEN);
-	env["bICONFIG"]=new sym("bIconfig",bICONFIG);
 	env["MODULE"]=curr_module;
 	env["FILES"]=new Str("");
 	env["CFILES"]=new Str("cpp.cpp");
