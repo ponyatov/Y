@@ -2,11 +2,9 @@
 *.swp
 bI.elf
 bI.exe
-*.blog
+*.*log
 *.tab.?pp
 lex.yy.c
 *.res
-tmp
 bIz
-ST
 minimal
