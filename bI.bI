@@ -6,6 +6,7 @@
 .color		darkblue
 .inc readme.bI
 .inc core/gitignore.bI
+.inc test/bI.bI
 .inc core/ypp.bI
 .inc core/lpp.bI
 .inc core/hpp.bI
