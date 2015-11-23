@@ -4,8 +4,6 @@
 .title		dynamic language system
 .about		Program In Line
 .color		darkblue
-.inc readme.bI
-.inc core/gitignore.bI
 .inc test/bI.bI
 .inc core/ypp.bI
 .inc core/lpp.bI
@@ -13,6 +11,8 @@
 .inc core/cpp.bI
 .inc core/res.bI
 .inc core/makefile.bI
+.inc readme.bI
+.inc core/gitignore.bI
 .inc core/gvim.bI
 .end
 
