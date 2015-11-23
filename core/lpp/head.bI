@@ -1,3 +1,4 @@
+$AUTOGEN$
 %{
 \#include "hpp.hpp"
 string StrBuf;										/* string parsing buffer */

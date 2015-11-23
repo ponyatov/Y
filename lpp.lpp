@@ -1,7 +1,8 @@
+/***** DO NOT EDIT: this file was autogened by bI *****/
 %{
 #include "hpp.hpp"
-string StrBuf;
-void incFile(sym* inc) {
+string StrBuf;										/* string parsing buffer */
+void incFile(sym* inc) {							/* .inc processing */
 	yyin = fopen(inc->value.c_str(),"r");
 	if (!yyin) yyerror(inc->tagval());
 	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));
@@ -9,14 +10,18 @@ void incFile(sym* inc) {
 %}
 %option noyywrap
 %option yylineno
+					/* number sign */
 S [\-\+]?
+					/* decimal number */
 D [0-9]+
+					/* directive tail part (after .directive till line end ) */
 X [ \t]*[^\n]*
 					/* expression parsing state */
 %x xx
 					/* string parsing state */
 %x ss
 %%
+
 \\.						T1(CHAR)
 <*>^#[^\n]*\n+			{W(yytext,false);}	/* full line comment with EOLs */
 <*>#[^\n]*				{W(yytext,false);}	/* comment at rest line */
