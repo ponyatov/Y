@@ -1,5 +1,7 @@
 # dynamic class description
 
+.end
+
 .module		bI
 .title		dynamic language system
 .about metamodel was written in bI itself (used manual copypaste into main source)

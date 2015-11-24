@@ -2,7 +2,7 @@
 # make parameters: EXE=.(exe|elf) RES=(res.res|)
 .PHONY: exec
 exec: ./bI$(EXE)
-	./bI$(EXE) < bI.bI > bI.blog
+	./bI$(EXE) < bI.bI > bI.blog && head -n7 bI.blog 
 .PHONY: clean
 clean:
 	rm -rf *~ .*~ *.*log ./bI$(EXE) *.tab.?pp lex.yy.c $(RES)
