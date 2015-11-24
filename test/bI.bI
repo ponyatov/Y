@@ -1,4 +1,5 @@
 .file test.bI
+.inc test/func.bI
 .inc test/comment.bI
 \# bI supports
 .inc test/numbers.bI

@@ -8,5 +8,5 @@
 							/* directives with special processing */
 %token <o> DIRECTIVE
 %token <o> MODULE FFILE FEOF INC
-							/* nonterminal types: expression list vector */
-%type <o> ex list vector
+							/* nonterminal types: expression list vector block*/
+%type <o> ex list vector block
