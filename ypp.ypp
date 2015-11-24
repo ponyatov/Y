@@ -22,7 +22,7 @@ bI :
 					  env["MODULE"] = curr_module; }
 	| bI FFILE CHAR	{ W($2,false); W($3,false); }			/* drop <.file:..>*/
 	| bI FEOF  CHAR	{ W($2,false); W($3,false); }			/* drop <.eof:..> */
-	| bI INC   		{ W($2,false); }						/* drop <.inc:..> */
+	| bI INC   		{ W($2,false); W("\n",false); }			/* drop <.inc:..> */
 	| bI SX ex		{ W($3->eval()->value); }		/* insert computed string */
 	| bI QX ex		{ W($3);						/* dump AST and eval result*/
 					  W("\n----------------");

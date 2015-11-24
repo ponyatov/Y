@@ -3,7 +3,7 @@
 \# make parameters: EXE=.(exe|elf) RES=(res.res|)
 .PHONY: exec
 exec: ./$MODULE$\$(EXE)
-	./$MODULE$\$(EXE) < $MODULE$.bI > $MODULE$.blog
+	./$MODULE$\$(EXE) < test.bI > test.blog
 .PHONY: clean
 clean:
 	rm -rf *~ .*~ ./$MODULE$\$(EXE) \$(RES) *.*log

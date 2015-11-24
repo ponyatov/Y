@@ -1,4 +1,4 @@
-.file bI.bI
+.file test.bI
 .inc test/comment.bI
 \# bI supports
 .inc test/numbers.bI
@@ -6,5 +6,5 @@
 .inc test/aggregate.bI
 .inc test/directive.bI
 .eof
-.file bI.blog
+.file test.blog
 .eof
