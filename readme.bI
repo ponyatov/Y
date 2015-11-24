@@ -1,5 +1,8 @@
 .inc core/readme.bI
-\#\#\# Динамический язык программирования Ы (чтобы никто не догадался)
+
+\# ![logo](logo/logo64x64.png) ALYEH platform : bI dynamic language system
+\#\# Динамический язык программирования Ы (чтобы никто не догадался)
+
 \#\#\# goals:
 
 * metaprogramming
