@@ -1,5 +1,5 @@
 # ![logo](logo/logo64x64.png) ALYEH platform : bI dynamic language system
-## Динамический язык программирования Ы (чтобы никто не догадался)
+## Динамический язык метапрограммирования Ы (чтобы никто не догадался)
 ### metamodel was written in bI itself (used manual copypaste into main source)
 
 (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
