@@ -1,6 +1,5 @@
-# ![logo](logo/logo64x64.png) ALYEH platform : bI
-## bI: dynamic language system
-### Program In Line
+# ![logo](logo/logo64x64.png) bI: dynamic language system
+### metamodel was written in bI itself (used manual copypaste into main source)
 ### Динамический язык программирования Ы (чтобы никто не догадался)
 
 (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
@@ -48,3 +47,4 @@ Dana Nau
 
 [kvalle]
 [DIY Lisp](https://github.com/kvalle/diy-lisp)
+

@@ -2,8 +2,12 @@
 
 .module		bI
 .title		dynamic language system
-.about		Program In Line
+.about		metamodel was written in bI itself (used manual copypaste into main source)
 .color		darkblue
+.file bI.bI
+\?'$AUTOGEN$'\?
+.file bI.blog
+.eof
 .inc test/bI.bI
 .inc core/ypp.bI
 .inc core/lpp.bI
