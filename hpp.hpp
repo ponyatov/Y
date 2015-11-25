@@ -41,6 +41,10 @@ struct sym {
 	string tagval();			// <tag:value> string
 	string dump(int depth=0);	// dump object in string form
 	virtual sym* eval();		// evaluate (compute) object
+	// functions
+	sym* (*fn)(sym*);			// optional ptr to internal sym* fn(sym*)
+	// code generation
+	virtual string hpp(int depth=0);	// dump in C++ .hpp
 };
 extern map<string,sym*> env;	// \\ global environment: objects registry
 extern void env_init();			// //
@@ -68,8 +72,10 @@ struct Vector:sym { Vector(); };							// <vector>
 struct Pair:sym { Pair(sym*,sym*); };						// pa:ir
 struct Block:sym { Block(); };								// {block}
 
-typedef sym* (*FN)(sym*);									// ptr to fn()
-struct Fn:sym { Fn(string,FN); };							// function
+// class processing
+
+struct Class:sym { Class(string); };						// class:def
+extern sym* classdef(sym*);									// class fn
 
 // lexer/parser interface (flex/bison)
 
@@ -92,5 +98,12 @@ void W(char   ,bool to_file=true);
 void W(string ,bool to_file=true);
 void W(string*,bool to_file=true);
 void W(sym*   ,bool to_file=true);
+
+// functions
+
+typedef sym* (*FN)(sym*);									// ptr to fn()
+struct Fn:sym { Fn(string,FN); };							// function
+
+extern sym* hpp(sym*);			// hpp
 
 #endif // _H_bI

@@ -1,5 +1,15 @@
 # dynamic class description
 
+?class:Symbol
+	= String:tag
+	= String:value
+?
+?Symbol:Number?
+?Symbol:String?
+
+?[hpp Symbol 123 'str']?
+$[hpp Symbol 123 'str']$
+
 .end
 
 .module		bI

@@ -54,12 +54,20 @@ void env_init() {
 	env["%N"]=new sym("nil","%N");
 	env["%E"]=new sym("error","%E");
 	env["%%"]=new sym("default","%%");
+	// functions
+	env["hpp"]=new Fn("hpp",hpp);
+	env["class"]=new Fn("class",classdef);
 }
+
+string sym::hpp(int depth)	{ return pad(depth)+"//"+tagval()+"\n"; }
 
 sym* sym::eval()	{									// object evaluator
 	if (env[value]) return env[value];					// lookup in env[]
 	for (auto it=nest.begin(); it!=nest.end(); it++)	// walk over nest[]ed
 		(*it) = (*it)->eval();							// recurse compute
+	if (env[tag]) return env[tag]->fn(this);
+	if (nest.size() && nest[0]->tag=="fn")				// apply()
+		return nest[0]->fn(this);
 	return this;										// default as is
 }
 
@@ -136,3 +144,23 @@ Vector::Vector():sym("","") {}						// <vector>
 Pair::Pair(sym*A,sym*B):sym(A->value,B->value) {}	// pa:ir
 Block::Block():sym("{","}") {}						// {block}
 
+// class processing
+
+Class::Class(string V):sym("class",V) {}
+sym* classdef(sym*o) {
+	sym* C = new Class(o->value);							// create class
+	C->fn = classdef;										// set def fn
+	for (auto it=o->nest.begin();it!=o->nest.end();it++)	// copy nested
+		C->join(*it);
+	env[o->value]=C;										// save to env[]
+	return C;}												// return as result
+
+// functions
+
+Fn::Fn(string V,FN F):sym("fn",V) { fn=F; }
+
+sym* hpp(sym*o) {
+	string S;
+	for (auto it=o->nest.begin()+1 ; it!=o->nest.end() ; it++)
+		S += (*it)->hpp();
+	return new Str(S); }

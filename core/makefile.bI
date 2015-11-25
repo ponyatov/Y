@@ -1,10 +1,10 @@
 .file Makefile
 \# $AUTOGEN$
-\# make parameters: EXE=.(exe|elf) RES=(res.res|)
+\# make parameters: EXE=.(exe|elf) RES=(res.res|) TAIL=("tail..."|)
 .PHONY: exec
 exec: ./$MODULE$\$(EXE)
-	./$MODULE$\$(EXE) < test.bI > test.blog
-	./$MODULE$\$(EXE) < $MODULE$.bI > $MODULE$.blog
+	./$MODULE$\$(EXE) < test.bI > test.blog $(TAIL)
+	./$MODULE$\$(EXE) < $MODULE$.bI > $MODULE$.blog $(TAIL)
 .PHONY: clean
 clean:
 	rm -rf *~ .*~ *.*log ./$MODULE$\$(EXE) *.tab.\?pp lex.yy.c \$(RES)
