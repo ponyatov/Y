@@ -1,14 +1,13 @@
-// DO NOT EDIT: this file was autogened by PIL
-#ifndef _H_PIL
-#define _H_PIL
+/***** DO NOT EDIT: this file was autogened by bI *****/
+#ifndef _H_bI
+#define _H_bI
 
 // metainfo constants
 
 #define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"
-#define GITHUB "https://github.com/ponyatov/Y"
-#define AUTOGEN  "/***** DO NOT EDIT: this file was autogened by bI *****/"
-#define bICONFIG "/************ bI language abridged dialect ************/"
+#define GITHUB "https://github.com/ponyatov/bI"
+#define AUTOGEN "/***** DO NOT EDIT: this file was autogened by bI *****/"
 #define LOGO "logo64x64"
 #define LISP "warning64x64"
 
@@ -36,53 +35,47 @@ struct sym {
 	string tag;					// object class or data type
 	string value;				// object value in string form
 	sym(string,string);			// constructor from string form tag:value
-	string dump(int depth=0);	// dump object in string form
-	virtual sym* eval();		// evaluate (compute) object
-	string tagval();			// <tag:value> string
-	string pad(int);			// pad tagval with tabs
 	vector<sym*> nest;			// nested objects tree
 	void join(sym*);			// add nested object
-	sym*(*fn)(sym*);			// for functions: pointer to lowlevel C++ fn()
-// predefined low-level functions defined on symbols and inherited objects
-//	virtual sym* add(sym*);		// + to current object
-										// codegens
-	virtual string hpp(int depht=0);	// .hpp C++
-	virtual string cpp(int depht=0);	// .cpp C++
+	string pad(int);			// pad tagval with tabs
+	string tagval();			// <tag:value> string
+	string dump(int depth=0);	// dump object in string form
+	virtual sym* eval();		// evaluate (compute) object
+	// functions
+	sym* (*fn)(sym*);			// optional ptr to internal sym* fn(sym*)
+	// code generation
+	virtual string hpp(int depth=0);	// dump in C++ .hpp
 };
 extern map<string,sym*> env;	// \\ global environment: objects registry
 extern void env_init();			// //
 
 // dynamic symbolic object subsystem
 
-struct Directive:sym { Directive(string); };					// .directive
-struct Module:sym { Module(string); };							// .module
+struct Directive:sym { Directive(string); };				// .directive
+struct Module:sym {											// .module
+	Module(string); ~Module();
+	static void CurrSet(Module*); };			
 extern Module *curr_module;									// current module
-struct File:sym {File(string,string M="r"); FILE *fh; ~File(); };	// .file
+struct File:sym {											// .file
+	File(string,string M="r"); ~File(); FILE *fh;
+	static void CurrSet(File*); };							// set curr_file
 extern File *curr_file;									// current output file
 
-struct Int:sym { Int(string); sym* eval(); sym* add(sym*); };	// integer
-struct Num:sym { Num(string); sym* eval(); };					// float number
-struct Str:sym { Str(string); string hpp(); };					// string
+struct Int:sym { Int(string); sym* eval(); };				// integer
+struct Hex:sym { Hex(string); sym* eval(); };				// hex
+struct Bin:sym { Bin(string); sym* eval(); };				// binary
+struct Num:sym { Num(string); sym* eval(); };				// float number
+struct Str:sym { Str(string); };							// string
 
-struct List:sym { List(); sym* add(sym*); };					// [list]
-struct Vector:sym { Vector(); };								// <vector>
-struct Pair:sym { Pair(sym*,sym*); };							// pa:ir
-struct Dot:sym { Dot(); };										// some.dot
-struct Op:sym {Op(string);};									// operator
+struct List:sym { List(); };								// [list]
+struct Vector:sym { Vector(); };							// <vector>
+struct Pair:sym { Pair(sym*,sym*); };						// pa:ir
+struct Block:sym { Block(); };								// {block}
 
-typedef sym* (*FN)(sym*);										// ptr to fn()
-struct Fn:sym { Fn(string,FN); };								// function
+// class processing
 
-										// low-level fu()nctions
-extern sym* setenv(sym*);				// env update function
-extern sym* defclass(sym*);				// class definition
-extern sym* add(sym*o);
-extern sym* print(sym*o);
-extern sym* exit(sym*o);
-extern sym* hpp(sym*o);
-extern sym* cpp(sym*o);
-										// std.constructors
-extern sym* str(sym*o);
+struct Class:sym { Class(string); };						// class:def
+extern sym* classdef(sym*);									// class fn
 
 // lexer/parser interface (flex/bison)
 
@@ -106,4 +99,11 @@ void W(string ,bool to_file=true);
 void W(string*,bool to_file=true);
 void W(sym*   ,bool to_file=true);
 
-#endif // _H_PIL
+// functions
+
+typedef sym* (*FN)(sym*);									// ptr to fn()
+struct Fn:sym { Fn(string,FN); };							// function
+
+extern sym* hpp(sym*);			// hpp
+
+#endif // _H_bI

@@ -7,12 +7,12 @@ Directive::Directive(string V):sym("",V) {
 		                 value.erase(0,1); }
 	// file-specific operations
 	if (tag==".inc") incFile(this);							// .include files
+	if (tag==".module") Module::CurrSet(new Module(value));
 	if (tag==".file") {										// create new .file
 		env["FILES"]->value+=value+" ";						// FILES+= filename
 		value = curr_module->value+"/"+value;			// full name with module
 		if (curr_file) delete curr_file; curr_file=new File(value,"w"); }
-	if (tag==".eof") {										// end .file
-		if (curr_file) delete curr_file; curr_file=NULL; }
+	if (tag==".eof") File::CurrSet(NULL);					// end .file
 												// .module metainfo directives
 	if (tag==".title")	env["TITLE"]	=new sym("title",value);
 	if (tag==".about")	env["ABOUT"]	=new sym("about",value);
@@ -30,11 +30,18 @@ Module::Module(string V):sym("module",V) {					// define .module
 	\#else
 		mkdir(V.c_str(),0700);								// create POSIX dir
 	\#endif
+	File::CurrSet(NULL);
 }
-Module *curr_module = new Module("next");	// default module on system start
+void Module::CurrSet(Module*M) {
+	if (curr_module) delete curr_module; curr_module=M; env["MODULE"]=M; }
+Module::~Module() { File::CurrSet(NULL); }
+Module *curr_module=new Module("next");			// default module on system start
 
 File::File(string V,string M):sym("file",V) {		// create file [Mode="r/w"]
 	assert(fh=fopen(V.c_str(),M.c_str()));}
+void File::CurrSet(File*F) {						// reset current file
+	if (curr_file) delete curr_file;				// close if opened
+	curr_file=F; }									// set to selected File*
 File::~File() { fclose(fh); }						// close file
 File *curr_file = NULL;								// current out file for W()
 
@@ -62,3 +69,4 @@ Str::Str(string V):sym("str",V)	{}					// string
 List::List():sym("[","]") {}						// [list]
 Vector::Vector():sym("","") {}						// <vector>
 Pair::Pair(sym*A,sym*B):sym(A->value,B->value) {}	// pa:ir
+Block::Block():sym("{","}") {}						// {block}

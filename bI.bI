@@ -1,9 +1,25 @@
 # dynamic class description
 
+?class:Symbol
+	= String:tag
+	= String:value
+?
+?Symbol:Number?
+?Symbol:String?
+
+?[hpp Symbol 123 'str']?
+$[hpp Symbol 123 'str']$
+
+.end
+
 .module		bI
 .title		dynamic language system
-.about		Program In Line
-.color		darkblue
+.about metamodel was written in bI itself (used manual copypaste into main source)
+.color darkblue
+.file bI.bI
+\?'$AUTOGEN$'\?
+.file bI.blog
+.eof
 .inc test/bI.bI
 .inc core/ypp.bI
 .inc core/lpp.bI

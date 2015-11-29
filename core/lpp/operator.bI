@@ -7,6 +7,8 @@
 <xx>\\<				TC(LL)				/* <vector begin */
 <xx>\\>				TC(GG)				/*  vector end>  */
 <xx>\\:				TC(COLON)			/* some:pair */
+<xx>\\{				TC(BL)				/* {block begin */
+<xx>\\}				TC(BR)				/*  block end}  */
 #<xx>\\+				TC(ADD)
 #<xx>\\-				TC(SUB)
 #<xx>\\*				TC(MUL)

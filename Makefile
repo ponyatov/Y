@@ -1,10 +1,11 @@
-# DO NOT EDIT: this file was autogened by bI
+# /***** DO NOT EDIT: this file was autogened by bI *****/
+# make parameters: EXE=.(exe|elf) RES=(res.res|) TAIL=("&& tail -n7 bI.blog"|)
 .PHONY: exec
 exec: ./bI$(EXE)
-	./bI$(EXE) < bI.bI > bI.blog
+	./bI$(EXE) < bI.bI > bI.blog $(TAIL)
 .PHONY: clean
 clean:
-	rm -rf *~ .*~ *.*log ./bI$(EXE) *.tab.?pp lex.yy.c
+	rm -rf *~ .*~ *.*log ./bI$(EXE) *.tab.?pp lex.yy.c $(RES)
 .PHONY: upgrade
 upgrade:
 	cp bI/Makefile ./

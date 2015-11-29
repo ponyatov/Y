@@ -6,5 +6,6 @@
 .inc core/ypp/ex.bI
 .inc core/ypp/list.bI
 .inc core/ypp/vector.bI
+.inc core/ypp/block.bI
 %%
 .eof
