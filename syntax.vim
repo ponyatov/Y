@@ -5,6 +5,7 @@ syntax match  Comment	"\v#.*"						" # line comment
 syntax match  Todo		"\v^\.[a-z]+[\+\-]?[ \t]*"	" .directive
 syntax match  Keyword	"\v\$"						" $ inline expression
 syntax match  Keyword	"\v\?"						" ? inline expression
+syntax match  Keyword	"\v\~"						" ~ clean data stack
 syntax match  Type		"\v[\[\]\(\)\<\>\=\+\-\*\/]"		" operator
 syntax match  Constant	"\v[0-9]+[eE][\+\-]?[0-9]+"			" exponential
 syntax match  Constant	"\v[0-9]+\.[0-9]+"					" float
