@@ -6,6 +6,7 @@ syntax match  Todo		"\v^\.[a-z]+[\+\-]?[ \t]*"	" .directive
 syntax match  Keyword	"\v\$"						" $ inline expression
 syntax match  Keyword	"\v\?"						" ? inline expression
 syntax match  Todo		"\v\~"						" ~ clean data stack
+syntax match  Todo		"\v[\.\;]"					" print / drop
 syntax match  Type		"\v[\[\]\(\)\<\>\=\+\-\*\/]"	" operators & brackets
 syntax match  Identifier "\v[\{\}]"						" lambda brackets
 syntax match  Constant	"\v[0-9]+[eE][\+\-]?[0-9]+"			" exponential
