@@ -10,7 +10,7 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/lin_make.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/lin_mk.launch</value>
 				</dictionary>
 				<dictionary>
 					<key>incclean</key>

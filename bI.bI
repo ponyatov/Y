@@ -1,3 +1,6 @@
+.module tmp
+.end
+
 # dynamic class description
 
 ?class:Symbol
