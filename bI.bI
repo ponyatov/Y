@@ -1,4 +1,21 @@
-.module tmp
+.end
+
+.module	hobot
+.title	[H]obby R[obot]
+.about	Script language for diy robotics
+
+.inc test/config.bI
+
+.inc core/ypp.bI
+.inc core/lpp.bI
+.inc core/hpp.bI
+.inc core/cpp.bI
+
+.inc core/makefile.bI
+.inc core/gvim.bI
+.inc core/readme.bI
+.inc core/gitignore.bI
+.inc core/res.bI
 .end
 
 # dynamic class description

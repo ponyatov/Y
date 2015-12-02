@@ -1,4 +1,3 @@
-.file cpp.cpp
 .inc core/cpp/head.bI
 .inc core/cpp/main.bI
 .inc core/cpp/writers.bI

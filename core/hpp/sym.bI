@@ -6,6 +6,9 @@ struct sym {
 	sym(string,string);			// constructor from string form tag:value
 	vector<sym*> nest;			// nested objects tree
 	void join(sym*);			// add nested object
+	map<string,sym*> par;		// named parameters
+	void setpar(string,sym*);	// set parameter
+	sym* getpar(string);		// get parameter
 	string pad(int);			// pad tagval with tabs
 	string tagval();			// <tag:value> string
 	string dump(int depth=0);	// dump object in string form

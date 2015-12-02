@@ -13,5 +13,4 @@
 \.inc ../core/gitignore.bI
 \.inc ../core/gvim.bI
 
-\.end
-\$this code \? must \? be ignored [] \$
+\.inc ../test/end.bI

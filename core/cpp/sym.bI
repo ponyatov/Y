@@ -32,6 +32,8 @@ void env_init() {
 	env["%N"]=new sym("nil","%N");
 	env["%E"]=new sym("error","%E");
 	env["%%"]=new sym("default","%%");
+	// call function setup
+	fn_init();
 }
 
 sym* sym::eval()	{									// object evaluator

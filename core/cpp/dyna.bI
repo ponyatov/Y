@@ -64,9 +64,10 @@ sym* Num::eval() {
 
 Str::Str(string V):sym("str",V)	{}					// string
 
-// aggregate data types
+// compound data types
 
 List::List():sym("[","]") {}						// [list]
 Vector::Vector():sym("","") {}						// <vector>
 Pair::Pair(sym*A,sym*B):sym(A->value,B->value) {}	// pa:ir
-Block::Block():sym("{","}") {}						// {block}
+
+.inc core/cpp/lambda.bI

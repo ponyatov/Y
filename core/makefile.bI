@@ -3,11 +3,11 @@
 \# make parameters: EXE=.(exe|elf) RES=(res.res|) TAIL=("tail..."|)
 .PHONY: exec
 exec: ./$MODULE$\$(EXE)
-	./$MODULE$\$(EXE) < test.bI > test.blog $(TAIL)
-	./$MODULE$\$(EXE) < $MODULE$.bI > $MODULE$.blog $(TAIL)
+	./$MODULE$\$(EXE) < test.bI > test.blog \$(TAIL)
+#	./$MODULE$\$(EXE) < $MODULE$.bI > $MODULE$.blog $(TAIL)
 .PHONY: clean
 clean:
-	rm -rf *~ .*~ *.*log ./$MODULE$\$(EXE) *.tab.\?pp lex.yy.c \$(RES)
+	rm -rf *~ .*~ ./$MODULE$\$(EXE) *.*log *.tab.\?pp lex.yy.c \$(RES)
 C = $CFILES$ ypp.tab.cpp lex.yy.c
 H = $HFILES$ ypp.tab.hpp
 \#RES = res.res

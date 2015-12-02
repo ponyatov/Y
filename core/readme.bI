@@ -1,5 +1,5 @@
 .file README.md
-\# ![logo](logo/$LOGO$.png) $MODULE$: $TITLE$
+\# ![logo](../logo/$LOGO$.png) $MODULE$: $TITLE$
 \#\#\# $ABOUT$
 
 $AUTHOR$
