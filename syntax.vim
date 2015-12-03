@@ -2,7 +2,7 @@
 " Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 " GitHub: https://github.com/ponyatov/Y
 syntax match  Comment	"\v#.*"						" # line comment
-syntax match  Todo		"\v^\.[a-z]+[\+\-]?[ \t]*"	" .directive
+syntax match  Todo		"\v\.[a-z]+[\+\-]?[ \t]*"	" .directive
 syntax match  Keyword	"\v\$"						" $ inline expression
 syntax match  Keyword	"\v\?"						" ? inline expression
 syntax match  Type		"\v[\[\]\(\)\<\>\=\+\-\*\/]"	" operators & brackets
