@@ -10,6 +10,7 @@ syntax match  Identifier "\v[\{\}]"						" lambda brackets
 syntax match  Keyword	"\v\@"							" lambda apply
 syntax match  Keyword	"\v\%"								" member of
 syntax match  Type		"\v:"								" pair/typedef
+syntax match  Identifier "\~"								" lambda parameter
 syntax match  Constant	"\v[0-9]+[eE][\+\-]?[0-9]+"			" exponential
 syntax match  Constant	"\v[0-9]+\.[0-9]+"					" float
 syntax match  Constant	"\v[0-9]+"							" int
