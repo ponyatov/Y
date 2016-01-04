@@ -1,0 +1,26 @@
+digraph {
+
+subgraph frontend { label=frontend; 
+
+"source file" [shape=invhouse];
+"source file" -> lexer [label="  single chars"];
+lexer -> parser [label="  tokens"];
+parser -> "AST-level optimizer" [label="  AST tree"]; 
+}
+
+subgraph backend { label=backend;
+
+frontend -> "code generator" [label="  AST"];
+"code generator" -> "lowlevel optimizer" [label="  trigraphs"] ;
+"lowlevel optimizer" -> "object file\l.o" [label="  machine\lcode"];
+ 
+}
+
+subgraph { label=linker;
+".o" -> linker;
+".dll" -> ".def" -> linker;
+linker -> ".exe";
+".dll" -> ".exe";
+}
+
+}
