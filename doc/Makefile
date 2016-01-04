@@ -12,7 +12,7 @@ FIG = tmp/compiler.png
 LST = tmp/lpp tmp/ypp
 LPP = tmp/lpp.head tmp/lpp.opt tmp/lpp.rules tmp/lpp.spaces tmp/lpp.comment
 YPP = tmp/ypp.head
-HPP = tmp/hpp.once
+HPP = tmp/hpp.once tmp/hpp.lex tmp/hpp.pars
 
 LATEX = pdflatex -halt-on-error
 bI.pdf: $(TEX) $(FIG) $(LST) $(LPP) $(YPP) $(HPP)

@@ -1,8 +1,14 @@
 %{
 #include <fstream>
 std::ofstream once("tmp/hpp.once");
+std::ofstream lex("tmp/hpp.lex");
+std::ofstream pars("tmp/hpp.pars");
 %}
 %option main
 %%
-^.+_H_.+\n		{once<<yytext;}
+^.+_H_.+\n					{once<<yytext;}
+^.*==\ lexer.*\n			{lex<<yytext;}
+^.*yy(lex|line|text).*\n	{lex<<yytext;}
+^.*==\ parser.*\n			{pars<<yytext;}
+^.*yy(parse|error).*\n		{pars<<yytext;}
 %%
