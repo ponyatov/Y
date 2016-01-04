@@ -19,6 +19,7 @@ and dynamic data types C++ class tree for internal use in generated program.
 * symbolic and numeric computations
 * clustering and cloud computing
 * complex engineering systems design
+* statical translation to C++/Java for multiplatform software development
 
 ### includes:
 
