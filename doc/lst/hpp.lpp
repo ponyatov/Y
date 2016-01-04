@@ -3,6 +3,7 @@
 std::ofstream once("tmp/hpp.once");
 std::ofstream lex("tmp/hpp.lex");
 std::ofstream pars("tmp/hpp.pars");
+std::ofstream inc("tmp/hpp.inc");
 %}
 %option main
 %%
@@ -11,4 +12,6 @@ std::ofstream pars("tmp/hpp.pars");
 ^.*yy(lex|line|text).*\n	{lex<<yytext;}
 ^.*==\ parser.*\n			{pars<<yytext;}
 ^.*yy(parse|error).*\n		{pars<<yytext;}
+^.*==\ std.inc.*\n			{inc<<yytext;}
+^#include\ <.+\n			{inc<<yytext;}
 %%

@@ -1,5 +1,18 @@
 #ifndef _H_bI
 #define _H_bI
+														// == std.includes ==
+#include <iostream>
+#include <sstream>
+#include <cstdlib>
+//#include <cstdio>
+//#include <cassert>
+#include <vector>
+#include <map>
+#ifdef __MINGW32__
+	#include <direct.h>
+#else
+	#include <sys/stat.h>
+#endif
 
 														// == lexer interface ==
 extern int yylex();										// parse next token
