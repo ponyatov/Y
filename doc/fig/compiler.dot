@@ -5,22 +5,21 @@ subgraph frontend { label=frontend;
 "source file" [shape=invhouse];
 "source file" -> lexer [label="  single chars"];
 lexer -> parser [label="  tokens"];
-parser -> "AST-level optimizer" [label="  AST tree"]; 
+parser -> "AST" [label="  AST tree"]; 
 }
 
 subgraph backend { label=backend;
 
-frontend -> "code generator" [label="  AST"];
-"code generator" -> "lowlevel optimizer" [label="  trigraphs"] ;
-"lowlevel optimizer" -> "object file\l.o" [label="  machine\lcode"];
+frontend -> "optimizer" -> "code generator" [label="  AST"];
+"code generator" -> "object file\l.o" [label="  machine\lcode"];
  
 }
 
 subgraph { label=linker;
 ".o" -> linker;
-".dll" -> ".def" -> linker;
-linker -> ".exe";
-".dll" -> ".exe";
+".dll/.so" -> ".def" -> linker;
+linker -> ".exe/.elf";
+".dll/.so" -> ".exe/.elf";
 }
 
 }

@@ -1,0 +1,23 @@
+\secrel{Lexer /lpp.lpp/}\label{lexer}
+
+Lexer uses \prog{flex}\ generator, produces \file{lex.yy.c}.
+\bigskip
+
+All defines moved to \file{hpp.hpp}, lexer header includes
+buffer for string parsing.
+
+\lst{lpp.lpp}{tmp/lpp.head}{C++}
+
+Options disables \verb|yywrap()|\ function usage and enables line number
+autocount for error reporting.
+
+\lstx{lpp.lpp}{tmp/lpp.opt}
+
+Rules section described part by part in scalar types \ref{scalars}\ manual
+sections.
+
+\lstx{lpp.lpp}{tmp/lpp.rules}
+
+Unused chars will be dropped by this rules at end of lexer:
+
+\lst{lpp.lpp}{tmp/lpp.spaces}{C++}

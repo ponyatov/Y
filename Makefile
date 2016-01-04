@@ -1,8 +1,10 @@
 ## make parameters: EXE=.exe| RES=res.res| TAIL=-n17|-n7
 MODULE = bI
 #MODULE = $(notdir $(CURDIR))
+.PHONY: default
+default: doc
 .PHONY: exec
-exec: doc ./$(MODULE)$(EXE) $(MODULE).bI
+exec: ./$(MODULE)$(EXE) $(MODULE).bI
 	./$(MODULE)$(EXE) < $(MODULE).bI > $(MODULE).blog && tail $(TAIL) $(MODULE).blog 
 .PHONY: clean
 clean:

@@ -1,0 +1,8 @@
+%{
+#include <fstream>
+std::ofstream once("tmp/hpp.once");
+%}
+%option main
+%%
+^.+_H_.+\n		{once<<yytext;}
+%%

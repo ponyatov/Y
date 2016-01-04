@@ -1,0 +1,11 @@
+%{
+#include "hpp.hpp"
+std::string StringLexBuffer;
+%}
+%option noyywrap
+%option yylineno
+%%
+#[^\n]*			{}		/* line comment */
+[ \t\r\n]+		{}		/* spaces */
+.				{}		/* undetected chars */
+%%

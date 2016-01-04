@@ -4,14 +4,30 @@ TEX += ../../texheader/colors.tex
 TEX += ../../texheader/relsec.tex
 TEX += ../../texheader/comp.tex
 TEX += ../../texheader/misc.tex
-TEX += intro.tex files.tex compiler.tex
+TEX += intro.tex files.tex compiler.tex core.tex lexer.tex parser.tex
+TEX += headers.tex comment.tex scalars.tex
 
 FIG = tmp/compiler.png
 
+LST = tmp/lpp tmp/ypp
+LPP = tmp/lpp.head tmp/lpp.opt tmp/lpp.rules tmp/lpp.spaces tmp/lpp.comment
+YPP = tmp/ypp.head
+HPP = tmp/hpp.once
+
 LATEX = pdflatex -halt-on-error
-bI.pdf: $(TEX) $(FIG)
+bI.pdf: $(TEX) $(FIG) $(LST) $(LPP) $(YPP) $(HPP)
 #	ln -s ~/tmp tmp
 	$(LATEX) $< && $(LATEX) $<
 	
 tmp/%.png: fig/%.dot
 	dot -Tpng -o $@ $<
+	
+tmp/%: lst/%.lpp
+	flex -o $@.c $< && $(CXX) -o $@ $@.c
+	
+$(LPP): tmp/lpp ../lpp.lpp
+	$< < ../lpp.lpp
+$(YPP): tmp/ypp ../ypp.ypp
+	$< < ../ypp.ypp
+$(HPP): tmp/hpp ../hpp.hpp
+	$< < ../hpp.hpp
