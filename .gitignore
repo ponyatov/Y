@@ -1,13 +1,9 @@
 *~
 *.swp
-bI.elf
+bI
 bI.exe
 *.*log
 *.tab.?pp
 lex.yy.c
 *.res
-bIz
-ST
-bI
-minimal
-hobot
+2del/
