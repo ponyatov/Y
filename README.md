@@ -1,6 +1,5 @@
-# ![logo](logo/logo64x64.png) ALYEH platform : bI dynamic language system
+# ![logo](https://github.com/ponyatov/icons/raw/master/hedge64x64.png) ALYEH platform : bI dynamic language system
 ## Динамический язык метапрограммирования Ы (чтобы никто не догадался)
-### metamodel was written in bI itself (used manual copypaste into main source)
 
 (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 
@@ -8,43 +7,25 @@ license: http://www.gnu.org/copyleft/lesser.html
 
 GitHub: https://github.com/ponyatov/Y
 
-### ![warning](logo/warning64x64.png) This program was autogened by bI system
+### ![warning](https://github.com/ponyatov/icons/raw/master/warning64x64.png) /***** DO NOT EDIT: this file was autogened by bI *****/
 
 Any program MUST HAVE scripting ability for CONFIGS and user EXTENSIONS.
-bI system provides universal script engine for bI language abridged dialect
+bI system provides universal script engine for bI language dialect
 and dynamic data types C++ class tree for internal use in generated program.
 
 ### goals:
 
-* metaprogramming
-* programming language design and translator development
+* metaprogramming, computer language design and translator development
 * symbolic and numeric computations
-* complex engeneering systems design
+* clustering and cloud computing
+* complex engineering systems design
 
 ### includes:
 
 * [x] dynamic symbolic object subsystem 
-* [x] simple Lisp-inspired metaprogramming language
+* [x] simple Python-inspired metaprogramming language
 * [ ] optimizing translator into C++ for target static cross-compilation
 * [ ] rich GUI/CAD/Visualization environment with MVC architecture
 * [ ] parallel programming subsystem for clustering and cloud computing
 * [ ] symbolic math engine
 * [ ] FFI: .so/.dll and [D]COM integration
-
-### LISP-like evaluator
-
-System includes experimantal list evaluator tested with some Lisp tutorials:
-
-[dana]
-Dana Nau
-[Introduction to (Allegro) Lisp](http://www.cs.umd.edu/~nau/cmsc421/lisp-intro.pdf)
-
-[home]
-[Short Lisp intro (ru)](http://homelisp.ru/help/lisp.html)
-
-[LTHW]
-[Learn Lisp The Hard Way](http://learnlispthehardway.org/)
-
-[kvalle]
-[DIY Lisp](https://github.com/kvalle/diy-lisp)
-
