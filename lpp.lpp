@@ -1,6 +1,12 @@
 %{
 #include "hpp.hpp"
 std::string StringLexBuffer;	/* string parsing buffer /string lexer state/ */
+
+void incFile(AST* inc) {							/* .include processing */
+	yyin = fopen(inc->val.c_str(),"r");
+	if (!yyin) yyerror(inc->tagval());
+	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));
+}
 %}
 %option noyywrap
 %option yylineno
@@ -32,4 +38,8 @@ N [0-9]+
 
 [ \t\r\n]+		{}				/* drop spaces */
 .				{}				/* drop undetected chars */
+
+<<EOF>>			{ yypop_buffer_state();				/* end of .inluded file */
+				if ( !YY_CURRENT_BUFFER )
+					yyterminate();}
 %%
