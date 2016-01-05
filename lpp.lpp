@@ -1,12 +1,35 @@
 %{
 #include "hpp.hpp"
-std::string StringLexBuffer;
+std::string StringLexBuffer;	/* string parsing buffer /string lexer state/ */
 %}
 %option noyywrap
 %option yylineno
+								/* optional number sign */
+S [\+\-]?
+								/* decimal number digit(s) */						
+N [0-9]+
+								/* lexer state: string parsing mode */
+%x lexstring
 %%
 #[^\n]*			{}				/* line comment */
+
+								/* numbers: */
+{N}				TOC(Int,NUM)	/* integer */
+{N}\.{N}		TOC(Num,NUM)	/* float */
+{N}[eE]{S}{N}	TOC(Num,NUM)	/* exponential */
+0x[0-9A-F]+		TOC(Hex,NUM)	/* machine hex */
+0b[01]+			TOC(Bin,NUM)	/* machine binary */
+
 [a-zA-Z0-9_]+	TOC(Sym,SYM)	/* symbol */
+
+'				{BEGIN(lexstring);StringLexBuffer="";}		/* string parser */
+<lexstring>'	{BEGIN(INITIAL);
+				yylval.o = new Str(StringLexBuffer); return STR; }
+<lexstring>.	{StringLexBuffer+=yytext[0];}
+
+								/* parens */
+
+
 [ \t\r\n]+		{}				/* drop spaces */
 .				{}				/* drop undetected chars */
 %%

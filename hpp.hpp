@@ -52,5 +52,12 @@ extern void yyerror(std::string);						// error callback
 
 														// == scalars ==
 struct Sym:AST { Sym(std::string); };					// generic symbol
+struct Str:AST { Str(std::string); };					// string
+struct Int:AST { Int(std::string); long   val;			// integer
+	std::string tagval(); };
+struct Hex:AST { Hex(std::string); };					// hex machine number
+struct Bin:AST { Bin(std::string); };					// binary machine number
+struct Num:AST { Num(std::string); double val;			// floating point number
+	std::string tagval(); };
 
 #endif // _H_bI

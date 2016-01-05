@@ -29,4 +29,16 @@ AST* AST::eval() {
 	return this;
 }
 
-Sym::Sym(std::string V):AST("sym",V) {}
+Sym::Sym(std::string V):AST("sym",V)	{}
+Str::Str(std::string V):AST("str",V)	{}
+
+Int::Int(std::string V):AST("int","")	{ val = atoi(V.c_str()); }
+std::string Int::tagval() {
+	std::ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
+
+Hex::Hex(std::string V):AST("hex",V)	{}
+Bin::Bin(std::string V):AST("bin",V)	{}
+
+Num::Num(std::string V):AST("num","")	{ val = atof(V.c_str()); }
+std::string Num::tagval() {
+	std::ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
