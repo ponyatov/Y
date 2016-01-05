@@ -17,9 +17,9 @@ frontend -> "optimizer" -> "code generator" [label="  AST"];
 
 subgraph { label=linker;
 ".o" -> linker;
-".dll/.so" -> ".def" -> linker;
-linker -> ".exe/.elf";
-".dll/.so" -> ".exe/.elf";
+".dll / .so" -> ".def" -> linker;
+linker -> ".exe / .elf";
+".dll / .so" -> ".exe / .elf";
 }
 
 }

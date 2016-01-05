@@ -1,1 +1,27 @@
 \secrel{AST symbolic data type}\label{ast}
+
+\bi\ core based on operations on AST \term{symbolic type}:
+[A]bstract [S]yntax [T]ree elements.
+
+\bigskip
+\begin{tabular}{l l l}
+\verb|class:AST| &&\\
+\hline
+& \verb|string:tag| & type, class tag \\
+& \verb|string:val| & value \\
+\hline
+& \verb|AST(string,string)| & \verb|<T:V>|\ constructor \\
+& \verb|AST(AST)| & copy constructor \\
+\hline
+& \verb|List<AST>:nest[]| & nested elements \\
+& \verb|fn:push(AST)| & add nested \\
+\hline
+& \verb|Dict<string,AST>:par[]| & parameters dict (string-keyed list) \\
+& \verb|fn:setpar(AST)| & add/set parameter \\
+\hline
+& \verb|fn:dump(int)->string| & dump tree in text form (with depth padding) \\
+& \verb|fn:tagval()->string| & dump \verb|<T:V>| header only \\
+& \verb|fn:pad(int)->string| & return padding string: n tabs \\  
+\end{tabular} 
+
+\lst{hpp.hpp}{tmp/hpp.ast}{C++}

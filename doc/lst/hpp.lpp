@@ -4,8 +4,10 @@ std::ofstream once("tmp/hpp.once");
 std::ofstream lex("tmp/hpp.lex");
 std::ofstream pars("tmp/hpp.pars");
 std::ofstream inc("tmp/hpp.inc");
+std::ofstream ast("tmp/hpp.ast");
 %}
 %option main
+%x AST
 %%
 ^.+_H_.+\n					{once<<yytext;}
 ^.*==\ lexer.*\n			{lex<<yytext;}
@@ -14,4 +16,7 @@ std::ofstream inc("tmp/hpp.inc");
 ^.*yy(parse|error).*\n		{pars<<yytext;}
 ^.*==\ std.inc.*\n			{inc<<yytext;}
 ^#include\ <.+\n			{inc<<yytext;}
+^struct\ AST				{ast<<yytext; BEGIN(AST);}
+<AST>\};\n					{ast<<yytext; BEGIN(INITIAL);}
+<AST>.*\n					{ast<<yytext;}
 %%

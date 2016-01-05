@@ -13,7 +13,6 @@
 #else
 #include <sys/stat.h>	// linux
 #endif
-
 														// == lexer interface ==
 extern int yylex();										// parse next token
 extern int yylineno;									// current source line
@@ -23,5 +22,15 @@ extern char* yytext;									// found token text
 extern int yyparse();									// run parser
 extern void yyerror(std::string);						// error callback
 #include "ypp.tab.hpp"									// token defines for lexer
+
+struct AST {											// == AST symbolic type ==
+// -------------------------------------------------------------------------------
+	std::string tag;									// class/data type tag
+	std::string val;									// value
+// -------------------------------------------------------------------------------
+	AST(std::string,std::string);						// <T:V> constructor
+	AST(AST*);											// copy constructor
+// -------------------------------------------------------------------------------
+};
 
 #endif // _H_bI
