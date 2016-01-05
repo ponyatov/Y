@@ -1,1 +1,18 @@
-\secrel{Build scripts}\label{makes}
+\secrel{Build script}\label{makes}
+
+Project builds with command \verb|[mingw32-]make [vars]|. Vars can be:
+
+\begin{tabular}{l l l}
+\verb$EXE$ & \verb$.exe|$ & executable file extension, empty if Linux/UNIX \\ 
+\verb$RES$ & \verb$res.res|$ & resource file name (win32 only) \\
+\verb$TAIL$ & \verb$-n17|-n7$ & number of \verb$.blog$ lines
+will be printed on \verb$make exec$ build \\
+\verb$LLVER$ & \verb$3.5|$ & LLVM version if used \\
+\end{tabular}\bigskip
+
+\verb|MODULE|\ variable sets name for current module.
+It was set to \bi, but can use current dir name as module name. 
+
+\lst{Makefile}{tmp/mk.mod}{make}
+
+\lst{Makefile}{tmp/mk.mk}{make}

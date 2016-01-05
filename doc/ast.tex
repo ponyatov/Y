@@ -1,4 +1,4 @@
-\secrel{AST symbolic data type}\label{ast}
+\secrel{AST symbolic data type}\label{ast}\secdown
 
 \bi\ core based on operations on AST \term{symbolic type}:
 [A]bstract [S]yntax [T]ree elements.
@@ -19,9 +19,20 @@
 & \verb|Dict<string,AST>:par[]| & parameters dict (string-keyed list) \\
 & \verb|fn:setpar(AST)| & add/set parameter \\
 \hline
-& \verb|fn:dump(int)->string| & dump tree in text form (with depth padding) \\
+& \verb|fn:dump(int)->string| & recursive \verb|dump(+1)|\ tree in text
+form (with depth padding) \\
 & \verb|fn:tagval()->string| & dump \verb|<T:V>| header only \\
 & \verb|fn:pad(int)->string| & return padding string: n tabs \\  
 \end{tabular} 
 
 \lst{hpp.hpp}{tmp/hpp.ast}{C++}
+
+\secrel{Writers}
+
+Writer\ --- function writes argument to \bi\ log (\verb|.blog|):
+
+\lst{hpp.hpp}{tmp/hpp.wrt}{C++}
+
+\lst{cpp.cpp}{tmp/cpp.wrt}{C++}
+
+\secup

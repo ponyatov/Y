@@ -5,6 +5,8 @@ std::ofstream lex("tmp/hpp.lex");
 std::ofstream pars("tmp/hpp.pars");
 std::ofstream inc("tmp/hpp.inc");
 std::ofstream ast("tmp/hpp.ast");
+std::ofstream wrt("tmp/hpp.wrt");
+std::ofstream env("tmp/hpp.env");
 %}
 %option main
 %x AST
@@ -19,4 +21,5 @@ std::ofstream ast("tmp/hpp.ast");
 ^struct\ AST				{ast<<yytext; BEGIN(AST);}
 <AST>\};\n					{ast<<yytext; BEGIN(INITIAL);}
 <AST>.*\n					{ast<<yytext;}
+^.+\ W\(.+\n				{wrt<<yytext;}
 %%

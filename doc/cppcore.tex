@@ -1,1 +1,17 @@
 \secrel{\cpp\ core}\label{cppcore}
+
+\cpp\ code described part by part over this manual in every
+symbolic type section.
+
+\lst{cpp.cpp}{tmp/cpp.hdr}{C++}
+
+\emph{Error callback}\ function: it will be called from parser on error.
+\verb|YYERR|\ macro used for doubling error message: to
+\verb|stdout|\ redirected to \verb|.blog|, and \verb|stderr| goes to \make\
+output log\note{and IDE report}.
+
+\lst{cpp.cpp}{tmp/cpp.err}{C++}
+
+\verb|main()|\ function: call global environment setup and parser:
+
+\lst{cpp.cpp}{tmp/cpp.main}{C++}

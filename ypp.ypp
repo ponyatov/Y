@@ -1,3 +1,11 @@
 %{
 #include "hpp.hpp"
 %}
+%defines %union { AST*o; }
+%token <o> SYM NUM STR		/* symbol number string */
+%type <o> ex scalar			/* expression scalar */
+%%
+bI : | bI ex { W($2); W("\n---------\n"); W($2->eval()); W("\n==========\n"); }
+scalar : SYM | NUM | STR ;
+ex : scalar ;
+%%

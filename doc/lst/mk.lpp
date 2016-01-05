@@ -1,0 +1,8 @@
+%{
+#include <fstream>
+std::ofstream mod("tmp/mk.mod");
+%}
+%option main
+%%
+^.?MODULE\ =.+\n		{mod<<yytext;}
+%%
