@@ -9,9 +9,9 @@
 #include <vector>
 #include <map>
 #ifdef __MINGW32__
-	#include <direct.h>
+#include <direct.h>		// win32
 #else
-	#include <sys/stat.h>
+#include <sys/stat.h>	// linux
 #endif
 
 														// == lexer interface ==

@@ -4,8 +4,9 @@ TEX += ../../texheader/colors.tex
 TEX += ../../texheader/relsec.tex
 TEX += ../../texheader/comp.tex
 TEX += ../../texheader/misc.tex
-TEX += intro.tex files.tex compiler.tex core.tex lexer.tex parser.tex
-TEX += headers.tex comment.tex scalars.tex
+TEX += intro.tex install.tex compiler.tex 
+TEX += files.tex core.tex lexer.tex parser.tex
+TEX += headers.tex cppcore.tex ast.tex comment.tex scalars.tex
 
 FIG = tmp/compiler.png
 

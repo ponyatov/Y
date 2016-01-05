@@ -1,14 +1,21 @@
-\secly{Files}
+\secrel{Files}\label{files}\secdown
 
 \begin{tabular}{l l l}
 \file{ypp.ypp} & flex & parser \ref{parser}\\
 \file{lpp.lpp} & bison & lexer \ref{lexer}\\
 \file{hpp.hpp} & \cpp & headers \ref{headers}\\
 \file{cpp.cpp} & \cpp & core \ref{cppcore}\\
-\file{Makefile} & make & build script\\
+\file{Makefile} & make & build script \ref{makes}\\
 \file{rc.rc} & windres & win32 resource description \\
 \file{bat.bat} && win32 (g)gvim helper\\
 \file{doc/} & \LaTeX & manual \\
-\file{doc/Makefile} &&\\
+\file{doc/Makefile} && \ref{makes}\\
 \file{doc/bI.pdf} &&\\
 \end{tabular}
+
+\input{lexer}
+\input{parser}
+\input{headers}
+\input{cppcore}
+\input{makes}
+\secup
