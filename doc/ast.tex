@@ -1,6 +1,6 @@
 \secrel{AST symbolic data type}\label{ast}\secdown
 
-\bi\ core based on operations on AST \term{symbolic type}:
+\bi\ language based on operations on AST \term{symbolic type}:
 [A]bstract [S]yntax [T]ree elements.
 
 \bigskip
@@ -25,11 +25,17 @@ form (with depth padding) \\
 & \verb|fn:pad(int)->string| & return padding string: n tabs \\
 \hline
 & \verb|fn:eval()->AST| & compute/evaluate object \\
-operators: & \verb|op:@(AST)->AST| & apply \\
-& \verb|op:=(AST)->AST| & equal \\
+operators: & \verb|op:@(AST)->AST| & \verb|A @ B|\ apply \\
+& \verb|op:=(AST)->AST| & \verb|A = B|\ equal \\
 \end{tabular} 
 
 \lst{hpp.hpp}{tmp/hpp.ast}{C++}
+
+Using \term{virtual base class}\ \verb|AST{}|\ allows to use RTTI and process
+inherited class instances using pointers to base class, first of all it allows
+to use storage collections \verb|vector<AST*>|\ and
+\verb|map<std::string,AST*>|\ for any objects\note{instances of inherited
+classes}.  
 
 \secrel{Writers}
 

@@ -22,18 +22,20 @@ struct AST {											// == AST symbolic type ==
 	AST(std::string,std::string);						// <T:V> constructor
 	AST(AST*);											// copy constructor
 // -------------------------------------------------------------------------------
-	vector<AST*> nest;									// nest[]ed elements
+	std::vector<AST*> nest;								// nest[]ed elements
 	void push(AST*);									// push nested as stack
 // -------------------------------------------------------------------------------
-	map<std::string,AST*> par;							// par{}ameters
+	std::map<std::string,AST*> par;						// par{}ameters
 	void setpar(AST*);									// add/set parameter
 // -------------------------------------------------------------------------------
 	std::string dump(int depth=0);						// recursive dump(+1)
-	std::string tagval();								// <tag:val> header
-	std::string pad(int);								//
+	virtual std::string tagval();						// <tag:val> header
+	std::string pad(int);								// padding string
+// -------------------------------------------------------------------------------
+	virtual AST* eval();
 };
 
-extern map<string,sym*> env;							// == glob.environment ==
+extern std::map<std::string,AST*> env;					// == glob.environment ==
 extern void env_init();
 
 extern void W(AST*);									// == writers ==
@@ -47,5 +49,8 @@ extern char* yytext;									// found token text
 extern int yyparse();									// run parser
 extern void yyerror(std::string);						// error callback
 #include "ypp.tab.hpp"									// token defines for lexer
+
+														// == scalars ==
+struct Sym:AST { Sym(std::string); };					// generic symbol
 
 #endif // _H_bI
