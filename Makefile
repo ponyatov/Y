@@ -1,4 +1,4 @@
-## make parameters: EXE=.exe| RES=res.res| TAIL=-n17|-n7
+## make parameters: EXE=.exe| RES=res.res| TAIL=-n17|-n7 LLVM=|3.5
 MODULE = bI
 #MODULE = $(notdir $(CURDIR))
 .PHONY: default
@@ -12,8 +12,8 @@ clean:
 C = cpp.cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp ypp.tab.hpp
 CXXFLAGS += -I. -std=gnu++11
-./$(MODULE)$(EXE): $(C) $(H)
-	$(CXX) $(CXXFLAGS) -o $@ $(C)
+./$(MODULE)$(EXE): $(C) $(H) $(RES)
+	$(CXX) $(CXXFLAGS) -o $@ $(C) $(RES)
 ypp.tab.cpp: ypp.ypp
 	bison $<
 lex.yy.c: lpp.lpp

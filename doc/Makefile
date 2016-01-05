@@ -6,7 +6,7 @@ TEX += ../../texheader/comp.tex
 TEX += ../../texheader/misc.tex
 TEX += intro.tex install.tex compiler.tex 
 TEX += files.tex core.tex lexer.tex parser.tex
-TEX += headers.tex cppcore.tex ast.tex comment.tex scalars.tex
+TEX += headers.tex cppcore.tex ast.tex makes.tex comment.tex scalars.tex
 
 FIG = tmp/compiler.png
 
@@ -15,7 +15,7 @@ LPP = tmp/lpp.head tmp/lpp.opt tmp/lpp.rules tmp/lpp.spaces tmp/lpp.comment
 YPP = tmp/ypp.head
 HPP = tmp/hpp.once tmp/hpp.lex tmp/hpp.pars tmp/hpp.inc tmp/hpp.wrt tmp/hpp.env
 CPP = tmp/cpp.hdr tmp/cpp.wrt tmp/cpp.err tmp/cpp.main tmp/cpp.env
-MPP = tmp/mk.mk tmp/mk.mod
+MPP = tmp/mk.mod tmp/mk.clean tmp/mk.ch tmp/mk.cc
 
 LATEX = pdflatex -halt-on-error
 bI.pdf: $(TEX) $(FIG) $(LST) $(LPP) $(YPP) $(HPP) $(CPP) $(MPP)

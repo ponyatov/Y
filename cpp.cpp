@@ -6,3 +6,6 @@ int main() { env_init(); return yyparse(); }
 
 map<string,AST*> env;
 void env_init() {}
+
+void W(AST*o)			{ std::cout << o->dump(); }
+void W(std::string s)	{ std::cout << s; }

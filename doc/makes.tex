@@ -1,13 +1,13 @@
 \secrel{Build script}\label{makes}
 
-Project builds with command \verb|[mingw32-]make [vars]|. Vars can be:
+Project builds with command \verb|[mingw32-]make [vars]|. Vars can be:\bigskip
 
 \begin{tabular}{l l l}
 \verb$EXE$ & \verb$.exe|$ & executable file extension, empty if Linux/UNIX \\ 
 \verb$RES$ & \verb$res.res|$ & resource file name (win32 only) \\
 \verb$TAIL$ & \verb$-n17|-n7$ & number of \verb$.blog$ lines
 will be printed on \verb$make exec$ build \\
-\verb$LLVER$ & \verb$3.5|$ & LLVM version if used \\
+\verb$LLVER$ & \verb$|3.5$ & LLVM version if used \\
 \end{tabular}\bigskip
 
 \verb|MODULE|\ variable sets name for current module.
@@ -15,4 +15,33 @@ It was set to \bi, but can use current dir name as module name.
 
 \lst{Makefile}{tmp/mk.mod}{make}
 
-\lst{Makefile}{tmp/mk.mk}{make}
+\verb|exec|\ target build \bi\ system core and runs high-level system build 
+from \file{bI.bI}\ master source: 
+
+\lst{Makefile}{tmp/mk.exec}{make}
+
+\verb|make clean|\ removes all temporary and produced files, makes all project
+clean:
+
+\lst{Makefile}{tmp/mk.clean}{make}
+
+\verb|C\H|\ contains files will be compiled by \verb|CXX|\ \cpp\ compiler
+into interpreter executable:
+
+\lst{Makefile}{tmp/mk.ch}{make}
+
+\cpp\ compiler run:
+
+\lst{Makefile}{tmp/mk.cc}{make}
+
+\prog{bison}\ parser generator run:
+
+\lst{Makefile}{tmp/mk.yacc}{make}
+
+\prog{flex}\ lexer generator run:
+
+\lst{Makefile}{tmp/mk.flex}{make}
+
+win32 resource compiler run:
+
+\lst{Makefile}{tmp/mk.res}{make}

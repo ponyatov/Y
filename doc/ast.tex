@@ -22,7 +22,11 @@
 & \verb|fn:dump(int)->string| & recursive \verb|dump(+1)|\ tree in text
 form (with depth padding) \\
 & \verb|fn:tagval()->string| & dump \verb|<T:V>| header only \\
-& \verb|fn:pad(int)->string| & return padding string: n tabs \\  
+& \verb|fn:pad(int)->string| & return padding string: n tabs \\
+\hline
+& \verb|fn:eval()->AST| & compute/evaluate object \\
+operators: & \verb|op:@(AST)->AST| & apply \\
+& \verb|op:=(AST)->AST| & equal \\
 \end{tabular} 
 
 \lst{hpp.hpp}{tmp/hpp.ast}{C++}

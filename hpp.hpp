@@ -16,18 +16,25 @@
 
 struct AST {											// == AST symbolic type ==
 // -------------------------------------------------------------------------------
-	std::string tag;									// class/data type tag
+	std::string tag;									// class/type tag
 	std::string val;									// value
 // -------------------------------------------------------------------------------
 	AST(std::string,std::string);						// <T:V> constructor
 	AST(AST*);											// copy constructor
 // -------------------------------------------------------------------------------
 	vector<AST*> nest;									// nest[]ed elements
-	void push(AST*);									// add nested element
+	void push(AST*);									// push nested as stack
 // -------------------------------------------------------------------------------
 	map<std::string,AST*> par;							// par{}ameters
 	void setpar(AST*);									// add/set parameter
+// -------------------------------------------------------------------------------
+	std::string dump(int depth=0);						// recursive dump(+1)
+	std::string tagval();								// <tag:val> header
+	std::string pad(int);								//
 };
+
+extern map<string,sym*> env;							// == glob.environment ==
+extern void env_init();
 
 extern void W(AST*);									// == writers ==
 extern void W(std::string);
