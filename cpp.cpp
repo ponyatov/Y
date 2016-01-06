@@ -31,7 +31,7 @@ std::string AST::dump(int depth) {
 }
 
 AST* AST::eval() {
-	AST*E = env[val]; if (E) return E;
+	AST*E = env[val]; if (E) return E;					// eval: lookup
 	for (auto it=nest.begin() ; it!=nest.end() ; it++)
 		(*it) = (*it)->eval();
 	return this;
