@@ -1,5 +1,12 @@
 digraph {
 
+subgraph {
+source [shape=invhouse];
+source -> frontend [label="  single\lchars"];
+frontend -> backend [label="  AST\l(IR)"];
+backend -> "object file" [label="  machine\lcode"];
+}
+
 subgraph frontend { label=frontend; 
 
 "source file" [shape=invhouse];
@@ -10,7 +17,7 @@ parser -> "AST" [label="  AST tree"];
 
 subgraph backend { label=backend;
 
-frontend -> "optimizer" -> "code generator" [label="  AST"];
+" frontend" -> optimizer -> "code generator" [label="  AST"];
 "code generator" -> "object file\l.o" [label="  machine\lcode"];
  
 }

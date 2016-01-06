@@ -43,7 +43,7 @@ struct AST {											// == AST symbolic type ==
 	virtual AST* eval();
 };
 
-extern std::map<std::string,AST*> env;					// == glob.environment ==
+extern std::map<std::string,AST*> env;				// == global environment ==
 extern void env_init();
 
 extern void W(AST*);									// == writers ==

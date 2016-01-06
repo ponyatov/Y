@@ -1,0 +1,9 @@
+digraph {
+rankdir=LR;
+data -> bI [label="data metainfo\l(structure,types,size)"];
+data -> "low-level\lprogram" [label="bulk data itself"];
+"problem\ldomain" -> bI;
+bI -> "low-level\lprogram" [label="adaptive\lcomputational model"];
+"low-level\lprogram" -> "result\ldata" [label="bare\lhardware\lexecution"];
+"low-level\lprogram" -> bI [label="runtime backtracking\lfor optimization"];
+}

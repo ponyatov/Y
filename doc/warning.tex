@@ -1,0 +1,45 @@
+\secly{\textsc{Be Warned}}\label{warning}
+
+\subsection{\bi\ not intended for data crunching itself}
+
+\begin{framed}
+\noindent \textcolor{Blue}{\bi\ not intended for data crunching itself\ --- it's
+tool for hand-cranked compiling and program transformations.}\\\bi\ core supports
+\verb|<num:|\ref{num}\verb|>|\
+data type for floating point numbers, but \emph{avoid use of
+\bi\ core for numerical computation}.
+\textcolor{Green}{Right way to use \bi\ --- construct low-level program
+which will crunch your data using power of \bi\ metaprogramming.}
+
+\figx{tmp/meta.png}{width=0.9\textwidth}
+
+\end{framed}
+
+LLVM framework and JIT libraries looks very interesting for
+\term{dynamic compilation}\ --- this magic can conjure some speedup of
+\bi\ core\note{it's high-level part realized in \bi\ language, and \bi/$next$
+generation described via core metamodel}\ itself,
+and incredible performance of mutable runtime-generated machine code 
+for data crunching.    
+
+\pagebreak
+\subsection{There is no memory management at all}
+
+\begin{framed}\begin{framed}\noindent \textcolor{Red}{Current 
+version of \bi\ core have no any memory management: there is no garbage
+collector, all created objects will be stay in memory until system crash on
+memory overflow.}
+\end{framed}
+This way was chosen for simplicity. It is sufficient for tiny batch runs
+and interactive work with "failure and restart from snapshot"\ hints,
+but this makes continues or large data crunching impossible.
+\end{framed}
+
+\subsection{You must have some skills in compiler design and functional programming}
+
+\begin{framed}
+\noindent \bi\ system is syntax analyzer and translator framework by design, 
+and user must have some skills in compiler design and functional programming.
+You must read DragonBook \cite{dragon}, SICP \cite{sicp}\ and
+Harrison/Field \cite{hf}\ before you dig in hedgehog den.  
+\end{framed}

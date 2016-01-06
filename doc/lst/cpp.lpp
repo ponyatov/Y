@@ -12,4 +12,5 @@ std::ofstream env("tmp/cpp.env");
 ^.+YYERR.+\n	{err<<yytext;}
 ^.+main.+\n		{mn<<yytext;env<<yytext;}
 ^.+env.+\n		{env<<yytext;}
+^.*\ W\(.*\n	{wrt<<yytext;}
 %%

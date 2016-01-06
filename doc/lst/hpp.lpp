@@ -22,4 +22,5 @@ std::ofstream env("tmp/hpp.env");
 <AST>\};\n					{ast<<yytext; BEGIN(INITIAL);}
 <AST>.*\n					{ast<<yytext;}
 ^.+\ W\(.+\n				{wrt<<yytext;}
+^.*env.*\n					{env<<yytext;}
 %%
