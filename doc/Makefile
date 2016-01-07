@@ -19,7 +19,6 @@ MPP = tmp/mk.mod tmp/mk.clean tmp/mk.ch tmp/mk.cc
 
 LATEX = pdflatex -halt-on-error
 bI.pdf: $(TEX) $(FIG) $(LST) $(LPP) $(YPP) $(HPP) $(CPP) $(MPP)
-#	ln -s ~/tmp tmp
 	$(LATEX) $< && $(LATEX) $<
 	
 tmp/%.png: fig/%.dot
