@@ -40,7 +40,16 @@ struct AST {											// == AST symbolic type ==
 	virtual std::string tagval();						// <tag:val> header
 	std::string pad(int);								// padding string
 // -------------------------------------------------------------------------------
-	virtual AST* eval();
+	virtual AST* eval();								// compute/evaluate
+// ------------------------------------------------------- operators
+	virtual AST* eq(sym*);								// A = B  assignment
+	virtual AST* at(sym*);								// A @ B  apply
+	virtual AST* dot(sym*);								// A . B  index
+	virtual AST* add(sym*);								// A + B  \ arithmetic
+	virtual AST* sub(sym*);								// A - B
+	virtual AST* mul(sym*);								// A * B
+	virtual AST* div(sym*);								// A / B
+	virtual AST* pow(sym*);								// A ^ B  /
 };
 
 extern std::map<std::string,AST*> env;				// == global environment ==
