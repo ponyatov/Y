@@ -1,0 +1,15 @@
+%{
+#include <fstream>
+std::ofstream lc("tmp/bi.linecomment");
+std::ofstream bc("tmp/bi.blockcomment");
+%}
+%option main
+%x block
+%%
+\#\|\ block	{BEGIN(block);bc<<yytext;}
+<block>\|\#	{BEGIN(INITIAL);bc<<yytext;}
+<block>\n	{bc<<yytext;}
+<block>.	{bc<<yytext;}
+
+^#\ line[^\n]*\n	{lc<<yytext;}
+%%

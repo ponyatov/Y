@@ -77,6 +77,9 @@ AST* Num::neg()							{ val = -val; return this; }// -Num
 														// == composites ==
 List::List():AST("[","]") {}							// [list]
 Vector::Vector():AST("","") {}							// <vector>
+Tuple::Tuple(AST*A,AST*B):AST(",",",") {				// tu,ple
+	push(A); push(B);
+	}
 Pair::Pair(AST*A,AST*B):AST("","") {					// pa:ir
 	tag=A->val; push(A); val=B->val; push(B); }
 														// == functionals ==

@@ -1,6 +1,18 @@
 \secrel{Comments}\secdown
-\secrel{Line comment}
+\secrel{Line comment}\label{linecomment}
 
-\lst{lpp.lpp}{tmp/lpp.comment}{C++}
+\lst{bI.bI}{tmp/bi.linecomment}{bI}
+
+\lst{lpp.lpp}{tmp/lpp.linecomment}{C++}
+
+\secrel{Block comment}\label{blockcomment}
+
+\emph{Current version have undetected problems with block comments}:
+on multiline block comments lexer hangs until file end,
+ignoring all source and causing strange syntax errors.
+
+\lst{bI.bI}{tmp/bi.blockcomment}{bI}
+
+\lst{lpp.lpp}{tmp/lpp.blockcomment}{C++}
 
 \secup

@@ -4,7 +4,8 @@ std::ofstream head("tmp/lpp.head");
 std::ofstream opt("tmp/lpp.opt");
 std::ofstream rules("tmp/lpp.rules");
 std::ofstream spaces("tmp/lpp.spaces");
-std::ofstream comment("tmp/lpp.comment");
+std::ofstream linecomment("tmp/lpp.linecomment");
+std::ofstream blockcomment("tmp/lpp.blockcomment");
 
 %}
 %option main
@@ -15,7 +16,9 @@ std::ofstream comment("tmp/lpp.comment");
 <xx>(\n|.)		{head<<yytext;}
 ^\%option.+\n	{opt<<yytext;}
 ^\%\%\n			{rules<<yytext<<"...";}
-^#.+\n			{comment<<yytext;}
+^#.+line.+\n			{linecomment<<yytext;}
+^.*lexcomment.*\n	{blockcomment<<yytext;}
+^.+block\ comment.+\n	{blockcomment<<yytext;}
 ^.+\\n.+\n		{spaces<<yytext;}
 ^\.[ \t].*\n	{spaces<<yytext;}
 ^\%\%			{spaces<<yytext;}

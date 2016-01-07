@@ -10,16 +10,16 @@ void incFile(AST* inc) {								/* .include processing */
 %}
 %option noyywrap
 %option yylineno
-									/* optional number sign */
+												/* optional number sign */
 S [\+\-]?
-									/* decimal number digit(s) */						
+												/* decimal number digit(s) */
 N [0-9]+
-									/* lexer state: string parsing mode */
+												/* lexer state: string parsing mode */
 %x lexstring
-									/* lexer state: #| block comment |# */
+												/* lexer state: #| block comment |# */
 %x lexcomment
 %%
-\#\|				{BEGIN(lexcomment);}				/* block comment */
+#\|					{BEGIN(lexcomment);}				/* block comment */
 <lexcomment>\|\#	{BEGIN(INITIAL);}
 <lexcomment>\n		{}
 <lexcomment>.		{}

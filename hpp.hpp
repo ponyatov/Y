@@ -84,6 +84,7 @@ struct Num:AST { Num(std::string); double val;			// floating point number
 struct List:AST { List(); };							// [list]
 struct Vector:AST { Vector(); };						// <vector>
 struct Pair:AST { Pair(AST*,AST*); };					// pa:ir
+struct Tuple:AST { Tuple(AST*,AST*); };					// tu,ple
 
 														// == functionals ==
 struct Op:AST { Op(std::string); AST* eval(); };		// operator
