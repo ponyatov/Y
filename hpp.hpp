@@ -53,7 +53,7 @@ struct AST {											// == AST symbolic type ==
 	virtual AST* pow(AST*);								// A ^ B  /
 };
 
-extern std::map<std::string,AST*> env;				// == global environment ==
+extern std::map<std::string,AST*> env;					// == global environment ==
 extern void env_init();									// init env[] on startup
 extern void fn_init();									// internal functions 
 
@@ -63,7 +63,8 @@ extern void W(std::string);
 extern int yylex();										// parse next token
 extern int yylineno;									// current source line
 extern char* yytext;									// found token text
-#define TOC(C,X) { yylval.o = new C(yytext); return X; }
+#define TOC(C,X) { yylval.o = new C(yytext); return X; }// token macro used in lexer
+
 														// == parser interface ==
 extern int yyparse();									// run parser
 extern void yyerror(std::string);						// error callback
@@ -71,7 +72,8 @@ extern void yyerror(std::string);						// error callback
 
 														// == scalars ==
 struct Sym:AST { Sym(std::string); };					// generic symbol
-struct Str:AST { Str(std::string); };					// string
+struct Str:AST { Str(std::string); 						// string
+	std::string tagval(); };
 struct Int:AST { Int(std::string); long   val;			// integer
 	std::string tagval(); AST*neg(); };
 struct Hex:AST { Hex(std::string); };					// hex machine number
@@ -84,7 +86,7 @@ struct Vector:AST { Vector(); };						// <vector>
 struct Pair:AST { Pair(AST*,AST*); };					// pa:ir
 
 														// == functionals ==
-struct Op:AST { Op(std::string); };						// operator
+struct Op:AST { Op(std::string); AST* eval(); };		// operator
 struct Lambda:AST { Lambda(); };						// {lambda}
 typedef AST*(*FN)(AST*);								// function ptr
 struct Fn:AST { Fn(std::string,FN); FN fn; };			// internal function

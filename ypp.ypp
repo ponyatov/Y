@@ -46,7 +46,7 @@ vector :				{ $$=new Vector(); }
 ;
 lambda :				{ $$=new Lambda(); }
 	| lambda SYM COLON	{ $$->setpar($2); }
-	| lambda ex			{ $$=$2; $$->push($2); }
+	| lambda ex			{ $$=$1; $$->push($2); }
 ;
 pair : ex COLON ex 		{ $$=new Pair($1,$3); } ;
 %%

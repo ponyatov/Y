@@ -2,7 +2,7 @@
 #include "hpp.hpp"
 std::string StringLexBuffer;	/* string parsing buffer /string lexer state/ */
 
-void incFile(AST* inc) {							/* .include processing */
+void incFile(AST* inc) {								/* .include processing */
 	yyin = fopen(inc->val.c_str(),"r");
 	if (!yyin) yyerror(inc->tagval());
 	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));
@@ -16,32 +16,37 @@ S [\+\-]?
 N [0-9]+
 									/* lexer state: string parsing mode */
 %x lexstring
+									/* lexer state: #| block comment |# */
+%x lexcomment
 %%
-#[^\n]*				{}				/* line comment */
+\#\|				{BEGIN(lexcomment);}				/* block comment */
+<lexcomment>\|\#	{BEGIN(INITIAL);}
+<lexcomment>\n		{}
+<lexcomment>.		{}
+#[^\n]*				{}									/* line comment */
 
-									/* numbers: */
-{S}{N}				TOC(Int,NUM)	/* integer */
-{S}{N}\.{N}			TOC(Num,NUM)	/* float */
-{S}{N}[eE]{S}{N}	TOC(Num,NUM)	/* exponential */
-0x[0-9A-F]+			TOC(Hex,NUM)	/* machine hex */
-0b[01]+				TOC(Bin,NUM)	/* machine binary */
+														/* numbers: */
+{S}{N}				TOC(Int,NUM)						/* integer */
+{S}{N}\.{N}			TOC(Num,NUM)						/* float */
+{S}{N}[eE]{S}{N}	TOC(Num,NUM)						/* exponential */
+0x[0-9A-F]+			TOC(Hex,NUM)						/* machine hex */
+0b[01]+				TOC(Bin,NUM)						/* machine binary */
 
-[a-zA-Z0-9_]+		TOC(Sym,SYM)	/* symbol */
+[a-zA-Z0-9_]+		TOC(Sym,SYM)						/* symbol */
 
 '					{BEGIN(lexstring);StringLexBuffer="";}	/* string parser */
 <lexstring>'		{BEGIN(INITIAL);
 					yylval.o = new Str(StringLexBuffer); return STR; }
 <lexstring>.		{StringLexBuffer+=yytext[0];}
-
-									/* parens */
-\(					TOC(Op,LP)
+														/* parens */
+\(					TOC(Op,LP)							
 \)					TOC(Op,RP)
 \[					TOC(Op,LQ)
 \]					TOC(Op,RQ)
 \{					TOC(Op,LB)
 \}					TOC(Op,RB)
-									/* operators */
-\=					TOC(Op,EQ)
+														/* operators */
+\=					TOC(Op,EQ)							
 \@					TOC(Op,AT)
 \.					TOC(Op,DOT)
 \,					TOC(Op,COMMA)
@@ -53,10 +58,10 @@ N [0-9]+
 \/					TOC(Op,DIV)
 \^					TOC(Op,POW)
 
-[ \t\r\n]+			{}				/* drop spaces */
-.					{}				/* drop undetected chars */
+[ \t\r\n]+			{}									/* drop spaces */
+.					{}									/* drop undetected chars */
 
-<<EOF>>				{ yypop_buffer_state();			/* end of .inluded file */
+<<EOF>>				{ yypop_buffer_state();				/* end of .inluded file */
 					if ( !YY_CURRENT_BUFFER )
 						yyterminate();}
 %%
