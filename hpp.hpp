@@ -42,14 +42,14 @@ struct AST {											// == AST symbolic type ==
 // -------------------------------------------------------------------------------
 	virtual AST* eval();								// compute/evaluate
 // ------------------------------------------------------- operators
-	virtual AST* eq(sym*);								// A = B  assignment
-	virtual AST* at(sym*);								// A @ B  apply
-	virtual AST* dot(sym*);								// A . B  index
-	virtual AST* add(sym*);								// A + B  \ arithmetic
-	virtual AST* sub(sym*);								// A - B
-	virtual AST* mul(sym*);								// A * B
-	virtual AST* div(sym*);								// A / B
-	virtual AST* pow(sym*);								// A ^ B  /
+	virtual AST* eq(AST*);								// A = B  assignment
+	virtual AST* at(AST*);								// A @ B  apply
+	virtual AST* dot(AST*);								// A . B  index
+	virtual AST* add(AST*);								// A + B  \ arithmetic
+	virtual AST* sub(AST*);								// A - B
+	virtual AST* mul(AST*);								// A * B
+	virtual AST* div(AST*);								// A / B
+	virtual AST* pow(AST*);								// A ^ B  /
 };
 
 extern std::map<std::string,AST*> env;				// == global environment ==
@@ -76,5 +76,15 @@ struct Hex:AST { Hex(std::string); };					// hex machine number
 struct Bin:AST { Bin(std::string); };					// binary machine number
 struct Num:AST { Num(std::string); double val;			// floating point number
 	std::string tagval(); };
+														// == composites ==
+struct List:AST { List(); };							// [list]
+struct Vector:AST { Vector(); };						// <vector>
+struct Pair:AST { Pair(AST*,AST*); };					// pa:ir
+
+														// == functionals ==
+struct Op:AST { Op(std::string); };						// operator
+struct Lambda:AST { Lambda(); };						// {lambda}
+typedef AST*(*FN)(AST*);								// function ptr
+struct Fn:AST { Fn(std::string,FN); FN fn; };			// internal function
 
 #endif // _H_bI
