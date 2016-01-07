@@ -2,7 +2,7 @@
 MODULE = bI
 #MODULE = $(notdir $(CURDIR))
 .PHONY: exec
-exec: doc ./$(MODULE)$(EXE) $(MODULE).bI
+exec: ./$(MODULE)$(EXE) $(MODULE).bI
 	./$(MODULE)$(EXE) < $(MODULE).bI > $(MODULE).blog && tail $(TAIL) $(MODULE).blog 
 .PHONY: clean
 clean:

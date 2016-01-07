@@ -2,10 +2,47 @@
 #include "hpp.hpp"
 %}
 %defines %union { AST*o; }
-%token <o> SYM NUM STR		/* symbol number string */
-%type <o> ex scalar			/* expression scalar */
+%token <o> SYM NUM STR				/* symbol number 'string' */
+%token <o> LP RP LQ RQ LB RB LL GG	/* ( ) [ ] { } < > */
+%token <o> EQ AT COLON DOT COMMA	/* = @ : . , */
+%token <o> ADD SUB MUL DIV POW		/* + - * / ^ */
+%token <o> ADDEQ					/* += */
+%type <o> ex scalar					/* expression scalar */
+%type <o> list lambda pair vector	/* [list] {lambda} pa:ir <vector> */
+
+%left EQ AT
+%left ADD SUB
+%left MUL DIV
+%left POW
 %%
-bI : | bI ex { W($2); W("\n---------"); W($2->eval()); W("\n=========="); }
+bI : | bI ex 			{ W($2); W("\n---------"); 
+						W($2->eval()); W("\n=========="); }
 scalar : SYM | NUM | STR ;
-ex : scalar ;
+ex : scalar | pair
+	| LP ex RP			{ $$=$2; }
+	| LQ list RQ		{ $$=$2; }
+	| LL vector GG		{ $$=$2; }
+	| LB lambda RB		{ $$=$2; }
+	| ex EQ ex			{ $$=$2; $$->push($1); $$->push($3); }
+	| ex DOT ex			{ $$=$2; $$->push($1); $$->push($3); }
+	| ex COMMA ex		{ $$=$2; $$->push($1); $$->push($3); }
+	| ex ADD ex			{ $$=$2; $$->push($1); $$->push($3); }
+	| ex SUB ex			{ $$=$2; $$->push($1); $$->push($3); }
+	| ex MUL ex			{ $$=$2; $$->push($1); $$->push($3); }
+	| ex DIV ex			{ $$=$2; $$->push($1); $$->push($3); }
+	| ex POW ex			{ $$=$2; $$->push($1); $$->push($3); }
+	| ex AT ex			{ $$=$2; $$->push($1); $$->push($3); }
+	| ex LP list RP		{ $$=new Op("@"); $$->push($1); $$->push($3); }
+;
+list :					{ $$=new List(); }
+	| list ex			{ $$=$1; $$->push($2); }
+;
+vector :				{ $$=new Vector(); }
+	| vector ex			{ $$=$1; $$->push($2); }
+;
+lambda :				{ $$=new Lambda(); }
+	| lambda SYM COLON	{ $$->setpar($2); }
+	| lambda ex			{ $$=$2; $$->push($2); }
+;
+pair : ex COLON ex 		{ $$=new Pair($1,$3); } ;
 %%
