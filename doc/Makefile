@@ -10,7 +10,7 @@ TEX += headers.tex cppcore.tex ast.tex makes.tex comment.tex scalars.tex
 
 FIG = tmp/compiler.png tmp/meta.png
 
-LST = tmp/lpp tmp/ypp tmp/hpp tmp/cpp tmp/mk
+LST = tmp/lpp$(EXE) tmp/ypp$(EXE) tmp/hpp$(EXE) tmp/cpp$(EXE) tmp/mk$(EXE)
 LPP = tmp/lpp.head tmp/lpp.opt tmp/lpp.rules tmp/lpp.spaces tmp/lpp.comment
 YPP = tmp/ypp.head
 HPP = tmp/hpp.once tmp/hpp.lex tmp/hpp.pars tmp/hpp.inc tmp/hpp.wrt tmp/hpp.env
@@ -24,16 +24,16 @@ bI.pdf: $(TEX) $(FIG) $(LST) $(LPP) $(YPP) $(HPP) $(CPP) $(MPP)
 tmp/%.png: fig/%.dot
 	dot -Tpng -o $@ $<
 	
-tmp/%: lst/%.lpp
+tmp/%$(EXE): lst/%.lpp
 	flex -o $@.c $< && $(CXX) -o $@ $@.c
 	
-$(LPP): tmp/lpp ../lpp.lpp
+$(LPP): tmp/lpp$(EXE) ../lpp.lpp
 	$< < ../lpp.lpp
-$(YPP): tmp/ypp ../ypp.ypp
+$(YPP): tmp/ypp$(EXE) ../ypp.ypp
 	$< < ../ypp.ypp
-$(HPP): tmp/hpp ../hpp.hpp
+$(HPP): tmp/hpp$(EXE) ../hpp.hpp
 	$< < ../hpp.hpp
-$(CPP): tmp/cpp ../cpp.cpp
+$(CPP): tmp/cpp$(EXE) ../cpp.cpp
 	$< < ../cpp.cpp
-$(MPP): tmp/mk  ../Makefile
+$(MPP): tmp/mk$(EXE)  ../Makefile
 	$< < ../Makefile
