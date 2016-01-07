@@ -45,6 +45,7 @@ struct AST {											// == AST symbolic type ==
 	virtual AST* eq(AST*);								// A = B  assignment
 	virtual AST* at(AST*);								// A @ B  apply
 	virtual AST* dot(AST*);								// A . B  index
+	virtual AST* neg();									// -A     negate
 	virtual AST* add(AST*);								// A + B  \ arithmetic
 	virtual AST* sub(AST*);								// A - B
 	virtual AST* mul(AST*);								// A * B
@@ -53,7 +54,8 @@ struct AST {											// == AST symbolic type ==
 };
 
 extern std::map<std::string,AST*> env;				// == global environment ==
-extern void env_init();
+extern void env_init();									// init env[] on startup
+extern void fn_init();									// internal functions 
 
 extern void W(AST*);									// == writers ==
 extern void W(std::string);
@@ -71,11 +73,11 @@ extern void yyerror(std::string);						// error callback
 struct Sym:AST { Sym(std::string); };					// generic symbol
 struct Str:AST { Str(std::string); };					// string
 struct Int:AST { Int(std::string); long   val;			// integer
-	std::string tagval(); };
+	std::string tagval(); AST*neg(); };
 struct Hex:AST { Hex(std::string); };					// hex machine number
 struct Bin:AST { Bin(std::string); };					// binary machine number
 struct Num:AST { Num(std::string); double val;			// floating point number
-	std::string tagval(); };
+	std::string tagval(); AST*neg(); };
 														// == composites ==
 struct List:AST { List(); };							// [list]
 struct Vector:AST { Vector(); };						// <vector>

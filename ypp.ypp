@@ -10,15 +10,19 @@
 %type <o> ex scalar					/* expression scalar */
 %type <o> list lambda pair vector	/* [list] {lambda} pa:ir <vector> */
 
-%left EQ AT
+%left EQ AT DOC COMMA COLON
 %left ADD SUB
 %left MUL DIV
 %left POW
+%left LP RP LQ RQ LB RB
+%left PFX
 %%
 bI : | bI ex 			{ W($2); W("\n---------"); 
 						W($2->eval()); W("\n=========="); }
 scalar : SYM | NUM | STR ;
 ex : scalar | pair
+	| ADD ex %prec PFX	{ $$=$2; }
+	| SUB ex %prec PFX	{ $$=$2->neg(); }
 	| LP ex RP			{ $$=$2; }
 	| LQ list RQ		{ $$=$2; }
 	| LL vector GG		{ $$=$2; }
