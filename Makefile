@@ -1,13 +1,14 @@
 ## make parameters: EXE=.exe| RES=res.res| TAIL=-n17|-n7 LLVM=|3.5
 MODULE = bI
 #MODULE = $(notdir $(CURDIR))
+OS = $(shell $(CXX) -dumpmachine)
 .PHONY: exec
 exec: ./$(MODULE)$(EXE) $(MODULE).bI
 	./$(MODULE)$(EXE) < $(MODULE).bI > $(MODULE).blog && tail $(TAIL) $(MODULE).blog 
 .PHONY: clean
 clean:
 	rm -rf ./$(MODULE)$(EXE) *.*log ypp.tab.?pp lex.yy.c $(RES)
-C = cpp.cpp ypp.tab.cpp lex.yy.c
+C = cpp.cpp ypp.tab.cpp lex.yy.c $(OS).cpp
 H = hpp.hpp ypp.tab.hpp
 CXXFLAGS += -I. -std=gnu++11
 ./$(MODULE)$(EXE): $(C) $(H) $(RES)
