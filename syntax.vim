@@ -14,9 +14,8 @@ syntax region String	start="'" end="'"					" 'string'
 syntax region Special	start="\"" end="\""					" "docstring"
 syntax match  Keyword	"\v[a-zA-Z_]+"						" symbol
 
-syntax match  Operator	"\v[\+\-\*\/\^]"					" operator
+syntax match  Type		"\v[\+\-\*\/\^\@]"					" operator
 syntax match  Type		"\v[\[\]\(\)\<\>\:\=]"				" bracket
 syntax match  Keyword	"\v[\{\}]"							" lambda
-syntax match  Keyword	"\v[\@]"							" pair/typedef
 
 let b:current_syntax = "bI"

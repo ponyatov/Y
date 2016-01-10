@@ -6,6 +6,7 @@ int main() { env_init(); return yyparse(); }
 
 std::map<std::string,AST*> env;
 void env_init() {
+	env["nil"]=nil;
 	// ----------------------------------------------- metainfo constants
 	env["AUTHOR"]	= new Str(AUTHOR);					// author (c)
 	env["LICENSE"]	= new Str(LICENSE);					// license
@@ -53,6 +54,8 @@ AST* AST::mul(AST*)		{ return this; }				// *
 AST* AST::div(AST*)		{ return this; }				// /
 AST* AST::pow(AST*)		{ return this; }				// ^
 
+														// == specials ==
+AST* nil = new AST("nil","");							
 														// == scalars ==
 Sym::Sym(std::string V):AST("sym",V)	{}				// symbol
 

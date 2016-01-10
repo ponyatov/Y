@@ -70,6 +70,9 @@ extern int yyparse();									// run parser
 extern void yyerror(std::string);						// error callback
 #include "ypp.tab.hpp"									// token defines for lexer
 
+														// == specials ==
+extern AST* nil;										// nil
+
 														// == scalars ==
 struct Sym:AST { Sym(std::string); };					// generic symbol
 struct Str:AST { Str(std::string); 						// string
@@ -91,5 +94,10 @@ struct Op:AST { Op(std::string); AST* eval(); };		// operator
 struct Lambda:AST { Lambda(); };						// {lambda}
 typedef AST*(*FN)(AST*);								// function ptr
 struct Fn:AST { Fn(std::string,FN); FN fn; };			// internal function
+
+														// == OS specific ==
+#ifdef __MINGW32__
+#include "mingw32.hpp"									// win32/MinGW
+#endif
 
 #endif // _H_bI

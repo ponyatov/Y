@@ -16,6 +16,7 @@ S [\+\-]?
 N [0-9]+
 												/* lexer state: string parsing mode */
 %x lexstring
+%x lexdoc
 												/* lexer state: #| block comment |# */
 %x lexcomment
 %%
@@ -38,6 +39,12 @@ N [0-9]+
 <lexstring>'		{BEGIN(INITIAL);
 					yylval.o = new Str(StringLexBuffer); return STR; }
 <lexstring>.		{StringLexBuffer+=yytext[0];}
+
+\"					{BEGIN(lexdoc);StringLexBuffer="";}	/* docstring parser */
+<lexdoc>\"			{BEGIN(INITIAL);
+					yylval.o = new Str(StringLexBuffer); return DOC; }
+<lexdoc>.			{StringLexBuffer+=yytext[0];}
+
 														/* parens */
 \(					TOC(Op,LP)							
 \)					TOC(Op,RP)

@@ -2,7 +2,7 @@
 #include "hpp.hpp"
 %}
 %defines %union { AST*o; }
-%token <o> SYM NUM STR				/* symbol number 'string' */
+%token <o> SYM NUM STR DOC			/* symbol number 'string' "docstring" */
 %token <o> LP RP LQ RQ LB RB LL GG	/* ( ) [ ] { } < > */
 %token <o> EQ AT COLON DOT COMMA	/* = @ : . , */
 %token <o> ADD SUB MUL DIV POW		/* + - * / ^ */
@@ -18,10 +18,10 @@
 %left LP RP LQ RQ LB RB
 %left PFX
 %%
-bI : | bI ex 			{ W($2); W("\n---------"); 
-						W($2->eval()); W("\n=========="); }
+bI : | bI ex 			{ W($2); W("\n-------"); W($2->eval()); W("\n======="); }
 scalar : SYM | NUM | STR ;
 ex : scalar | pair | tuple
+	| ex DOC			{ $$=$1; $$->par["doc"]=$2; }
 	| ADD ex %prec PFX	{ $$=$2; }
 	| SUB ex %prec PFX	{ $$=$2->neg(); }
 	| LP ex RP			{ $$=$2; }
