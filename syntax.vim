@@ -11,7 +11,8 @@ syntax match  Constant	"\v[\+\-]?[0-9]+[eE][\+\-]?[0-9]+"	" exponential
 syntax match  Constant	"\v0x[0-9A-F]+"						" hex
 syntax match  Constant	"\v0b[01]+"							" bin
 syntax region String	start="'" end="'"					" 'string'
-syntax match  Special	"\v[a-zA-Z_]+"						" symbol
+syntax region Special	start="\"" end="\""					" "docstring"
+syntax match  Keyword	"\v[a-zA-Z_]+"						" symbol
 
 syntax match  Operator	"\v[\+\-\*\/\^]"					" operator
 syntax match  Type		"\v[\[\]\(\)\<\>\:\=]"				" bracket
