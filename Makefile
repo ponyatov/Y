@@ -8,8 +8,8 @@ exec: ./$(MODULE)$(EXE) $(MODULE).bI
 .PHONY: clean
 clean:
 	rm -rf ./$(MODULE)$(EXE) *.*log ypp.tab.?pp lex.yy.c $(RES)
-C = cpp.cpp ypp.tab.cpp lex.yy.c $(OS).cpp
-H = hpp.hpp ypp.tab.hpp
+C = cpp.cpp $(OS).cpp ypp.tab.cpp lex.yy.c 
+H = hpp.hpp $(OS).hpp ypp.tab.hpp
 CXXFLAGS += -I. -std=gnu++11
 ./$(MODULE)$(EXE): $(C) $(H) $(RES)
 	$(CXX) $(CXXFLAGS) -o $@ $(C) $(RES)

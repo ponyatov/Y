@@ -1,18 +1,3 @@
-# line comment
-##|
-[						# == scalars nested list ==
-	[-01 -00 +00 +02 ]	# int: integer
-	[ +02.3 -04e+05 ]	# num: float/exponential
-	[ 0x12AF 0b1101 ] 	# machine hex: bin:
-	symbol 'string'
-	[ 1,2 3,4,5 ]		# tuple
-]
-#| block comment	[[ |#
+.inc test.bI
 
-# lambda usage
-empty = {}
-const = {X:Y}
-copy = {Z:Z}
-
-1+2/3 ^ 4
-
+A=11 A
