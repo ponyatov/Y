@@ -1,3 +1,4 @@
 #.inc test.bI
 
-A=11 A
+( winMain "main GUI window" = window @ 'GUI script' ) .MDI
+winMain@show

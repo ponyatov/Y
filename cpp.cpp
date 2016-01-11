@@ -29,18 +29,22 @@ string Sym::dump(int depth) {							// dump symbol object
 
 Sym* Sym::eval() {
 	Sym*E = env[val]; if (E) return E;					// lookup in glob.env[]
-	for (auto it=nest.begin();it!=nest.end();it++)		// recurse eval()
+	for (auto it=nest.begin();it!=nest.end();it++)		// recursive eval()
 		(*it) = (*it)->eval();
 	return this;
 }
 
-Sym* Sym::eq(Sym*o)		{ env[o->val]=o; return o; }
+Sym* Sym::eq(Sym*o)		{ env[val]=o; return o; }
 Sym* Sym::at(Sym*o)		{ push(o); return this; }
 Sym* Sym::dot(Sym*o)	{ setpar(o); return this; }
 
-Directive::Directive(string V):Sym("",V) {				// == .directive ==
-}
 string Directive::tagval() { return "<"+tag+":'"+val+"'>"; }
+Directive::Directive(string V):Sym("",V) {				// == .directive ==
+	while (val.size() && (val[0]!=' ' && val[0]!='\t')) {
+		tag += val[0]; val.erase(0,1); }
+	while (val.size() && (val[0]==' ' || val[0]=='\t')) {
+		               val.erase(0,1); }
+}
 
 														// == specials ==
 Sym* nil = new Sym("nil","");							// nil
@@ -58,11 +62,10 @@ void env_init() {										// init on startup
 	// functions
 	fn_init();
 }
-
 														// == scalars ==
 														// == string ==
 Str::Str(string V):Sym("str",V) {}
-//string Str::tagval()			{ return "<"+tag+":'"+val+"'>"; }
+string Str::tagval()			{ return "<"+tag+":'"+val+"'>"; }
 														// == machine numbers ==
 Hex::Hex(string V):Sym("hex",V) {}						// hexadecimal
 Bin::Bin(string V):Sym("bin",V) {}						// binary
@@ -86,11 +89,11 @@ Vector::Vector():Sym("","") {}							// <vector>
 														// == functionals ==
 Op::Op(string V):Sym("op",V) {}							// operator
 Sym* Op::eval() {
-//	Sym::eval();										// nest[]ed evaluate
+	Sym::eval();										// nest[]ed evaluate
 	if (nest.size()==2) {								// A op B bin.operator
 		if (val=="=") return nest[0]->eq(nest[1]);
-//		if (val=="@") return nest[0]->at(nest[1]);
-//		if (val==".") return nest[0]->dot(nest[1]);
+		if (val=="@") return nest[0]->at(nest[1]);
+		if (val==".") return nest[0]->dot(nest[1]);
 	}
 	return this;
 }
@@ -98,7 +101,12 @@ Fn::Fn(string V, FN F):Sym("fn",V) { fn=F; }			// == function ==
 Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
 Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
 
+														// == GUI ==
+
+Sym* window(Sym*o) { return new Window(o); }				// constructor fn
+string Window::tagval() { return "<"+tag+":'"+val+"'>"; }
+
 
 void fn_init() {							// == register internal functions ==
-//	env["window"] = new Fn("window",window);
+	env["window"] = new Fn("window",window);
 }

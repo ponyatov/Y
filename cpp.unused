@@ -1,22 +1,4 @@
 
-bool Sym::haskey(string s) {							// scan for key exists
-	if (par.count(s)) return true; else return false;
-}
-
-Sym* Sym::at(Sym*o)		{ push(o); return this; }
-Sym* Sym::dot(Sym*o)	{ setpar(o); return this; }
-
-//Directive::Directive(string V):Sym("",V) {				// == .directive ==
-	while (val.size() && (val[0]!=' ' && val[0]!='\t')) {
-		tag += val[0]; val.erase(0,1); }
-	while (val.size() && (val[0]==' ' || val[0]=='\t')) {
-		               val.erase(0,1); }
-}
-
-														// == GUI ==
-
-Sym* window(Sym*o) { return new Window(o); }				// constructor fn
-string Window::tagval() { return "<"+tag+":'"+val+"'>"; }
 Sym* Window::dot(Sym*o) { Sym::eval();
 //	if (o->val=="show") show();
 	return this; }

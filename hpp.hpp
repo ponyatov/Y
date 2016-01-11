@@ -69,7 +69,7 @@ extern Sym* nil;						// nil
 
 										// == scalars ==
 struct Str:Sym { Str(string);			// string
-};//	longstring tagval(); };
+	string tagval(); };
 struct Hex:Sym { Hex(string); };		// hexadecimal machine number
 struct Bin:Sym { Bin(string); };		// binary machine number
 struct Int:Sym { Int(string);			// integer
@@ -92,10 +92,15 @@ typedef Sym*(*FN)(Sym*);				// function ptr
 struct Fn:Sym { Fn(string,FN); 			// internal/dyncompiled function
 	FN fn; Sym*at(Sym*); };
 
-
 										// == GUI ==
 struct Window:Sym { Window(Sym*); 		// window
+	string tagval();
 	void show();
 };
+
+										// == OS specific ==
+#ifdef __MINGW32__
+#include "mingw32.hpp"					// win32/MinGW
+#endif
 
 #endif // _H_bI
