@@ -1,8 +1,19 @@
-#ifndef _H_GUI
-#define _H_GUI
+#ifndef _H_bI
+#define _H_bI
+										// == metainfo constants
+
+#define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
+#define LICENSE "http://www.gnu.org/copyleft/lesser.html"
+#define GITHUB "https://github.com/ponyatov/Y/tree/dev"
+#define AUTOGEN "/***** DO NOT EDIT: this file was autogened by bI *****/"
+#define LOGO "logo64x64"
+#define LISPLOGO "warning64x64"
 										// == std.includes ==
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
+//#include <cstdio>
+//#include <cassert>
 #include <vector>
 #include <map>
 using namespace std;
@@ -27,9 +38,10 @@ struct Sym {							// == abstract symbolic type (AST) ==
 	virtual string tagval();			// <T:V> header string
 // ---------------------------------------------------------------------------
 	Sym* eval();						// compute/evaluate object
-	virtual Sym* eq(Sym*);				// A = B
-	virtual Sym* at(Sym*);				// A @ B
-	virtual Sym* dot(Sym*);				// A . B
+// ----------------------------------------------------------------- operators
+	virtual Sym* eq(Sym*);				// A = B	assignment
+	virtual Sym* at(Sym*);				// A @ B	apply
+	virtual Sym* dot(Sym*);				// A . B	index
 };
 										// == writers ==
 extern void W(Sym*);
@@ -66,4 +78,4 @@ extern void yyerror(string);
 #include "mingw32.hpp"
 #endif
 
-#endif // _H_GUI
+#endif // _H_bI

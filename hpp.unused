@@ -1,57 +1,3 @@
-#ifndef _H_bI
-#define _H_bI
-														// == metainfo constants
-
-#define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
-#define LICENSE "http://www.gnu.org/copyleft/lesser.html"
-#define GITHUB "https://github.com/ponyatov/Y/tree/dev"
-#define AUTOGEN "/***** DO NOT EDIT: this file was autogened by bI *****/"
-#define LOGO "logo64x64"
-#define LISPLOGO "warning64x64"
-														// == std.includes ==
-#include <iostream>
-#include <sstream>
-#include <cstdlib>
-#include <cstdio>
-#include <cassert>
-#include <vector>
-#include <map>
-#ifdef __MINGW32__
-#include <direct.h>		// win32
-#else
-#include <sys/stat.h>	// linux
-#endif
-
-struct AST {											// == AST symbolic type ==
-// -------------------------------------------------------------------------------
-	std::string tag;									// class/type tag
-	std::string val;									// value
-// -------------------------------------------------------------------------------
-	AST(std::string,std::string);						// <T:V> constructor
-	AST(AST*);											// copy constructor
-// -------------------------------------------------------------------------------
-	std::vector<AST*> nest;								// nest[]ed elements
-	void push(AST*);									// push nested as stack
-// -------------------------------------------------------------------------------
-	std::map<std::string,AST*> par;						// par{}ameters
-	void setpar(AST*);									// add/set parameter
-// -------------------------------------------------------------------------------
-	std::string dump(int depth=0);						// recursive dump(+1)
-	virtual std::string tagval();						// <tag:val> header
-	std::string pad(int);								// padding string
-// -------------------------------------------------------------------------------
-	virtual AST* eval();								// compute/evaluate
-// ------------------------------------------------------- operators
-	virtual AST* eq(AST*);								// A = B  assignment
-	virtual AST* at(AST*);								// A @ B  apply
-	virtual AST* dot(AST*);								// A . B  index
-	virtual AST* neg();									// -A     negate
-	virtual AST* add(AST*);								// A + B  \ arithmetic
-	virtual AST* sub(AST*);								// A - B
-	virtual AST* mul(AST*);								// A * B
-	virtual AST* div(AST*);								// A / B
-	virtual AST* pow(AST*);								// A ^ B  /
-};
 
 extern std::map<std::string,AST*> env;					// == global environment ==
 extern void env_init();									// init env[] on startup
@@ -100,4 +46,3 @@ struct Fn:AST { Fn(std::string,FN); FN fn; };			// internal function
 #include "mingw32.hpp"									// win32/MinGW
 #endif
 
-#endif // _H_bI
