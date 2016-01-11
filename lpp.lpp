@@ -6,17 +6,30 @@ string StringLexBuffer;				/* string parsing buffer */
 %option yylineno
 									/* lexer state: string parsing mode */
 %x lexstring
+									/* lexer state: #| block comment |# */
+%x lexcomment
 									/* optional number sign */
 S [\+\-]?
 									/* decimal number digit(s) */
 N [0-9]+
 %%
-#[^\n]*\n			{}				/* line comment */
+#[^\|][^\n]*\n		{}						/* line comment */
+#\|					{BEGIN(lexcomment);}	/* block comment*/
+<lexcomment>\|#		{BEGIN(INITIAL);}
+<lexcomment>\n		{}
+<lexcomment>.		{}
 
 '					{BEGIN(lexstring);StringLexBuffer="";}	/* string parser */
 <lexstring>'		{BEGIN(INITIAL);
 					yylval.o = new Str(StringLexBuffer); return STR; }
 <lexstring>.		{StringLexBuffer+=yytext[0];}
+
+									/* numbers: */
+{S}{N}				TOC(Int,NUM)	/* integer */
+0x[0-9A-F]+			TOC(Hex,NUM)	/* machine hex */
+0b[01]+				TOC(Bin,NUM)	/* machine binary */
+{S}{N}\.{N}			TOC(Num,NUM)	/* float */
+{S}{N}[eE]{S}{N}	TOC(Num,NUM)	/* exponential */
 
 [a-zA-Z0-9_]+		TOC(Sym,SYM)	/* symbol */
 
