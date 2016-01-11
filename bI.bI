@@ -1,3 +1,3 @@
-.inc test.bI
+#.inc test.bI
 
 A=11 A
