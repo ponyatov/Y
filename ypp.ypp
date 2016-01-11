@@ -12,6 +12,8 @@
 %type <o> pair tuple				/* pa:ir tu,ple */
 
 %left COMMA
+%left DOC
+%left COLON
 %%
 bI		: | bI ex				{ W($2); W("\n------");
 								W($2->eval()); W("\n=======\n"); } ;
