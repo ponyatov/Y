@@ -1,103 +1,69 @@
-#ifndef _H_bI
-#define _H_bI
-														// == metainfo constants
-
-#define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
-#define LICENSE "http://www.gnu.org/copyleft/lesser.html"
-#define GITHUB "https://github.com/ponyatov/Y/tree/dev"
-#define AUTOGEN "/***** DO NOT EDIT: this file was autogened by bI *****/"
-#define LOGO "logo64x64"
-#define LISPLOGO "warning64x64"
-														// == std.includes ==
+#ifndef _H_GUI
+#define _H_GUI
+										// == std.includes ==
 #include <iostream>
-#include <sstream>
 #include <cstdlib>
-#include <cstdio>
-#include <cassert>
 #include <vector>
 #include <map>
-#ifdef __MINGW32__
-#include <direct.h>		// win32
-#else
-#include <sys/stat.h>	// linux
-#endif
+using namespace std;
 
-struct AST {											// == AST symbolic type ==
-// -------------------------------------------------------------------------------
-	std::string tag;									// class/type tag
-	std::string val;									// value
-// -------------------------------------------------------------------------------
-	AST(std::string,std::string);						// <T:V> constructor
-	AST(AST*);											// copy constructor
-// -------------------------------------------------------------------------------
-	std::vector<AST*> nest;								// nest[]ed elements
-	void push(AST*);									// push nested as stack
-// -------------------------------------------------------------------------------
-	std::map<std::string,AST*> par;						// par{}ameters
-	void setpar(AST*);									// add/set parameter
-// -------------------------------------------------------------------------------
-	std::string dump(int depth=0);						// recursive dump(+1)
-	virtual std::string tagval();						// <tag:val> header
-	std::string pad(int);								// padding string
-// -------------------------------------------------------------------------------
-	virtual AST* eval();								// compute/evaluate
-// ------------------------------------------------------- operators
-	virtual AST* eq(AST*);								// A = B  assignment
-	virtual AST* at(AST*);								// A @ B  apply
-	virtual AST* dot(AST*);								// A . B  index
-	virtual AST* neg();									// -A     negate
-	virtual AST* add(AST*);								// A + B  \ arithmetic
-	virtual AST* sub(AST*);								// A - B
-	virtual AST* mul(AST*);								// A * B
-	virtual AST* div(AST*);								// A / B
-	virtual AST* pow(AST*);								// A ^ B  /
+struct Sym {							// == abstract symbolic type (AST) ==
+// ---------------------------------------------------------------------------
+	string tag;							// data type / class
+	string val;							// symbol value
+// ---------------------------------------------------------------------------
+	Sym(string,string);					// <T:V> constructor
+	Sym(string);						// token constructor
+	Sym(Sym*);							// copy constructor
+// ---------------------------------------------------------------------------
+	vector<Sym*> nest;					// nest[]ed
+	void push(Sym*);					// add nested element
+// ---------------------------------------------------------------------------
+	map<string,Sym*> par;				// par{}ameters
+	void setpar(Sym*);					// add parameter
+// ---------------------------------------------------------------------------
+	string dump(int depth=0);			// dump symbol
+	string pad(int);					// tab padding
+	virtual string tagval();			// <T:V> header string
+// ---------------------------------------------------------------------------
+	Sym* eval();						// compute/evaluate object
+	virtual Sym* eq(Sym*);				// A = B
+	virtual Sym* at(Sym*);				// A @ B
+	virtual Sym* dot(Sym*);				// A . B
 };
+										// == writers ==
+extern void W(Sym*);
+extern void W(string);
+										// == environment ==
+extern map<string,Sym*> env;
+extern void env_init();
+extern void fn_init();
+										// == scalars ==
+struct Str:Sym { Str(string);			// string
+	string tagval(); };
+struct Int:Sym { Int(string);			// integer
+	long val; };
+struct Num:Sym { Num(string);			// floating number
+	double val; };
+										// == composites ==
+struct List:Sym { List(); };			// [list]
+struct Pair:Sym { Pair(Sym*,Sym*); };	// pa:ir
 
-extern std::map<std::string,AST*> env;					// == global environment ==
-extern void env_init();									// init env[] on startup
-extern void fn_init();									// internal functions 
+										// == functionals ==
+struct Op:Sym { Op(string); };			// operator
+struct Lambda:Sym { Lambda(); };		// {la:mbda}
 
-extern void W(AST*);									// == writers ==
-extern void W(std::string);
-														// == lexer interface ==
-extern int yylex();										// parse next token
-extern int yylineno;									// current source line
-extern char* yytext;									// found token text
-#define TOC(C,X) { yylval.o = new C(yytext); return X; }// token macro used in lexer
-
-														// == parser interface ==
-extern int yyparse();									// run parser
-extern void yyerror(std::string);						// error callback
-#include "ypp.tab.hpp"									// token defines for lexer
-
-														// == specials ==
-extern AST* nil;										// nil
-
-														// == scalars ==
-struct Sym:AST { Sym(std::string); };					// generic symbol
-struct Str:AST { Str(std::string); 						// string
-	std::string tagval(); };
-struct Int:AST { Int(std::string); long   val;			// integer
-	std::string tagval(); AST*neg(); };
-struct Hex:AST { Hex(std::string); };					// hex machine number
-struct Bin:AST { Bin(std::string); };					// binary machine number
-struct Num:AST { Num(std::string); double val;			// floating point number
-	std::string tagval(); AST*neg(); };
-														// == composites ==
-struct List:AST { List(); };							// [list]
-struct Vector:AST { Vector(); };						// <vector>
-struct Pair:AST { Pair(AST*,AST*); };					// pa:ir
-struct Tuple:AST { Tuple(AST*,AST*); };					// tu,ple
-
-														// == functionals ==
-struct Op:AST { Op(std::string); AST* eval(); };		// operator
-struct Lambda:AST { Lambda(); };						// {lambda}
-typedef AST*(*FN)(AST*);								// function ptr
-struct Fn:AST { Fn(std::string,FN); FN fn; };			// internal function
-
-														// == OS specific ==
+										// == lexer/parser interface ==
+extern int yylex();
+extern int yylineno;
+extern char* yytext;
+extern int yyparse();
+extern void yyerror(string);
+#define TOC(C,X) { yylval.o = new C(yytext); return X; }
+#include "ypp.tab.hpp"
+										// == OS specific ==
 #ifdef __MINGW32__
-#include "mingw32.hpp"									// win32/MinGW
+#include "mingw32.hpp"
 #endif
 
-#endif // _H_bI
+#endif // _H_GUI
