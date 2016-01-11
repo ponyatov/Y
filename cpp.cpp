@@ -8,17 +8,13 @@ int main() { env_init(); return yyparse(); }			// == main() ==
 void W(Sym*o)		{ cout<<o->dump(); }				// == writers ==
 void W(string s)	{ cout<<s; }
 
-										// == abstract symbolic type (AST) ==
+											// == abstract symbolic type (AST) ==
 
 Sym::Sym(string T,string V)		{ tag=T; val=V; }		// <T:V> constructor
 Sym::Sym(string V):Sym("sym",V)	{}						// token constructor
 
 void Sym::push(Sym*o)			{ nest.push_back(o); }	// add nest[]ed element
 void Sym::setpar(Sym*o)			{ par[o->val]=o; }		// add par{}ameter
-
-bool Sym::haskey(string s) {							// scan for key exists
-	if (par.count(s)) return true; else return false;
-}
 
 string Sym::pad(int n)	{ string S; for (int i=0;i<n;i++) S+="\t"; return S; }
 string Sym::tagval()	{ return "<"+tag+":"+val+">"; }	// <T:V> header string
@@ -42,13 +38,10 @@ Sym* Sym::eq(Sym*o)		{ env[o->val]=o; return o; }
 Sym* Sym::at(Sym*o)		{ push(o); return this; }
 Sym* Sym::dot(Sym*o)	{ setpar(o); return this; }
 
-string Directive::tagval() { return "<"+tag+":'"+val+"'>"; }
 Directive::Directive(string V):Sym("",V) {				// == .directive ==
-	while (val.size() && (val[0]!=' ' && val[0]!='\t')) {
-		tag += val[0]; val.erase(0,1); }
-	while (val.size() && (val[0]==' ' || val[0]=='\t')) {
-		               val.erase(0,1); }
 }
+string Directive::tagval() { return "<"+tag+":'"+val+"'>"; }
+
 														// == specials ==
 Sym* nil = new Sym("nil","");							// nil
 
@@ -65,57 +58,47 @@ void env_init() {										// init on startup
 	// functions
 	fn_init();
 }
+
 														// == scalars ==
 														// == string ==
 Str::Str(string V):Sym("str",V) {}
-string Str::tagval()			{ return "<"+tag+":'"+val+"'>"; }
-
+//string Str::tagval()			{ return "<"+tag+":'"+val+"'>"; }
+														// == machine numbers ==
+Hex::Hex(string V):Sym("hex",V) {}						// hexadecimal
+Bin::Bin(string V):Sym("bin",V) {}						// binary
 														// == integer ==
 Int::Int(string V):Sym("int","") { val = atoi(V.c_str()); }
 string Int::tagval() {
 	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
-
 														// == floating number ==
 Num::Num(string V):Sym("num","") { val = atof(V.c_str()); }
 string Num::tagval() {
 	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
 
-														// == machine numbers ==
-Hex::Hex(string V):Sym("hex",V) {}						// hexadecimal
-Bin::Bin(string V):Sym("bin",V) {}						// binary
 
 														// == composites ==
 List::List():Sym("[","]") {}							// [list]
 Pair::Pair(Sym*A,Sym*B):Sym(A->val,B->val) {}			// pa:ir
 Tuple::Tuple(Sym*A,Sym*B):Sym(",",",") {				// tu,ple
-	push(A); push(B); }
+push(A); push(B); }
 Vector::Vector():Sym("","") {}							// <vector>
 
 														// == functionals ==
 Op::Op(string V):Sym("op",V) {}							// operator
 Sym* Op::eval() {
-	Sym::eval();										// nest[]ed evaluate
+//	Sym::eval();										// nest[]ed evaluate
 	if (nest.size()==2) {								// A op B bin.operator
 		if (val=="=") return nest[0]->eq(nest[1]);
-		if (val=="@") return nest[0]->at(nest[1]);
-		if (val==".") return nest[0]->dot(nest[1]);
+//		if (val=="@") return nest[0]->at(nest[1]);
+//		if (val==".") return nest[0]->dot(nest[1]);
 	}
 	return this;
 }
-
-Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
-
 Fn::Fn(string V, FN F):Sym("fn",V) { fn=F; }			// == function ==
 Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
+Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
 
-														// == GUI ==
-
-Sym* window(Sym*o) { return new Window(o); }				// constructor fn
-string Window::tagval() { return "<"+tag+":'"+val+"'>"; }
-Sym* Window::dot(Sym*o) { Sym::eval();
-//	if (o->val=="show") show();
-	return this; }
 
 void fn_init() {							// == register internal functions ==
-	env["window"] = new Fn("window",window);
+//	env["window"] = new Fn("window",window);
 }

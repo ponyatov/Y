@@ -1,6 +1,13 @@
-														// == scalars ==
-struct Int:AST { Int(std::string); long   val;			// integer
-	std::string tagval(); AST*neg(); };
-struct Num:AST { Num(std::string); double val;			// floating point number
-	std::string tagval(); AST*neg(); };
+	bool haskey(string);				// check if parameter exists
+	virtual Sym* at(Sym*);				// A @ B	apply
+	virtual Sym* dot(Sym*);				// A . B	index
+};
 
+
+	void show(); void hide();
+	string tagval(); Sym*dot(Sym*); };
+
+										// == OS specific ==
+#ifdef __MINGW32__
+#include "mingw32.hpp"					// win32/MinGW
+#endif

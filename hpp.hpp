@@ -32,7 +32,6 @@ struct Sym {							// == abstract symbolic type (AST) ==
 // ---------------------------------------------------------------------------
 	map<string,Sym*> par;				// par{}ameters
 	void setpar(Sym*);					// add parameter
-	bool haskey(string);				// check if parameter exists
 // ---------------------------------------------------------------------------
 	string dump(int depth=0);			// dump symbol object
 	string pad(int);					// tab padding
@@ -52,19 +51,32 @@ extern map<string,Sym*> env;			// == global environment ==
 extern void env_init();					// init env[] on startup
 extern void fn_init();					// register internal functions
 
+// == lexer interface ==
+extern int yylex();						// parse next token
+extern int yylineno;					// current source line
+extern char* yytext;					// found token text
+#define TOC(C,X) { yylval.o = new C(yytext); return X; }// token macro used in lexer
+
+// == parser interface ==
+extern int yyparse();					// run parser
+extern void yyerror(std::string);		// error callback
+#include "ypp.tab.hpp"					// token defines for lexer
+
 struct Directive:Sym { Directive(string);// == .directive ==
 	string tagval(); };
 										// == specials ==
 extern Sym* nil;						// nil
+
 										// == scalars ==
 struct Str:Sym { Str(string);			// string
-	string tagval(); };
-struct Int:Sym { Int(string);			// integer
-	long val; string tagval(); };
+};//	longstring tagval(); };
 struct Hex:Sym { Hex(string); };		// hexadecimal machine number
 struct Bin:Sym { Bin(string); };		// binary machine number
+struct Int:Sym { Int(string);			// integer
+	long val; string tagval(); };
 struct Num:Sym { Num(string);			// floating number
 	double val; string tagval(); };
+
 										// == composites ==
 struct List:Sym { List(); };			// [list]
 struct Pair:Sym { Pair(Sym*,Sym*); };	// pa:ir
@@ -80,25 +92,10 @@ typedef Sym*(*FN)(Sym*);				// function ptr
 struct Fn:Sym { Fn(string,FN); 			// internal/dyncompiled function
 	FN fn; Sym*at(Sym*); };
 
-										// == lexer interface ==
-extern int yylex();						// parse next token
-extern int yylineno;					// current source line
-extern char* yytext;					// found token text
-#define TOC(C,X) { yylval.o = new C(yytext); return X; }// token macro used in lexer
-
-										// == parser interface ==
-extern int yyparse();					// run parser
-extern void yyerror(std::string);		// error callback
-#include "ypp.tab.hpp"					// token defines for lexer
 
 										// == GUI ==
 struct Window:Sym { Window(Sym*); 		// window
-	void show(); void hide();
-	string tagval(); Sym*dot(Sym*); };
-
-										// == OS specific ==
-#ifdef __MINGW32__
-#include "mingw32.hpp"					// win32/MinGW
-#endif
+	void show();
+};
 
 #endif // _H_bI
