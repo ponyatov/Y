@@ -1,5 +1,0 @@
-
-Sym* Window::dot(Sym*o) { Sym::eval();
-//	if (o->val=="show") show();
-	return this; }
-
