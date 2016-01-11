@@ -1,9 +1,5 @@
-%token <o> DOC						/* "docstring" */
-%token <o> LL GG					/* < > */
-%token <o> COMMA					/* , */
 %token <o> ADD SUB MUL DIV POW		/* + - * / ^ */
 %token <o> ADDEQ					/* += */
-%type <o> vector tuple				/* <vector> tu,ple */
 
 %left EQ AT DOC COMMA COLON
 %left ADD SUB
@@ -11,12 +7,9 @@
 %left POW
 %left LP RP LQ RQ LB RB
 %left PFX
-%%
-ex : scalar | pair | tuple
-	| ex DOC			{ $$=$1; $$->par["doc"]=$2; }
+
 	| ADD ex %prec PFX	{ $$=$2; }
 	| SUB ex %prec PFX	{ $$=$2->neg(); }
-	| LL vector GG		{ $$=$2; }
 	| ex EQ ex			{ $$=$2; $$->push($1); $$->push($3); }
 	| ex DOT ex			{ $$=$2; $$->push($1); $$->push($3); }
 	| ex ADD ex			{ $$=$2; $$->push($1); $$->push($3); }
@@ -25,11 +18,3 @@ ex : scalar | pair | tuple
 	| ex DIV ex			{ $$=$2; $$->push($1); $$->push($3); }
 	| ex POW ex			{ $$=$2; $$->push($1); $$->push($3); }
 	| ex LP tuple RP	{ $$=new Op("@"); $$->push($1); $$->push($3); }
-;
-tuple : ex COMMA ex		{ $$=new Tuple($1,$3); }
-	| tuple COMMA ex	{ $$=$1; $$->push($3); }
-;
-vector :				{ $$=new Vector(); }
-	| vector ex			{ $$=$1; $$->push($2); }
-;
-%%

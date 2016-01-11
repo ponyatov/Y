@@ -1,6 +1,6 @@
 #ifndef _H_bI
 #define _H_bI
-										// == metainfo constants
+										// == metainfo constants ==
 
 #define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"
@@ -33,7 +33,7 @@ struct Sym {							// == abstract symbolic type (AST) ==
 	map<string,Sym*> par;				// par{}ameters
 	void setpar(Sym*);					// add parameter
 // ---------------------------------------------------------------------------
-	string dump(int depth=0);			// dump symbol
+	string dump(int depth=0);			// dump symbol object
 	string pad(int);					// tab padding
 	virtual string tagval();			// <T:V> header string
 // ---------------------------------------------------------------------------
@@ -43,39 +43,55 @@ struct Sym {							// == abstract symbolic type (AST) ==
 	virtual Sym* at(Sym*);				// A @ B	apply
 	virtual Sym* dot(Sym*);				// A . B	index
 };
-										// == writers ==
-extern void W(Sym*);
+
+extern void W(Sym*);					// == writers ==
 extern void W(string);
-										// == environment ==
-extern map<string,Sym*> env;
-extern void env_init();
-extern void fn_init();
+
+extern map<string,Sym*> env;			// == global environment ==
+extern void env_init();					// init env[] on startup
+extern void fn_init();					// register internal functions
+
+struct Directive:Sym { Directive(string);// == .directive ==
+	string tagval(); };
+										// == specials ==
+extern Sym* nil;						// nil
 										// == scalars ==
 struct Str:Sym { Str(string);			// string
 	string tagval(); };
 struct Int:Sym { Int(string);			// integer
-	long val; };
+	long val; string tagval(); };
+struct Hex:Sym { Hex(string); };		// hexadecimal machine number
+struct Bin:Sym { Bin(string); };		// binary machine number
 struct Num:Sym { Num(string);			// floating number
-	double val; };
+	double val; string tagval(); };
 										// == composites ==
 struct List:Sym { List(); };			// [list]
 struct Pair:Sym { Pair(Sym*,Sym*); };	// pa:ir
+struct Vector:Sym { Vector(); };		// <vector>
+struct Tuple:Sym { Tuple(); 			// tu,ple
+	Tuple(Sym*,Sym*); };
 
 										// == functionals ==
 struct Op:Sym { Op(string); };			// operator
 struct Lambda:Sym { Lambda(); };		// {la:mbda}
+typedef Sym*(*FN)(Sym*);				// function ptr
+struct Fn:Sym { Fn(string,FN); 			// internal/dyncompiled function
+	FN fn; };
 
-										// == lexer/parser interface ==
-extern int yylex();
-extern int yylineno;
-extern char* yytext;
-extern int yyparse();
-extern void yyerror(string);
-#define TOC(C,X) { yylval.o = new C(yytext); return X; }
-#include "ypp.tab.hpp"
+										// == lexer interface ==
+extern int yylex();						// parse next token
+extern int yylineno;					// current source line
+extern char* yytext;					// found token text
+#define TOC(C,X) { yylval.o = new C(yytext); return X; }// token macro used in lexer
+
+										// == parser interface ==
+extern int yyparse();					// run parser
+extern void yyerror(std::string);		// error callback
+#include "ypp.tab.hpp"					// token defines for lexer
+
 										// == OS specific ==
 #ifdef __MINGW32__
-#include "mingw32.hpp"
+#include "mingw32.hpp"					// win32/MinGW
 #endif
 
 #endif // _H_bI

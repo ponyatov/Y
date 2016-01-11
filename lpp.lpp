@@ -1,11 +1,15 @@
 %{
 #include "hpp.hpp"
 string StringLexBuffer;				/* string parsing buffer */
+void incLude(Sym*inc) {				/* .inc processing */
+	if (!(yyin = fopen(inc->val.c_str(),"r"))) yyerror("");		// open
+	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));	// push to lexer
+}
 %}
 %option noyywrap
 %option yylineno
 									/* lexer state: string parsing mode */
-%x lexstring
+%x lexstring docstring
 									/* lexer state: #| block comment |# */
 %x lexcomment
 									/* optional number sign */
@@ -24,6 +28,15 @@ N [0-9]+
 					yylval.o = new Str(StringLexBuffer); return STR; }
 <lexstring>.		{StringLexBuffer+=yytext[0];}
 
+\"					{BEGIN(docstring);StringLexBuffer="";}	/* docstring */
+<docstring>\"		{BEGIN(INITIAL);
+					yylval.o = new Str(StringLexBuffer); return DOC; }
+<docstring>.		{StringLexBuffer+=yytext[0];}
+
+^\.inc[ \t]+[^\n]+	{ yylval.o = new Directive(yytext);	/* .inc lude */
+					incLude(yylval.o); return DIR; }
+^\.[a-z]+[^\n]*		TOC(Directive,DIR)	/* .directive */
+
 									/* numbers: */
 {S}{N}				TOC(Int,NUM)	/* integer */
 0x[0-9A-F]+			TOC(Hex,NUM)	/* machine hex */
@@ -40,12 +53,18 @@ N [0-9]+
 \]					TOC(Op,RQ)
 \{					TOC(Op,LB)
 \}					TOC(Op,RB)
+\<					TOC(Op,LL)
+\>					TOC(Op,GG)
 									/* operators */
 \=					TOC(Op,EQ)							
 \@					TOC(Op,AT)
 \.					TOC(Op,DOT)
+\,					TOC(Op,COMMA)
 \:					TOC(Op,COLON)
 
 [ \t\r\n]+			{}				/* drop spaces */
 .					{}				/* drop undetected chars */
+
+<<EOF>>				{ yypop_buffer_state();			/* end of .inluded file */
+					if (!YY_CURRENT_BUFFER) yyterminate();}
 %%

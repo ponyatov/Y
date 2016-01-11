@@ -2,6 +2,7 @@
 " Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 " GitHub: https://github.com/ponyatov/Y
 
+syntax match  Todo      "\v^\.[a-z]+"						" .directive
 syntax match  Comment	"\v#.*"								" # line comment
 syntax region Comment	start="#|" end="|#"					" #|block comment|#
 

@@ -1,26 +1,6 @@
-%{
-void incFile(AST* inc) {								/* .include processing */
-	yyin = fopen(inc->val.c_str(),"r");
-	if (!yyin) yyerror(inc->tagval());
-	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));
-}
-%}
-%x lexdoc
-
-\"					{BEGIN(lexdoc);StringLexBuffer="";}	/* docstring parser */
-<lexdoc>\"			{BEGIN(INITIAL);
-					yylval.o = new Str(StringLexBuffer); return DOC; }
-<lexdoc>.			{StringLexBuffer+=yytext[0];}
-
-\,					TOC(Op,COMMA)
-
 \+					TOC(Op,ADD)
 \-					TOC(Op,SUB)
 \*					TOC(Op,MUL)
 \/					TOC(Op,DIV)
 \^					TOC(Op,POW)
 
-<<EOF>>				{ yypop_buffer_state();				/* end of .inluded file */
-					if ( !YY_CURRENT_BUFFER )
-						yyterminate();}
-%%
