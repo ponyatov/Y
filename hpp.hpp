@@ -32,12 +32,13 @@ struct Sym {							// == abstract symbolic type (AST) ==
 // ---------------------------------------------------------------------------
 	map<string,Sym*> par;				// par{}ameters
 	void setpar(Sym*);					// add parameter
+	bool haskey(string);				// check if parameter exists
 // ---------------------------------------------------------------------------
 	string dump(int depth=0);			// dump symbol object
 	string pad(int);					// tab padding
 	virtual string tagval();			// <T:V> header string
 // ---------------------------------------------------------------------------
-	Sym* eval();						// compute/evaluate object
+	virtual Sym* eval();				// compute/evaluate object
 // ----------------------------------------------------------------- operators
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
@@ -72,11 +73,12 @@ struct Tuple:Sym { Tuple(); 			// tu,ple
 	Tuple(Sym*,Sym*); };
 
 										// == functionals ==
-struct Op:Sym { Op(string); };			// operator
+struct Op:Sym { Op(string); 			// operator
+	Sym* eval(); };
 struct Lambda:Sym { Lambda(); };		// {la:mbda}
 typedef Sym*(*FN)(Sym*);				// function ptr
 struct Fn:Sym { Fn(string,FN); 			// internal/dyncompiled function
-	FN fn; };
+	FN fn; Sym*at(Sym*); };
 
 										// == lexer interface ==
 extern int yylex();						// parse next token
@@ -88,6 +90,11 @@ extern char* yytext;					// found token text
 extern int yyparse();					// run parser
 extern void yyerror(std::string);		// error callback
 #include "ypp.tab.hpp"					// token defines for lexer
+
+										// == GUI ==
+struct Window:Sym { Window(Sym*); 		// window
+	void show(); void hide();
+	string tagval(); Sym*dot(Sym*); };
 
 										// == OS specific ==
 #ifdef __MINGW32__

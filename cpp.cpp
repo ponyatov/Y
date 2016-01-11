@@ -16,6 +16,10 @@ Sym::Sym(string V):Sym("sym",V)	{}						// token constructor
 void Sym::push(Sym*o)			{ nest.push_back(o); }	// add nest[]ed element
 void Sym::setpar(Sym*o)			{ par[o->val]=o; }		// add par{}ameter
 
+bool Sym::haskey(string s) {							// scan for key exists
+	if (par.count(s)) return true; else return false;
+}
+
 string Sym::pad(int n)	{ string S; for (int i=0;i<n;i++) S+="\t"; return S; }
 string Sym::tagval()	{ return "<"+tag+":"+val+">"; }	// <T:V> header string
 string Sym::dump(int depth) {							// dump symbol object
@@ -89,7 +93,29 @@ Vector::Vector():Sym("","") {}							// <vector>
 
 														// == functionals ==
 Op::Op(string V):Sym("op",V) {}							// operator
+Sym* Op::eval() {
+	Sym::eval();										// nest[]ed evaluate
+	if (nest.size()==2) {								// A op B bin.operator
+		if (val=="=") return nest[0]->eq(nest[1]);
+		if (val=="@") return nest[0]->at(nest[1]);
+		if (val==".") return nest[0]->dot(nest[1]);
+	}
+	return this;
+}
+
 Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
 
+Fn::Fn(string V, FN F):Sym("fn",V) { fn=F; }			// == function ==
+Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
+
+														// == GUI ==
+
+Sym* window(Sym*o) { return new Window(o); }				// constructor fn
+string Window::tagval() { return "<"+tag+":'"+val+"'>"; }
+Sym* Window::dot(Sym*o) { Sym::eval();
+//	if (o->val=="show") show();
+	return this; }
+
 void fn_init() {							// == register internal functions ==
+	env["window"] = new Fn("window",window);
 }
