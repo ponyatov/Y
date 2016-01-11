@@ -3,7 +3,7 @@
 " GitHub: https://github.com/ponyatov/Y
 
 syntax match  Comment	"\v#.*"								" # line comment
-syntax region Comment	start="#|" end="|#"					" #| block comment |#
+syntax region Comment	start="#|" end="|#"					" #|block comment|#
 
 syntax match  Constant	"\v[\+\-]?[0-9]+"					" integer
 syntax match  Constant	"\v[\+\-]?[0-9]+\.[0-9]+"			" floating point
@@ -12,10 +12,10 @@ syntax match  Constant	"\v0x[0-9A-F]+"						" hex
 syntax match  Constant	"\v0b[01]+"							" bin
 syntax region String	start="'" end="'"					" 'string'
 syntax region Special	start="\"" end="\""					" "docstring"
-syntax match  Keyword	"\v[a-zA-Z_]+"						" symbol
+														" symbols not colored
 
-syntax match  Type		"\v[\+\-\*\/\^\@]"					" operator
-syntax match  Type		"\v[\[\]\(\)\<\>\:\=]"				" bracket
-syntax match  Keyword	"\v[\{\}]"							" lambda
+syntax match  Keyword	"\v[\+\-\*\/\^]"					" operator
+syntax match  Type		"\v[\[\]\(\)\<\>\:\=]"				" brackets
+syntax match  Keyword	"\v[\{\}\@]"						" lambda coloring
 
 let b:current_syntax = "bI"
