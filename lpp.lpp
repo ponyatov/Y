@@ -31,6 +31,7 @@ N [0-9]+
 \=					TOC(Op,EQ)							
 \@					TOC(Op,AT)
 \.					TOC(Op,DOT)
+\:					TOC(Op,COLON)
 
 [ \t\r\n]+			{}				/* drop spaces */
 .					{}				/* drop undetected chars */

@@ -27,7 +27,6 @@ void incFile(AST* inc) {								/* .include processing */
 <lexdoc>.			{StringLexBuffer+=yytext[0];}
 
 \,					TOC(Op,COMMA)
-\:					TOC(Op,COLON)
 
 \+					TOC(Op,ADD)
 \-					TOC(Op,SUB)
