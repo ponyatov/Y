@@ -1,1 +1,1 @@
-( winMain "main GUI window" = window @ 'GUI script' .MDI ) @ show
+( winMain "main GUI window" = window @ MODULE .MDI ) @ show
