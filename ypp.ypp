@@ -7,25 +7,26 @@
 %token <o> LP RP LQ RQ LB RB LL GG	/* parens: ( ) [ ] { } < > */
 %token <o> EQ AT DOT				/* operators: = @ . */
 %token <o> COMMA COLON				/* , . */
-%type <o> ex scalar op				/* expression scalar operator */
+%type <o> ex scalar 				/* expression scalar */
 %type <o> list lambda vector		/* [list] {la:mbda} <vec,tor> */
 %type <o> pair tuple				/* pa:ir tu,ple */
 
-%left COMMA
-%left DOC
-%left COLON
+%left EQ
+%left DOT
+%left AT
 %%
 bI		: | bI ex				{ W($2); W("\n------");
 								W($2->eval()); W("\n=======\n"); } ;
 scalar	: SYM | NUM | STR ;
-op		: EQ | AT | DOT ;
 ex		: scalar | pair | tuple | DIR
 		| ex DOC				{ $$=$1; $$->par["doc"]=$2; }
 		| LP ex RP				{ $$=$2; }
 		| LQ list RQ			{ $$=$2; }
 		| LB lambda RB			{ $$=$2; }
 		| LL vector GG			{ $$=$2; }
-		| ex op ex				{ $$=$2; $$->push($1); $$->push($3); }
+		| ex EQ ex				{ $$=$2; $$->push($1); $$->push($3); }
+		| ex AT ex				{ $$=$2; $$->push($1); $$->push($3); }
+		| ex DOT ex				{ $$=$2; $$->push($1); $$->push($3); }
 ;
 pair	: ex COLON ex			{ $$=new Pair($1,$3); }
 ;
