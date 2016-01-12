@@ -10,7 +10,7 @@ clean:
 	rm -rf ./$(MODULE)$(EXE) *.*log ypp.tab.?pp lex.yy.c $(RES)
 C = cpp.cpp $(OS).cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp $(OS).hpp ypp.tab.hpp
-CXXFLAGS += -I. -std=gnu++11
+CXXFLAGS += -I. -std=gnu++11 -DMODULE=\"$(MODULE)\"
 ./$(MODULE)$(EXE): $(C) $(H) $(RES) Makefile
 	$(CXX) $(CXXFLAGS) -o $@ $(C) $(RES)
 ypp.tab.cpp: ypp.ypp

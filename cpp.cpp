@@ -53,6 +53,7 @@ map<string,Sym*> env;									// == environment ==
 void env_init() {										// init on startup
 	env["nil"]=nil;
 	// --------------------------------------------------- metainfo constants
+	env["MODULE"]	= new Str(MODULE);			// module name (CFLAGS -DMODULE)
 	env["AUTHOR"]	= new Str(AUTHOR);			// author (c)
 	env["LICENSE"]	= new Str(LICENSE);			// license
 	env["GITHUB"]	= new Str(GITHUB);			// github home
