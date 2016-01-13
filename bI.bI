@@ -1,4 +1,4 @@
-#.inc test.bI
+.inc test.bI
 
 0b1101000111
 

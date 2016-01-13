@@ -1,7 +1,7 @@
 *~
 *.swp
 bI
-bI.exe
+*.exe
 *.*log
 ypp.tab.?pp
 lex.yy.c
