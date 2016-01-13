@@ -71,7 +71,8 @@ extern Sym* nil;						// nil
 struct Str:Sym { Str(string);			// string
 	string tagval(); };
 struct Hex:Sym { Hex(string); };		// hexadecimal machine number
-struct Bin:Sym { Bin(string); };		// binary machine number
+struct Bin:Sym { Bin(string); 			// binary machine number (bit string)
+	vector<bool> val; string tagval(); };
 struct Int:Sym { Int(string);			// integer
 	long val; string tagval(); };
 struct Num:Sym { Num(string);			// floating number

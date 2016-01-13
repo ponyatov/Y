@@ -68,7 +68,16 @@ Str::Str(string V):Sym("str",V) {}
 string Str::tagval()			{ return "<"+tag+":'"+val+"'>"; }
 														// == machine numbers ==
 Hex::Hex(string V):Sym("hex",V) {}						// hexadecimal
-Bin::Bin(string V):Sym("bin",V) {}						// binary
+
+Bin::Bin(string V):Sym("bin","") {						// == binary ==
+	for (auto b : V.substr(2))
+		val.push_back(b == '1');
+}
+string Bin::tagval() {									// bit string to str
+	ostringstream os; os<<"<"<<tag<<":0b";
+	for (auto b:val) os<<b;
+	os<<">"; return os.str();
+}
 														// == integer ==
 Int::Int(string V):Sym("int","") { val = atoi(V.c_str()); }
 string Int::tagval() {
