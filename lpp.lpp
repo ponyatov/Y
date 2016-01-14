@@ -8,17 +8,17 @@ void incLude(Sym*inc) {				/* .inc processing */
 %}
 %option noyywrap
 %option yylineno
-									/* lexer state: string parsing mode */
+										/* lexer state: string parsing mode */
 %x lexstring docstring
-									/* lexer state: #| block comment |# */
+										/* lexer state: #| block comment |# */
 %x lexcomment
-									/* optional number sign */
+										/* optional number sign */
 S [\+\-]?
-									/* decimal number digit(s) */
+										/* decimal number digit(s) */
 N [0-9]+
 %%
-#[^\|][^\n]*\n		{}						/* line comment */
-#\|					{BEGIN(lexcomment);}	/* block comment*/
+#[^\|][^\n]*\n		{}										/* line comment */
+#\|					{BEGIN(lexcomment);}					/* block comment*/
 <lexcomment>\|#		{BEGIN(INITIAL);}
 <lexcomment>\n		{}
 <lexcomment>.		{}
@@ -33,20 +33,22 @@ N [0-9]+
 					yylval.o = new Str(StringLexBuffer); return DOC; }
 <docstring>.		{StringLexBuffer+=yytext[0];}
 
-^\.inc[ \t]+[^\n]+	{ yylval.o = new Directive(yytext);	/* .inc lude */
+^\.inc[ \t]+[^\n]+	{ yylval.o = new Directive(yytext);		/* .inc lude */
 					incLude(yylval.o); return DIR; }
-^\.[a-z]+[^\n]*		TOC(Directive,DIR)	/* .directive */
+^\.[a-z]+[^\n]*		TOC(Directive,DIR)						/* .directive */
 
-									/* numbers: */
-{S}{N}				TOC(Int,NUM)	/* integer */
-0x[0-9A-F]+			TOC(Hex,NUM)	/* machine hex */
-0b[01]+				TOC(Bin,NUM)	/* machine binary */
-{S}{N}\.{N}			TOC(Num,NUM)	/* float */
-{S}{N}[eE]{S}{N}	TOC(Num,NUM)	/* exponential */
+												/* numbers: */
+{S}{N}				TOC(Int,NUM)					/* integer */
+0x[0-9A-F]+			TOC(Hex,NUM)					/* 0x00 \ machine hex */
+[0-9A-F]+[Hh]		TOC(Hex,NUM)					/* 00h  / */
+0b[01]+				TOC(Bin,NUM)					/* 0b00 \ machine binary */
+[01]+[Bb]			TOC(Bin,NUM)					/* 00b  / */
+{S}{N}\.{N}			TOC(Num,NUM)					/* float */
+{S}{N}[eE]{S}{N}	TOC(Num,NUM)					/* exponential */
 
-[a-zA-Z0-9_]+		TOC(Sym,SYM)	/* symbol */
+[a-zA-Z0-9_]+		TOC(Sym,SYM)				/* symbol */
 
-									/* parens */
+												/* parens */
 \(					TOC(Op,LP)
 \)					TOC(Op,RP)
 \[					TOC(Op,LQ)
@@ -55,16 +57,17 @@ N [0-9]+
 \}					TOC(Op,RB)
 \<					TOC(Op,LL)
 \>					TOC(Op,GG)
-									/* operators */
+												/* operators */
 \=					TOC(Op,EQ)							
 \@					TOC(Op,AT)
 \.					TOC(Op,DOT)
 \,					TOC(Op,COMMA)
-\:					TOC(Op,COLON)
+\:					TOC(Op,COLON)	
 
-[ \t\r\n]+			{}				/* drop spaces */
-.					{}				/* drop undetected chars */
+[ \t\r\n]+			{}							/* drop spaces */
+.					{}							/* drop undetected chars */
 
-<<EOF>>				{ yypop_buffer_state();			/* end of .inluded file */
-					if (!YY_CURRENT_BUFFER) yyterminate();}
+<<EOF>>				{ yypop_buffer_state();		/* end of .inluded file */
+					if (!YY_CURRENT_BUFFER)
+						yyterminate();}
 %%
