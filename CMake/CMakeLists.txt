@@ -1,1 +1,2 @@
+project("bI script engine")
 
