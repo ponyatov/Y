@@ -14,8 +14,15 @@ class:Window
 	Window @ Sym -> window:sym.val		# constructor: crerate (hided) window
 	fn:hide								# hide window
 	fn:show								# show window (hided by default)
-	fn:minimize
-	fn:fullscreen
+	callback:paint						# redraw contents
+	callback:close						# window close
+	callback:iconize					
+	callback:maximize					# fullscreen with window decoration
+	callback:fullscreen					# game mode fullscreen
+	callback:create						# on create
+	callback:destroy					# on destroy
+	callback:click						# touch / left mouse click
+	callback:popup						# local popup menu / right mouse click
 \end{verbatim}
 
 \secrel{Group: widget grouping}\secdown

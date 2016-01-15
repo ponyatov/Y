@@ -13,7 +13,7 @@
 #include <sstream>
 #include <cstdlib>
 //#include <cstdio>
-//#include <cassert>
+#include <cassert>
 #include <vector>
 #include <map>
 using namespace std;
