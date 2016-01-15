@@ -1,34 +1,39 @@
-\secrel{AST symbolic data type}\label{ast}\secdown
+\secrel{Sym: Abstract Symbolic Type}\label{ast}\secdown
 
-\bi\ language based on operations on AST \term{symbolic type}:
-[A]bstract [S]yntax [T]ree elements. AST much complicated comparing
-to \lisp\ ceils/lists, but it was selected considering primary \bi\ area:
+\bi\ language based on operations on 
+\termdef{abstract symbolic type}{Abstract [Sym]bolic Type}:
+it's close to classical Abstract Syntax Tree elements, and 
+uses same acronim. 
+For dymanic languages Sym much complicated comparing
+to \lisp\ ceils/lists, and scalar primitive types\note{numbers, strings},
+but it was selected considering primary \bi\ area:
 computer language processing, where annotated AST trees is basic data type.
 
 \bigskip
 \begin{tabular}{l l l}
-\verb|class:AST| &&\\
+\verb|class:Sym| && abstract symbolic type \\
 \hline
 & \verb|string:tag| & type, class tag \\
 & \verb|string:val| & value \\
 \hline
-& \verb|AST(string,string)| & \verb|<T:V>|\ constructor \\
-& \verb|AST(AST)| & copy constructor \\
+& \verb|Sym(string,string)| & \verb|<T:V>|\ constructor \\
+& \verb|Sym(string)| & token constructor \\
+& \verb|Sym(Sym)| & copy constructor \\
 \hline
-& \verb|List<AST>:nest[]| & nested elements \\
-& \verb|fn:push(AST)| & add nested \\
+& \verb|List<Sym>:nest[]| & nested elements \\
+& \verb|fn:push(Sym)| & add nested \\
 \hline
-& \verb|Dict<string,AST>:par[]| & parameters dict (string-keyed list) \\
-& \verb|fn:setpar(AST)| & add/set parameter \\
+& \verb|Dict<string,Sym>:par[]| & parameters dict (string-keyed list) \\
+& \verb|fn:setpar(Sym)| & add/set parameter \\
 \hline
 & \verb|fn:dump(int)->string| & recursive \verb|dump(+1)|\ tree in text
 form (with depth padding) \\
 & \verb|fn:tagval()->string| & dump \verb|<T:V>| header only \\
 & \verb|fn:pad(int)->string| & return padding string: n tabs \\
 \hline
-& \verb|fn:eval()->AST| & compute/evaluate object \\
-operators: & \verb|op:@(AST)->AST| & \verb|A @ B|\ apply \\
-& \verb|op:=(AST)->AST| & \verb|A = B|\ equal \\
+& \verb|fn:eval()->Sym| & compute/evaluate object \\
+operators: & \verb|op:@(Sym)->Sym| & \verb|A @ B|\ apply \\
+& \verb|op:=(Sym)->Sym| & \verb|A = B|\ equal \\
 \end{tabular} 
 
 \lst{hpp.hpp}{tmp/hpp.ast}{C++}
