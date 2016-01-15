@@ -1,4 +1,4 @@
-\secrel{Sym: Abstract Symbolic Type}\label{ast}\secdown
+\secrel{Sym: Abstract Symbolic Type}\label{sym}
 
 \bi\ language based on operations on 
 \termdef{abstract symbolic type}{Abstract [Sym]bolic Type}:
@@ -11,37 +11,37 @@ computer language processing, where annotated AST trees is basic data type.
 
 \bigskip
 \begin{tabular}{l l l}
-\verb|class:Sym| && abstract symbolic type \\
+\verb|class:Sym| && \term{abstract symbolic type} \\
 \hline
 & \verb|string:tag| & type, class tag \\
 & \verb|string:val| & value \\
 \hline
-& \verb|Sym(string,string)| & \verb|<T:V>|\ constructor \\
+\verb|constructors:| & \verb|Sym(string,string)| & \verb|<T:V>|\ constructor \\
 & \verb|Sym(string)| & token constructor \\
 & \verb|Sym(Sym)| & copy constructor \\
 \hline
-& \verb|List<Sym>:nest[]| & nested elements \\
+\verb|nest[]ed:| & \verb|List<Sym>:nest[]| & nested elements \\
 & \verb|fn:push(Sym)| & add nested \\
 \hline
-& \verb|Dict<string,Sym>:par[]| & parameters dict (string-keyed list) \\
+\verb|par{}ameters:| & \verb|Dict<string,Sym>:par[]| & parameters dict (string-keyed list) \\
 & \verb|fn:setpar(Sym)| & add/set parameter \\
 \hline
-& \verb|fn:dump(int)->string| & recursive \verb|dump(+1)|\ tree in text
+\verb|dump:| & \verb|fn:dump(int)->string| & recursive \verb|dump(+1)|\ tree in text
 form (with depth padding) \\
 & \verb|fn:tagval()->string| & dump \verb|<T:V>| header only \\
 & \verb|fn:pad(int)->string| & return padding string: n tabs \\
 \hline
 & \verb|fn:eval()->Sym| & compute/evaluate object \\
-operators: & \verb|op:@(Sym)->Sym| & \verb|A @ B|\ apply \\
+\verb|operators:| & \verb|op:@(Sym)->Sym| & \verb|A @ B|\ apply \\
 & \verb|op:=(Sym)->Sym| & \verb|A = B|\ equal \\
 \end{tabular} 
 
 \lst{hpp.hpp}{tmp/hpp.ast}{C++}
 
-Using \term{virtual base class}\ \verb|AST{}|\ allows to use RTTI and process
+Using \term{virtual base class}\ \verb|Sym{}|\ allows to use RTTI and process
 inherited class instances using pointers to base class, first of all it allows
-to use storage collections \verb|vector<AST*>|\ and
-\verb|map<std::string,AST*>|\ for any objects\note{instances of inherited
+to use storage collections \verb|vector<Sym*>|\ and
+\verb|map<string,Sym*>|\ for any objects\note{instances of inherited
 classes}.  
 
 \secrel{Writers}
@@ -52,4 +52,3 @@ Writer\ --- function writes argument to \bi\ log (\verb|.blog|):
 
 \lst{cpp.cpp}{tmp/cpp.wrt}{C++}
 
-\secup

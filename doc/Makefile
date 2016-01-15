@@ -7,6 +7,15 @@ TEX += ../../texheader/misc.tex
 TEX += intro.tex install.tex warning.tex compiler.tex 
 TEX += files.tex core.tex lexer.tex parser.tex
 TEX += headers.tex cppcore.tex ast.tex makes.tex comment.tex scalars.tex
+TEX += composites.tex
+TEX += func.tex op.tex
+TEX += gui.tex
+TEX += storage.tex
+TEX += network.tex
+TEX += math.tex
+TEX += cad.tex
+TEX += syntax.tex
+TEX += llvm.tex
 
 FIG = tmp/compiler.png tmp/meta.png
 
@@ -16,7 +25,9 @@ LPP = tmp/lpp.head tmp/lpp.opt tmp/lpp.rules tmp/lpp.spaces
 LPP += tmp/lpp.linecomment tmp/lpp.blockcomment
 YPP = tmp/ypp.head
 HPP = tmp/hpp.once tmp/hpp.lex tmp/hpp.pars tmp/hpp.inc tmp/hpp.wrt tmp/hpp.env
+HPP += tmp/hpp.list tmp/hpp.pair tmp/hpp.vector tmp/hpp.tuple
 CPP = tmp/cpp.hdr tmp/cpp.wrt tmp/cpp.err tmp/cpp.main tmp/cpp.env
+CPP += tmp/cpp.list tmp/cpp.pair tmp/cpp.vector tmp/cpp.tuple
 MPP = tmp/mk.mod tmp/mk.clean tmp/mk.ch tmp/mk.cc
 BIP = tmp/bi.linecomment tmp/bi.blockcomment
 

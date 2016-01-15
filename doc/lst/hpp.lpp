@@ -8,6 +8,11 @@ std::ofstream inc("tmp/hpp.inc");
 std::ofstream ast("tmp/hpp.ast");
 std::ofstream wrt("tmp/hpp.wrt");
 std::ofstream env("tmp/hpp.env");
+std::ofstream lst("tmp/hpp.list");
+std::ofstream pir("tmp/hpp.pair");
+std::ofstream vct("tmp/hpp.vector");
+std::ofstream tpl("tmp/hpp.tuple");
+
 %}
 %option main
 %x AST
@@ -21,9 +26,12 @@ std::ofstream env("tmp/hpp.env");
 ^.*==\ std.inc.*\n			{inc<<yytext;}
 ^using.*\n					{inc<<yytext;}
 ^#include\ <.+\n			{inc<<yytext;}
-^struct\ AST				{ast<<yytext; BEGIN(AST);}
-<AST>\};\n					{ast<<yytext; BEGIN(INITIAL);}
-<AST>.*\n					{ast<<yytext;}
 ^.+\ W\(.+\n				{wrt<<yytext;}
 ^.*env.*\n					{env<<yytext;}
 %%
+/*
+^struct\ Sym				{ast<<yytext; BEGIN(AST);}
+<Sym>\};\n					{ast<<yytext; BEGIN(INITIAL);}
+<Sym>\n						{ast<<yytext;}
+<Sym>.						{ast<<yytext;}
+*/

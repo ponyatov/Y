@@ -44,12 +44,12 @@ struct Sym {							// == abstract symbolic type (AST) ==
 	virtual Sym* dot(Sym*);				// A . B	index
 };
 
-extern void W(Sym*);					// == writers ==
+extern void W(Sym*);								// == writers ==
 extern void W(string);
 
-extern map<string,Sym*> env;			// == global environment ==
-extern void env_init();					// init env[] on startup
-extern void fn_init();					// register internal functions
+extern map<string,Sym*> env;						// == global environment ==
+extern void env_init();								// init env[] on startup
+extern void fn_init();								// register internal functions
 
 // == lexer interface ==
 extern int yylex();						// parse next token
