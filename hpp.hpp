@@ -51,53 +51,54 @@ extern map<string,Sym*> env;						// == global environment ==
 extern void env_init();								// init env[] on startup
 extern void fn_init();								// register internal functions
 
-// == lexer interface ==
-extern int yylex();						// parse next token
-extern int yylineno;					// current source line
-extern char* yytext;					// found token text
+													// == lexer interface ==
+extern int yylex();									// parse next token
+extern int yylineno;								// current source line
+extern char* yytext;								// found token text
+extern void incLude(Sym*inc);						// .include file
 #define TOC(C,X) { yylval.o = new C(yytext); return X; }// token macro used in lexer
 
-// == parser interface ==
-extern int yyparse();					// run parser
-extern void yyerror(std::string);		// error callback
-#include "ypp.tab.hpp"					// token defines for lexer
+													// == parser interface ==
+extern int yyparse();								// run parser
+extern void yyerror(std::string);					// error callback
+#include "ypp.tab.hpp"								// token defines for lexer
 
-struct Directive:Sym { Directive(string);// == .directive ==
+struct Directive:Sym { Directive(string);			// == .directive ==
 	string tagval(); };
-										// == specials ==
-extern Sym* nil;						// nil
+													// == specials ==
+extern Sym* nil;									// nil
 
-										// == scalars ==
-struct Str:Sym { Str(string);			// string
+													// == scalars ==
+struct Str:Sym { Str(string);						// string
 	string tagval(); };
-struct Hex:Sym { Hex(string); };		// hexadecimal machine number
-struct Bin:Sym { Bin(string); };		// binary machine number (bit string)
-struct Int:Sym { Int(string);			// integer
+struct Hex:Sym { Hex(string); };					// hexadecimal machine number
+struct Bin:Sym { Bin(string); };					// binary machine number (bit string)
+struct Int:Sym { Int(string);						// integer
 	long val; string tagval(); };
-struct Num:Sym { Num(string);			// floating number
+struct Num:Sym { Num(string);						// floating number
 	double val; string tagval(); };
 
-										// == composites ==
-struct List:Sym { List(); };			// [list]
-struct Pair:Sym { Pair(Sym*,Sym*); };	// pa:ir
-struct Vector:Sym { Vector(); };		// <vector>
-struct Tuple:Sym { Tuple(); 			// tu,ple
+													// == composites ==
+struct List:Sym { List(); };						// [list]
+struct Pair:Sym { Pair(Sym*,Sym*); };				// pa:ir
+struct Vector:Sym { Vector(); };					// <vector>
+struct Tuple:Sym { Tuple(); 						// tu,ple
 	Tuple(Sym*,Sym*); };
 
-										// == functionals ==
-struct Op:Sym { Op(string); 			// operator
+													// == functionals ==
+struct Op:Sym { Op(string); 						// operator
 	Sym* eval(); };
-struct Lambda:Sym { Lambda(); };		// {la:mbda}
-typedef Sym*(*FN)(Sym*);				// function ptr
-struct Fn:Sym { Fn(string,FN); 			// internal/dyncompiled function
+struct Lambda:Sym { Lambda(); };					// {la:mbda}
+typedef Sym*(*FN)(Sym*);							// function ptr
+struct Fn:Sym { Fn(string,FN); 						// internal/dyncompiled function
 	FN fn; Sym*at(Sym*); };
 
-										// == GUI ==
+													// == GUI ==
 //struct Window:Sym
 
-										// == OS specific ==
+													// == OS specific ==
 #ifdef __MINGW32__
-#include "mingw32.hpp"					// win32/MinGW
+#include "mingw32.hpp"								// win32/MinGW
 #endif
 
 #endif // _H_bI
