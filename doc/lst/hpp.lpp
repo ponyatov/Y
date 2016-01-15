@@ -3,6 +3,7 @@
 std::ofstream once("tmp/hpp.once");
 std::ofstream lex("tmp/hpp.lex");
 std::ofstream pars("tmp/hpp.pars");
+std::ofstream meta("tmp/hpp.meta");
 std::ofstream inc("tmp/hpp.inc");
 std::ofstream ast("tmp/hpp.ast");
 std::ofstream wrt("tmp/hpp.wrt");
@@ -16,7 +17,9 @@ std::ofstream env("tmp/hpp.env");
 ^.*yy(lex|line|text).*\n	{lex<<yytext;}
 ^.*==\ parser.*\n			{pars<<yytext;}
 ^.*yy(parse|error).*\n		{pars<<yytext;}
+^#define\ [A-Z]+.+\n		{meta<<yytext;}
 ^.*==\ std.inc.*\n			{inc<<yytext;}
+^using.*\n					{inc<<yytext;}
 ^#include\ <.+\n			{inc<<yytext;}
 ^struct\ AST				{ast<<yytext; BEGIN(AST);}
 <AST>\};\n					{ast<<yytext; BEGIN(INITIAL);}

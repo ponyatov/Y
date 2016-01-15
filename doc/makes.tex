@@ -2,12 +2,13 @@
 
 Project builds with command \verb|[mingw32-]make [vars]|. Vars can be:\bigskip
 
-\begin{tabular}{l l l}
-\verb$EXE$ & \verb$.exe|$ & executable file extension, empty if Linux/UNIX \\ 
-\verb$RES$ & \verb$res.res|$ & resource file name (win32 only) \\
-\verb$TAIL$ & \verb$-n17|-n7$ & number of \verb$.blog$ lines
+\begin{tabular}{l l ll }
+variable & win32 & unix & \\ \hline
+	\verb$EXE$ & \verb$.exe$& & executable file extension, empty if Linux/UNIX \\ 
+	\verb$RES$ & \verb$res.res$& & resource file name (win32 only) \\
+	\verb$TAIL$ & \verb$-n17$&\verb$-n7$ & number of \verb$.blog$ lines
 will be printed on \verb$make exec$ build \\
-\verb$LLVER$ & \verb$|3.5$ & LLVM version if used \\
+\verb$LLVER$ & &\verb$3.5$ & LLVM version if used \\
 \end{tabular}\bigskip
 
 \verb|MODULE|\ variable sets name for current module.
