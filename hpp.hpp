@@ -93,10 +93,7 @@ struct Fn:Sym { Fn(string,FN); 			// internal/dyncompiled function
 	FN fn; Sym*at(Sym*); };
 
 										// == GUI ==
-struct Window:Sym { Window(Sym*); 		// window
-	string tagval();
-	void show();
-};
+//struct Window:Sym
 
 										// == OS specific ==
 #ifdef __MINGW32__

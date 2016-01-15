@@ -2,8 +2,11 @@
 #define _H_MINGW32
 
 #include <direct.h>
-namespace win32 {
 #include <windows.h>
-}
+
+struct Window:Sym { Window(Sym*); 		// window
+	string tagval();
+	void show();
+};
 
 #endif // _H_MINGW32

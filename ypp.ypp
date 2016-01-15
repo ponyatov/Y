@@ -4,7 +4,7 @@
 %defines %union { Sym*o; }
 %token <o> DOC DIR					/* "docstring" .directive */
 %token <o> SYM NUM STR				/* scalars: symbol number 'string' */
-%token <o> LP RP LQ RQ LB RB LL GG	/* parens: ( ) [ ] { } < > */
+%token <o> LPP RP LQ RQ LB RB LL GG	/* parens: ( ) [ ] { } < > */
 %token <o> EQ AT DOT				/* operators: = @ . */
 %token <o> COMMA COLON				/* , . */
 %type <o> ex scalar 				/* expression scalar */
@@ -20,7 +20,7 @@ bI		: | bI ex				{ W($2); W("\n------");
 scalar	: SYM | NUM | STR ;
 ex		: scalar | pair | tuple | DIR
 		| ex DOC				{ $$=$1; $$->par["doc"]=$2; }
-		| LP ex RP				{ $$=$2; }
+		| LPP ex RP				{ $$=$2; }
 		| LQ list RQ			{ $$=$2; }
 		| LB lambda RB			{ $$=$2; }
 		| LL vector GG			{ $$=$2; }
