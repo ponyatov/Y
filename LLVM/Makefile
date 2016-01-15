@@ -12,7 +12,8 @@ LLVM_CMAKE_CFG = $(CMAKE_CFG) \
 	-DLLVM_EXTERNAL_MSBUILD_BUILD=OFF -DCMAKE_GNUtoMS=OFF \
 	-DLLVM_INSTALL_TOOLCHAIN_ONLY=ON \
 	-DBUILD_SHARED_LIBS=OFF \
-	-DLLVM_TARGETS_TO_BUILD=X86 -DLLVM_DEFAULT_TARGET_TRIPLE=i386-pc-mingw32
+	-DLLVM_TARGETS_TO_BUILD=host
+#	-DLLVM_TARGETS_TO_BUILD=X86 -DLLVM_DEFAULT_TARGET_TRIPLE=i386-pc-mingw32
 
 MINGW = C:/MinGW
 XPATH = "$(MINGW)/bin;$(MINGW)/CMake/bin"
@@ -51,15 +52,23 @@ $(GZ)/$(LLRT_GZ):
 	$(WGET) http://llvm.org/releases/$(LLVM_VER)/$(LLRT_GZ)
 
 .PHONY: src
-src: $(SRC)/$(LLVM)/README
+src: \
+	$(SRC)/$(LLVM)/README \
+	$(SRC)/$(LLVM)/tools/clang/README \
+	$(SRC)/$(LLVM)/projects/compiler-rt/README
 
-$(SRC)/$(LLVM)/README: $(GZ)/$(LLVM_GZ)
-	cd $(SRC) && rm -rf $(LLVM).src $(LLVM) &&\
-  	xzcat $< | tar x && mv $(LLVM).src $(LLVM) && touch $@
+$(SRC)/$(LLVM)/tools/clang/README: $(GZ)/$(CLANG_GZ)
+	cd $(SRC)/$(LLVM)/tools && rm -rf $(CLANG).src tools/clang &&\
+	xzcat $< | tar x && mv $(CLANG).src tools/clang
+
+#$(SRC)/$(LLVM)/README: $(GZ)/$(LLVM_GZ)  ############ xzcat symlink error
+#	cd $(SRC) && rm -rf $(LLVM).src $(LLVM) &&\
+#  	xzcat $< | tar x && mv $(LLVM).src $(LLVM) && touch $@
 
 .PHONY: cmake
 cmake: src
-	rm -rf $(TMP)/* && $(MAKE) PATH=$(XPATH) cmake-cfg cmake-build
+	rm -rf $(TMP)/* && $(MAKE) PATH=$(XPATH) cmake-cfg 
+#	cmake-build
 .PHONY: cmake-cfg
 cmake-cfg:
 	cd $(TMP) && cmake -G "MinGW Makefiles" $(LLVM_CMAKE_CFG) $(SRC)/$(LLVM)
