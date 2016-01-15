@@ -9,4 +9,6 @@ struct Window:Sym { Window(Sym*); 		// window
 	void show();
 };
 
+struct Message:Sym { Message(Sym*); };	// message
+
 #endif // _H_MINGW32

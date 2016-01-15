@@ -45,9 +45,9 @@ $(LPP): tmp/lpp$(EXE) ../lpp.lpp
 	$< < ../lpp.lpp
 $(YPP): tmp/ypp$(EXE) ../ypp.ypp
 	$< < ../ypp.ypp
-$(HPP): tmp/hpp$(EXE) ../hpp.hpp
+$(HPP): tmp/hpp$(EXE) ../hpp.hpp ../mingw32.hpp
 	$< < ../hpp.hpp
-$(CPP): tmp/cpp$(EXE) ../cpp.cpp
+$(CPP): tmp/cpp$(EXE) ../cpp.cpp ../mingw32.cpp
 	$< < ../cpp.cpp
 $(MPP): tmp/mk$(EXE)  ../Makefile
 	$< < ../Makefile

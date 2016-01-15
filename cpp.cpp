@@ -108,7 +108,9 @@ Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
 Sym* window(Sym*o) { return new Window(o); }				// constructor fn
 string Window::tagval() { return "<"+tag+":'"+val+"'>"; }
 
+Sym* message(Sym*o) { return new Message(o); }
 
 void fn_init() {							// == register internal functions ==
 	env["window"] = new Fn("window",window);
+	env["message"] = new Fn("message",message);
 }

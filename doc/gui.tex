@@ -1,6 +1,23 @@
-\secrel{GUI subsystem}\label{gui}\secdown
+\secrel{GUI subsystem (win32 only)}\label{gui}\secdown
+
+Current version support GUI only in win32/MinGW build
+(\file{mingw32.?pp}\ files).
+
 \secrel{Display}
 \secrel{Window}
+
+Window object controls windows in GUI environments
+
+\begin{verbatim}
+window @ Sym -> window:sym.val	# window constructor using name from Sym.val
+class:Window
+	Window @ Sym -> window:sym.val		# constructor: crerate (hided) window
+	fn:hide								# hide window
+	fn:show								# show window (hided by default)
+	fn:minimize
+	fn:fullscreen
+\end{verbatim}
+
 \secrel{Group: widget grouping}\secdown
 \secrel{Tiler window manager}
 \secrel{Tabber: fullsize with tab/slide}
@@ -18,6 +35,11 @@
 \secrel{Label: text label}
 \secrel{Entry: text entry with format checker}
 \secrel{Message: message bar/window}
+
+\begin{verbatim}
+message @ sym -> message:sym	# display message function, return message itself
+\end{verbatim}
+
 \secrel{Image: pixel view}
 \secrel{Canvas: vector view}
 \secrel{Tree: foldable tree view}
