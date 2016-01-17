@@ -8,18 +8,8 @@ void W(string s)	{ cout << s; }
 
 string Sym::dump()	{ return tag+"@"+val; }
 
-struct Window {
-	static const char wndClass[];
-	static const HINSTANCE hInstance;
-	string Title;
-	MSG msg;
-	HWND hwnd;
-	Window(string);
-	void mainloop();
-};
-
 const char Window::wndClass[] = MODULE;
-const HINSTANCE hInstance = GetModuleHandle(NULL);
+ HINSTANCE hInstance = GetModuleHandle(NULL);
 
 Window::Window(string T) {
 	Title = T;
@@ -30,7 +20,7 @@ Window::Window(string T) {
 		CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT, // geometry
 		0,							// parent wnd
 		0,							// menu id
-		hApp,						// app hinst
+		hInstance,					// app hinst
 		NULL						// extra params
 	));
 }
@@ -39,4 +29,7 @@ void Window::mainloop() {
 	while(GetMessage(&msg,0,0,0))
 		DispatchMessage(&msg);
 }
+
+map<string,Sym*> env;
+void env_init(){}
 

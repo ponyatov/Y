@@ -2,7 +2,7 @@ MODULE = $(notdir $(CURDIR))
 OS = $(shell gcc -dumpmachine)
 .PHONY: exec
 exec: ./$(MODULE).exe
-	./$(MODULE).exe
+	./$(MODULE).exe < $(MODULE).lisp > $(MODULE).log && tail $(TAIL) $(MODULE).log
 C = cpp.cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp ypp.tab.hpp
 CXXFLAGS += -I. -std=gnu++11 -DMODULE=\"$(MODULE)\"

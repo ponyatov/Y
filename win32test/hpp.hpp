@@ -16,6 +16,9 @@ struct Sym {
 };
 struct Cons:Sym { Cons(Sym*,Sym*); };
 
+extern map<string,Sym*> env;
+extern void env_init();
+
 extern void W(Sym*);
 extern void W(string);
 
@@ -27,6 +30,14 @@ extern void yyerror(string);
 #define TOC(C,X) { yylval.o = new C(yytext); return X; }
 #include "ypp.tab.hpp"
 
-extern HINSTANCE hApp;
+struct Window {
+	static const char wndClass[];
+	static const HINSTANCE hInstance;
+	string Title;
+	MSG msg;
+	HWND hwnd;
+	Window(string);
+	void mainloop();
+};
 
 #endif // _H_WIN32TEST
