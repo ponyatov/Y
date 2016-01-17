@@ -14,15 +14,19 @@ int WinApplication::run() {
 	MSG msg;
 	while (GetMessage(&msg,NULL,0,0))
 		DispatchMessage(&msg);
-	return 0;
+	return msg.wParam;
 }
 
 WinApplication& WinApplication::operator+=(Window* wnd) { wins[wnd->Title]=wnd; }
 
 LRESULT CALLBACK WinClass::WndProc(HWND hwnd,UINT iMsg,WPARAM wp,LPARAM lp) {
-//	switch () {
-//	}
-	return DefWindowProc(hwnd,iMsg,wp,lp);
+	switch (iMsg) {
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
+		default:
+			return DefWindowProc(hwnd,iMsg,wp,lp);
+	}
 }
 
 WinClass::WinClass() {
@@ -35,8 +39,8 @@ WinClass::WinClass() {
 //	wc.style			= CS_HREDRAW|CS_VREDRAW;
 //	wc.lpszMenuName		= NULL;
 	wc.hIcon			= LoadIcon(WinApplication::hInstance,"logo");
-//	wc.hCursor			= LoadCursor(NULL,IDC_ARROW);
-//	wc.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);
+	wc.hCursor			= LoadCursor(NULL,IDC_ARROW);
+//	wc.hbrBackground	= (HBRUSH)GetStockObject(NULL_BRUSH);
 	assert(atom=RegisterClass(&wc));
 }
 
