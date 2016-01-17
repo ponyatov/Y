@@ -4,5 +4,6 @@ exec: ./exe.exe
 	./exe.exe
 C = cpp.cpp
 H = hpp.hpp
+#CXXFLAGS += -I. -std=gnu++11
 ./exe.exe: $(C) $(H) Makefile
-	$(CXX) -DMODULE=\"$(MODULE)\" -o $@ $(C)
+	$(CXX) $(CXXFLAGS) -DMODULE=\"$(MODULE)\" -o $@ $(C)
