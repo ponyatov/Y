@@ -20,11 +20,25 @@ int WinApplication::run() {
 WinApplication& WinApplication::operator+=(Window* wnd) { wins[wnd->Title]=wnd; }
 
 LRESULT CALLBACK WinClass::WndProc(HWND hwnd,UINT iMsg,WPARAM wp,LPARAM lp) {
+	HDC hdc;
+	PAINTSTRUCT ps;
+	RECT rect;
+	char b[0x10];
+	int prevmsg;
 	switch (iMsg) {
+		case WM_PAINT:
+			hdc = BeginPaint(hwnd,&ps);	// gdi context
+			GetClientRect(hwnd,&rect);
+			DrawText(hdc,itoa(prevmsg,b,0x10),-1,&rect,DT_SINGLELINE|DT_CENTER|DT_VCENTER);
+			EndPaint(hwnd,&ps);
+			return 0;
+		case WM_CLOSE:
+
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
 		default:
+			prevmsg=iMsg;
 			return DefWindowProc(hwnd,iMsg,wp,lp);
 	}
 }
@@ -44,12 +58,14 @@ WinClass::WinClass() {
 	assert(atom=RegisterClass(&wc));
 }
 
+WinClass Window::wndclass;
+
 WinClass::~WinClass() {
 	assert(UnregisterClass(
 		WinApplication::AppName,WinApplication::hInstance)); }
 
 Window::Window(string T) {
-	Title=T;
+	Title="["MODULE"] "+T;
 	assert ( hwnd = CreateWindow(
 		WinApplication::AppName,
 		Title.c_str(),
@@ -66,5 +82,6 @@ Window::Window(string T) {
 int WINAPI WinMain (HINSTANCE hInstance,HINSTANCE,LPSTR cmdLine,int iCmdShow) {
 	WinApplication app(hInstance,cmdLine,iCmdShow);
 	app += new Window("main");
+	app += new Window("log");
 	return app.run();
 }
