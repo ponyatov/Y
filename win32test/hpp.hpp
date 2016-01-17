@@ -5,19 +5,19 @@
 #include <map>
 using namespace std;
 
+struct Window {
+	string Title;
+	HWND hwnd;
+	Window(string T);
+	~Window();
+};
+
 struct WinClass {
 	WNDCLASS wc;
 	ATOM atom;
 	static LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
 	WinClass();
 	~WinClass();
-};
-
-struct Window {
-	string Title;
-	HWND hwnd;
-	static WinClass wndclass;
-	Window(string T);
 };
 
 struct WinApplication {
@@ -27,6 +27,8 @@ struct WinApplication {
 	static int iCmdShow;
 	WinApplication(HINSTANCE,LPSTR,int);
 	static int run();
-	map<string,Window*> wins;
+	static WinClass winclass;
+	static LRESULT CALLBACK quit();
+	static map<string,Window*> wins;
 	WinApplication& operator+=(Window* wnd);
 };
