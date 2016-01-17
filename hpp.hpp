@@ -36,6 +36,7 @@ struct Sym {							// == abstract symbolic type (AST) ==
 	string dump(int depth=0);			// dump symbol object
 	string pad(int);					// tab padding
 	virtual string tagval();			// <T:V> header string
+	string tagstr();					// <T:'V'> Str-like header string
 // ---------------------------------------------------------------------------
 	virtual Sym* eval();				// compute/evaluate object
 // ----------------------------------------------------------------- operators

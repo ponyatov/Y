@@ -15,9 +15,9 @@ struct Window {
 struct WinClass {
 	WNDCLASS wc;
 	ATOM atom;
-	static LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
 	WinClass();
 	~WinClass();
+	static LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
 };
 
 struct WinApplication {

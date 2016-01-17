@@ -3,7 +3,9 @@
 #define YYERR "\n\n"<<yylineno<<":"<<msg<<"["<<yytext<<"]\n\n"
 void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
 
-//int main() { env_init(); return yyparse(); }		// == main() ==
+#ifndef __MINGW32__
+int main() { env_init(); return yyparse(); }		// == main() ==
+#endif
 
 void W(Sym*o)		{ cout<<o->dump(); }			// == writers ==
 void W(string s)	{ cout<<s; }
@@ -18,6 +20,7 @@ void Sym::setpar(Sym*o)			{ par[o->val]=o; }		// add par{}ameter
 
 string Sym::pad(int n)	{ string S; for (int i=0;i<n;i++) S+="\t"; return S; }
 string Sym::tagval()	{ return "<"+tag+":"+val+">"; }	// <T:V> header string
+string Sym::tagstr()	{ return "<"+tag+":'"+val+"'>"; }// <T:'V'> header
 string Sym::dump(int depth) {							// dump symbol object
 	string S = "\n"+pad(depth)+tagval();				// header
 	for (auto pr=par.begin() ; pr!=par.end() ; pr++)	// par{}ameters
@@ -38,7 +41,7 @@ Sym* Sym::eq(Sym*o)		{ env[val]=o; return o; }
 Sym* Sym::at(Sym*o)		{ push(o); return this; }
 Sym* Sym::dot(Sym*o)	{ setpar(o); return this; }
 
-string Directive::tagval() { return "<"+tag+":'"+val+"'>"; }
+string Directive::tagval() { return tagstr(); }
 Directive::Directive(string V):Sym("",V) {				// == .directive ==
 	while (val.size() && (val[0]!=' ' && val[0]!='\t')) {
 		tag += val[0]; val.erase(0,1); }
@@ -66,7 +69,7 @@ void env_init() {									// init on startup
 														// == scalars ==
 														// == string ==
 Str::Str(string V):Sym("str",V) {}
-string Str::tagval()			{ return "<"+tag+":'"+val+"'>"; }
+string Str::tagval()			{ return tagstr(); }
 														// == machine numbers ==
 Hex::Hex(string V):Sym("hex",V) {}						// hexadecimal
 Bin::Bin(string V):Sym("bin",V)	{}						// binary
@@ -104,11 +107,11 @@ Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
 Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
 
 														// == GUI ==
+Sym* window(Sym*o)			{ return new Window(o); }
+string Window::tagval()		{ return tagstr(); }
 
-Sym* window(Sym*o) { return new Window(o); }				// constructor fn
-string Window::tagval() { return "<"+tag+":'"+val+"'>"; }
-
-Sym* message(Sym*o) { return new Message(o); }
+Sym* message(Sym*o) 		{ return new Message(o); }
+string Message::tagval()	{ return tagstr(); }
 
 void fn_init() {							// == register internal functions ==
 	env["window"] = new Fn("window",window);

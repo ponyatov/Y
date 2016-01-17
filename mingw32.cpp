@@ -1,78 +1,86 @@
 #include "hpp.hpp"
 
-static struct {							// == application WinMain (parameters)
-	HINSTANCE hInstance;				// application id
-	HINSTANCE hPrevInstance;			// 0 or app forked id
-	LPSTR CmdLine;						// command line string (with spaces)
-	int nCmdShow;
-} WinMainParameters;
-
-WNDCLASS Window::wndclass = {
-	.style = 0,								// window style
-	.lpfnWndProc = (WNDPROC) winproc,		// win message proc function
-	.cbClsExtra = 0, .cbWndExtra = 0,		// extra data area sizes
-};
-const char Window::wndClassName[] = MODULE "window";
-
-LRESULT CALLBACK Window::winproc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
-	return DefWindowProc(hwnd,msg,wp,lp);
+int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,
+		LPSTR CmdLine,int nCmdShow) {
+	// copy params to static class
+	WinApp.hInstance=hInstance;
+	WinApp.cmdLine=CmdLine;
+	WinApp.nCmdShow=nCmdShow;
+	// start REPL
+	env_init(); return yyparse();
+//	env_init(); incLude(new Str(CmdLine)); return yyparse();
 }
 
-void Window::regclass() {					// == register window class ==
-//	memset(&wndclass,0,sizeof(wndclass));	// clear struct
-	wndclass.hInstance = WinMainParameters.hInstance;	// set app hInstance
-	wndclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);	// load std icon
-	wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);		// window cursor
-	wndclass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);// back color
-	wndclass.lpszMenuName = (LPSTR)NULL;				// empty menu
-	ATOM aWndClass = RegisterClass(&wndclass) ; // register
-	assert(aWndClass);
+LRESULT CALLBACK WinClass::WndProc(HWND hwnd,UINT iMsg,WPARAM wp,LPARAM lp) {
+	HDC hdc;
+	PAINTSTRUCT ps;
+	RECT rect;
+	switch (iMsg) {
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
+		case WM_PAINT:
+			hdc = BeginPaint(hwnd,&ps);
+			GetClientRect(hwnd,&rect);
+			DrawText(hdc,MODULE,-1,&rect,DT_SINGLELINE|DT_CENTER|DT_VCENTER);
+			EndPaint(hwnd,&ps);
+			return 0;
+		default:
+			return DefWindowProc(hwnd,iMsg,wp,lp);
+	}
 }
+
+WinClass::WinClass() {
+	memset(&wc,0,sizeof(wc));
+	wc.lpszClassName	= WinApplication::AppName;
+	wc.hInstance		= WinApplication::hInstance;	
+	wc.lpfnWndProc		= WndProc;
+//	wc.cbClsExtra		= 0;
+//	wc.cbWndExtra		= 0;
+//	wc.style			= CS_HREDRAW|CS_VREDRAW;
+//	wc.lpszMenuName		= NULL;
+	wc.hIcon			= LoadIcon(WinApplication::hInstance,"logo");
+	wc.hCursor			= LoadCursor(NULL,IDC_ARROW);
+	wc.hbrBackground	= (HBRUSH)GetStockObject(NULL_BRUSH);
+	assert(RegisterClass(&wc));
+}
+
+vector<HWND*> WinClass::wins;						// hwnd registry
+WinClass::~WinClass() {								// unregister window class
+	for (auto wn=wins.begin(),e=wins.end();wn!=e;wn++)	// destroy windows
+		DestroyWindow(**wn);
+	assert(UnregisterClass(
+		WinApplication::AppName,WinApplication::hInstance ));
+}
+
+WinApplication WinApp;
+const char WinApplication::AppName[] = MODULE;		// application name 
+HINSTANCE WinApplication::hInstance=0;				// winapp id
+LPSTR WinApplication::cmdLine=0;					// command line
+int WinApplication::nCmdShow=0;						// normal/full/iconized
+WinClass WinApplication::winclass;					// shared window class
 
 Window::Window(Sym*o):Sym("window",o->val) {
-	assert ( hwnd = CreateWindow(
-			wndClassName,
-			val.c_str(),					// title
-			WS_OVERLAPPEDWINDOW,			// style
-    		CW_USEDEFAULT,       			// \ geometry
-    		CW_USEDEFAULT,
-		    CW_USEDEFAULT,
-		    CW_USEDEFAULT,					// /
-    		0,                   			// parent window id
-    		0,                   			// menu id
-    		WinMainParameters.hInstance,	// application id
-    		NULL));							// extra params
-	ShowWindow(hwnd,WinMainParameters.nCmdShow);	// display window
-}
-
-void Window::show() { par["show"]=nil; }
-
-MSG Window::msg;
-void Window::dispatcher() {
-	while (GetMessage(&msg,0,0,0)) {
+	assert ( hwnd = CreateWindow(					// == create window ==
+		WinApplication::AppName,					// window class
+		val.c_str(),								// window title
+		WS_OVERLAPPEDWINDOW,						// style
+		CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,//geometry
+		NULL,										// parent win
+		NULL,										// menu
+		WinApplication::hInstance,
+		NULL
+	));
+	WinClass::wins.push_back(&hwnd);				// register for cleanup
+	ShowWindow(hwnd,WinApplication::nCmdShow);		// display window
+	MSG msg;
+	while (GetMessage(&msg,0,0,0)) {				// infty msg dispatcher
 		DispatchMessage(&msg);
 	}
 }
 
+Window::~Window() { DestroyWindow(hwnd); }
+
 Message::Message(Sym*o):Sym("message",o->val) {
 	MessageBox(NULL, val.c_str(), tag.c_str(), MB_OK);
-}
-
-int WINAPI WinMain(
-		HINSTANCE hInstance,HINSTANCE hPrevInstance,
-		LPSTR CmdLine,int nCmdShow) {
-	// copy WinMain parameters
-	WinMainParameters.hInstance = hInstance;
-	WinMainParameters.hPrevInstance = hPrevInstance;
-	WinMainParameters.CmdLine = CmdLine;
-	WinMainParameters.nCmdShow = nCmdShow;
-	// register app-wide objects
-	Window::regclass();								// register window class
-	// debug write
-	cout << "hInstance="<<hInstance<<"\n";
-	cout << "hPrevInstance="<<hPrevInstance<<"\n";
-	cout << "CmdLine="<<CmdLine<<"\n";
-	cout << "nCmdShow="<<nCmdShow<<"\n";
-	// parser start
-	env_init(); incLude(new Str(CmdLine)); return yyparse();
 }

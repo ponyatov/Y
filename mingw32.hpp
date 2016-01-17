@@ -4,17 +4,15 @@
 #include <direct.h>
 #include <windows.h>
 
-struct Window:Sym { Window(Sym*); 		// create window (hided)
+struct Message:Sym { Message(Sym*);		// message to system bar / message box
+	string tagval(); };
+
+struct Window:Sym { Window(Sym*); 		// create window
 	string tagval();
+	~Window();
 										// == WINAPI specific ==
-	HWND hwnd;							// winapi window id										
-	static WNDCLASS wndclass;			// window class
-	static const char wndClassName[];	// MODULE "window";
-	static void regclass();				// register window class
-	static MSG msg;						// == (async) messages ==
-	static void dispatcher();			// window mainloop
-	static LRESULT CALLBACK winproc(HWND, UINT, WPARAM, LPARAM);
-										
+	HWND hwnd;							// winapi window id
+/*
 	void hide();
 	void show();
 	void paint();						// repaint contents
@@ -25,8 +23,23 @@ struct Window:Sym { Window(Sym*); 		// create window (hided)
 	void destroy();						// on window destroy
 	void click();						// touch / left mouse click
 	void popup();						// local popup menu / right mouse click
+*/};
+
+struct WinClass {
+	WinClass();
+	~WinClass();
+	static vector<HWND*> wins;			// window registry for cleanup
+	WNDCLASS wc;
+	static LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
 };
 
-struct Message:Sym { Message(Sym*); };	// message
+struct WinApplication {
+	static const char AppName[];		// applicatio name
+	static HINSTANCE hInstance;			// winapp id
+	static LPSTR cmdLine;				// command line with spaces
+	static int nCmdShow;				// startup normal/full/minimized
+	static WinClass winclass;			// shared window class
+};
+extern WinApplication WinApp;
 
 #endif // _H_MINGW32
