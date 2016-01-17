@@ -15,6 +15,7 @@ struct WinClass {
 
 struct Window {
 	string Title;
+	HWND hwnd;
 	WinClass wndclass;
 	Window(string T);
 };

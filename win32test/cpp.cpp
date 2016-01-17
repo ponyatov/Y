@@ -11,12 +11,17 @@ WinApplication::WinApplication(HINSTANCE H, LPSTR L, int S) {
 }
 
 int WinApplication::run() {
+	MSG msg;
+	while (GetMessage(&msg,NULL,0,0))
+		DispatchMessage(&msg);
 	return 0;
 }
 
 WinApplication& WinApplication::operator+=(Window* wnd) { wins[wnd->Title]=wnd; }
 
 LRESULT CALLBACK WinClass::WndProc(HWND hwnd,UINT iMsg,WPARAM wp,LPARAM lp) {
+//	switch () {
+//	}
 	return DefWindowProc(hwnd,iMsg,wp,lp);
 }
 
@@ -29,7 +34,7 @@ WinClass::WinClass() {
 //	wc.cbWndExtra		= 0;
 //	wc.style			= CS_HREDRAW|CS_VREDRAW;
 //	wc.lpszMenuName		= NULL;
-//	wc.hIcon			= LoadIcon(NULL,IDI_APPLICATION);
+	wc.hIcon			= LoadIcon(WinApplication::hInstance,"logo");
 //	wc.hCursor			= LoadCursor(NULL,IDC_ARROW);
 //	wc.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);
 	assert(atom=RegisterClass(&wc));
@@ -41,6 +46,17 @@ WinClass::~WinClass() {
 
 Window::Window(string T) {
 	Title=T;
+	assert ( hwnd = CreateWindow(
+		WinApplication::AppName,
+		Title.c_str(),
+		WS_OVERLAPPEDWINDOW,		// style
+		CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,//geometry
+		NULL,						// parent win
+		NULL,						// menu
+		WinApplication::hInstance,
+		NULL
+	));
+	ShowWindow(hwnd,WinApplication::iCmdShow);
 }
 
 int WINAPI WinMain (HINSTANCE hInstance,HINSTANCE,LPSTR cmdLine,int iCmdShow) {
