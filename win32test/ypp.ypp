@@ -1,8 +1,0 @@
-%{
-#include "hpp.hpp"
-%}
-%defines %union { Sym*o; }
-%token <o> CHR
-%%
-REPL : | REPL CHR { W($2); W("\n"); } ;
-%%
