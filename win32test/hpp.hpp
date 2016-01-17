@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cassert>
 #include <windows.h>
 #include <vector>
 #include <map>
@@ -6,13 +7,15 @@ using namespace std;
 
 struct WinClass {
 	WNDCLASS wc;
+	ATOM atom;
+	static LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
 	WinClass();
+	~WinClass();
 };
 
 struct Window {
 	string Title;
 	WinClass wndclass;
-	static LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
 	Window(string T);
 };
 
