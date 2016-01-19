@@ -3,10 +3,10 @@ MODULE = $(notdir $(CURDIR))
 .PHONY: exec
 exec: ./$(MODULE)$(EXE) $(MODULE).bI
 	./$(MODULE)$(EXE) < $(MODULE).bI > $(MODULE).blog && tail $(TAIL) $(MODULE).blog
-C = cpp.cpp $(OS).cpp ypp.tab.cpp lex.yy.c
-H = hpp.hpp $(OS).hpp ypp.tab.hpp
+C = ../cpp.cpp $(OS).cpp ypp.tab.cpp lex.yy.c
+H = ../hpp.hpp $(OS).hpp ypp.tab.hpp
 L = 
-CXXFLAGS += -I. -std=gnu++11 -DMODULE=\"$(MODULE)\"
+CXXFLAGS += -I. -I.. -std=gnu++11 -DMODULE=\"$(MODULE)\"
 ./$(MODULE)$(EXE): $(C) $(H) $(RES) Makefile
 	$(CXX) $(CXXFLAGS) -o $@ $(C) $(L) $(RES)
 ypp.tab.cpp: ypp.ypp

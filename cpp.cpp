@@ -3,9 +3,7 @@
 #define YYERR "\n\n"<<yylineno<<":"<<msg<<"["<<yytext<<"]\n\n"
 void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
 // =================================================== main()
-#ifndef __MINGW32__
 int main() { env_init(); return yyparse(); }
-#endif
 // =================================================== writers
 void W(Sym* o)		{ cout << o->dump(); }
 void W(string s)	{ cout << s; }
@@ -140,11 +138,10 @@ string File::tagval() { return tagstr(); }
 // ============================================================================
 
 // ======================================================================= GUI
-Sym* window(Sym*o)			{ return new Window(o); }
-string Window::tagval()		{ return tagstr(); }
-
-Sym* message(Sym*o) 		{ return new Message(o); }
-string Message::tagval()	{ return tagstr(); }
+//Sym* window(Sym*o)		{ return new Window(o); }
+//string Window::tagval()	{ return tagstr(); }
+//Sym* message(Sym*o) 		{ return new Message(o); }
+//string Message::tagval()	{ return tagstr(); }
 // ============================================================================
 
 // ====================================================== GLOBAL ENV{}IRONMENT
@@ -160,7 +157,11 @@ void env_init() {									// init env{} on startup
 	env["LOGO"]		= new Str(LOGO);				// bI logo (w/o file extension)
 	env["LISPLOGO"]	= new Str(LISPLOGO);			// Lisp Warning logo
 	// ----------------------------------------------- internal functions
-	env["window"] = new Fn("window",window);
-	env["message"] = new Fn("message",message);
+	// ----------------------------------------------- fileio
+	env["dir"]		= new Fn("dir",dir);
+	env["file"]		= new Fn("file",file);
+	// ----------------------------------------------- GUI
+//	env["window"] = new Fn("window",window);
+//	env["message"] = new Fn("message",message);
 }
 

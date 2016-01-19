@@ -95,7 +95,6 @@ struct Lambda:Sym { Lambda(); };					// {la:mbda}
 typedef Sym*(*FN)(Sym*);							// function ptr
 struct Fn:Sym { Fn(string,FN); 						// internal/dyncompiled function
 	FN fn; Sym*at(Sym*); };
-// ===================================================
 
 // ==================================================================== FILEIO
 struct Dir:Sym { Dir(Sym*); string tagval(); };		// directory
@@ -104,12 +103,16 @@ struct File:Sym { File(Sym*); string tagval();		// file
 	FILE *fh; };
 extern Sym* file(Sym*);
 
-// == GUI ==
-//struct Window:Sym
+// ======================================================================= GUI
+//struct Window:Sym { Window(Sym*); string tagval(); };		// window
+//extern Window* window(Sym*);
+//struct Message:Sym { Message(Sym*); string tagval(); };	// message
+//extern Message* message(Sym*);
+// ============================================================================
 
 													// == OS specific ==
 #ifdef __MINGW32__
-#include "mingw32.hpp"								// win32/MinGW
+#include "win32.hpp"								// win32/MinGW
 #endif
 
 // ====================================================== GLOBAL ENV{}IRONMENT
