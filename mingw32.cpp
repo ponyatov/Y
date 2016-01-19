@@ -41,7 +41,7 @@ WinClass::WinClass() {
 //	wc.lpszMenuName		= NULL;
 	wc.hIcon			= LoadIcon(WinApplication::hInstance,"logo");
 	wc.hCursor			= LoadCursor(NULL,IDC_ARROW);
-	wc.hbrBackground	= (HBRUSH)GetStockObject(NULL_BRUSH);
+//	wc.hbrBackground	= (HBRUSH)GetStockObject(NULL_BRUSH);
 	assert(RegisterClass(&wc));
 }
 

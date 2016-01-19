@@ -1,6 +1,6 @@
 %{
 #include "hpp.hpp"
-string StringLexBuffer;				/* string parsing buffer */
+string LexString;					/* string parsing buffer */
 void incLude(Sym*inc) {				/* .inc processing */
 	if (!(yyin = fopen(inc->val.c_str(),"r"))) yyerror("");		// open
 	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));	// push to lexer
@@ -23,15 +23,15 @@ N [0-9]+
 <lexcomment>\n		{}
 <lexcomment>.		{}
 
-'					{BEGIN(lexstring);StringLexBuffer="";}	/* string parser */
+'					{BEGIN(lexstring);LexString="";}		/* string parser */
 <lexstring>'		{BEGIN(INITIAL);
-					yylval.o = new Str(StringLexBuffer); return STR; }
-<lexstring>.		{StringLexBuffer+=yytext[0];}
+					yylval.o = new Str(LexString); return STR; }
+<lexstring>.		{LexString+=yytext[0];}
 
-\"					{BEGIN(docstring);StringLexBuffer="";}	/* docstring */
+\"					{BEGIN(docstring);LexString="";}		/* docstring */
 <docstring>\"		{BEGIN(INITIAL);
-					yylval.o = new Str(StringLexBuffer); return DOC; }
-<docstring>.		{StringLexBuffer+=yytext[0];}
+					yylval.o = new Str(LexString); return DOC; }
+<docstring>.		{LexString+=yytext[0];}
 
 ^\.inc[ \t]+[^\n]+	{ yylval.o = new Directive(yytext);		/* .inc lude */
 					incLude(yylval.o); return DIR; }
