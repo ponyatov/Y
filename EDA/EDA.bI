@@ -1,0 +1,5 @@
+sch		= module @ 'Schematics'	"Scheme editor"
+sim		= module @ 'Simulator'	"ng-spice simulator"
+pcb		= module @ 'PCB'		"PCB editor & router"
+lib		= module @ 'Library'	"component manager"
+gerb	= module @ 'Gerber'		"gerber/drill export"
