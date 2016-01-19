@@ -18,7 +18,7 @@
 #include <map>
 using namespace std;
 
-struct Sym {							// == abstract symbolic type (AST) ==
+struct Sym {							// == Abstract Symbolic Type (AST) ==
 // ---------------------------------------------------------------------------
 	string tag;							// data type / class
 	string val;							// symbol value
@@ -68,6 +68,8 @@ struct Directive:Sym { Directive(string);			// == .directive ==
 	string tagval(); };
 													// == specials ==
 extern Sym* nil;									// nil
+struct Cons:Sym { Cons(Sym*,Sym*);					// classic Lisp cons element
+	string tagval(); };
 
 													// == scalars ==
 struct Str:Sym { Str(string);						// string
