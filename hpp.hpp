@@ -103,14 +103,7 @@ struct File:Sym { File(Sym*); string tagval();		// file
 	FILE *fh; ~File(); };
 extern Sym* file(Sym*);
 
-// ======================================================================= GUI
-//struct Window:Sym { Window(Sym*); string tagval(); };		// window
-//extern Window* window(Sym*);
-//struct Message:Sym { Message(Sym*); string tagval(); };	// message
-//extern Message* message(Sym*);
-// ============================================================================
-
-													// == OS specific ==
+// =============================================================== OS SPECIFIC
 #ifdef __MINGW32__
 #include "win32.hpp"								// win32/MinGW
 #endif

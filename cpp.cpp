@@ -183,7 +183,7 @@ void env_init() {									// init env{} on startup
 	env["dir"]		= new Fn("dir",dir);
 	env["file"]		= new Fn("file",file);
 	// ----------------------------------------------- GUI
-//	env["window"] = new Fn("window",window);
-//	env["message"] = new Fn("message",message);
+	env["window"] = new Fn("window",window);
+	env["message"] = new Fn("message",message);
 }
 
