@@ -30,9 +30,7 @@ struct Window:Sym { Window(Sym*); ~Window(); string tagval();
 };
 extern Sym* window(Sym*);
 
-// ============================================================================
-
-// --------------------------------------- window class
+// ======================================================= shared window class
 struct WinClass {
 	WinClass();
 	~WinClass();
@@ -41,7 +39,7 @@ struct WinClass {
 	static LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
 };
 
-// --------------------------------------- window application singleton
+// ============================================== window application singleton
 struct WinApplication {
 	static const char AppName[];		// applicatio name
 	static HINSTANCE hInstance;			// winapp id

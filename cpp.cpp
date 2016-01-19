@@ -3,7 +3,9 @@
 #define YYERR "\n\n"<<yylineno<<":"<<msg<<"["<<yytext<<"]\n\n"
 void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
 // =================================================== main()
+#ifndef __MINGW32__
 int main() { env_init(); return yyparse(); }
+#endif
 // =================================================== writers
 void W(Sym* o)		{ cout << o->dump(); }
 void W(string s)	{ cout << s; }
