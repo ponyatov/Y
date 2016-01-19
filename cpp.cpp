@@ -14,6 +14,10 @@ void W(string s)	{ cout << s; }
 // --------------------------------------------------- constructors
 Sym::Sym(string T,string V)		{ tag=T; val=V; };	// <T:V>
 Sym::Sym(string V):Sym("sym",V)	{}					// token
+Sym::Sym(Sym*o):Sym(o->tag,o->val) {				// copy
+	for (auto it=o->nest.begin(),e=o->nest.end();it!=e;it++)
+		push(new Sym(*it));
+}
 // --------------------------------------------------- nest[]ed elements
 void Sym::push(Sym*o) { nest.push_back(o); }		// add
 // --------------------------------------------------- par{}ameters
@@ -38,7 +42,8 @@ Sym* Sym::eval() {
 	return this;
 }
 // --------------------------------------------------- operators
-Sym* Sym::doc(Sym*o){ par["doc"]=o; return this; }	// A "B"	docstring
+Sym* Sym::doc(Sym*o){								// A "B"	docstring
+	Sym*E = new Sym(this); E->par["doc"]=o; return E; }	
 Sym* Sym::eq(Sym*o)	{ env[val]=o; return o; }		// A = B	assignment
 Sym* Sym::at(Sym*o)	{ push(o); return this; }		// A @ B	apply
 Sym* Sym::dot(Sym*o){ return new Cons(this,o); }	// A . B	cons

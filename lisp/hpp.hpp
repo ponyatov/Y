@@ -18,6 +18,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // --------------------------------------- constructors
 	Sym(string,string);					// <T:V>
 	Sym(string);						// token
+	Sym(Sym*);							// copy
 // --------------------------------------- nest[]ed elements
 	vector<Sym*> nest;
 	void push(Sym*);
