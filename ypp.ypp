@@ -2,31 +2,35 @@
 #include "hpp.hpp"
 %}
 %defines %union { Sym*o; }
-%token <o> DOC DIR					/* "docstring" .directive */
-%token <o> SYM NUM STR				/* scalars: symbol number 'string' */
-%token <o> L R LQ RQ LB RB LL GG	/* parens: ( ) [ ] { } < > */
-%token <o> EQ AT DOT				/* operators: = @ . */
-%token <o> COMMA COLON				/* , . */
-%type <o> ex scalar 				/* expression scalar */
-%type <o> list lambda vector		/* [list] {la:mbda} <vec,tor> */
-%type <o> pair tuple				/* pa:ir tu,ple */
+%token <o> SYM NUM STR DOC	/* scalars:   symbol number 'string' "docstring" */
+%token <o> L R LQ RQ LB RB	/* brackets:  ( ) [ ] { }						 */
+%token <o> EQ AT DOT COLON	/* operators: = @ . :							 */
+%type <o> scalar ex list	/* scalar expression [list]						 */
+
+%token <o> DIR				/* .directive */
+%token <o> LL GG			/* brackets: < > */
+%token <o> COMMA 			/* , */
+%type <o> lambda vector		/* [list] {la:mbda} <vec,tor> */
+%type <o> pair tuple		/* pa:ir tu,ple */
 
 %left EQ
 %left DOT
 %left AT
 %%
-bI		: | bI ex				{ W($2); W("\n------");
-								W($2->eval()); W("\n=======\n"); } ;
-scalar	: SYM | NUM | STR ;
-ex		: scalar | pair | tuple | DIR
-		| ex DOC				{ $$=$1; $$->par["doc"]=$2; }
-		| L ex R				{ $$=$2; }
-		| LQ list RQ			{ $$=$2; }
-		| LB lambda RB			{ $$=$2; }
-		| LL vector GG			{ $$=$2; }
-		| ex EQ ex				{ $$=$2; $$->push($1); $$->push($3); }
-		| ex AT ex				{ $$=$2; $$->push($1); $$->push($3); }
-		| ex DOT ex				{ $$=$2; $$->push($1); $$->push($3); }
+REPL	: | REPL ex			{ W($2); W("\n------");					/* parsed */
+							W($2->eval()); W("\n=======\n"); } ;	/* evaled */
+scalar	: SYM | NUM | STR;
+ex		: scalar 
+		| pair | tuple 
+		| DIR
+		| ex DOC			{ $$=new Op("doc"); $$->push($1); $$->push($2); }
+		| L ex R			{ $$=$2; }
+		| LQ list RQ		{ $$=$2; }
+		| LB lambda RB		{ $$=$2; }
+		| LL vector GG		{ $$=$2; }
+		| ex EQ ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex AT ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex DOT ex			{ $$=$2; $$->push($1); $$->push($3); }
 ;
 pair	: ex COLON ex			{ $$=new Pair($1,$3); }
 ;
