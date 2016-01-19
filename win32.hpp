@@ -35,7 +35,7 @@ struct WinClass {
 	WinClass();
 	~WinClass();
 	static vector<HWND*> wins;			// window registry for cleanup
-	WNDCLASS wc;
+	WNDCLASSEX wc;
 	static LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
 };
 

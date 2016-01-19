@@ -42,6 +42,7 @@ LRESULT CALLBACK WinClass::WndProc(HWND hwnd,UINT iMsg,WPARAM wp,LPARAM lp) {
 
 WinClass::WinClass() {
 	memset(&wc,0,sizeof(wc));
+	wc.cbSize			= sizeof(wc);
 	wc.lpszClassName	= WinApplication::AppName;
 	wc.hInstance		= WinApplication::hInstance;	
 	wc.lpfnWndProc		= WndProc;
@@ -50,9 +51,10 @@ WinClass::WinClass() {
 //	wc.style			= CS_HREDRAW|CS_VREDRAW;
 //	wc.lpszMenuName		= NULL;
 	wc.hIcon			= LoadIcon(WinApplication::hInstance,"logo");
+	wc.hIconSm			= LoadIcon(WinApplication::hInstance,"logo");
 	wc.hCursor			= LoadCursor(NULL,IDC_ARROW);
 //	wc.hbrBackground	= (HBRUSH)GetStockObject(NULL_BRUSH);
-	assert(RegisterClass(&wc));
+	assert(RegisterClassEx(&wc));
 }
 
 vector<HWND*> WinClass::wins;						// hwnd registry
