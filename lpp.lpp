@@ -1,27 +1,21 @@
 %{
 #include "hpp.hpp"
-string LexString;					/* string parsing buffer */
-void incLude(Sym*inc) {				/* .inc processing */
-	if (!(yyin = fopen(inc->val.c_str(),"r"))) yyerror("");		// open
-	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));	// push to lexer
+string LexString;											// string buffer
+void incLude(Sym*inc) {										// .inc processing
+	if (!(yyin = fopen(inc->val.c_str(),"r"))) yyerror("");	// open
+	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));// push to lexer
 }
 %}
 %option noyywrap
 %option yylineno
-										/* lexer state: string parsing mode */
+								/* extra lexer states: string/docstring parsing */
 %x lexstring docstring
-										/* lexer state: #| block comment |# */
-%x lexcomment
-										/* optional number sign */
+								/* optional sign in numbers */
 S [\+\-]?
-										/* decimal number digit(s) */
+								/* decimal number digit(s) */
 N [0-9]+
 %%
-#[^\|][^\n]*\n		{}										/* line comment */
-#\|					{BEGIN(lexcomment);}					/* block comment*/
-<lexcomment>\|#		{BEGIN(INITIAL);}
-<lexcomment>\n		{}
-<lexcomment>.		{}
+#[^\n]*				{}						/* line comment */
 
 '					{BEGIN(lexstring);LexString="";}		/* string parser */
 <lexstring>'		{BEGIN(INITIAL);
@@ -46,9 +40,9 @@ N [0-9]+
 {S}{N}\.{N}			TOC(Num,NUM)					/* float */
 {S}{N}[eE]{S}{N}	TOC(Num,NUM)					/* exponential */
 
-[a-zA-Z0-9_]+		TOC(Sym,SYM)				/* symbol */
+[a-zA-Z0-9_]+		TOC(Sym,SYM)			/* symbol */
 
-												/* parens */
+											/* brackets */
 \(					TOC(Op,L)
 \)					TOC(Op,R)
 \[					TOC(Op,LQ)
@@ -57,17 +51,16 @@ N [0-9]+
 \}					TOC(Op,RB)
 \<					TOC(Op,LL)
 \>					TOC(Op,GG)
-												/* operators */
+											/* operators */
 \=					TOC(Op,EQ)							
 \@					TOC(Op,AT)
 \.					TOC(Op,DOT)
 \,					TOC(Op,COMMA)
 \:					TOC(Op,COLON)	
 
-[ \t\r\n]+			{}							/* drop spaces */
-.					{}							/* drop undetected chars */
+[ \t\r\n]+			{}						/* drop spaces */
+.					{}						/* drop undetected chars */
 
-<<EOF>>				{ yypop_buffer_state();		/* end of .inluded file */
-					if (!YY_CURRENT_BUFFER)
-						yyterminate();}
+<<EOF>>				{ yypop_buffer_state();	/* end of .inluded file */
+					if (!YY_CURRENT_BUFFER) yyterminate();}
 %%

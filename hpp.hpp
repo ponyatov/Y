@@ -22,24 +22,24 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // ---------------------------------------------------------------------------
 	string tag;							// data type / class
 	string val;							// symbol value
-// ---------------------------------------------------------------------------
-	Sym(string,string);					// <T:V> constructor
-	Sym(string);						// token constructor
-	Sym(Sym*);							// copy constructor
-// ---------------------------------------------------------------------------
-	vector<Sym*> nest;					// nest[]ed
-	void push(Sym*);					// add nested element
-// ---------------------------------------------------------------------------
-	map<string,Sym*> par;				// par{}ameters
-	void setpar(Sym*);					// add parameter
-// ---------------------------------------------------------------------------
+// --------------------------------------- constructors
+	Sym(string,string);					// <T:V>
+	Sym(string);						// token
+	Sym(Sym*);							// copy
+// --------------------------------------- nest[]ed elements
+	vector<Sym*> nest;
+	void push(Sym*);
+// --------------------------------------- par{}ameters
+	map<string,Sym*> par;
+	void setpar(Sym*);
+// --------------------------------------- dumping
 	string dump(int depth=0);			// dump symbol object
-	string pad(int);					// tab padding
 	virtual string tagval();			// <T:V> header string
 	string tagstr();					// <T:'V'> Str-like header string
-// ---------------------------------------------------------------------------
-	virtual Sym* eval();				// compute/evaluate object
-// ----------------------------------------------------------------- operators
+	string pad(int);					// tab padding
+// --------------------------------------- evaluation (computing)
+	virtual Sym* eval();
+// --------------------------------------- operators
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
 	virtual Sym* dot(Sym*);				// A . B	index
@@ -47,33 +47,28 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 
 extern void W(Sym*);								// == writers ==
 extern void W(string);
-
-extern map<string,Sym*> env;						// == global environment ==
-extern void env_init();								// init env[] on startup
-extern void fn_init();								// register internal functions
-
 													// == lexer interface ==
 extern int yylex();									// parse next token
 extern int yylineno;								// current source line
 extern char* yytext;								// found token text
 extern void incLude(Sym*inc);						// .include file
-#define TOC(C,X) { yylval.o = new C(yytext); return X; }// token macro used in lexer
-
+#define TOC(C,X) { yylval.o = new C(yytext); return X; }// token macro in .lpp
 													// == parser interface ==
 extern int yyparse();								// run parser
-extern void yyerror(std::string);					// error callback
+extern void yyerror(string);						// error callback
 #include "ypp.tab.hpp"								// token defines for lexer
 
-struct Directive:Sym { Directive(string);			// == .directive ==
-	string tagval(); };
-													// == specials ==
+// ================================================================== SPECIALS
 extern Sym* nil;									// nil
 struct Cons:Sym { Cons(Sym*,Sym*);					// classic Lisp cons element
+	string tagval(); Sym* car; Sym* cdr; };
+
+// ================================================================= DIRECTIVE
+struct Directive:Sym { Directive(string);
 	string tagval(); };
 
-													// == scalars ==
-struct Str:Sym { Str(string);						// string
-	string tagval(); };
+// =================================================================== SCALARS
+struct Str:Sym { Str(string); string tagval(); };	// string
 struct Hex:Sym { Hex(string); };					// hexadecimal machine number
 struct Bin:Sym { Bin(string); };					// binary machine number (bit string)
 struct Int:Sym { Int(string);						// integer
@@ -81,16 +76,15 @@ struct Int:Sym { Int(string);						// integer
 struct Num:Sym { Num(string);						// floating number
 	double val; string tagval(); };
 
-													// == composites ==
+// ================================================================ COMPOSITES
 struct List:Sym { List(); };						// [list]
 struct Pair:Sym { Pair(Sym*,Sym*); };				// pa:ir
 struct Vector:Sym { Vector(); };					// <vector>
 struct Tuple:Sym { Tuple(); 						// tu,ple
 	Tuple(Sym*,Sym*); };
 
-													// == functionals ==
-struct Op:Sym { Op(string); 						// operator
-	Sym* eval(); };
+// =============================================================== FUNCTIONALS
+struct Op:Sym { Op(string); Sym* eval(); };			// operator
 struct Lambda:Sym { Lambda(); };					// {la:mbda}
 typedef Sym*(*FN)(Sym*);							// function ptr
 struct Fn:Sym { Fn(string,FN); 						// internal/dyncompiled function
@@ -103,5 +97,8 @@ struct Fn:Sym { Fn(string,FN); 						// internal/dyncompiled function
 #ifdef __MINGW32__
 #include "mingw32.hpp"								// win32/MinGW
 #endif
+
+extern map<string,Sym*> env;						// == global env{}ironment ==
+extern void env_init();								// init env{} on startup
 
 #endif // _H_bI

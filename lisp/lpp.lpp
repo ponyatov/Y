@@ -1,21 +1,34 @@
 %{
 #include "hpp.hpp"
-string LexString;												// string buffer
-void incLude(Sym*inc) {											// .inc processing
-	if (!(yyin = fopen(inc->val.c_str(),"r"))) yyerror("");		// open
-	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));	// push to lexer
+string LexString;											// string buffer
+void incLude(Sym*inc) {										// .inc processing
+	if (!(yyin = fopen(inc->val.c_str(),"r"))) yyerror("");	// open
+	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));// push to lexer
 }
 %}
 %option noyywrap
 %option yylineno
-								/* extra lexer stated: string/docstring parsing */
+								/* extra lexer states: string/docstring parsing */
 %x lexstring docstring
 								/* optional sign in numbers */
 S [\+\-]?
 								/* decimal number digit(s) */
 N [0-9]+
 %%
-#[^\n]*		{}					/* line comment */
-[ \t\r\n]+	{}					/* drop spaces */
-.			{}					/* drop undetected chars */
+#[^\n]*				{}						/* line comment */
+
+\"					{BEGIN(docstring);LexString="";}		/* docstring */
+<docstring>\"		{BEGIN(INITIAL);
+					yylval.o = new Str(LexString); return DOC; }
+<docstring>.		{LexString+=yytext[0];}
+
+[a-zA-Z0-9_]+		TOC(Sym,SYM)			/* symbol */
+
+											/* brackets */
+
+[ \t\r\n]+			{}						/* drop spaces */
+.					{}						/* drop undetected chars */
+
+<<EOF>>				{ yypop_buffer_state();	/* end of .inluded file */
+					if (!YY_CURRENT_BUFFER) yyterminate();}
 %%

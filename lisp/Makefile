@@ -2,7 +2,7 @@
 MODULE = $(notdir $(CURDIR))
 .PHONY: exec
 exec: ./$(MODULE)$(EXE) $(MODULE).bI
-	./$(MODULE)$(EXE) $(MODULE).bI > $(MODULE).blog && tail $(TAIL) $(MODULE).blog
+	./$(MODULE)$(EXE) < $(MODULE).bI > $(MODULE).blog && tail $(TAIL) $(MODULE).blog
 C = cpp.cpp $(OS).cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp $(OS).hpp ypp.tab.hpp
 L = 
