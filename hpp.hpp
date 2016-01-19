@@ -29,7 +29,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // --------------------------------------- nest[]ed elements
 	vector<Sym*> nest;
 	void push(Sym*);
-// --------------------------------------- par{}ameters
+// --------------------------------------- par{}ameters / class members table
 	map<string,Sym*> par;
 	void setpar(Sym*);
 // --------------------------------------- dumping
@@ -40,6 +40,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // --------------------------------------- evaluation (computing)
 	virtual Sym* eval();
 // --------------------------------------- operators
+	virtual Sym* doc(Sym*);				// A "B"	docstring
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
 	virtual Sym* dot(Sym*);				// A . B	index
@@ -61,8 +62,8 @@ extern void yyerror(string);						// error callback
 // ================================================================== SPECIALS
 extern Sym* nil;									// nil
 struct Cons:Sym { Cons(Sym*,Sym*);					// classic Lisp cons element
-	string tagval(); Sym* car; Sym* cdr; };
-
+	Sym* car; Sym* cdr; string dump(int);
+	Sym* eval(); };
 // ================================================================= DIRECTIVE
 struct Directive:Sym { Directive(string);
 	string tagval(); };
@@ -84,13 +85,26 @@ struct Tuple:Sym { Tuple(); 						// tu,ple
 	Tuple(Sym*,Sym*); };
 
 // =============================================================== FUNCTIONALS
-struct Op:Sym { Op(string); Sym* eval(); };			// operator
+// =================================================== operator
+struct Op:Sym { Op(string); Sym* eval(); };
+extern Op* doc;										// "doc"string operator
+// =================================================== 
+
 struct Lambda:Sym { Lambda(); };					// {la:mbda}
+// =================================================== function
 typedef Sym*(*FN)(Sym*);							// function ptr
 struct Fn:Sym { Fn(string,FN); 						// internal/dyncompiled function
 	FN fn; Sym*at(Sym*); };
+// ===================================================
 
-													// == GUI ==
+// ==================================================================== FILEIO
+struct Dir:Sym { Dir(Sym*); string tagval(); };		// directory
+extern Sym* dir(Sym*);
+struct File:Sym { File(Sym*); string tagval();		// file
+	FILE *fh; };
+extern Sym* file(Sym*);
+
+// == GUI ==
 //struct Window:Sym
 
 													// == OS specific ==
@@ -98,7 +112,8 @@ struct Fn:Sym { Fn(string,FN); 						// internal/dyncompiled function
 #include "mingw32.hpp"								// win32/MinGW
 #endif
 
-extern map<string,Sym*> env;						// == global env{}ironment ==
+// ====================================================== GLOBAL ENV{}IRONMENT
+extern map<string,Sym*> env;
 extern void env_init();								// init env{} on startup
 
 #endif // _H_bI

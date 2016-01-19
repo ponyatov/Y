@@ -17,6 +17,11 @@ N [0-9]+
 %%
 #[^\n]*				{}						/* line comment */
 
+'					{BEGIN(lexstring);LexString="";}		/* string parser */
+<lexstring>'		{BEGIN(INITIAL);
+					yylval.o = new Str(LexString); return STR; }
+<lexstring>.		{LexString+=yytext[0];}
+
 \"					{BEGIN(docstring);LexString="";}		/* docstring */
 <docstring>\"		{BEGIN(INITIAL);
 					yylval.o = new Str(LexString); return DOC; }
@@ -25,6 +30,15 @@ N [0-9]+
 [a-zA-Z0-9_]+		TOC(Sym,SYM)			/* symbol */
 
 											/* brackets */
+\(					TOC(Op,L)
+\)					TOC(Op,R)
+\[					TOC(Op,LQ)
+\]					TOC(Op,RQ)
+\{					TOC(Op,LB)
+\}					TOC(Op,RB)
+											/* operators */
+\.					TOC(Op,DOT)
+\@					TOC(Op,AT)
 
 [ \t\r\n]+			{}						/* drop spaces */
 .					{}						/* drop undetected chars */

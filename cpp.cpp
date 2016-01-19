@@ -17,9 +17,7 @@ Sym::Sym(string V):Sym("sym",V)	{}					// token
 // --------------------------------------------------- nest[]ed elements
 void Sym::push(Sym*o) { nest.push_back(o); }		// add
 // --------------------------------------------------- par{}ameters
-void Sym::push(Sym*o)			{ nest.push_back(o); }	/
-void Sym::setpar(Sym*o)			{ par[o->val]=o; }		// add par{}ameter
-
+void Sym::setpar(Sym*o) { par[o->val]=o; }			// add
 // --------------------------------------------------- dumping
 string Sym::tagval() {return "<"+tag+":"+val+">";}	// <T:V> header string
 string Sym::tagstr() {return "<"+tag+":'"+val+"'>";}// <T:'V'> Str-like header
@@ -40,9 +38,10 @@ Sym* Sym::eval() {
 	return this;
 }
 // --------------------------------------------------- operators
-Sym* Sym::eq(Sym*o)		{ env[val]=o; return o; }
-Sym* Sym::at(Sym*o)		{ push(o); return this; }
-Sym* Sym::dot(Sym*o)	{ setpar(o); return this; }
+Sym* Sym::doc(Sym*o){ par["doc"]=o; return this; }	// A "B"	docstring
+Sym* Sym::eq(Sym*o)	{ env[val]=o; return o; }		// A = B	assignment
+Sym* Sym::at(Sym*o)	{ push(o); return this; }		// A @ B	apply
+Sym* Sym::dot(Sym*o){ return new Cons(this,o); }	// A . B	cons
 // ============================================================================
 
 string Directive::tagval() { return tagstr(); }
@@ -55,6 +54,15 @@ Directive::Directive(string V):Sym("",V) {				// == .directive ==
 
 // ================================================================== SPECIALS
 Sym* nil = new Sym("nil","");						// nil
+// =================================================== classic Lisp cons element
+Cons::Cons(Sym*X,Sym*Y):Sym("","") { car=X, cdr=Y; }
+Sym* Cons::eval() { (car->eval())->at(cdr->eval()); }// eval as car@cdr
+string Cons::dump(int depth) {
+	string S = Sym::dump(depth);
+	S += car->dump(depth+1);
+	S += cdr->dump(depth+1);
+	return S;
+}
 // ============================================================================
 
 // =================================================================== SCALARS
@@ -93,25 +101,46 @@ Vector::Vector():Sym("","") {}							// <vector>
 Op::Op(string V):Sym("op",V) {}
 Sym* Op::eval() {
 	Sym::eval();									// nest[]ed evaluate
-	if (nest.size()==2) {								// A op B bin.operator
+	if (nest.size()==2) {							// A op B bin.operator
 		if (val=="=") return nest[0]->eq(nest[1]);
 		if (val=="@") return nest[0]->at(nest[1]);
 		if (val==".") return nest[0]->dot(nest[1]);
+		if (val=="doc") return nest[0]->doc(nest[1]);
 	}
 	return this;
 }
+Op* doc = new Op("doc");							// "doc"string operator
 // ===================================================
 
-Fn::Fn(string V, FN F):Sym("fn",V) { fn=F; }			// == function ==
-Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
+// =================================================== function
+Fn::Fn(string V,FN F):Sym("fn",V) { fn=F; }
+Sym* Fn::at(Sym*o) { return fn(o); }				// apply function
+// ===================================================
+
 Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
 
-														// == GUI ==
+// ============================================================================
+
+// ==================================================================== FILEIO
+// =================================================== dir
+Dir::Dir(Sym*o):Sym("dir",o->val) {}
+Sym* dir(Sym*o) { return new Dir(o); }
+string Dir::tagval() { return tagstr(); }
+// ===================================================
+// =================================================== file
+File::File(Sym*o):Sym("file",o->val) {}
+Sym* file(Sym*o) { return new File(o); }
+string File::tagval() { return tagstr(); }
+// ===================================================
+// ============================================================================
+
+// ======================================================================= GUI
 Sym* window(Sym*o)			{ return new Window(o); }
 string Window::tagval()		{ return tagstr(); }
 
 Sym* message(Sym*o) 		{ return new Message(o); }
 string Message::tagval()	{ return tagstr(); }
+// ============================================================================
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 map<string,Sym*> env;

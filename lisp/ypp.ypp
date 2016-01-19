@@ -12,9 +12,11 @@ REPL	: | REPL ex			{ W($2); W("\n------");					/* parsed */
 							W($2->eval()); W("\n=======\n"); } ;	/* evaled */
 scalar	: SYM | NUM | STR;
 ex		: scalar
-		| ex DOC			{ $$=new Op("doc"); $$->push($1); $$->push($2); }
+		| ex DOC			{ $$=doc; $$->push($1); $$->push($2); }
 		| L ex R			{ $$=$2; }
 		| LQ list RQ		{ $$=$2; }
+		| ex DOT ex			{ $$=new Cons($1,$3); }
+		| ex AT ex			{ $$=$2; $$->push($1); $$->push($3); }
 ;
 list	:					{ $$=nil; }
 		| ex list			{ $$=new Cons($1,$2); }

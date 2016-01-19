@@ -4,7 +4,7 @@ MODULE = bI
 OS = $(shell $(CXX) -dumpmachine)
 .PHONY: exec
 exec: ./$(MODULE)$(EXE) $(MODULE).bI
-	./$(MODULE)$(EXE) $(MODULE).bI > $(MODULE).blog && tail $(TAIL) $(MODULE).blog
+	./$(MODULE)$(EXE) < $(MODULE).bI > $(MODULE).blog && tail $(TAIL) $(MODULE).blog
 .PHONY: clean
 clean:
 	rm -rf ./$(MODULE)$(EXE) *.*log ypp.tab.?pp lex.yy.c $(RES)
