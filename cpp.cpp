@@ -126,14 +126,36 @@ Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
 
 // ==================================================================== FILEIO
 // =================================================== dir
-Dir::Dir(Sym*o):Sym("dir",o->val) {}
+Dir::Dir(Sym*o):Sym("dir",o->val) {
+/*
+	#ifdef __MINGW32__
+	mkdir(val.c_str());
+	#else
+	mkdir(val.c_str(),0700);
+	#endif
+*/
+}
 Sym* dir(Sym*o) { return new Dir(o); }
 string Dir::tagval() { return tagstr(); }
+/*
+Sym* Dir::add(Sym*o) {
+	if (o->tag!="file") return Sym::add(o);
+	else return new File(val+'/'+o->val);
+}
+*/
 // ===================================================
+
 // =================================================== file
 File::File(Sym*o):Sym("file",o->val) {}
+File::~File() { if (fh) fclose(fh); }
 Sym* file(Sym*o) { return new File(o); }
 string File::tagval() { return tagstr(); }
+/*
+Sym* File::addeq(Sym*o) {
+	if (!fh) assert(fh=fopen(val.c_str(),"w"));			// auto open on write
+	return new Int(fprintf(fh,"%s",o->val.c_str()));
+}
+*/
 // ===================================================
 // ============================================================================
 

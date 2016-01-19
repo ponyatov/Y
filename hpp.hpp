@@ -12,7 +12,7 @@
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
-//#include <cstdio>
+#include <cstdio>
 #include <cassert>
 #include <vector>
 #include <map>
@@ -100,7 +100,7 @@ struct Fn:Sym { Fn(string,FN); 						// internal/dyncompiled function
 struct Dir:Sym { Dir(Sym*); string tagval(); };		// directory
 extern Sym* dir(Sym*);
 struct File:Sym { File(Sym*); string tagval();		// file
-	FILE *fh; };
+	FILE *fh; ~File(); };
 extern Sym* file(Sym*);
 
 // ======================================================================= GUI
