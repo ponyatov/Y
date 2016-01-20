@@ -1,2 +1,2 @@
 @start .
-@gvim -p GUI.bI GUI.blog ../ypp.ypp ../hpp.hpp ../cpp.cpp ../mingw32.hpp ../mingw32.cpp Makefile bat.bat
+@gvim -p GUI.bI GUI.blog ../ypp.ypp ./lpp.lpp ../hpp.hpp ../cpp.cpp ../win32.hpp ../win32.cpp

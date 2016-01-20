@@ -69,19 +69,15 @@ WinClass::~WinClass() {								// unregister window class
 
 // ======================================= message to system bar / message box
 
-Sym* message(Sym*o) { return new Message(o); }
-
 Message::Message(Sym*o):Sym("message",o->val) {
 	MessageBox(NULL, val.c_str(), tag.c_str(), MB_OK);
 }
 
-string Message::tagval() { return tagstr(); }
-
 // ==================================================================== window
 
-Sym* window(Sym*o) { return new Window(o); }
+Sym* window(Sym*o) { return new WinWindow(o); }
 
-Window::Window(Sym*o):Sym("window",o->val) {
+WinWindow::WinWindow(Sym*o):Window(o) {
 	assert ( hwnd = CreateWindow(					// == create window ==
 		WinApplication::AppName,					// window class
 		val.c_str(),								// window title
@@ -100,5 +96,4 @@ Window::Window(Sym*o):Sym("window",o->val) {
 	}
 }
 
-string Window::tagval() { return tagstr(); }
-Window::~Window() { DestroyWindow(hwnd); }
+WinWindow::~WinWindow() { DestroyWindow(hwnd); }

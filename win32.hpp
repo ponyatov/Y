@@ -6,13 +6,8 @@
 
 // ======================================================================= GUI
 
-// --------------------------------------- message to system bar / message box
-struct Message:Sym { Message(Sym*); string tagval(); 
-};
-extern Sym* message(Sym*);			
-
-// --------------------------------------- window
-struct Window:Sym { Window(Sym*); ~Window(); string tagval();
+// --------------------------------------- GUI window
+struct WinWindow:Window { WinWindow(Sym*); ~WinWindow();
 /*
 	void hide();
 	void show();
@@ -28,7 +23,6 @@ struct Window:Sym { Window(Sym*); ~Window(); string tagval();
 										// == WINAPI specific ==
 	HWND hwnd;							// winapi window id
 };
-extern Sym* window(Sym*);
 
 // ======================================================= shared window class
 struct WinClass {

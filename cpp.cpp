@@ -50,7 +50,7 @@ Sym* Sym::dot(Sym*o){ return new Cons(this,o); }	// A . B	cons
 // ============================================================================
 
 string Directive::tagval() { return tagstr(); }
-Directive::Directive(string V):Sym("",V) {				// == .directive ==
+Directive::Directive(string V):Sym("",V) {			// == .directive ==
 	while (val.size() && (val[0]!=' ' && val[0]!='\t')) {
 		tag += val[0]; val.erase(0,1); }
 	while (val.size() && (val[0]==' ' || val[0]=='\t')) {
@@ -81,11 +81,11 @@ string Str::tagval() { return tagstr(); }
 Hex::Hex(string V):Sym("hex",V) {}					// hexadecimal
 Bin::Bin(string V):Sym("bin",V)	{}					// binary
 
-														// == integer ==
+													// == integer ==
 Int::Int(string V):Sym("int","") { val = atoi(V.c_str()); }
 string Int::tagval() {
 	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
-														// == floating number ==
+													// == floating number ==
 Num::Num(string V):Sym("num","") { val = atof(V.c_str()); }
 string Num::tagval() {
 	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
@@ -93,12 +93,12 @@ string Num::tagval() {
 // ============================================================================
 
 
-														// == composites ==
-List::List():Sym("[","]") {}							// [list]
-Pair::Pair(Sym*A,Sym*B):Sym(A->val,B->val) {}			// pa:ir
-Tuple::Tuple(Sym*A,Sym*B):Sym(",",",") {				// tu,ple
-push(A); push(B); }
-Vector::Vector():Sym("","") {}							// <vector>
+													// == composites ==
+List::List():Sym("[","]") {}						// [list]
+Pair::Pair(Sym*A,Sym*B):Sym(A->val,B->val) {}		// pa:ir
+Tuple::Tuple(Sym*A,Sym*B):Sym(",",",") {			// tu,ple
+	push(A); push(B); }
+Vector::Vector():Sym("","") {}						// <vector>
 
 // =============================================================== FUNCTIONALS
 
@@ -122,7 +122,7 @@ Fn::Fn(string V,FN F):Sym("fn",V) { fn=F; }
 Sym* Fn::at(Sym*o) { return fn(o); }				// apply function
 // ===================================================
 
-Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
+Lambda::Lambda():Sym("^","^") {}					// {la:mbda}
 
 // ============================================================================
 
@@ -154,7 +154,7 @@ Sym* file(Sym*o) { return new File(o); }
 string File::tagval() { return tagstr(); }
 /*
 Sym* File::addeq(Sym*o) {
-	if (!fh) assert(fh=fopen(val.c_str(),"w"));			// auto open on write
+	if (!fh) assert(fh=fopen(val.c_str(),"w"));		// auto open on write
 	return new Int(fprintf(fh,"%s",o->val.c_str()));
 }
 */
@@ -162,10 +162,10 @@ Sym* File::addeq(Sym*o) {
 // ============================================================================
 
 // ======================================================================= GUI
-//Sym* window(Sym*o)		{ return new Window(o); }
-//string Window::tagval()	{ return tagstr(); }
-//Sym* message(Sym*o) 		{ return new Message(o); }
-//string Message::tagval()	{ return tagstr(); }
+Sym* message(Sym*o) 	{ return new Message(o); }
+string Message::tagval(){ return tagstr(); }
+Window::Window(Sym*o):Sym("window",o->val)	{ }
+string Window::tagval()	{ return tagstr(); }
 // ============================================================================
 
 // ====================================================== GLOBAL ENV{}IRONMENT
@@ -174,6 +174,7 @@ void env_init() {									// init env{} on startup
 	env["nil"]		= nil;
 	// ----------------------------------------------- metainfo constants
 	env["MODULE"]	= new Str(MODULE);				// module name (CFLAGS -DMODULE)
+	env["OS"]		= new Str(OS);					// host OS
 	env["AUTHOR"]	= new Str(AUTHOR);				// author (c)
 	env["LICENSE"]	= new Str(LICENSE);				// license
 	env["GITHUB"]	= new Str(GITHUB);				// github home
@@ -185,7 +186,7 @@ void env_init() {									// init env{} on startup
 	env["dir"]		= new Fn("dir",dir);
 	env["file"]		= new Fn("file",file);
 	// ----------------------------------------------- GUI
-	env["window"] = new Fn("window",window);
-	env["message"] = new Fn("message",message);
+	env["message"]	= new Fn("message",message);
+	env["window"]	= new Fn("window",window);
 }
 
