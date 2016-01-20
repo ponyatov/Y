@@ -6,7 +6,7 @@ exec: ./$(MODULE)$(EXE) $(MODULE).bI
 	tail $(TAIL) $(MODULE).blog
 .PHONY: clean
 clean:
-	rm -rf ./$(MODULE)$(EXE) *.*log ypp.tab.?pp lex.yy.c $(RES)
+	rm -rf ./$(MODULE)$(EXE) *.*log ypp.tab.?pp lex.yy.c res.res *~
 C += ../cpp.cpp ../$(OS).cpp ypp.tab.cpp lex.yy.c
 H += ../hpp.hpp ../$(OS).hpp ypp.tab.hpp
 L += 

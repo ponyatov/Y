@@ -1,24 +1,12 @@
+%type <o> lambda				/* {lambda}                                    */
 
+%type <o> lambda vector		/* {la:mbda} <vec,tor> */
+%type <o> pair tuple		/* pa:ir tu,ple */
 
 %left EQ
 %left DOT
 %left AT
 %%
-REPL	: | REPL ex			{ W($2); W("\n------");					/* parsed */
-							W($2->eval()); W("\n=======\n"); } ;	/* evaled */
-scalar	: SYM | NUM | STR;
-ex		: scalar 
-		| pair | tuple 
-		| DIR
-		| ex DOC			{ $$=new Op("doc"); $$->push($1); $$->push($2); }
-		| L ex R			{ $$=$2; }
-		| LQ list RQ		{ $$=$2; }
-		| LB lambda RB		{ $$=$2; }
-		| LL vector GG		{ $$=$2; }
-		| ex EQ ex			{ $$=$2; $$->push($1); $$->push($3); }
-		| ex AT ex			{ $$=$2; $$->push($1); $$->push($3); }
-		| ex DOT ex			{ $$=$2; $$->push($1); $$->push($3); }
-;
 pair	: ex COLON ex			{ $$=new Pair($1,$3); }
 ;
 tuple	: ex COMMA ex			{ $$=new Tuple($1,$3); }
@@ -42,8 +30,6 @@ vector :						{ $$=new Vector(); }
 %token <o> DIR				/* .directive */
 %token <o> LL GG			/* brackets: < > */
 %token <o> COMMA 			/* , */
-%type <o> lambda vector		/* [list] {la:mbda} <vec,tor> */
-%type <o> pair tuple		/* pa:ir tu,ple */
 
 %token <o> ADDEQ					/* += */
 

@@ -27,19 +27,6 @@ N [0-9]+
 					yylval.o = new Str(LexString); return DOC; }
 <docstring>.		{LexString+=yytext[0];}
 
-^\.inc[ \t]+[^\n]+	{ yylval.o = new Directive(yytext);		/* .inc lude */
-					incLude(yylval.o); return DIR; }
-^\.[a-z]+[^\n]*		TOC(Directive,DIR)						/* .directive */
-
-												/* numbers: */
-{S}{N}				TOC(Int,NUM)					/* integer */
-0x[0-9A-F]+			TOC(Hex,NUM)					/* 0x00 \ machine hex */
-[0-9A-F]+[Hh]		TOC(Hex,NUM)					/* 00h  / */
-0b[01]+				TOC(Bin,NUM)					/* 0b00 \ machine binary */
-[01]+[Bb]			TOC(Bin,NUM)					/* 00b  / */
-{S}{N}\.{N}			TOC(Num,NUM)					/* float */
-{S}{N}[eE]{S}{N}	TOC(Num,NUM)					/* exponential */
-
 [a-zA-Z0-9_]+		TOC(Sym,SYM)			/* symbol */
 
 											/* brackets */
@@ -49,14 +36,11 @@ N [0-9]+
 \]					TOC(Op,RQ)
 \{					TOC(Op,LB)
 \}					TOC(Op,RB)
-\<					TOC(Op,LL)
-\>					TOC(Op,GG)
 											/* operators */
-\=					TOC(Op,EQ)							
-\@					TOC(Op,AT)
 \.					TOC(Op,DOT)
-\,					TOC(Op,COMMA)
-\:					TOC(Op,COLON)	
+\=					TOC(Op,EQ)
+\@					TOC(Op,AT)
+\:					TOC(Op,COLON)
 
 [ \t\r\n]+			{}						/* drop spaces */
 .					{}						/* drop undetected chars */
