@@ -1,5 +1,9 @@
 #include "hpp.hpp"
 
+// ==================================================================== FILEIO
+Dir::Dir(Sym*o):Sym("dir",o->val) {
+	assert(0==mkdir(val.c_str())||errno==EEXIST); }
+
 // ================================================================= WinMain()
 int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,
 		LPSTR CmdLine,int nCmdShow) {

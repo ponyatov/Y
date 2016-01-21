@@ -2,7 +2,7 @@
 " Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 " GitHub: https://github.com/ponyatov/Y
 
-syntax match  Todo      "\v^\.[a-z]+"						" .directive
+syntax match  Todo      "\v^\.[a-z]+.*"						" .directive
 syntax match  Comment	"\v#.*"								" # line comment
 syntax region Comment	start="#|" end="|#"					" #|block comment|#
 
@@ -18,7 +18,10 @@ syntax region Special	start="\"" end="\""					" "docstring"
 														" symbols not colored
 
 syntax match  Keyword	"\v[\+\-\*\/\^]"					" operator
-syntax match  Type		"\v[\[\]\(\)\<\>\:\=\.]"			" brackets
+syntax match  Type		"\v[\[\]\(\)\<\>\:\=]"				" brackets
 syntax match  Keyword	"\v[\{\}\@]"						" lambda coloring
+
+syntax match Constant	"\vdoc|dir|file|str"
+syntax match Todo		"\v\.[a-z]+:"
 
 let b:current_syntax = "bI"

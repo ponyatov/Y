@@ -2,6 +2,7 @@
 #define _H_bI
 										// == metainfo constants ==
 
+#define TITLE "bI dynamic language system"
 #define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"
 #define GITHUB "https://github.com/ponyatov/Y/tree/dev"
@@ -44,6 +45,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
 	virtual Sym* dot(Sym*);				// A . B	index
+	virtual Sym* ins(Sym*);				// A += B	insert (vs C increment)
 };
 
 extern void W(Sym*);								// == writers ==
@@ -66,7 +68,7 @@ struct Cons:Sym { Cons(Sym*,Sym*);					// classic Lisp cons element
 	Sym* eval(); };
 // ================================================================= DIRECTIVE
 struct Directive:Sym { Directive(string);
-	string tagval(); };
+	string tagval(); Sym*eval(); };
 
 // =================================================================== SCALARS
 struct Str:Sym { Str(string); string tagval(); };	// string
@@ -97,7 +99,8 @@ struct Fn:Sym { Fn(string,FN); 						// internal/dyncompiled function
 	FN fn; Sym*at(Sym*); };
 
 // ==================================================================== FILEIO
-struct Dir:Sym { Dir(Sym*); string tagval(); };		// directory
+struct Dir:Sym { Dir(Sym*); string tagval();		// directory
+	Sym*ins(Sym); };
 extern Sym* dir(Sym*);
 struct File:Sym { File(Sym*); string tagval();		// file
 	FILE *fh; ~File(); };

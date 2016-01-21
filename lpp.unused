@@ -1,7 +1,6 @@
 
 ^\.inc[ \t]+[^\n]+	{ yylval.o = new Directive(yytext);		/* .inc lude */
 					incLude(yylval.o); return DIR; }
-^\.[a-z]+[^\n]*		TOC(Directive,DIR)						/* .directive */
 
 												/* numbers: */
 {S}{N}				TOC(Int,NUM)					/* integer */

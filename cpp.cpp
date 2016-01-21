@@ -47,15 +47,25 @@ Sym* Sym::doc(Sym*o){								// A "B"	docstring
 Sym* Sym::eq(Sym*o)	{ env[val]=o; return o; }		// A = B	assignment
 Sym* Sym::at(Sym*o)	{ push(o); return this; }		// A @ B	apply
 Sym* Sym::dot(Sym*o){ return new Cons(this,o); }	// A . B	cons
+Sym* Sym::ins(Sym*o){ push(o); return this; }		// A += B	insert
 // ============================================================================
 
+// ================================================================= DIRECTIVE
 string Directive::tagval() { return tagstr(); }
-Directive::Directive(string V):Sym("",V) {			// == .directive ==
+Directive::Directive(string V):Sym("",V) {
 	while (val.size() && (val[0]!=' ' && val[0]!='\t')) {
 		tag += val[0]; val.erase(0,1); }
 	while (val.size() && (val[0]==' ' || val[0]=='\t')) {
 		               val.erase(0,1); }
 }
+Sym* Directive::eval() { Sym::eval();
+	val=nest[0]->val; 
+	if (tag==".module") env["MODULE"]=nest[0];
+	if (tag==".title") env["TITLE"]=nest[0];
+	if (tag==".author") env["AUTHOR"]=nest[0];
+	if (tag==".github") env["GITHUB"]=nest[0];
+	nest.erase(nest.begin());
+	return this; }
 
 // ================================================================== SPECIALS
 Sym* nil = new Sym("nil","");						// nil
@@ -93,7 +103,7 @@ string Num::tagval() {
 // ============================================================================
 
 
-													// == composites ==
+// ================================================================ composites 
 List::List():Sym("[","]") {}						// [list]
 Pair::Pair(Sym*A,Sym*B):Sym(A->val,B->val) {}		// pa:ir
 Tuple::Tuple(Sym*A,Sym*B):Sym(",",",") {			// tu,ple
@@ -111,6 +121,7 @@ Sym* Op::eval() {
 		if (val=="@") return nest[0]->at(nest[1]);
 		if (val==".") return nest[0]->dot(nest[1]);
 		if (val=="doc") return nest[0]->doc(nest[1]);
+		if (val=="+=") return nest[0]->ins(nest[1]);
 	}
 	return this;
 }
@@ -128,15 +139,6 @@ Lambda::Lambda():Sym("^","^") {}					// {la:mbda}
 
 // ==================================================================== FILEIO
 // =================================================== dir
-Dir::Dir(Sym*o):Sym("dir",o->val) {
-/*
-	#ifdef __MINGW32__
-	mkdir(val.c_str());
-	#else
-	mkdir(val.c_str(),0700);
-	#endif
-*/
-}
 Sym* dir(Sym*o) { return new Dir(o); }
 string Dir::tagval() { return tagstr(); }
 /*
@@ -173,8 +175,9 @@ map<string,Sym*> env;
 void env_init() {									// init env{} on startup
 	env["nil"]		= nil;
 	// ----------------------------------------------- metainfo constants
-	env["MODULE"]	= new Str(MODULE);				// module name (CFLAGS -DMODULE)
 	env["OS"]		= new Str(OS);					// host OS
+	env["MODULE"]	= new Str(MODULE);				// module name (CFLAGS -DMODULE)
+	env["TITLE"]	= new Str(TITLE);				// module title
 	env["AUTHOR"]	= new Str(AUTHOR);				// author (c)
 	env["LICENSE"]	= new Str(LICENSE);				// license
 	env["GITHUB"]	= new Str(GITHUB);				// github home

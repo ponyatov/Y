@@ -3,10 +3,10 @@
 %type <o> lambda vector		/* {la:mbda} <vec,tor> */
 %type <o> pair tuple		/* pa:ir tu,ple */
 
-%left EQ
-%left DOT
-%left AT
-%%
+%left PFX
+	| ADD ex %prec PFX	{ $$=$2; }
+	| SUB ex %prec PFX	{ $$=$2->neg(); }
+
 pair	: ex COLON ex			{ $$=new Pair($1,$3); }
 ;
 tuple	: ex COMMA ex			{ $$=new Tuple($1,$3); }
@@ -24,25 +24,4 @@ lambda	:						{ $$=new Lambda(); }
 vector :						{ $$=new Vector(); }
 		| vector ex				{ $$=$1; $$->push($2); }
 ;
-%%
 
-
-%token <o> DIR				/* .directive */
-%token <o> LL GG			/* brackets: < > */
-%token <o> COMMA 			/* , */
-
-%token <o> ADDEQ					/* += */
-
-%left COMMA COLON
-%left PFX
-
-	| ADD ex %prec PFX	{ $$=$2; }
-	| SUB ex %prec PFX	{ $$=$2->neg(); }
-	| ex EQ ex			{ $$=$2; $$->push($1); $$->push($3); }
-	| ex DOT ex			{ $$=$2; $$->push($1); $$->push($3); }
-	| ex ADD ex			{ $$=$2; $$->push($1); $$->push($3); }
-	| ex SUB ex			{ $$=$2; $$->push($1); $$->push($3); }
-	| ex MUL ex			{ $$=$2; $$->push($1); $$->push($3); }
-	| ex DIV ex			{ $$=$2; $$->push($1); $$->push($3); }
-	| ex POW ex			{ $$=$2; $$->push($1); $$->push($3); }
-	| ex LP tuple RP	{ $$=new Op("@"); $$->push($1); $$->push($3); }
