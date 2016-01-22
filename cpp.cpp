@@ -48,7 +48,7 @@ Sym* Sym::eval() {
 Sym* Sym::dummy(Sym*o) { push(o); return this; }	// cons -> nest[] folding
 Sym* Sym::doc(Sym*o){								// A "B"	docstring
 	Sym*E = new Sym(this); E->par["doc"]=o; return E; }	
-Sym* Sym::eq(Sym*o)	{ env[val]=o; return o; }	// A = B	assignment
+Sym* Sym::eq(Sym*o)	{ env[val]=o; return o; }		// A = B	assignment
 Sym* Sym::at(Sym*o)	{ return dummy(o); }			// A @ B	apply
 Sym* Sym::dot(Sym*o){ return new Cons(this,o); }	// A . B	cons
 Sym* Sym::add(Sym*o){ return dummy(o); }			// A + B	add
@@ -138,9 +138,9 @@ Vector::Vector():Sym("","") {}						// <vector>
 // =================================================== operator
 Op::Op(string V):Sym("op",V) {}
 Sym* Op::eval() {
+	if (val=="=") return nest[0]->eq(nest[1]->eval());
 	Sym::eval();									// nest[]ed evaluate
 	if (nest.size()==2) {							// A op B bin.operator
-		if (val=="=") return nest[0]->eq(nest[1]);
 		if (val=="@") return nest[0]->at(nest[1]);
 		if (val==".") return nest[0]->dot(nest[1]);
 		if (val=="doc") return nest[0]->doc(nest[1]);

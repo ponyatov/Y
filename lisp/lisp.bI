@@ -1,7 +1,5 @@
 
-TITLE
 TITLE = 'Lisp engine realization in bI'
-TITLE
 
 next = dir @ MODULE
 
@@ -9,8 +7,9 @@ readme = next += file @ 'README.md'
 
 readme += '# ' + MODULE +'\n'
 readme += '### ' + TITLE + '\n'
-
-TITLE
+readme += '\n' + AUTHOR +'\n'
+readme += '\nlicence: '+LICENSE+ '\n'
+readme += '\nGitHub: '+GITHUB+'/'+MODULE+'\n'
 
 #[ 0 file 'ypp.ypp' ] "parser"
 #[ dir 'next' ] "next generation dir"
