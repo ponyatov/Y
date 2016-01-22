@@ -34,7 +34,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	map<string,Sym*> par;
 	void setpar(Sym*);
 // --------------------------------------- dumping
-	string dump(int depth=0);			// dump symbol object
+	virtual string dump(int depth=0);	// dump symbol object
 	virtual string tagval();			// <T:V> header string
 	string tagstr();					// <T:'V'> Str-like header string
 	string pad(int);					// tab padding

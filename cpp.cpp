@@ -71,14 +71,12 @@ Sym* Directive::eval() { Sym::eval();
 Sym* nil = new Sym("nil","");						// nil
 // =================================================== classic Lisp cons element
 Cons::Cons(Sym*X,Sym*Y):Sym("","") { car=X, cdr=Y; }
-Sym* Cons::eval() { return Sym::eval(); }		
+Sym* Cons::eval() { return Sym::eval(); }
 //(car->eval())->at(cdr->eval()); }// eval in lisp style as car@cdr
 string Cons::dump(int depth) {
 	string S = Sym::dump(depth);
-	S += car->dump(depth+1);
-	S += cdr->dump(depth+1);
-	return S;
-}
+	S += car->dump(depth+1); S += cdr->dump(depth+1);
+	return S; }
 // ============================================================================
 
 // =================================================================== SCALARS

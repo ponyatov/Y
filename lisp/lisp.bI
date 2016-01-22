@@ -1,3 +1,4 @@
+[1]
 [ dir MODULE ]
 #[ dir 'next' ] "next generation dir"
 #MODULE OS
