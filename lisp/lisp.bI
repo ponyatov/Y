@@ -1,15 +1,17 @@
 
 TITLE = 'Lisp engine realization in bI'
 
-next = dir @ MODULE
+.inc '../meta/files.bI'
 
-readme = next += file @ 'README.md'
+#next = dir @ MODULE
 
-readme += '# ' + MODULE +'\n'
-readme += '### ' + TITLE + '\n'
-readme += '\n' + AUTHOR +'\n'
-readme += '\nlicence: '+LICENSE+ '\n'
-readme += '\nGitHub: '+GITHUB+'/'+MODULE+'\n'
+#readme = next += file @ 'README.md'
+
+#readme += '# ' + MODULE +'\n'
+#readme += '### ' + TITLE + '\n'
+#readme += '\n' + AUTHOR +'\n'
+#readme += '\nlicence: '+LICENSE+ '\n'
+#readme += '\nGitHub: '+GITHUB+'/'+MODULE+'\n'
 
 #[ 0 file 'ypp.ypp' ] "parser"
 #[ dir 'next' ] "next generation dir"

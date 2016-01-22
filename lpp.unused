@@ -1,6 +1,7 @@
 
 ^\.inc[ \t]+[^\n]+	{ yylval.o = new Directive(yytext);		/* .inc lude */
-					incLude(yylval.o); return DIR; }
+					/*incLude(yylval.o); */
+					return DIR; }
 
 0x[0-9A-F]+			TOC(Hex,NUM)					/* 0x00 \ machine hex */
 [0-9A-F]+[Hh]		TOC(Hex,NUM)					/* 00h  / */

@@ -17,6 +17,8 @@ N [0-9]+
 %%
 #[^\n]*				{}						/* line comment */
 
+^\.inc[ \t]+[^\n]+	{incLude(new Directive(yytext)); }	/* .inc lude */
+
 '					{BEGIN(lexstring);LexString="";}		/* string parser */
 <lexstring>'		{BEGIN(INITIAL);
 					yylval.o = new Str(LexString); return STR; }

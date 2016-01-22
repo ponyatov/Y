@@ -66,10 +66,11 @@ Directive::Directive(string V):Sym("",V) {
 }
 Sym* Directive::eval() { Sym::eval();
 	val=nest[0]->val; 
-	if (tag==".module") env["MODULE"]=nest[0];
-	if (tag==".title") env["TITLE"]=nest[0];
-	if (tag==".author") env["AUTHOR"]=nest[0];
-	if (tag==".github") env["GITHUB"]=nest[0];
+//	if (tag==".module") env["MODULE"]=nest[0];
+//	if (tag==".title") env["TITLE"]=nest[0];
+//	if (tag==".author") env["AUTHOR"]=nest[0];
+//	if (tag==".github") env["GITHUB"]=nest[0];
+//	if (tag==".inc") incLude(this);
 	nest.erase(nest.begin());
 	return this; }
 
