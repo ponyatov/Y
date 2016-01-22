@@ -52,7 +52,6 @@ Sym* Sym::eq(Sym*o)	{ env[val]=o; return o; }		// A = B	assignment
 Sym* Sym::at(Sym*o)	{ return dummy(o); }			// A @ B	apply
 Sym* Sym::dot(Sym*o){ return new Cons(this,o); }	// A . B	cons
 Sym* Sym::add(Sym*o){ return dummy(o); }			// A + B	add
-Sym* Sym::addeq(Sym*o){ return dummy(o); }			// A += B	insert
 string Sym::str() { return tagval(); }				// A.str	to string
 // ============================================================================
 
@@ -145,9 +144,7 @@ Sym* Op::eval() {
 		if (val=="@") return nest[0]->at(nest[1]);
 //		if (val==".") return nest[0]->dot(nest[1]);
 		if (val=="doc") return nest[0]->doc(nest[1]);
-		if (val=="+=") return nest[0]->addeq(nest[1]);
 //		if (val=="+") return nest[0]->add(nest[1]);
-//		if (val=="+=") return nest[0]->ins(nest[1]);
 	}
 	return this;
 }
