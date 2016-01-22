@@ -5,6 +5,8 @@
 syntax match  Todo      "\v^\.[a-z]+.*"						" .directive
 syntax match  Comment	"\v#.*"								" # line comment
 syntax region Comment	start="#|" end="|#"					" #|block comment|#
+syntax match  Comment	"L___"
+syntax match  Comment	"|   "
 
 syntax match  Constant	"\v[\+\-]?[0-9]+L?"					" integer
 syntax match  Constant	"\v[\+\-]?[0-9]+\.[0-9]+"			" floating point

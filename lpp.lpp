@@ -27,6 +27,9 @@ N [0-9]+
 					yylval.o = new Str(LexString); return DOC; }
 <docstring>.		{LexString+=yytext[0];}
 
+											/* numbers */
+{S}{N}				TOC(Int,NUM)			/* integer */
+
 ^\.[a-z]+			TOC(Directive,DIR)		/* .directive */
 [a-zA-Z0-9_]+		TOC(Sym,SYM)			/* symbol */
 
@@ -42,6 +45,13 @@ N [0-9]+
 \=					TOC(Op,EQ)
 \@					TOC(Op,AT)
 \:					TOC(Op,COLON)
+
+\+					TOC(Op,ADD)
+\-					TOC(Op,SUB)
+\*					TOC(Op,MUL)
+\/					TOC(Op,DIV)
+\^					TOC(Op,DIV)
+
 \+=					TOC(Op,INS)
 \-=					TOC(Op,DEL)
 

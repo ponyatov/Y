@@ -33,7 +33,9 @@ string Sym::dump(int depth) {						// dump symbol object
 		S += (*it)->dump(depth+1);
 	return S; }
 string Sym::pad(int n) { string S;					// tab padding
-	for (int i=0;i<n;i++) S+="\t"; return S; }
+	for (int i=0;i<n-1;i++) S+="|   ";
+	if (n>0) S += "L___";
+	return S; }
 // --------------------------------------------------- evaluation (computing)
 Sym* Sym::eval() {
 	Sym*E = env[val]; if (E) return E;				// lookup in glob.env[]
@@ -42,12 +44,14 @@ Sym* Sym::eval() {
 	return this;
 }
 // --------------------------------------------------- operators
+Sym* Sym::dummy(Sym*o) { push(o); return this; }	// cons -> nest[] folding
 Sym* Sym::doc(Sym*o){								// A "B"	docstring
 	Sym*E = new Sym(this); E->par["doc"]=o; return E; }	
 Sym* Sym::eq(Sym*o)	{ env[val]=o; return o; }		// A = B	assignment
-Sym* Sym::at(Sym*o)	{ push(o); return this; }		// A @ B	apply
+Sym* Sym::at(Sym*o)	{ return dummy(o); }			// A @ B	apply
 Sym* Sym::dot(Sym*o){ return new Cons(this,o); }	// A . B	cons
-Sym* Sym::ins(Sym*o){ push(o); return this; }		// A += B	insert
+Sym* Sym::add(Sym*o){ return dummy(o); }			// A + B	add
+Sym* Sym::ins(Sym*o){ return dummy(o); }			// A += B	insert
 // ============================================================================
 
 // ================================================================= DIRECTIVE
@@ -121,6 +125,7 @@ Sym* Op::eval() {
 		if (val=="@") return nest[0]->at(nest[1]);
 		if (val==".") return nest[0]->dot(nest[1]);
 		if (val=="doc") return nest[0]->doc(nest[1]);
+		if (val=="+") return nest[0]->add(nest[1]);
 		if (val=="+=") return nest[0]->ins(nest[1]);
 	}
 	return this;

@@ -41,11 +41,13 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // --------------------------------------- evaluation (computing)
 	virtual Sym* eval();
 // --------------------------------------- operators
+	Sym* dummy(Sym*);					// A dummy B	cons -> nest[] folding
 	virtual Sym* doc(Sym*);				// A "B"	docstring
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
 	virtual Sym* dot(Sym*);				// A . B	index
 	virtual Sym* ins(Sym*);				// A += B	insert (vs C increment)
+	virtual Sym* add(Sym*);				// A + B	add
 };
 
 extern void W(Sym*);								// == writers ==

@@ -2,17 +2,10 @@
 ^\.inc[ \t]+[^\n]+	{ yylval.o = new Directive(yytext);		/* .inc lude */
 					incLude(yylval.o); return DIR; }
 
-												/* numbers: */
-{S}{N}				TOC(Int,NUM)					/* integer */
 0x[0-9A-F]+			TOC(Hex,NUM)					/* 0x00 \ machine hex */
 [0-9A-F]+[Hh]		TOC(Hex,NUM)					/* 00h  / */
 0b[01]+				TOC(Bin,NUM)					/* 0b00 \ machine binary */
 [01]+[Bb]			TOC(Bin,NUM)					/* 00b  / */
 {S}{N}\.{N}			TOC(Num,NUM)					/* float */
 {S}{N}[eE]{S}{N}	TOC(Num,NUM)					/* exponential */
-
-\<					TOC(Op,LL)
-\>					TOC(Op,GG)
-											/* operators */
-\,					TOC(Op,COMMA)
 
