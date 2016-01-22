@@ -1,8 +1,17 @@
-#include "hpp.hpp"
+#include "../hpp.hpp"
 
 // ==================================================================== FILEIO
 Dir::Dir(Sym*o):Sym("dir",o->val) {
 	assert(0==mkdir(val.c_str())||errno==EEXIST); }
+Sym* Dir::ins(Sym*o) {
+	File* F = new File(val+'/'+o->val);
+	push(F);
+	F->setpar(Wmode); assert(F->fh=fopen(F->val.c_str(),"w"));
+	return F;
+}
+
+Sym* File::ins(Sym*o) {
+	if (fh) fprintf(fh,"%s",o->str().c_str()); return o; }
 
 // ================================================================= WinMain()
 int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,

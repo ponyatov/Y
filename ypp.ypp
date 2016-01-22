@@ -22,16 +22,16 @@ ex		: scalar
 		| DIR ex			{ $$=$1; $$->push($2); }
 		| ex DOC			{ $$=doc; $$->push($1); $$->push($2); }
 		| L ex R			{ $$=$2; }
-		| ex DOT ex			{ $$=new Cons($1,$3); }
 		| LQ list RQ		{ $$=$2; }
+		| ex DOT ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex EQ ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex AT ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex INS ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex DEL ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex ADD ex			{ $$=$2; $$->push($1); $$->push($3); }
 ;
-list	:					{ $$=nil; }
-		| ex list			{ $$=new Cons($1,$2); }
+list	:					{ $$=new List(); }
+		| list ex			{ $$=$1; $$->push($2); }
 ;
 %%
 

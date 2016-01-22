@@ -48,7 +48,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	virtual Sym* dot(Sym*);				// A . B	index
 	virtual Sym* ins(Sym*);				// A += B	insert (vs C increment)
 	virtual Sym* add(Sym*);				// A + B	add
-	virtual Sym* add();					// +A		sum
+	virtual string str();				// A.str	to string
 };
 
 extern void W(Sym*);								// == writers ==
@@ -66,12 +66,15 @@ extern void yyerror(string);						// error callback
 
 // ================================================================== SPECIALS
 extern Sym* nil;									// nil
+extern Sym* Rmode;									// R
+extern Sym* Wmode;									// W
 // ================================================================= DIRECTIVE
 struct Directive:Sym { Directive(string);
 	string tagval(); Sym*eval(); };
 
 // =================================================================== SCALARS
-struct Str:Sym { Str(string); string tagval(); };	// string
+struct Str:Sym { Str(string); string tagval();		// string
+	Sym*add(Sym*); string str(); };
 struct Hex:Sym { Hex(string); };					// hexadecimal machine number
 struct Bin:Sym { Bin(string); };					// binary machine number (bit string)
 struct Int:Sym { Int(string); Int(long);			// integer
@@ -83,10 +86,9 @@ struct Num:Sym { Num(string); Num(double);			// floating number
 // ================================================================ COMPOSITES
 // ====================================================================== CONS
 struct Cons:Sym { Cons(Sym*,Sym*);					// classic Lisp cons element
-	Sym* car; Sym* cdr; string dump(int);
-	Sym* eval(); Sym*add(); };
-/* droppped due to bI lispification following SICP bible
+	Sym* car; Sym* cdr; string dump(int); };
 struct List:Sym { List(); };						// [list]
+/* droppped due to bI lispification following SICP bible
 struct Pair:Sym { Pair(Sym*,Sym*); };				// pa:ir
 struct Vector:Sym { Vector(); };					// <vector>
 struct Tuple:Sym { Tuple(); 						// tu,ple
@@ -95,8 +97,7 @@ struct Tuple:Sym { Tuple(); 						// tu,ple
 
 // =============================================================== FUNCTIONALS
 // =================================================== operator
-struct Op:Sym { Op(string); Sym* eval();
-	Sym* at(Sym*); };
+struct Op:Sym { Op(string); Sym* eval(); };
 extern Op* doc;										// "doc"string operator
 // =================================================== 
 
@@ -107,11 +108,14 @@ struct Fn:Sym { Fn(string,FN); 						// internal/dyncompiled function
 	FN fn; Sym*at(Sym*); };
 
 // ==================================================================== FILEIO
-struct Dir:Sym { Dir(Sym*); string tagval();		// directory
-	Sym*ins(Sym); };
+// =================================================== directory
+struct Dir:Sym { Dir(Sym*); string tagval();
+	Sym*ins(Sym*); };
 extern Sym* dir(Sym*);
-struct File:Sym { File(Sym*); string tagval();		// file
-	FILE *fh; ~File(); };
+// =================================================== file
+struct File:Sym { File(Sym*); string tagval();
+	FILE *fh; ~File(); File(string);
+	Sym* ins(Sym*); };
 extern Sym* file(Sym*);
 
 // ======================================================================= GUI

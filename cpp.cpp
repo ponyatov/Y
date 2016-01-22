@@ -48,12 +48,12 @@ Sym* Sym::eval() {
 Sym* Sym::dummy(Sym*o) { push(o); return this; }	// cons -> nest[] folding
 Sym* Sym::doc(Sym*o){								// A "B"	docstring
 	Sym*E = new Sym(this); E->par["doc"]=o; return E; }	
-Sym* Sym::eq(Sym*o)	{ env[val]=o; return o; }		// A = B	assignment
+Sym* Sym::eq(Sym*o)	{ env[val]=o; return o; }	// A = B	assignment
 Sym* Sym::at(Sym*o)	{ return dummy(o); }			// A @ B	apply
 Sym* Sym::dot(Sym*o){ return new Cons(this,o); }	// A . B	cons
 Sym* Sym::add(Sym*o){ return dummy(o); }			// A + B	add
-Sym* Sym::add()		{ return this; }				// +A		sum
 Sym* Sym::ins(Sym*o){ return dummy(o); }			// A += B	insert
+string Sym::str() { return tagval(); }				// A.str	to string
 // ============================================================================
 
 // ================================================================= DIRECTIVE
@@ -75,6 +75,8 @@ Sym* Directive::eval() { Sym::eval();
 
 // ================================================================== SPECIALS
 Sym* nil = new Sym("nil","");						// nil
+Sym *Rmode = new Sym("mode","R");					// R
+Sym *Wmode = new Sym("mode","W");					// W
 // ============================================================================
 
 // =================================================================== SCALARS
@@ -82,6 +84,8 @@ Sym* nil = new Sym("nil","");						// nil
 // =================================================== string
 Str::Str(string V):Sym("str",V) {}
 string Str::tagval() { return tagstr(); }
+Sym* Str::add(Sym*o) { return new Str(val+o->val); }
+string Str::str() { return val; }
 // ===================================================
 
 // =================================================== machine numbers
@@ -114,15 +118,15 @@ string Num::tagval() {
 // ================================================================ COMPOSITES
 // ====================================================================== CONS
 Cons::Cons(Sym*X,Sym*Y):Sym("","") { car=X, cdr=Y; }
-Sym* Cons::eval() {									// eval as car@cdr
-	return (car->eval())->at(cdr); }
 string Cons::dump(int depth) {
 	string S = Sym::dump(depth);
 	S += car->dump(depth+1); S += cdr->dump(depth+1);
 	return S; }
-Sym* Cons::add() { return car->add(cdr); }
-/* droppped due to bI lispification following SICP bible
+
+// ====================================================================== LIST
 List::List():Sym("[","]") {}						// [list]
+
+/* droppped due to bI lispification following SICP bible
 Pair::Pair(Sym*A,Sym*B):Sym(A->val,B->val) {}		// pa:ir
 Tuple::Tuple(Sym*A,Sym*B):Sym(",",",") {			// tu,ple
 	push(A); push(B); }
@@ -140,12 +144,9 @@ Sym* Op::eval() {
 		if (val=="@") return nest[0]->at(nest[1]);
 		if (val==".") return nest[0]->dot(nest[1]);
 		if (val=="doc") return nest[0]->doc(nest[1]);
+		if (val=="+") return nest[0]->add(nest[1]);
 		if (val=="+=") return nest[0]->ins(nest[1]);
 	}
-	return this;
-}
-Sym* Op::at(Sym*o) {
-	if (val=="+") return o->add();
 	return this;
 }
 Op* doc = new Op("doc");							// "doc"string operator
@@ -161,19 +162,14 @@ Lambda::Lambda():Sym("^","^") {}					// {la:mbda}
 // ============================================================================
 
 // ==================================================================== FILEIO
-// =================================================== dir
+// =================================================== directory
 Sym* dir(Sym*o) { return new Dir(o); }
 string Dir::tagval() { return tagstr(); }
-/*
-Sym* Dir::add(Sym*o) {
-	if (o->tag!="file") return Sym::add(o);
-	else return new File(val+'/'+o->val);
-}
-*/
 // ===================================================
 
 // =================================================== file
 File::File(Sym*o):Sym("file",o->val) {}
+File::File(string V):Sym("file",V) {}
 File::~File() { if (fh) fclose(fh); }
 Sym* file(Sym*o) { return new File(o); }
 string File::tagval() { return tagstr(); }
@@ -197,6 +193,8 @@ string Window::tagval()	{ return tagstr(); }
 map<string,Sym*> env;
 void env_init() {									// init env{} on startup
 	env["nil"]		= nil;
+	env["R"]		= Rmode;
+	env["W"]		= Wmode;
 	// ----------------------------------------------- metainfo constants
 	env["OS"]		= new Str(OS);					// host OS
 	env["MODULE"]	= new Str(MODULE);				// module name (CFLAGS -DMODULE)
