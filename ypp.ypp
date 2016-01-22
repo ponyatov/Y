@@ -3,7 +3,7 @@
 %}
 %defines %union { Sym*o; }
 
-%token <o> DOC DIR				/* doc: "docstring" .directive		*/
+%token <o> DOC DIR INC			/* doc: "docstring" .directive		*/
 %token <o> SYM NUM STR 			/* scalars: symbol number 'string'	*/
 %token <o> L R LQ RQ LB RB		/* brackets:  ( ) [ ] { }			*/
 %token <o> EQ AT DOT COLON		/* operators: = @ . :				*/
@@ -19,6 +19,7 @@ REPL	: | REPL ex			{ W($2); W("\n------");					/* parsed */
 							W($2->eval()); W("\n=======\n"); } ;	/* evaled */
 scalar	: SYM | NUM | STR ;
 ex		: scalar
+		| INC
 		| DIR ex			{ $$=$1; $$->push($2); }
 		| ex DOC			{ $$=doc; $$->push($1); $$->push($2); }
 		| L ex R			{ $$=$2; }

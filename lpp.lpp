@@ -17,7 +17,7 @@ N [0-9]+
 %%
 #[^\n]*				{}						/* line comment */
 
-^\.inc[ \t]+[^\n]+	{incLude(new Directive(yytext)); }	/* .inc lude */
+^\.inc[^\n]*		{incLude(new Directive(yytext));}
 
 '					{BEGIN(lexstring);LexString="";}		/* string parser */
 <lexstring>'		{BEGIN(INITIAL);

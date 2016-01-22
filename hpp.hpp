@@ -78,8 +78,7 @@ struct Str:Sym { Str(string); string tagval();		// string
 struct Hex:Sym { Hex(string); };					// hexadecimal machine number
 struct Bin:Sym { Bin(string); };					// binary machine number (bit string)
 struct Int:Sym { Int(string); Int(long);			// integer
-	long val; string tagval();
-	Sym*add(Sym*); };
+	long val; string tagval(); Sym*add(Sym*); };
 struct Num:Sym { Num(string); Num(double);			// floating number
 	double val; string tagval(); };
 

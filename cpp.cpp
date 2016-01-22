@@ -64,14 +64,14 @@ Directive::Directive(string V):Sym("",V) {
 	while (val.size() && (val[0]==' ' || val[0]=='\t')) {
 		               val.erase(0,1); }
 }
-Sym* Directive::eval() { Sym::eval();
-	val=nest[0]->val; 
+Sym* Directive::eval() {
+//	Sym::eval();
+//	val=nest[0]->val; 
 //	if (tag==".module") env["MODULE"]=nest[0];
 //	if (tag==".title") env["TITLE"]=nest[0];
 //	if (tag==".author") env["AUTHOR"]=nest[0];
 //	if (tag==".github") env["GITHUB"]=nest[0];
-//	if (tag==".inc") incLude(this);
-	nest.erase(nest.begin());
+//	nest.erase(nest.begin());
 	return this; }
 
 // ================================================================== SPECIALS
