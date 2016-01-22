@@ -34,7 +34,7 @@ string Sym::dump(int depth) {						// dump symbol object
 	return S; }
 string Sym::pad(int n) { string S;					// tab padding
 	for (int i=0;i<n-1;i++) S+="|   ";
-	if (n>0) S += "L___";
+	if (n>0) S += "\\___";
 	return S; }
 // --------------------------------------------------- evaluation (computing)
 Sym* Sym::eval() {

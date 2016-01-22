@@ -4,8 +4,7 @@
 
 syntax match  Todo      "\v^\.[a-z]+.*"						" .directive
 syntax match  Comment	"\v#.*"								" # line comment
-syntax region Comment	start="#|" end="|#"					" #|block comment|#
-syntax match  Comment	"L___"
+syntax match  Comment	"\\___"
 syntax match  Comment	"|   "
 
 syntax match  Constant	"\v[\+\-]?[0-9]+L?"					" integer
@@ -20,7 +19,7 @@ syntax region Special	start="\"" end="\""					" "docstring"
 														" symbols not colored
 
 syntax match  Keyword	"\v[\+\-\*\/\^]"					" operator
-syntax match  Type		"\v[\[\]\(\)\<\>\:\=]"				" brackets
+syntax match  Type		"\v[\(\)\<\>\:\=]"					" brackets
 syntax match  Keyword	"\v[\{\}\@]"						" lambda coloring
 
 syntax match Constant	"\vdoc|dir|file|str"
