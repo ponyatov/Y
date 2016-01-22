@@ -52,6 +52,7 @@ Sym* Sym::eq(Sym*o)	{ env[val]=o; return o; }		// A = B	assignment
 Sym* Sym::at(Sym*o)	{ return dummy(o); }			// A @ B	apply
 Sym* Sym::dot(Sym*o){ return new Cons(this,o); }	// A . B	cons
 Sym* Sym::add(Sym*o){ return dummy(o); }			// A + B	add
+Sym* Sym::add()		{ return this; }				// +A		sum
 Sym* Sym::ins(Sym*o){ return dummy(o); }			// A += B	insert
 // ============================================================================
 
@@ -114,13 +115,12 @@ string Num::tagval() {
 // ====================================================================== CONS
 Cons::Cons(Sym*X,Sym*Y):Sym("","") { car=X, cdr=Y; }
 Sym* Cons::eval() {									// eval as car@cdr
-	return (car->eval())->at(cdr->eval()); }
-Sym* Cons::add(Sym*o) {
-	return (car->eval())->add(cdr->eval()); }
+	return (car->eval())->at(cdr); }
 string Cons::dump(int depth) {
 	string S = Sym::dump(depth);
 	S += car->dump(depth+1); S += cdr->dump(depth+1);
 	return S; }
+Sym* Cons::add() { return car->add(cdr); }
 /* droppped due to bI lispification following SICP bible
 List::List():Sym("[","]") {}						// [list]
 Pair::Pair(Sym*A,Sym*B):Sym(A->val,B->val) {}		// pa:ir
@@ -140,9 +140,12 @@ Sym* Op::eval() {
 		if (val=="@") return nest[0]->at(nest[1]);
 		if (val==".") return nest[0]->dot(nest[1]);
 		if (val=="doc") return nest[0]->doc(nest[1]);
-		if (val=="+") return nest[0]->add(nest[1]);
 		if (val=="+=") return nest[0]->ins(nest[1]);
 	}
+	return this;
+}
+Sym* Op::at(Sym*o) {
+	if (val=="+") return o->add();
 	return this;
 }
 Op* doc = new Op("doc");							// "doc"string operator

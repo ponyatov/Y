@@ -48,6 +48,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	virtual Sym* dot(Sym*);				// A . B	index
 	virtual Sym* ins(Sym*);				// A += B	insert (vs C increment)
 	virtual Sym* add(Sym*);				// A + B	add
+	virtual Sym* add();					// +A		sum
 };
 
 extern void W(Sym*);								// == writers ==
@@ -83,9 +84,7 @@ struct Num:Sym { Num(string); Num(double);			// floating number
 // ====================================================================== CONS
 struct Cons:Sym { Cons(Sym*,Sym*);					// classic Lisp cons element
 	Sym* car; Sym* cdr; string dump(int);
-	Sym* eval(); 
-	Sym* add(Sym*);
-};
+	Sym* eval(); Sym*add(); };
 /* droppped due to bI lispification following SICP bible
 struct List:Sym { List(); };						// [list]
 struct Pair:Sym { Pair(Sym*,Sym*); };				// pa:ir
@@ -96,7 +95,8 @@ struct Tuple:Sym { Tuple(); 						// tu,ple
 
 // =============================================================== FUNCTIONALS
 // =================================================== operator
-struct Op:Sym { Op(string); Sym* eval(); };
+struct Op:Sym { Op(string); Sym* eval();
+	Sym* at(Sym*); };
 extern Op* doc;										// "doc"string operator
 // =================================================== 
 
