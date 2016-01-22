@@ -80,11 +80,13 @@ struct Num:Sym { Num(string);						// floating number
 	double val; string tagval(); };
 
 // ================================================================ COMPOSITES
+/* droppped due to bI lispification following SICP bible (using Cons)
 struct List:Sym { List(); };						// [list]
 struct Pair:Sym { Pair(Sym*,Sym*); };				// pa:ir
 struct Vector:Sym { Vector(); };					// <vector>
 struct Tuple:Sym { Tuple(); 						// tu,ple
 	Tuple(Sym*,Sym*); };
+*/
 
 // =============================================================== FUNCTIONALS
 // =================================================== operator

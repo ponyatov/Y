@@ -71,7 +71,8 @@ Sym* Directive::eval() { Sym::eval();
 Sym* nil = new Sym("nil","");						// nil
 // =================================================== classic Lisp cons element
 Cons::Cons(Sym*X,Sym*Y):Sym("","") { car=X, cdr=Y; }
-Sym* Cons::eval() { (car->eval())->at(cdr->eval()); }// eval as car@cdr
+Sym* Cons::eval() { return Sym::eval(); }		
+//(car->eval())->at(cdr->eval()); }// eval in lisp style as car@cdr
 string Cons::dump(int depth) {
 	string S = Sym::dump(depth);
 	S += car->dump(depth+1);
@@ -102,13 +103,14 @@ string Num::tagval() {
 
 // ============================================================================
 
-
-// ================================================================ composites 
+// ================================================================ COMPOSITES
+/* droppped due to bI lispification following SICP bible (using Cons)
 List::List():Sym("[","]") {}						// [list]
 Pair::Pair(Sym*A,Sym*B):Sym(A->val,B->val) {}		// pa:ir
 Tuple::Tuple(Sym*A,Sym*B):Sym(",",",") {			// tu,ple
 	push(A); push(B); }
 Vector::Vector():Sym("","") {}						// <vector>
+*/
 
 // =============================================================== FUNCTIONALS
 

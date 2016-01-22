@@ -1,5 +1,6 @@
-[ dir 'next' ] "next generation dir"
-MODULE OS
+[ dir MODULE ]
+#[ dir 'next' ] "next generation dir"
+#MODULE OS
 #[ file 'ypp.ypp' ] "parser" 
 #[ file 'lpp.lpp' ] "lexer"
 #( file 'hpp.hpp' )
