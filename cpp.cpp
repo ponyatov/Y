@@ -33,8 +33,9 @@ string Sym::dump(int depth) {						// dump symbol object
 		S += (*it)->dump(depth+1);
 	return S; }
 string Sym::pad(int n) { string S;					// tab padding
-	for (int i=0;i<n-1;i++) S+="|   ";
-	if (n>0) S += "\\___";
+	if (n>0) {
+		for (int i=0;i<n-1;i++) S+="|   ";
+		S += "\\___"; }
 	return S; }
 // --------------------------------------------------- evaluation (computing)
 Sym* Sym::eval() {
@@ -73,14 +74,6 @@ Sym* Directive::eval() { Sym::eval();
 
 // ================================================================== SPECIALS
 Sym* nil = new Sym("nil","");						// nil
-// =================================================== classic Lisp cons element
-Cons::Cons(Sym*X,Sym*Y):Sym("","") { car=X, cdr=Y; }
-Sym* Cons::eval() {									// eval as car@cdr
-	return (car->eval())->at(cdr->eval()); }
-string Cons::dump(int depth) {
-	string S = Sym::dump(depth);
-	S += car->dump(depth+1); S += cdr->dump(depth+1);
-	return S; }
 // ============================================================================
 
 // =================================================================== SCALARS
@@ -90,15 +83,21 @@ Str::Str(string V):Sym("str",V) {}
 string Str::tagval() { return tagstr(); }
 // ===================================================
 
-													// == machine numbers ==
+// =================================================== machine numbers
 Hex::Hex(string V):Sym("hex",V) {}					// hexadecimal
 Bin::Bin(string V):Sym("bin",V)	{}					// binary
 
-													// == integer ==
+// =================================================== integer
 Int::Int(string V):Sym("int","") { val = atoi(V.c_str()); }
+Int::Int(long   V):Sym("int","") { val = V; }
 string Int::tagval() {
 	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
-													// == floating number ==
+Sym* Int::add(Sym*o) {
+	if (o->tag=="int") return new Int(val+dynamic_cast<Int*>(o)->val);
+	return Sym::add(o);
+}
+
+// =================================================== floating number
 Num::Num(string V):Sym("num","") { val = atof(V.c_str()); }
 string Num::tagval() {
 	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
@@ -106,7 +105,15 @@ string Num::tagval() {
 // ============================================================================
 
 // ================================================================ COMPOSITES
-/* droppped due to bI lispification following SICP bible (using Cons)
+// ====================================================================== CONS
+Cons::Cons(Sym*X,Sym*Y):Sym("","") { car=X, cdr=Y; }
+Sym* Cons::eval() {									// eval as car@cdr
+	return (car->eval())->at(cdr->eval()); }
+string Cons::dump(int depth) {
+	string S = Sym::dump(depth);
+	S += car->dump(depth+1); S += cdr->dump(depth+1);
+	return S; }
+/* droppped due to bI lispification following SICP bible
 List::List():Sym("[","]") {}						// [list]
 Pair::Pair(Sym*A,Sym*B):Sym(A->val,B->val) {}		// pa:ir
 Tuple::Tuple(Sym*A,Sym*B):Sym(",",",") {			// tu,ple

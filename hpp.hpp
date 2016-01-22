@@ -65,9 +65,6 @@ extern void yyerror(string);						// error callback
 
 // ================================================================== SPECIALS
 extern Sym* nil;									// nil
-struct Cons:Sym { Cons(Sym*,Sym*);					// classic Lisp cons element
-	Sym* car; Sym* cdr; string dump(int);
-	Sym* eval(); };
 // ================================================================= DIRECTIVE
 struct Directive:Sym { Directive(string);
 	string tagval(); Sym*eval(); };
@@ -76,13 +73,18 @@ struct Directive:Sym { Directive(string);
 struct Str:Sym { Str(string); string tagval(); };	// string
 struct Hex:Sym { Hex(string); };					// hexadecimal machine number
 struct Bin:Sym { Bin(string); };					// binary machine number (bit string)
-struct Int:Sym { Int(string);						// integer
-	long val; string tagval(); };
-struct Num:Sym { Num(string);						// floating number
+struct Int:Sym { Int(string); Int(long);			// integer
+	long val; string tagval();
+	Sym*add(Sym*); };
+struct Num:Sym { Num(string); Num(double);			// floating number
 	double val; string tagval(); };
 
 // ================================================================ COMPOSITES
-/* droppped due to bI lispification following SICP bible (using Cons)
+// ====================================================================== CONS
+struct Cons:Sym { Cons(Sym*,Sym*);					// classic Lisp cons element
+	Sym* car; Sym* cdr; string dump(int);
+	Sym* eval(); };
+/* droppped due to bI lispification following SICP bible
 struct List:Sym { List(); };						// [list]
 struct Pair:Sym { Pair(Sym*,Sym*); };				// pa:ir
 struct Vector:Sym { Vector(); };					// <vector>
