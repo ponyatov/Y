@@ -1,3 +1,3 @@
 next = dir @ MODULE	"target directory"
-next += file @ 'README.md'
+readme = next += file @ 'README.md'
 

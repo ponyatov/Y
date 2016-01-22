@@ -52,14 +52,14 @@ N [0-9]+
 \@					TOC(Op,AT)
 \:					TOC(Op,COLON)
 
+\+=					TOC(Op,INS)
+\-=					TOC(Op,DEL)
+
 \+					TOC(Op,ADD)
 \-					TOC(Op,SUB)
 \*					TOC(Op,MUL)
 \/					TOC(Op,DIV)
 \^					TOC(Op,DIV)
-
-\+=					TOC(Op,INS)
-\-=					TOC(Op,DEL)
 
 [ \t\r\n]+			{}						/* drop spaces */
 .					{}						/* drop undetected chars */

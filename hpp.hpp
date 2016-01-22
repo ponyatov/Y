@@ -46,7 +46,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
 	virtual Sym* dot(Sym*);				// A . B	index
-	virtual Sym* ins(Sym*);				// A += B	insert (vs C increment)
+	virtual Sym* addeq(Sym*);			// A += B	insert (vs C increment)
 	virtual Sym* add(Sym*);				// A + B	add
 	virtual string str();				// A.str	to string
 };
@@ -108,8 +108,7 @@ struct Fn:Sym { Fn(string,FN); 						// internal/dyncompiled function
 
 // ==================================================================== FILEIO
 // =================================================== directory
-struct Dir:Sym { Dir(Sym*); string tagval();
-	Sym*ins(Sym*); };
+struct Dir:Sym { Dir(Sym*); string tagval(); Sym*addeq(Sym*); };
 extern Sym* dir(Sym*);
 // =================================================== file
 struct File:Sym { File(Sym*); string tagval();
