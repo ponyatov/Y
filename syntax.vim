@@ -4,16 +4,16 @@
 
 syntax match  Todo      "\v^\.[a-z]+[ \t]*"					" .directive
 syntax match  Comment	"\v#.*"								" # line comment
-"syntax match  Comment	"\\___"
-"syntax match  Comment	"|   "
+syntax match  Comment	"\\___"
+syntax match  Comment	"|   "
 
-"syntax match  Constant	"\v[\+\-]?[0-9]+L?"					" integer
-"syntax match  Constant	"\v[\+\-]?[0-9]+\.[0-9]+"			" floating point
-"syntax match  Constant	"\v[\+\-]?[0-9]+[eE][\+\-]?[0-9]+"	" exponential
-"syntax match  Constant	"\v0x[0-9A-F]+"						" hex
-"syntax match  Constant	"\v[0-9A-F]+[Hh]"
-"syntax match  Constant	"\v0b[01]+"							" bin
-"syntax match  Constant	"\v[01]+[Bb]"
+syntax match  Constant	"\v[\+\-]?[0-9]+L?"					" integer
+syntax match  Constant	"\v[\+\-]?[0-9]+\.[0-9]+"			" floating point
+syntax match  Constant	"\v[\+\-]?[0-9]+[eE][\+\-]?[0-9]+"	" exponential
+syntax match  Constant	"\v0x[0-9A-F]+"						" hex
+syntax match  Constant	"\v[0-9A-F]+[Hh]"
+syntax match  Constant	"\v0b[01]+"							" bin
+syntax match  Constant	"\v[01]+[Bb]"
 syntax region String	start="'" end="'"					" 'string'
 syntax region Special	start="\"" end="\""					" "docstring"
 														" symbols not colored

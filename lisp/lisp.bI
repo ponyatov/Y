@@ -3,9 +3,6 @@ TITLE = 'Lisp engine realization in bI'
 
 .inc ../meta/files.bI
 
-#next = dir @ MODULE
-
-#readme = next += file @ 'README.md'
 
 #readme += '# ' + MODULE +'\n'
 #readme += '### ' + TITLE + '\n'
