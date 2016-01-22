@@ -20,11 +20,15 @@ N [0-9]+
 '					{BEGIN(lexstring);LexString="";}		/* string parser */
 <lexstring>'		{BEGIN(INITIAL);
 					yylval.o = new Str(LexString); return STR; }
+<lexstring>\\t		{LexString+='\t';}
+<lexstring>\\n		{LexString+='\n';}
 <lexstring>.		{LexString+=yytext[0];}
 
 \"					{BEGIN(docstring);LexString="";}		/* docstring */
 <docstring>\"		{BEGIN(INITIAL);
 					yylval.o = new Str(LexString); return DOC; }
+<docstring>\\t		{LexString+='\t';}
+<docstring>\\n		{LexString+='\n';}
 <docstring>.		{LexString+=yytext[0];}
 
 											/* numbers */
