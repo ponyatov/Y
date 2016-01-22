@@ -1,7 +1,7 @@
 
 TITLE = 'Lisp engine realization in bI'
 
-.inc ../meta/files
+.inc ../meta/files.bI
 
 #next = dir @ MODULE
 
