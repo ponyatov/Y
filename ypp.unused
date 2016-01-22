@@ -1,3 +1,5 @@
+							/* droppped due to bI lispification */
+
 %type <o> lambda				/* {lambda}                                    */
 
 %type <o> lambda vector		/* {la:mbda} <vec,tor> */

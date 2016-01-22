@@ -1,4 +1,4 @@
-#include "hpp.hpp"
+#include "../hpp.hpp"
 // =================================================== error callback
 #define YYERR "\n\n"<<yylineno<<":"<<msg<<"["<<yytext<<"]\n\n"
 void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
@@ -25,15 +25,18 @@ void Sym::setpar(Sym*o) { par[o->val]=o; }			// add
 // --------------------------------------------------- dumping
 string Sym::tagval() {return "<"+tag+":"+val+">";}	// <T:V> header string
 string Sym::tagstr() {return "<"+tag+":'"+val+"'>";}// <T:'V'> Str-like header
-string Sym::dump(int depth) {						// dump symbol object
-	string S = "\n" + pad(depth) + tagval();			// header
-	for (auto pr=par.begin() ; pr!=par.end() ; pr++)	// par{}ameters
+string Sym::dump(int depth) {							// dump as text
+	string S = "\n" + pad(depth) + tagval();
+	for (auto pr=par.begin(),e=par.end();pr!=e;pr++)	// par{}ameters
 		S += ","+pr->first+":"+pr->second->tagval();
-	for (auto it=nest.begin() ; it!=nest.end() ; it++)	// nest[]ed
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// nest[]ed
 		S += (*it)->dump(depth+1);
 	return S; }
 string Sym::pad(int n) { string S;					// tab padding
-	for (int i=0;i<n;i++) S+="\t"; return S; }
+	if (n>0) {
+		for (int i=0;i<n-1;i++) S+="|   ";
+		S += "\\___"; }
+	return S; }
 // --------------------------------------------------- evaluation (computing)
 Sym* Sym::eval() {
 	Sym*E = env[val]; if (E) return E;				// lookup in glob.env[]
@@ -42,12 +45,14 @@ Sym* Sym::eval() {
 	return this;
 }
 // --------------------------------------------------- operators
+Sym* Sym::dummy(Sym*o) { push(o); return this; }	// cons -> nest[] folding
 Sym* Sym::doc(Sym*o){								// A "B"	docstring
 	Sym*E = new Sym(this); E->par["doc"]=o; return E; }	
 Sym* Sym::eq(Sym*o)	{ env[val]=o; return o; }		// A = B	assignment
-Sym* Sym::at(Sym*o)	{ push(o); return this; }		// A @ B	apply
+Sym* Sym::at(Sym*o)	{ return dummy(o); }			// A @ B	apply
 Sym* Sym::dot(Sym*o){ return new Cons(this,o); }	// A . B	cons
-Sym* Sym::ins(Sym*o){ push(o); return this; }		// A += B	insert
+Sym* Sym::add(Sym*o){ return dummy(o); }			// A + B	add
+string Sym::str() { return tagval(); }				// A.str	to string
 // ============================================================================
 
 // ================================================================= DIRECTIVE
@@ -58,26 +63,20 @@ Directive::Directive(string V):Sym("",V) {
 	while (val.size() && (val[0]==' ' || val[0]=='\t')) {
 		               val.erase(0,1); }
 }
-Sym* Directive::eval() { Sym::eval();
+Sym* Directive::eval() {
+	Sym::eval();
 	val=nest[0]->val; 
-	if (tag==".module") env["MODULE"]=nest[0];
-	if (tag==".title") env["TITLE"]=nest[0];
-	if (tag==".author") env["AUTHOR"]=nest[0];
-	if (tag==".github") env["GITHUB"]=nest[0];
+//	if (tag==".module") env["MODULE"]=nest[0];
+//	if (tag==".title") env["TITLE"]=nest[0];
+//	if (tag==".author") env["AUTHOR"]=nest[0];
+//	if (tag==".github") env["GITHUB"]=nest[0];
 	nest.erase(nest.begin());
 	return this; }
 
 // ================================================================== SPECIALS
 Sym* nil = new Sym("nil","");						// nil
-// =================================================== classic Lisp cons element
-Cons::Cons(Sym*X,Sym*Y):Sym("","") { car=X, cdr=Y; }
-Sym* Cons::eval() { (car->eval())->at(cdr->eval()); }// eval as car@cdr
-string Cons::dump(int depth) {
-	string S = Sym::dump(depth);
-	S += car->dump(depth+1);
-	S += cdr->dump(depth+1);
-	return S;
-}
+Sym *Rmode = new Sym("mode","R");					// R
+Sym *Wmode = new Sym("mode","W");					// W
 // ============================================================================
 
 // =================================================================== SCALARS
@@ -85,43 +84,67 @@ string Cons::dump(int depth) {
 // =================================================== string
 Str::Str(string V):Sym("str",V) {}
 string Str::tagval() { return tagstr(); }
+Sym* Str::add(Sym*o) { return new Str(val+o->val); }
+string Str::str() { return val; }
 // ===================================================
 
-													// == machine numbers ==
+// =================================================== machine numbers
 Hex::Hex(string V):Sym("hex",V) {}					// hexadecimal
 Bin::Bin(string V):Sym("bin",V)	{}					// binary
 
-													// == integer ==
+// =================================================== integer
 Int::Int(string V):Sym("int","") { val = atoi(V.c_str()); }
+Int::Int(long   V):Sym("int","") { val = V; }
 string Int::tagval() {
 	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
-													// == floating number ==
+Sym* Int::add(Sym*o) {
+	cerr << "\n\n\n";
+	cerr << tagval() << "\n";
+	cerr << o->tagval() << "\n";
+//	cerr << "car:" << o->car->tagval() << "\n";
+//	cerr << "cdr:" << o->cdr->tagval() << "\n";
+	cerr << "\n\n\n";
+	if (o->tag=="int") return new Int(val+dynamic_cast<Int*>(o)->val);
+	return Sym::add(o);
+}
+
+// =================================================== floating number
 Num::Num(string V):Sym("num","") { val = atof(V.c_str()); }
 string Num::tagval() {
 	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
 
 // ============================================================================
 
+// ================================================================ COMPOSITES
+// ====================================================================== CONS
+Cons::Cons(Sym*X,Sym*Y):Sym("","") { car=X, cdr=Y; }
+string Cons::dump(int depth) {
+	string S = Sym::dump(depth);
+	S += car->dump(depth+1); S += cdr->dump(depth+1);
+	return S; }
 
-// ================================================================ composites 
+// ====================================================================== LIST
 List::List():Sym("[","]") {}						// [list]
+
+/* droppped due to bI lispification following SICP bible
 Pair::Pair(Sym*A,Sym*B):Sym(A->val,B->val) {}		// pa:ir
 Tuple::Tuple(Sym*A,Sym*B):Sym(",",",") {			// tu,ple
 	push(A); push(B); }
 Vector::Vector():Sym("","") {}						// <vector>
+*/
 
 // =============================================================== FUNCTIONALS
 
 // =================================================== operator
 Op::Op(string V):Sym("op",V) {}
 Sym* Op::eval() {
+	if (val=="=") return nest[0]->eq(nest[1]->eval());
 	Sym::eval();									// nest[]ed evaluate
 	if (nest.size()==2) {							// A op B bin.operator
-		if (val=="=") return nest[0]->eq(nest[1]);
 		if (val=="@") return nest[0]->at(nest[1]);
-		if (val==".") return nest[0]->dot(nest[1]);
+//		if (val==".") return nest[0]->dot(nest[1]);
 		if (val=="doc") return nest[0]->doc(nest[1]);
-		if (val=="+=") return nest[0]->ins(nest[1]);
+//		if (val=="+") return nest[0]->add(nest[1]);
 	}
 	return this;
 }
@@ -138,19 +161,14 @@ Lambda::Lambda():Sym("^","^") {}					// {la:mbda}
 // ============================================================================
 
 // ==================================================================== FILEIO
-// =================================================== dir
+// =================================================== directory
 Sym* dir(Sym*o) { return new Dir(o); }
 string Dir::tagval() { return tagstr(); }
-/*
-Sym* Dir::add(Sym*o) {
-	if (o->tag!="file") return Sym::add(o);
-	else return new File(val+'/'+o->val);
-}
-*/
 // ===================================================
 
 // =================================================== file
 File::File(Sym*o):Sym("file",o->val) {}
+File::File(string V):Sym("file",V) {}
 File::~File() { if (fh) fclose(fh); }
 Sym* file(Sym*o) { return new File(o); }
 string File::tagval() { return tagstr(); }
@@ -174,6 +192,8 @@ string Window::tagval()	{ return tagstr(); }
 map<string,Sym*> env;
 void env_init() {									// init env{} on startup
 	env["nil"]		= nil;
+	env["R"]		= Rmode;
+	env["W"]		= Wmode;
 	// ----------------------------------------------- metainfo constants
 	env["OS"]		= new Str(OS);					// host OS
 	env["MODULE"]	= new Str(MODULE);				// module name (CFLAGS -DMODULE)

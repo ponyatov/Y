@@ -1,4 +1,4 @@
-#include "hpp.hpp"
+#include "../hpp.hpp"
 
 // ==================================================================== FILEIO
 Dir::Dir(Sym*o):Sym("dir",o->val) {
