@@ -93,6 +93,12 @@ Int::Int(long   V):Sym("int","") { val = V; }
 string Int::tagval() {
 	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
 Sym* Int::add(Sym*o) {
+	cerr << "\n\n\n";
+	cerr << tagval() << "\n";
+	cerr << o->tagval() << "\n";
+//	cerr << "car:" << o->car->tagval() << "\n";
+//	cerr << "cdr:" << o->cdr->tagval() << "\n";
+	cerr << "\n\n\n";
 	if (o->tag=="int") return new Int(val+dynamic_cast<Int*>(o)->val);
 	return Sym::add(o);
 }
@@ -109,6 +115,8 @@ string Num::tagval() {
 Cons::Cons(Sym*X,Sym*Y):Sym("","") { car=X, cdr=Y; }
 Sym* Cons::eval() {									// eval as car@cdr
 	return (car->eval())->at(cdr->eval()); }
+Sym* Cons::add(Sym*o) {
+	return (car->eval())->add(cdr->eval()); }
 string Cons::dump(int depth) {
 	string S = Sym::dump(depth);
 	S += car->dump(depth+1); S += cdr->dump(depth+1);

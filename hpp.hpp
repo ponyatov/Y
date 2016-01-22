@@ -83,7 +83,9 @@ struct Num:Sym { Num(string); Num(double);			// floating number
 // ====================================================================== CONS
 struct Cons:Sym { Cons(Sym*,Sym*);					// classic Lisp cons element
 	Sym* car; Sym* cdr; string dump(int);
-	Sym* eval(); };
+	Sym* eval(); 
+	Sym* add(Sym*);
+};
 /* droppped due to bI lispification following SICP bible
 struct List:Sym { List(); };						// [list]
 struct Pair:Sym { Pair(Sym*,Sym*); };				// pa:ir

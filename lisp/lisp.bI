@@ -1,5 +1,5 @@
-[ dir MODULE ]
-[ 0 file 'ypp.ypp' ] "parser"
+#[ dir MODULE ]
+#[ 0 file 'ypp.ypp' ] "parser"
 [+ 1 2]
 #[ dir 'next' ] "next generation dir"
 #MODULE OS
