@@ -21,6 +21,7 @@ syntax match  Keyword	"\v[\+\-\*\/\^]"					" operator
 syntax match  Type		"\v[\[\]\(\)\<\>\:\=]"				" brackets
 syntax match  Keyword	"\v[\{\}\@]"						" lambda coloring
 
+syntax match Constant	"\vMODULE|OS|AUTHOR|GITHUB|LICENSE"
 syntax match Constant	"\vdoc|dir|file|str"
 syntax match Todo		"\v\.[a-z]+:"
 

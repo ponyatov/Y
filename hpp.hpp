@@ -100,7 +100,7 @@ struct Fn:Sym { Fn(string,FN); 						// internal/dyncompiled function
 
 // ==================================================================== FILEIO
 struct Dir:Sym { Dir(Sym*); string tagval();		// directory
-	Sym*ins(Sym); };
+	Sym*ins(Sym*); };
 extern Sym* dir(Sym*);
 struct File:Sym { File(Sym*); string tagval();		// file
 	FILE *fh; ~File(); };
