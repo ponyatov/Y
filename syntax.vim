@@ -2,9 +2,10 @@
 " Maintainer: (c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved
 " GitHub: https://github.com/ponyatov/Y
 
-syntax match  Todo      "\v^\.[a-z]+.*"						" .directive
+syntax match  Todo      "\v^\.[a-z]+[ \t]*"					" .directive
 syntax match  Comment	"\v#.*"								" # line comment
-syntax region Comment	start="#|" end="|#"					" #|block comment|#
+syntax match  Comment	"\v\\_+"
+syntax match  Comment	"\v\|\ +"
 
 syntax match  Constant	"\v[\+\-]?[0-9]+L?"					" integer
 syntax match  Constant	"\v[\+\-]?[0-9]+\.[0-9]+"			" floating point
@@ -17,12 +18,12 @@ syntax region String	start="'" end="'"					" 'string'
 syntax region Special	start="\"" end="\""					" "docstring"
 														" symbols not colored
 
-syntax match  Keyword	"\v[\+\-\*\/\^]"					" operator
-syntax match  Type		"\v[\[\]\(\)\<\>\:\=]"				" brackets
-syntax match  Keyword	"\v[\{\}\@]"						" lambda coloring
+syntax match  Keyword	"\v[+-]"					" operator
+syntax match  Type		"\v[<>:=]"					" brackets
+syntax match  Keyword	"\v[@]"						" lambda coloring
 
-syntax match Constant	"\vMODULE|OS|AUTHOR|GITHUB|LICENSE"
-syntax match Constant	"\vdoc|dir|file|str"
+syntax match Constant	"\vMODULE|OS|AUTHOR|GITHUB|LICENSE|TITLE"
+syntax match Constant	"\v(doc|dir|file|str)"
 syntax match Todo		"\v\.[a-z]+:"
 
 let b:current_syntax = "bI"
