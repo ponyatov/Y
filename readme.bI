@@ -1,6 +1,6 @@
 .inc core/readme.bI
 
-\# ![logo](logo/logo64x64.png) ALYEH platform : bI dynamic language system
+\# ![logo](https://github.com/ponyatov/icons/raw/master/logo64x64.png) ALYEH platform : bI dynamic language system
 \#\# Динамический язык метапрограммирования Ы (чтобы никто не догадался)
 
 \#\#\# goals:
