@@ -3,14 +3,14 @@
 %}
 %defines %union { Sym*o; }
 
-%token <o> DOC DIR 				/* doc: "docstring" .directive		*/
-%token <o> SYM NUM STR 			/* scalars: symbol number 'string'	*/
-%token <o> L R LQ RQ LB RB		/* brackets:  ( ) [ ] { }			*/
-%token <o> EQ AT COLON DOT		/* operators: = @ : .				*/
-%token <o> ADD SUB MUL DIV POW	/* + - * / ^						*/
-%token <o> INS DEL 				/* += -=							*/
+%token <o> DOC DIR 					/* doc: "docstring" .directive		*/
+%token <o> SYM NUM STR 				/* scalars: symbol number 'string'	*/
+%token <o> L R LQ RQ LB RB			/* brackets:  ( ) [ ] { }			*/
+%token <o> EQ AT COLON DOT			/* operators: = @ : .				*/
+%token <o> ADD SUB MUL DIV POW		/* + - * / ^						*/
+%token <o> INS DEL 					/* += -=							*/
 
-%type <o> ex scalar list lambda	/* expression scalar [list] {lambda} */
+%type <o> ex scalar list lambda		/* expression scalar [list] {lambda} */
 
 %left EQ
 %left ADD SUB
