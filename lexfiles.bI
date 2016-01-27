@@ -1,8 +1,8 @@
 # lexical fileset skeleton
 
-next		= dir @ MODULE					"next generation dos"
+next		= dir @ MODULE					# module next generation
 
-readme		= next + file @ 'README.md'		"README"
+readme		= next + file @ 'README.md'		# README
 files		= [
 do			= next + file @ 'do.do'
 log			= next + file @ 'log.log'

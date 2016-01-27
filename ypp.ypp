@@ -15,9 +15,9 @@
 %left EQ
 %left ADD SUB
 %left MUL DIV
-%left DOC
 %left STR
 %left AT
+%left DOC
 %%
 REPL	: | REPL ex			{ W($2); W("\n------");					/* parsed */
 							W($2->eval()); W("\n=======\n"); } ;	/* evaled */

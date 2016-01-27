@@ -119,11 +119,11 @@ Sym* Op::eval() {
 		return nest[0]->eq(nest[1]->eval()); }
 	Sym::eval();										// nest[]ed evaluate
 	if (nest.size()==2) {								// A op B bin.operator
-//		if (val=="doc")	return nest[0]->doc(nest[1]);
-//		if (val=="@")	return nest[0]->at(nest[1]);
-//		if (val=="+")	return nest[0]->add(nest[1]);
+		if (val=="doc")	return nest[0]->doc(nest[1]);
+		if (val=="@")	return nest[0]->at(nest[1]);
+		if (val=="+")	return nest[0]->add(nest[1]);
 //		if (val=="/")	return nest[0]->div(nest[1]);
-//		if (val=="+=")	return nest[0]->ins(nest[1]);
+		if (val=="+=")	return nest[0]->ins(nest[1]);
 	}
 	return this; }
 // ===================================================
