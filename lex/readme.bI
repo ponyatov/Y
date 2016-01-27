@@ -6,5 +6,5 @@ readme += '### '+ABOUT+'\n'
 readme += '\n'+AUTHOR+'\n'
 readme += '\nlicense: '+LICENSE+'\n'
 readme += '\nGitHub: '+GITHUB+'\n'
-readme += '\n### ![logo](https://github.com/ponyatov/icons/raw/master/logo64x64.png) powered by bI dymanic language\n'
+readme += '\n### ![logo](https://github.com/ponyatov/icons/raw/master/hedge64x64.png) powered by bI dymanic language\n'
 
