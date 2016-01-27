@@ -10,8 +10,8 @@ files = [
 bi	= next + file @ (MODULE+'.bI')
 log	= next + file @ (MODULE+'.blog')
 
-.inc ../Y/lex/lexer.bI
 .inc ../Y/lex/parser.bI
+.inc ../Y/lex/lexer.bI
 .inc ../Y/lex/headers.bI
 .inc ../Y/lex/cpp.bI
 
@@ -20,8 +20,8 @@ log	= next + file @ (MODULE+'.blog')
 exe = './'+MODULE+'.exe'
 log = MODULE+'.blog'
 
-CFILES = [ cpp OS+'.cpp' 'ypp.tab.cpp' 'lex.yy.c' ]/' '
-HFILES = [ hpp OS+'.hpp' 'ypp.tab.cpp' ]/' '
+CFILES = [ cpp '../../Y/'+OS+'.cpp' 'ypp.tab.cpp' 'lex.yy.c' ]/' '
+HFILES = [ hpp '../../Y/'+OS+'.hpp' 'ypp.tab.cpp' ]/' '
 .inc ../Y/lex/make.bI
 
 

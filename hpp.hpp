@@ -8,6 +8,8 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
+#include <string>
+#include <algorithm>
 #include <vector>
 #include <map>
 using namespace std;
@@ -61,6 +63,8 @@ extern Sym* Wr;										// write mode
 
 // =================================================================== SCALARS
 struct Str:Sym { Str(string); Sym* add(Sym*); };	// string
+extern Sym* upcase(Sym*);
+
 struct Hex:Sym { Hex(string); };					// hexadecimal
 struct Bin:Sym { Bin(string); };					// bit string
 struct Int:Sym { Int(string); Int(long);			// integer
