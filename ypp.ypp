@@ -34,6 +34,9 @@ ex		: scalar
 		| ex INS ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex DEL ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex ADD ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex SUB ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex MUL ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex DIV ex			{ $$=$2; $$->push($1); $$->push($3); }
 ;
 list	:					{ $$=new List(); }
 		| list ex			{ $$=$1; $$->push($2); }

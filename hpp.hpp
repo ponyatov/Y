@@ -44,8 +44,8 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	virtual Sym* ins(Sym*);				// A += B	insert
 };
 
-extern void W(Sym*);						// \ ==== writers ====
-extern void W(string);						// /
+extern void W(Sym*);								// \ ==== writers ====
+extern void W(string);								// /
 
 // ================================================================= DIRECTIVE
 struct Directive:Sym { Directive(string); };

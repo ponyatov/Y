@@ -15,13 +15,8 @@ win32h		= next + file @ 'win32.hpp'
 win32c		= next + file @ 'win32.cpp'
 make		= next + file @ 'Makefile'
 ]
-bat			= next + file @ 'bat.bat'		"(g)vim helper"
 
 .inc ../Y/lex/gitignore.bI
 .inc ../Y/lex/win32rc.bI
-
-# bat
-
-bat += '@start .\n'
-bat += '@gvim -c "colorscheme peachpuff" -p '+files/' '+'\n'
+.inc ../Y/lex/bat.bI
 

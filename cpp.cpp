@@ -122,7 +122,7 @@ Sym* Op::eval() {
 		if (val=="doc")	return nest[0]->doc(nest[1]);
 		if (val=="@")	return nest[0]->at(nest[1]);
 		if (val=="+")	return nest[0]->add(nest[1]);
-//		if (val=="/")	return nest[0]->div(nest[1]);
+		if (val=="/")	return nest[0]->div(nest[1]);
 		if (val=="+=")	return nest[0]->ins(nest[1]);
 	}
 	return this; }
