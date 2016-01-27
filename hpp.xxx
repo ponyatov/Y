@@ -1,0 +1,12 @@
+
+// ====================================================================== CONS
+struct Cons:Sym { Cons(Sym*,Sym*);					// classic Lisp cons element
+	Sym* car; Sym* cdr; string dump(int); };
+/* droppped due to bI lispification following SICP bible
+struct Pair:Sym { Pair(Sym*,Sym*); };				// pa:ir
+struct Vector:Sym { Vector(); };					// <vector>
+struct Tuple:Sym { Tuple(); 						// tu,ple
+	Tuple(Sym*,Sym*); };
+*/
+
+

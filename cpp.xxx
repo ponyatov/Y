@@ -1,0 +1,91 @@
+
+Sym::Sym(Sym*o):Sym(o->tag,o->val) {				// copy
+	for (auto it=o->nest.begin(),e=o->nest.end();it!=e;it++)
+		push(new Sym(*it));
+}
+
+string Sym::tagstr() {return "<"+tag+":'"+val+"'>";}// <T:'V'> Str-like header
+
+// ============================================================================
+
+string Directive::tagval() { return tagstr(); }
+Sym* Directive::eval() {
+	Sym::eval();
+	val=nest[0]->val; 
+//	if (tag==".module") env["MODULE"]=nest[0];
+//	if (tag==".title") env["TITLE"]=nest[0];
+//	if (tag==".author") env["AUTHOR"]=nest[0];
+//	if (tag==".github") env["GITHUB"]=nest[0];
+	nest.erase(nest.begin());
+	return this; }
+
+Sym* nil = new Sym("nil","");						// nil
+Sym *Rmode = new Sym("mode","R");					// R
+Sym *Wmode = new Sym("mode","W");					// W
+// ============================================================================
+
+
+string Str::tagval() { return tagstr(); }
+string Str::str() { return val; }
+// ===================================================
+
+Int::Int(long   V):Sym("int","") { val = V; }
+Sym* Int::add(Sym*o) {
+	cerr << "\n\n\n";
+	cerr << tagval() << "\n";
+	cerr << o->tagval() << "\n";
+//	cerr << "car:" << o->car->tagval() << "\n";
+//	cerr << "cdr:" << o->cdr->tagval() << "\n";
+	cerr << "\n\n\n";
+	if (o->tag=="int") return new Int(val+dynamic_cast<Int*>(o)->val);
+	return Sym::add(o);
+}
+
+
+// ====================================================================== CONS
+Cons::Cons(Sym*X,Sym*Y):Sym("","") { car=X, cdr=Y; }
+string Cons::dump(int depth) {
+	string S = Sym::dump(depth);
+	S += car->dump(depth+1); S += cdr->dump(depth+1);
+	return S; }
+
+
+/* droppped due to bI lispification following SICP bible
+Pair::Pair(Sym*A,Sym*B):Sym(A->val,B->val) {}		// pa:ir
+Tuple::Tuple(Sym*A,Sym*B):Sym(",",",") {			// tu,ple
+	push(A); push(B); }
+Vector::Vector():Sym("","") {}						// <vector>
+*/
+
+
+
+// ============================================================================
+
+string File::tagval() { return tagstr(); }
+/*
+Sym* File::addeq(Sym*o) {
+	if (!fh) assert(fh=fopen(val.c_str(),"w"));		// auto open on write
+	return new Int(fprintf(fh,"%s",o->val.c_str()));
+}
+*/
+// ===================================================
+
+string Message::tagval(){ return tagstr(); }
+string Window::tagval()	{ return tagstr(); }
+
+// ============================================================================
+
+// ============================================================================
+
+	env["nil"]		= nil;
+	env["R"]		= Rmode;
+	env["W"]		= Wmode;
+	// ----------------------------------------------- internal functions
+	env["LISPLOGO"]	= new Str(LISPLOGO);			// Lisp Warning logo
+}
+
+	// ---- specials ----
+	env["N"] = N;	env["T"] = T;	env["F"] = F;
+	env["E"] = E;	env["D"] = D;
+	env["R"] = Rd;	env["W"] = Wr;
+

@@ -1,14 +1,7 @@
 #ifndef _H_bI
 #define _H_bI
-										// == metainfo constants ==
 
-#define TITLE "bI dynamic language system"
-#define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
-#define LICENSE "http://www.gnu.org/copyleft/lesser.html"
-#define GITHUB "https://github.com/ponyatov/Y/tree/dev"
-#define AUTOGEN "/***** DO NOT EDIT: this file was autogened by bI *****/"
-#define LOGO "logo64x64"
-#define LISPLOGO "warning64x64"
+#include "./meta.hpp"
 										// == std.includes ==
 #include <iostream>
 #include <sstream>
@@ -23,75 +16,64 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // ---------------------------------------------------------------------------
 	string tag;							// data type / class
 	string val;							// symbol value
-// --------------------------------------- constructors
+// -------------------------------------------------------------- constructors
 	Sym(string,string);					// <T:V>
 	Sym(string);						// token
-	Sym(Sym*);							// copy
-// --------------------------------------- nest[]ed elements
+//	Sym(Sym*);							// copy
+// --------------------------------------------------------- nest[]ed elements
 	vector<Sym*> nest;
 	void push(Sym*);
-// --------------------------------------- par{}ameters / class members table
-	map<string,Sym*> par;
-	void setpar(Sym*);
-// --------------------------------------- dumping
-	virtual string dump(int depth=0);	// dump symbol object
+// -------------------------------------------------------------- par{}ameters
+	map<string,Sym*> par;				// can be used as class slots
+	void partag(Sym*);					// par[tag]=obj
+	void parval(Sym*);					// par[val]=obj
+// ------------------------------------------------------------------- dumping
+	string dump(int depth=0);			// dump symbol object as text
 	virtual string tagval();			// <T:V> header string
-	string tagstr();					// <T:'V'> Str-like header string
-	string pad(int);					// tab padding
-// --------------------------------------- evaluation (computing)
+//	string tagstr();					// <T:'V'> Str-like header string
+	string pad(int);					// padding with tree decorators
+// -------------------------------------------------------- compute (evaluate)
 	virtual Sym* eval();
-// --------------------------------------- operators
-	Sym* dummy(Sym*);					// A dummy B	cons -> nest[] folding
+// ----------------------------------------------------------------- operators	
+	virtual Sym* str();					// str(A)	to string representation
 	virtual Sym* doc(Sym*);				// A "B"	docstring
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
-	virtual Sym* dot(Sym*);				// A . B	index
 	virtual Sym* add(Sym*);				// A + B	add
-	virtual string str();				// A.str	to string
+	virtual Sym* div(Sym*);				// A / B	sub
+	virtual Sym* ins(Sym*);				// A += B	insert
 };
 
 extern void W(Sym*);								// == writers ==
 extern void W(string);
-													// == lexer interface ==
-extern int yylex();									// parse next token
-extern int yylineno;								// current source line
-extern char* yytext;								// found token text
-extern void incLude(Sym*inc);						// .include file
-#define TOC(C,X) { yylval.o = new C(yytext); return X; }// token macro in .lpp
-													// == parser interface ==
-extern int yyparse();								// run parser
-extern void yyerror(string);						// error callback
-#include "ypp.tab.hpp"								// token defines for lexer
+
+extern void W(Sym*);					// \ ==== writers ====
+extern void W(string);					// /
+
+// ================================================================= DIRECTIVE
+struct Directive:Sym { Directive(string); };
 
 // ================================================================== SPECIALS
-extern Sym* nil;									// nil
-extern Sym* Rmode;									// R
-extern Sym* Wmode;									// W
-// ================================================================= DIRECTIVE
-struct Directive:Sym { Directive(string);
-	string tagval(); Sym*eval(); };
+//extern Sym* nil;							// nil/false
+//extern Sym* T;							// true
+//extern Sym* F;							// false
+//extern Sym* E;							// error
+//extern Sym* D;							// default
+extern Sym* Rd;										// read mode
+extern Sym* Wr;										// write mode
 
 // =================================================================== SCALARS
-struct Str:Sym { Str(string); string tagval();		// string
-	Sym*add(Sym*); string str(); };
-struct Hex:Sym { Hex(string); };					// hexadecimal machine number
-struct Bin:Sym { Bin(string); };					// binary machine number (bit string)
+struct Str:Sym { Str(string); Sym* add(Sym*); };	// string
+struct Hex:Sym { Hex(string); };					// hexadecimal
+struct Bin:Sym { Bin(string); };					// bit string
 struct Int:Sym { Int(string); Int(long);			// integer
-	long val; string tagval(); Sym*add(Sym*); };
+	string tagval(); long   val; };
 struct Num:Sym { Num(string); Num(double);			// floating number
-	double val; string tagval(); };
+	string tagval(); double val; };
 
 // ================================================================ COMPOSITES
-// ====================================================================== CONS
-struct Cons:Sym { Cons(Sym*,Sym*);					// classic Lisp cons element
-	Sym* car; Sym* cdr; string dump(int); };
-struct List:Sym { List(); };						// [list]
-/* droppped due to bI lispification following SICP bible
-struct Pair:Sym { Pair(Sym*,Sym*); };				// pa:ir
-struct Vector:Sym { Vector(); };					// <vector>
-struct Tuple:Sym { Tuple(); 						// tu,ple
-	Tuple(Sym*,Sym*); };
-*/
+struct List:Sym { List();							// [list]
+	Sym*str(); Sym*div(Sym*); };
 
 // =============================================================== FUNCTIONALS
 // =================================================== operator
@@ -102,22 +84,21 @@ extern Op* doc;										// "doc"string operator
 struct Lambda:Sym { Lambda(); };					// {la:mbda}
 // =================================================== function
 typedef Sym*(*FN)(Sym*);							// function ptr
-struct Fn:Sym { Fn(string,FN); 						// internal/dyncompiled function
-	FN fn; Sym*at(Sym*); };
+struct Fn:Sym { Fn(string,FN); FN fn; Sym* at(Sym*); };// internal function
 
 // ==================================================================== FILEIO
 // =================================================== directory
-struct Dir:Sym { Dir(Sym*); string tagval(); };		// directory
+struct Dir:Sym { Dir(Sym*); Sym* add(Sym*); };
 extern Sym* dir(Sym*);
 // =================================================== file
-struct File:Sym { File(Sym*); string tagval();
-	FILE *fh; ~File(); File(string); };
+struct File:Sym { File(Sym*); Sym* ins(Sym*);
+	FILE *fh; ~File(); };
 extern Sym* file(Sym*);
 
 // ======================================================================= GUI
-struct Message:Sym { Message(Sym*);	string tagval(); };	// message box/bar
+struct Message:Sym { Message(Sym*);	};				// message box/bar
 extern Sym* message(Sym*);
-struct Window:Sym { Window(Sym*); string tagval(); };	// window
+struct Window:Sym { Window(Sym*); };				// window
 extern Sym* window(Sym*);
 
 // =============================================================== OS SPECIFIC
@@ -128,5 +109,17 @@ extern Sym* window(Sym*);
 // ====================================================== GLOBAL ENV{}IRONMENT
 extern map<string,Sym*> env;
 extern void env_init();								// init env{} on startup
+
+// ========================================================== PARSER INTERFACE
+													// == lexer interface ==
+extern int yylex();									// parse next token
+extern int yylineno;								// current source line
+extern char* yytext;								// found token text
+extern void incLude(Sym*inc);						// .include file
+#define TOC(C,X) { yylval.o = new C(yytext); return X; }
+													// == parser interface ==
+extern int yyparse();								// run parser
+extern void yyerror(string);						// error callback
+#include "ypp.tab.hpp"								// token defines for lexer
 
 #endif // _H_bI

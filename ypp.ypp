@@ -1,17 +1,20 @@
 %{
-#include "../hpp.hpp"
+#include "hpp.hpp"
 %}
 %defines %union { Sym*o; }
 
 %token <o> DOC DIR 				/* doc: "docstring" .directive		*/
 %token <o> SYM NUM STR 			/* scalars: symbol number 'string'	*/
 %token <o> L R LQ RQ LB RB		/* brackets:  ( ) [ ] { }			*/
-%token <o> EQ AT DOT COLON		/* operators: = @ . :				*/
+%token <o> EQ AT COLON DOT		/* operators: = @ : .				*/
 %token <o> ADD SUB MUL DIV POW	/* + - * / ^						*/
 %token <o> INS DEL 				/* += -=							*/
-%type <o> scalar ex list		/* scalar expression [list]			*/
+
+%type <o> ex scalar list lambda	/* expression scalar [list] {lambda} */
 
 %left EQ
+%left ADD SUB
+%left MUL DIV
 %left DOC
 %left STR
 %left AT
@@ -24,15 +27,20 @@ ex		: scalar
 		| ex DOC			{ $$=doc; $$->push($1); $$->push($2); }
 		| L ex R			{ $$=$2; }
 		| LQ list RQ		{ $$=$2; }
-		| ex DOT ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| LB lambda RB		{ $$=$2; }
 		| ex EQ ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex AT ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex DOT ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex INS ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex DEL ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex ADD ex			{ $$=$2; $$->push($1); $$->push($3); }
 ;
 list	:					{ $$=new List(); }
 		| list ex			{ $$=$1; $$->push($2); }
+;
+lambda	:					{ $$=new Lambda(); }
+		| lambda SYM COLON	{ $$=$1; $$->parval($2); }
+		| lambda ex			{ $$=$1; $$->push($2); }
 ;
 %%
 
