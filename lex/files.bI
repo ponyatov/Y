@@ -4,6 +4,7 @@ next		= dir @ MODULE					# module next generation
 
 .inc ../lex/readme.bI
 .inc ../lex/gitignore.bI
+.inc ../lex/meta.bI
 .inc ../Y/lex/win32rc.bI
 
 files = [

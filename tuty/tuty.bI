@@ -7,3 +7,4 @@ next		= dir @ 'next'					# module next generation
 
 .inc ../lex/readme.bI
 .inc ../lex/gitignore.bI
+.inc ../lex/meta.bI

@@ -3,3 +3,4 @@ include ../Makefile
 upgrade:
 	cp next/README.md ./
 	cp next/.gitignore ./
+	cp next/meta.hpp ./
