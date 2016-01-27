@@ -1,0 +1,8 @@
+make = next + file @ 'Makefile'
+make += 'MODULE = '+MODULE+'\n'
+make += '.PHONY: exec\nexec: '+exe+' '+bi+'\n\t'+exe+' < '+bi+' > '+log+'\n'
+make += 'C = '+CFILES+'\n'
+make += 'H = '+HFILES+'\n'
+make += exe+': $(C) $(H)\n\t$(CXX) $(CXXFLAGS) -o $@\n'
+make += 'ypp.tab.cpp: ypp.ypp\n\tbison $<\n'
+make += 'lex.yy.c: lpp.lpp\n\tflex $<\n'
