@@ -20,8 +20,8 @@ log	= next + file @ (MODULE+'.blog')
 exe = './'+MODULE+'.exe'
 log = MODULE+'.blog'
 
-CFILES = [ cpp 'ypp.tab.cpp' 'lex.yy.c' ]/' '
-HFILES = [ hpp 'ypp.tab.cpp' ]/' '
+CFILES = [ cpp OS+'.cpp' 'ypp.tab.cpp' 'lex.yy.c' ]/' '
+HFILES = [ hpp OS+'.hpp' 'ypp.tab.cpp' ]/' '
 .inc ../Y/lex/make.bI
 
 
