@@ -16,14 +16,12 @@ win32c		= next + file @ 'win32.cpp'
 make		= next + file @ 'Makefile'
 ]
 bat			= next + file @ 'bat.bat'		"(g)vim helper"
-win32rc		= next + file @ 'rc.rc'			"win32 resources"
 
 .inc ../Y/lex/gitignore.bI
+.inc ../Y/lex/win32rc.bI
 
 # bat
 
 bat += '@start .\n'
 bat += '@gvim -c "colorscheme peachpuff" -p '+files/' '+'\n'
 
-# rc.rc
-win32rc += 'logo ICON "../icons/'+LOGO+'.ico"\n'

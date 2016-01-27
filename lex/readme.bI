@@ -1,6 +1,4 @@
-readme		= next + file @ 'README.md'		# README
-
-# README
+readme = next + file @ 'README.md'
 
 readme += '# ![logo](https://github.com/ponyatov/icons/raw/master/'+LOGO+'.png) '
 readme += MODULE+' : '+TITLE+'\n'
