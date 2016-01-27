@@ -19,7 +19,7 @@ syntax region Special	start="\"" end="\""					" "docstring"
 														" symbols not colored
 
 syntax match  Keyword	"\v[+-]"					" operator
-syntax match  Type		"\v[[]<>:=]"				" brackets
+syntax match  Type		"\v[[\]<>:=]"				" brackets
 syntax match  Keyword	"\v[@]"						" lambda coloring
 
 syntax match Constant	"\vMODULE|OS|AUTHOR|GITHUB|LICENSE|TITLE"
