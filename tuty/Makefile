@@ -5,4 +5,4 @@ upgrade:
 	cp next/.gitignore ./
 	cp next/meta.hpp ./
 	cp next/rc.rc ./
-	cp next/bat.bat ./
+#	cp next/bat.bat ./
