@@ -9,3 +9,11 @@ next		= dir @ 'next'					# module next generation
 .inc ../lex/gitignore.bI
 .inc ../lex/meta.bI
 .inc ../lex/win32rc.bI
+
+files = [
+	MODULE+'.bI'
+	MODULE+'.blog'
+	'Makefile'
+]
+
+.inc ../lex/bat.bI
