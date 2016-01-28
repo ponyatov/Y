@@ -4,7 +4,7 @@
 
 #define TITLE "Modular Learning System"
 #define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
-#define LICENSE "LICENCE"
+#define LICENSE "http://www.gnu.org/copyleft/lesser.html"
 #define GITHUB "https://github.com/ponyatov/Y/tree/dev/tuty"
 #define AUTOGEN "/***** DO NOT EDIT: this file was autogened by bI *****/"
 #define LOGO "Rubik_64x64"
