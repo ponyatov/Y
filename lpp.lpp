@@ -23,6 +23,7 @@ N [0-9]+
 															/* string parser */
 '				{BEGIN(lexstring);LexString="";}
 <lexstring>'	{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }
+<lexstring>\\\\	{LexString+='\\';}
 <lexstring>\\'	{LexString+='\'';}
 <lexstring>\\t	{LexString+='\t';}
 <lexstring>\\n	{LexString+='\n';}
