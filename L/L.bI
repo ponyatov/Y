@@ -1,1 +1,3 @@
-.inc ../lex/files.bI
+#.inc ../lex/files.bI
+
+S = '[\+\-]?'	"number sign"
