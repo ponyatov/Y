@@ -4,4 +4,13 @@
 %option noyywrap
 %option yylineno
 %%
+#[^\n]*			{}									/* line comment */
+
+[a-zA-Z0-9_]+		TOC(Sym,SYM)					/* symbol */
+
+\[					TOC(Op,LQ)						/* brackets */
+\]					TOC(Op,RQ)
+
+[ \t\r\n]+		{}									/* drop spaces */
+.				{}									/* drop undetected chars */
 %%

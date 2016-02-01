@@ -53,7 +53,7 @@ extern void W(string);								// /
 struct Directive:Sym { Directive(string); };
 
 // ================================================================== SPECIALS
-//extern Sym* nil;							// nil/false
+extern Sym* nil;									// nil/false
 //extern Sym* T;							// true
 //extern Sym* F;							// false
 //extern Sym* E;							// error
@@ -73,6 +73,7 @@ struct Num:Sym { Num(string); Num(double);			// floating number
 	string tagval(); double val; };
 
 // ================================================================ COMPOSITES
+struct Cons:Sym { Cons(Sym*,Sym*); Sym*A; Sym*D; };	// classic Lisp cons
 struct List:Sym { List();							// [list]
 	Sym*str(); Sym*div(Sym*); };
 

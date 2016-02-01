@@ -17,16 +17,33 @@ Sym::Sym(string V):Sym("sym",V)	{}						// token
 
 // ------------------------------------------------------- dumping
 string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
+string Sym::pad(int n) { string S;						// pad as tree
+	for(int i=0;i<n-1;i++) S+="|   ";
+	if (n) S+="\\___";
+	return S; }
 string Sym::dump(int depth) {							// dump as text
-	string S = /*"\n" + pad(depth) +*/ tagval();
+	string S = "\n" + pad(depth) + tagval();
 	return S; }
 
 // ------------------------------------------------------- evaluation
+Sym* Sym::eval() { return this; }
 
-Sym* Sym::eval() {
-	return this; }
+// ================================================================== SPECIALS
+Sym* nil = new Sym("nil","");							// nil/false
+
+// ================================================================ COMPOSITES
+// ====================================================================== CONS
+Cons::Cons(Sym*X,Sym*Y):Sym("","") { A=X; D=Y; }		// classic Lisp cons
+string Cons::dump(int depth) {
+	return A->dump(depth)+D->dump(depth+1); }
+
+// =============================================================== FUNCTIONALS
+// ======================================================= operator
+Op::Op(string V):Sym("op",V) {}
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 map<string,Sym*> env;
 void env_init() {									// init env{} on startup
+	// ----------------------------------------------- specials
+	env["nil"]		= nil;
 }

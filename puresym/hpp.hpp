@@ -15,14 +15,26 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	Sym(string,string);					// <T:V>
 	Sym(string);						// token
 // ------------------------------------------------------------------- dumping
-	string dump(int depth=0);			// dump symbol object as text
+	virtual string dump(int depth=0);	// dump symbol object as text
 	virtual string tagval();			// <T:V> header string
+	string pad(int);					// padding with tree decorators
 // -------------------------------------------------------- compute (evaluate)
 	virtual Sym* eval();
 };
 
 extern void W(Sym*);								// \ ==== writers ====
 extern void W(string);								// /
+
+// ================================================================== SPECIALS
+extern Sym* nil;									// nil/false
+
+// ================================================================ COMPOSITES
+struct Cons:Sym { Cons(Sym*,Sym*); Sym*A; Sym*D; 	// classic Lisp cons
+	string dump(int); };
+
+// =============================================================== FUNCTIONALS
+// =================================================== operator
+struct Op:Sym { Op(string); };//Sym* eval(); };
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 extern map<string,Sym*> env;
