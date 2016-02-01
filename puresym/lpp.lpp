@@ -5,6 +5,8 @@ string LexString;									// string buffer
 %option noyywrap
 %option yylineno
 %x lexstring 
+S [\+\-]?
+N [0-9]+
 %%
 #[^\n]*			{}									/* line comment */
 
@@ -13,7 +15,9 @@ string LexString;									// string buffer
 <lexstring>'	{BEGIN(INITIAL); yylval.o = new Sym(LexString); return SYM; }
 <lexstring>.	{LexString+=yytext[0];}
 
-[a-zA-Z0-9_]+		TOC(Sym,SYM)					/* symbol */
+{S}{N}			TOC(Int,NUM)
+
+[a-zA-Z0-9_\+\-\*\/\^]+		TOC(Sym,SYM)					/* symbol */
 
 \[					TOC(Sym,LQ)						/* brackets */
 \]					TOC(Sym,RQ)

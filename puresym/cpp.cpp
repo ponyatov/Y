@@ -35,15 +35,18 @@ Sym* nil = new Sym("nil","");							// nil/false
 
 // =================================================================== SCALARS
 
+// ======================================================= integer
+Int::Int(string V):Sym("int","") { val = atoi(V.c_str()); }
+Int::Int(long N):Sym("int","") { val = N; }
+string Int::tagval() {
+	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
+
 // ================================================================ COMPOSITES
 // ====================================================================== CONS
 Cons::Cons(Sym*X,Sym*Y):Sym("","") { A=X; D=Y; }		// classic Lisp cons
 string Cons::dump(int depth) {
 	return A->dump(depth)+D->dump(depth+1); }
-Sym* Cons::eval() {
-	A=A->eval(); D=D->eval();
-	if (A->tag=="fn")	return dynamic_cast<Fn*>(A)->at(D);	// apply
-	else				return this; }
+Sym* Cons::eval() { return A->eval()->at(D); }
 
 // =============================================================== FUNCTIONALS
 
@@ -63,11 +66,27 @@ Sym* file(Sym*o) {
 	return new Cons(new File(o),dynamic_cast<Cons*>(o)->D); }
 File::File(Sym*o):Sym("file",dynamic_cast<Cons*>(o)->A->val) {}
 
+// ====================================================================== LISP
+Sym* Sym::at(Sym*o)	{ return new Cons(this,o); }
+
+Sym* sum(Sym*o) { 
+	Sym* A = dynamic_cast<Cons*>(o)->A; 
+	Sym* D = dynamic_cast<Cons*>(o)->D;
+	return A->sum(D);
+}
+Sym* Sym::sum(Sym*o) { return new Cons(this,o); }
+Sym* Int::sum(Sym*o) { 
+	if (o->tag=="int")	return new Int(val+dynamic_cast<Int*>(o)->val);
+	else 				Sym::sum(o);
+}
+
 // ====================================================== GLOBAL ENV{}IRONMENT
 map<string,Sym*> env;
 void env_init() {									// init env{} on startup
 	// ----------------------------------------------- specials
 	env["nil"]		= nil;
+	// ----------------------------------------------- lisp functions
+	env["+"]		= new Fn("+",sum);
 	// ----------------------------------------------- fileio
 	env["dir"]		= new Fn("dir",dir);
 	env["file"]		= new Fn("file",file);

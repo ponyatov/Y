@@ -3,6 +3,7 @@
 
 										// == std.includes ==
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
 #include <map>
 using namespace std;
@@ -20,6 +21,8 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	string pad(int);					// padding with tree decorators
 // -------------------------------------------------------- compute (evaluate)
 	virtual Sym* eval();
+	virtual Sym* sum(Sym*);				// + sum
+	virtual Sym* at(Sym*);				// @ apply
 };
 
 extern void W(Sym*);								// \ ==== writers ====
@@ -28,9 +31,15 @@ extern void W(string);								// /
 // ================================================================== SPECIALS
 extern Sym* nil;									// nil/false
 
+// =================================================================== SCALARS
+struct Int:Sym { Int(string); Int(long);			// integer
+	string tagval(); long   val;
+	Sym* sum(Sym*); };
+
 // ================================================================ COMPOSITES
 struct Cons:Sym { Cons(Sym*,Sym*); Sym*A; Sym*D; 	// classic Lisp cons
-	string dump(int); Sym*eval(); };
+	string dump(int); Sym*eval();
+};
 
 // =============================================================== FUNCTIONALS
 // =================================================== function
@@ -45,6 +54,9 @@ extern Sym* dir(Sym*);
 // =================================================== file
 struct File:Sym { File(Sym*); };
 extern Sym* file(Sym*);
+
+// ====================================================================== LISP
+extern Sym* sum(Sym*);
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 extern map<string,Sym*> env;

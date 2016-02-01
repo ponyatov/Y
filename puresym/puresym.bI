@@ -1,3 +1,7 @@
-# [pure] [sym]bolic computations: learning sample based on SICP
+# [pure] [sym]bolic computations: learning sample based on SICP_ru
 
-[ 1 [2 3 ]] 5 6
+#SIC.p26
+
+486
+
+[+ 137 349]
