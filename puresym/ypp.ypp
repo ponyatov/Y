@@ -1,0 +1,10 @@
+%{
+#include "hpp.hpp"
+%}
+%defines %union { Sym*o; }
+%token <o> SYM
+%type <o> ex
+%%
+REPL : | REPL ex { W($2); W(""); W($2->eval()); W("") } ;
+ex : SYM ;
+%%
