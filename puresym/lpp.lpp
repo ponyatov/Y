@@ -1,6 +1,6 @@
 %{
 #include "hpp.hpp"
-string LexString;											// string buffer
+string LexString;									// string buffer
 %}
 %option noyywrap
 %option yylineno
@@ -8,15 +8,15 @@ string LexString;											// string buffer
 %%
 #[^\n]*			{}									/* line comment */
 
-															/* string parser */
+													/* string parser */
 '				{BEGIN(lexstring);LexString="";}
-<lexstring>'	{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }
+<lexstring>'	{BEGIN(INITIAL); yylval.o = new Sym(LexString); return SYM; }
 <lexstring>.	{LexString+=yytext[0];}
 
 [a-zA-Z0-9_]+		TOC(Sym,SYM)					/* symbol */
 
-\[					TOC(Op,LQ)						/* brackets */
-\]					TOC(Op,RQ)
+\[					TOC(Sym,LQ)						/* brackets */
+\]					TOC(Sym,RQ)
 
 [ \t\r\n]+		{}									/* drop spaces */
 .				{}									/* drop undetected chars */
