@@ -24,6 +24,7 @@ void Sym::parval(Sym*o) { par[o->val]=o; }
 
 // ------------------------------------------------------- dumping
 string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
+string Sym::tagstr() { return "<"+tag+":'"+val+"'>"; }	// <T:'V'> header
 string Sym::pad(int n) { string S;						// pad as tree
 	for(int i=0;i<n-1;i++) S+="|   ";
 	if (n) S+="\\___";
@@ -73,6 +74,7 @@ Sym* Wr = new Sym("mode","W");							// write mode
 
 // ======================================================= string
 Str::Str(string V):Sym("str",V) {}
+string Str::tagval() { return tagstr(); }
 Sym* Str::add(Sym*o) { return new Str(val+o->str()->val); }
 Sym* upcase(Sym*o) { 
 	string S = o->str()->val;

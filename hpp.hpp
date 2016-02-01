@@ -32,7 +32,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // ------------------------------------------------------------------- dumping
 	string dump(int depth=0);			// dump symbol object as text
 	virtual string tagval();			// <T:V> header string
-//	string tagstr();					// <T:'V'> Str-like header string
+	string tagstr();					// <T:'V'> Str-like header string
 	string pad(int);					// padding with tree decorators
 // -------------------------------------------------------- compute (evaluate)
 	virtual Sym* eval();
@@ -62,7 +62,8 @@ extern Sym* Rd;										// read mode
 extern Sym* Wr;										// write mode
 
 // =================================================================== SCALARS
-struct Str:Sym { Str(string); Sym* add(Sym*); };	// string
+struct Str:Sym { Str(string); string tagval();		// string
+	Sym* add(Sym*); };
 extern Sym* upcase(Sym*);
 
 struct Hex:Sym { Hex(string); };					// hexadecimal
@@ -73,7 +74,8 @@ struct Num:Sym { Num(string); Num(double);			// floating number
 	string tagval(); double val; };
 
 // ================================================================ COMPOSITES
-struct Cons:Sym { Cons(Sym*,Sym*); Sym*A; Sym*D; };	// classic Lisp cons
+struct Cons:Sym { Cons(Sym*,Sym*); Sym*A; Sym*D; 	// classic Lisp cons
+	string dump(int); Sym*eval(); };
 struct List:Sym { List();							// [list]
 	Sym*str(); Sym*div(Sym*); };
 

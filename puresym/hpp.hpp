@@ -17,6 +17,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // ------------------------------------------------------------------- dumping
 	virtual string dump(int depth=0);	// dump symbol object as text
 	virtual string tagval();			// <T:V> header string
+	string tagstr();					// <T:'V'> Str-like header string
 	string pad(int);					// padding with tree decorators
 // -------------------------------------------------------- compute (evaluate)
 	virtual Sym* eval();
@@ -28,13 +29,28 @@ extern void W(string);								// /
 // ================================================================== SPECIALS
 extern Sym* nil;									// nil/false
 
+// =================================================================== SCALARS
+struct Str:Sym { Str(string); string tagval(); };	// string
+
 // ================================================================ COMPOSITES
 struct Cons:Sym { Cons(Sym*,Sym*); Sym*A; Sym*D; 	// classic Lisp cons
-	string dump(int); };
+	string dump(int); Sym*eval(); };
 
 // =============================================================== FUNCTIONALS
 // =================================================== operator
 struct Op:Sym { Op(string); };//Sym* eval(); };
+// =================================================== function
+typedef Sym*(*FN)(Sym*);							// function ptr
+struct Fn:Sym { Fn(string,FN); FN fn;				// internal function
+	Sym*at(Sym*); };								// apply
+
+// ==================================================================== FILEIO
+// =================================================== directory
+struct Dir:Sym { Dir(Sym*); string tagval(); };
+extern Sym* dir(Sym*);
+// =================================================== file
+struct File:Sym { File(Sym*); string tagval(); };
+extern Sym* file(Sym*);
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 extern map<string,Sym*> env;
