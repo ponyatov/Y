@@ -7,4 +7,6 @@ bi
 
 [1 2 3 4]
 
-[ file MODULE+'.bI' ]
+MODULE+'.bi'
+#MODULE+'.bI' 
+#[ file MODULE+'.bI' ]

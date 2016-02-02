@@ -22,6 +22,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	virtual Sym* eval();
 // ----------------------------------------------------------------- operators	
 	virtual Sym* at(Sym*);				// A @ B	apply
+	virtual Sym* add(Sym*);				// A + B	add
 	virtual string str();
 };
 
@@ -30,6 +31,9 @@ extern void W(string);								// /
 
 // ================================================================== SPECIALS
 extern Sym* nil;									// nil/false
+
+// =================================================================== SCALARS
+struct Str:Sym { Str(string); Sym*add(Sym*); };		// string
 
 // ================================================================ COMPOSITES
 struct Cons:Sym { Cons(Sym*,Sym*); Sym*A; Sym*D; 	// classic Lisp cons

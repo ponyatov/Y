@@ -9,7 +9,7 @@ string LexString;											// string buffer
 #[^\n]*			{}											/* line comment */
 															/* string parser */
 '				{BEGIN(lexstring); LexString=""; }
-<lexstring>'	{BEGIN(INITIAL); yylval.o = new Sym(LexString); return SYM; }
+<lexstring>'	{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }
 <lexstring>.	{LexString+=yytext[0];}
 
 \[					TOC(Sym,LQ)

@@ -32,9 +32,17 @@ Sym* Sym::eval() {
 
 Sym* Sym::at(Sym*o)		{ return new Cons(this,o); }	// A @ B	apply
 string Sym::str()		{ return val; }
+Sym* Sym::add(Sym*o)	{								// A + B	add
+	return new Cons(env["+"],new Cons(this,o)); }
 
 // ================================================================== SPECIALS
 Sym* nil = new Sym("nil","");							// nil/false
+
+// =================================================================== SCALARS
+
+// ======================================================= string
+Str::Str(string V):Sym("str",V) {}
+Sym* Str::add(Sym*o) { return new Str(val+o->eval()->val); }
 
 // ================================================================ COMPOSITES
 // ====================================================================== CONS
@@ -53,7 +61,7 @@ Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
 Sym* sum(Sym*o) {										// + operator
 	Sym* A = dynamic_cast<Cons*>(o)->A;
 	Sym* D = dynamic_cast<Cons*>(o)->D;
-	return new Sym(A->str()+D->str()); }
+	return A->add(D); }
 
 Sym* def(Sym*o) {										// = operator
 	Sym* A = dynamic_cast<Cons*>(o)->A;
@@ -70,7 +78,7 @@ Sym* file(Sym*o) { return new File(o); }
 map<string,Sym*> env;
 void env_init() {									// init env{} on startup
 	// ----------------------------------------------- metainfo constants
-	env["MODULE"]	= new Sym(MODULE);				// module name (CFLAGS -DMODULE)
+	env["MODULE"]	= new Str(MODULE);				// module name (CFLAGS -DMODULE)
 	// ----------------------------------------------- specials
 	env["nil"]		= nil;
 	// ----------------------------------------------- operators
