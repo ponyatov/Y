@@ -11,18 +11,25 @@ void W(string s)	{ cout << s; }
 // ============================================== Abstract Symbolic Type (AST)
 
 // ------------------------------------------------------- constructors
-Sym::Sym(string T,string V) { tag=T; val=V; next=NULL; };	// <T:V>
-Sym::Sym(string V):Sym("sym",V)	{}							// token
+Sym::Sym(string T,string V) { tag=T; val=V; };			// <T:V>
+Sym::Sym(string V):Sym("sym",V)	{}						// token
 
 // ------------------------------------------------------- dumping
-string Sym::dump(int depth) {
-	string S = "\n"+pad(depth)+"<"+val+">";
-	if (next) S += next->dump(depth+1);
+string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
+string Sym::pad(int n) { string S;						// pad as tree
+	for(int i=0;i<n;i++) S+="\t"; return S; }
+string Sym::dump(int depth) {							// dump as text
+	string S = "\n" + pad(depth) + tagval();
 	return S; }
-string Sym::pad(int n) { string S; for(int i=0;i<n;i++) S+="\t"; return S; }
 	
 // ================================================================== SPECIALS
 Sym* nil = new Sym("nil","");							// nil/false
+
+// ================================================================ COMPOSITES
+// ====================================================================== CONS
+Cons::Cons(Sym*X,Sym*Y):Sym("","") { A=X; D=Y; }		// classic Lisp cons
+string Cons::dump(int depth) {
+	return A->dump(depth+1)+D->dump(depth+1); }
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 map<string,Sym*> env;

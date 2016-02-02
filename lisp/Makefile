@@ -6,7 +6,7 @@ C += cpp.cpp ypp.tab.cpp lex.yy.c
 H += hpp.hpp ypp.tab.hpp
 CXXFLAGS += -I. -std=gnu++11 -DMODULE=\"$(MODULE)\"
 ./$(MODULE)$(EXE): $(C) $(H) Makefile
-	$(CXX) $(CXXFLAGS) -o $@ $(C) && strip --strip-all $@
+	$(CXX) $(CXXFLAGS) -o $@ $(C)
 ypp.tab.cpp: ypp.ypp
 	bison $<
 lex.yy.c: lpp.lpp

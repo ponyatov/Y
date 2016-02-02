@@ -5,7 +5,7 @@
 %token <o> SYM LQ RQ
 %type <o> ex list
 %%
-REPL : | REPL ex { W($2); } ;
+REPL : | REPL ex { W($2); W("\n=====\n"); } ;
 ex : SYM | LQ list RQ { $$=$2 } ;
-list : { $$=nil; } | ex list { $$=$1; $$->next=$2; } ;
+list : { $$=nil; } | ex list { $$=new Cons($1,$2); } ;
 %%
