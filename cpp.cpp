@@ -66,7 +66,7 @@ Directive::Directive(string V):Sym("",V) {
 }
 
 // ================================================================== SPECIALS
-
+Sym* nil = new Sym("nil","");							// nil/false
 Sym* Rd = new Sym("mode","R");							// read mode
 Sym* Wr = new Sym("mode","W");							// write mode
 
