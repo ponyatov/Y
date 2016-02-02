@@ -41,10 +41,8 @@ Sym* nil = new Sym("nil","");							// nil/false
 Cons::Cons(Sym*X,Sym*Y):Sym("","") { A=X; D=Y; }		// classic Lisp cons
 string Cons::dump(int depth) {
 	return A->dump(depth+1)+D->dump(depth+1); }
-Sym* Cons::eval() {
-	if (D==nil) return A->eval();
-	else 		return A->eval()->at(D->eval()); }
-string Cons::str()	{ return A->eval()->str()+"."+D->eval()->str(); }
+Sym* Cons::eval() { return A->eval()->at(D->eval()); }
+string Cons::str()	{ return A->str()+D->str(); }
 
 // =============================================================== FUNCTIONALS
 // ======================================================= function

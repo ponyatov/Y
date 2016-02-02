@@ -6,7 +6,7 @@
 %token <o> EQ AT
 %type <o> ex list
 %%
-REPL : | REPL ex { W($2->eval()); W("\n=====\n"); } ;
+REPL : | REPL ex { W($2); W("\n-----"); W($2->eval()); W("\n=====\n"); } ;
 ex	: SYM
 	| ex BINOP ex	{ $$=new Cons($2,new Cons($1,new Cons($3,nil))); }
 	| LQ list RQ	{ $$=$2 } ;
