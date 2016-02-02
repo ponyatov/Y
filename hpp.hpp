@@ -30,7 +30,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	void partag(Sym*);					// par[tag]=obj
 	void parval(Sym*);					// par[val]=obj
 // ------------------------------------------------------------------- dumping
-	string dump(int depth=0);			// dump symbol object as text
+	virtual string dump(int depth=0);	// dump symbol object as text
 	virtual string tagval();			// <T:V> header string
 	string tagstr();					// <T:'V'> Str-like header string
 	string pad(int);					// padding with tree decorators

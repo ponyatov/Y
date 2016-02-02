@@ -26,9 +26,11 @@ void Sym::parval(Sym*o) { par[o->val]=o; }
 string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
 string Sym::tagstr() { return "<"+tag+":'"+val+"'>"; }	// <T:'V'> header
 string Sym::pad(int n) { string S;						// pad as tree
+	//for(int i=0;i<n;i++) S+="\t"; return S; }
 	for(int i=0;i<n-1;i++) S+="|   ";
 	if (n) S+="\\___";
 	return S; }
+
 string Sym::dump(int depth) {							// dump as text
 	string S = "\n" + pad(depth) + tagval();
 	for (auto pr=par.begin(),e=par.end();pr!=e;pr++)	// par{}ameters
@@ -99,6 +101,8 @@ string Num::tagval() {
 // ================================================================ COMPOSITES
 // ====================================================================== CONS
 Cons::Cons(Sym*X,Sym*Y):Sym("","") { A=X; D=Y; }		// classic Lisp cons
+string Cons::dump(int depth) {
+	return A->dump(depth+1)+D->dump(depth+1); }
 
 // ====================================================================== LIST
 List::List():Sym("[","]") {}							// [list]
