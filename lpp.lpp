@@ -21,7 +21,7 @@ N [0-9]+
 ^\.[a-z]+			TOC(Directive,DIR)						/* .directive */
 
 															/* string parser */
-'				{BEGIN(lexstring);LexString="";}
+'				{BEGIN(lexstring); LexString=""; }
 <lexstring>'	{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }
 <lexstring>\\\\	{LexString+='\\';}
 <lexstring>\\'	{LexString+='\'';}
@@ -30,7 +30,7 @@ N [0-9]+
 <lexstring>\n	{LexString+='\n';}
 <lexstring>.	{LexString+=yytext[0];}
 															/* docstring */
-\"				{BEGIN(docstring);LexString="";}
+\"				{BEGIN(docstring); LexString=""; }
 <docstring>\"	{BEGIN(INITIAL); yylval.o = new Str(LexString); return DOC; }
 <docstring>\\\"	{LexString+='"';}
 <docstring>\\t	{LexString+='\t';}

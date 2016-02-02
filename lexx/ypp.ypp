@@ -2,9 +2,10 @@
 #include "hpp.hpp"
 %}
 %defines %union { Sym*o; }
-%token <o> SYM
-%type <o> ex
+%token <o> SYM LQ RQ
+%type <o> ex list
 %%
 REPL : | REPL ex { W($2); } ;
-ex : SYM ;
+ex : SYM | LQ list RQ { $$=$2 } ;
+list : { $$=nil; } | ex list { $$=$1; $$->next=$2; } ;
 %%
