@@ -41,6 +41,11 @@ typedef Sym*(*FN)(Sym*);							// function ptr
 struct Fn:Sym { Fn(string,FN); FN fn; 				// internal function
 	Sym* at(Sym*); };
 
+// ==================================================================== FILEIO
+// =================================================== file
+struct File:Sym { File(Sym*); };
+extern Sym* file(Sym*);
+
 // ====================================================== GLOBAL ENV{}IRONMENT
 extern map<string,Sym*> env;
 extern void env_init();								// init env{} on startup

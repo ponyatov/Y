@@ -3,3 +3,4 @@
 files = [ bi blog yacc lex hpp cpp make bat gitignore readme ]
 
 bi = [ file [ MODULE + '.bI' ] ]
+bi
