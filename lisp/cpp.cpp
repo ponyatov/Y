@@ -11,15 +11,22 @@ void W(string s)	{ cout << s; }
 // ============================================== Abstract Symbolic Type (AST)
 
 // ------------------------------------------------------- constructors
-Sym::Sym(string T,string V) { tag=T; val=V; };			// <T:V>
-Sym::Sym(string V):Sym("sym",V)	{}						// token
+Sym::Sym(string T,string V) { tag=T; val=V; next=NULL; };	// <T:V>
+Sym::Sym(string V):Sym("sym",V)	{}							// token
 
 // ------------------------------------------------------- dumping
-string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
-string Sym::dump(int depth) { return tagval(); }		// dump as text
+string Sym::dump(int depth) {
+	string S = "\n"+pad(depth)+"<"+val+">";
+	if (next) S += next->dump(depth+1);
+	return S; }
+string Sym::pad(int n) { string S; for(int i=0;i<n;i++) S+="\t"; return S; }
 	
+// ================================================================== SPECIALS
+Sym* nil = new Sym("nil","");							// nil/false
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 map<string,Sym*> env;
 void env_init() {									// init env{} on startup
+	// ----------------------------------------------- specials
+	env["nil"]		= nil;
 }

@@ -1,9 +1,0 @@
-*~
-*.swp
-*.exe
-*.elf
-*.*log
-ypp.tab.?pp
-lex.yy.c
-res.res
-lisp/

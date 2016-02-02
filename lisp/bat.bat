@@ -1,2 +1,2 @@
 @start .
-@gvim -c "colorscheme peachpuff" -p lisp.bI lisp.blog ../ypp.ypp ../lpp.lpp ../hpp.hpp ../cpp.cpp ../win32.hpp ../win32.cpp
+@gvim -p lexx.bI lexx.blog ypp.ypp lpp.lpp hpp.hpp cpp.cpp Makefile bat.bat .gitignore README.md 

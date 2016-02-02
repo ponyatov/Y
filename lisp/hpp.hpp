@@ -1,10 +1,9 @@
 #ifndef _H_LEXX
 #define _H_LEXX
-
 										// == std.includes ==
 #include <iostream>
 #include <cstdlib>
-#include <vector>
+//#include <vector>
 #include <map>
 using namespace std;
 
@@ -17,11 +16,16 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	Sym(string);						// token
 // ------------------------------------------------------------------- dumping
 	string dump(int depth=0);			// dump symbol object as text
-	virtual string tagval();			// <T:V> header string
+	string pad(int);					// padding with tree decorators
+// ---------------------------------------------------------------------- cons	
+	Sym* next;
 };
 
 extern void W(Sym*);								// \ ==== writers ====
 extern void W(string);								// /
+
+// ================================================================== SPECIALS
+extern Sym* nil;									// nil/false
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 extern map<string,Sym*> env;
