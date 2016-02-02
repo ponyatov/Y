@@ -18,6 +18,11 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	virtual string dump(int depth=0);	// dump symbol object as text
 	virtual string tagval();			// <T:V> header string
 	string pad(int);					// padding with tree decorators
+// -------------------------------------------------------- compute (evaluate)
+	virtual Sym* eval();
+// ----------------------------------------------------------------- operators	
+	virtual Sym* at(Sym*);				// A @ B	apply
+	virtual string str();
 };
 
 extern void W(Sym*);								// \ ==== writers ====
@@ -28,7 +33,13 @@ extern Sym* nil;									// nil/false
 
 // ================================================================ COMPOSITES
 struct Cons:Sym { Cons(Sym*,Sym*); Sym*A; Sym*D; 	// classic Lisp cons
-	string dump(int); };
+	string dump(int); Sym*eval(); string str(); };
+
+// =============================================================== FUNCTIONALS
+// =================================================== function
+typedef Sym*(*FN)(Sym*);							// function ptr
+struct Fn:Sym { Fn(string,FN); FN fn; 				// internal function
+	Sym* at(Sym*); };
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 extern map<string,Sym*> env;

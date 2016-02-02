@@ -2,14 +2,13 @@
 #include "hpp.hpp"
 %}
 %defines %union { Sym*o; }
-%token <o> SYM LQ RQ
+%token <o> SYM LQ RQ BINOP
 %token <o> EQ AT
-%type <o> ex list binop
+%type <o> ex list
 %%
-REPL : | REPL ex { W($2); W("\n=====\n"); } ;
+REPL : | REPL ex { W($2->eval()); W("\n=====\n"); } ;
 ex	: SYM
-	| ex binop ex	{ $$=new Cons($2,new Cons($1,new Cons($3,nil))); }
+	| ex BINOP ex	{ $$=new Cons($2,new Cons($1,new Cons($3,nil))); }
 	| LQ list RQ	{ $$=$2 } ;
 list : { $$=nil; } | ex list { $$=new Cons($1,$2); } ;
-binop : EQ | AT ;
 %%

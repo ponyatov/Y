@@ -15,7 +15,7 @@ string LexString;											// string buffer
 \[					TOC(Sym,LQ)
 \]					TOC(Sym,RQ)
 
-\=					TOC(Sym,EQ)
+[=+]				TOC(Sym,BINOP)
 
 [a-zA-Z0-9_]+		TOC(Sym,SYM)							/* symbol */
 

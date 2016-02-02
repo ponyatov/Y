@@ -21,7 +21,18 @@ string Sym::pad(int n) { string S;						// pad as tree
 string Sym::dump(int depth) {							// dump as text
 	string S = "\n" + pad(depth) + tagval();
 	return S; }
-	
+
+// ------------------------------------------------------- evaluation
+
+Sym* Sym::eval() {
+	Sym*E = env[val]; if (E) return E;					// lookup in glob.env[]
+	else return this; }
+
+// ------------------------------------------------------- operators
+
+Sym* Sym::at(Sym*o)		{ return new Cons(this,o); }	// A @ B	apply
+string Sym::str()		{ return val; }
+
 // ================================================================== SPECIALS
 Sym* nil = new Sym("nil","");							// nil/false
 
@@ -30,10 +41,29 @@ Sym* nil = new Sym("nil","");							// nil/false
 Cons::Cons(Sym*X,Sym*Y):Sym("","") { A=X; D=Y; }		// classic Lisp cons
 string Cons::dump(int depth) {
 	return A->dump(depth+1)+D->dump(depth+1); }
+Sym* Cons::eval() {
+	if (D==nil) return A->eval();
+	else 		return A->eval()->at(D->eval()); }
+string Cons::str()	{ return A->eval()->str()+"."+D->eval()->str(); }
+
+// =============================================================== FUNCTIONALS
+// ======================================================= function
+Fn::Fn(string V, FN F):Sym("fn",V) { fn=F; }
+Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
+
+// ================================================================= OPERATORS
+Sym* sum(Sym*o) {
+	Sym* A = dynamic_cast<Cons*>(o)->A;
+	Sym* D = dynamic_cast<Cons*>(o)->D;
+	return new Sym(A->str()+D->str()); }
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 map<string,Sym*> env;
 void env_init() {									// init env{} on startup
+	// ----------------------------------------------- metainfo constants
+	env["MODULE"]	= new Sym(MODULE);				// module name (CFLAGS -DMODULE)
 	// ----------------------------------------------- specials
 	env["nil"]		= nil;
+	// ----------------------------------------------- operators
+	env["+"]		= new Fn("+",sum);
 }
