@@ -157,19 +157,14 @@ allfiles = [
 bat += '@start .\n'
 bat += '@gvim -c "colorscheme peachpuff" -p '+files/' '+'\n'
 
-
 .sec Comment
 
-X:Y
-
 class:comment
-
-comment@x
-
-.sec Class subsystem
-
-X:Y
-X='zzz'
-X:Y
+comment:xyz
 
 #.end
+#.sec Class subsystem
+#X:Y
+#X='zzz'
+#X:Y
+
