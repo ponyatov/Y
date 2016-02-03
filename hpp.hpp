@@ -41,7 +41,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	virtual Sym* at(Sym*);				// A @ B	apply
 	virtual Sym* str();					// str(A)	to string representation
 	virtual Sym* add(Sym*);				// A + B	add
-	virtual Sym* div(Sym*);				// A / B	sub
+	virtual Sym* div(Sym*);				// A / B	div
 	virtual Sym* ins(Sym*);				// A += B	insert
 };
 
@@ -93,8 +93,8 @@ struct Fn:Sym { Fn(string,FN); FN fn; Sym* at(Sym*); };// internal function
 struct Dir:Sym { Dir(Sym*); Sym* add(Sym*); };
 extern Sym* dir(Sym*);
 // =================================================== file
-struct File:Sym { File(Sym*); Sym* ins(Sym*);
-	FILE *fh; ~File(); };
+struct File:Sym { File(Sym*); FILE *fh; ~File();
+	Sym* ins(Sym*); };
 extern Sym* file(Sym*);
 
 // ======================================================================= GUI

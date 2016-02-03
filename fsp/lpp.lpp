@@ -12,6 +12,7 @@ string LexString;											// string buffer
 															/* string parser */
 '				{BEGIN(lexstring); LexString=""; }
 <lexstring>'	{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }
+<lexstring>\\n	{LexString+='\n';}
 <lexstring>.	{LexString+=yytext[0];}
 															/* docstring */
 \"				{BEGIN(docstring); LexString=""; }
@@ -36,6 +37,8 @@ string LexString;											// string buffer
 \*					TOC(Op,MUL)
 \/					TOC(Op,DIV)
 \^					TOC(Op,POW)								/* / */
+\+\=				TOC(Op,INS)								/* ins \ composite */
+\-\=				TOC(Op,DEL)								/* del / */
 
 [ \t\r\n]+		{}									/* drop spaces */
 %%

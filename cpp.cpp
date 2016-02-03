@@ -56,6 +56,7 @@ Sym* Sym::str()			{ return new Str(val); }		// str(A)	as string
 
 Sym* Sym::add(Sym*o)	{ push(o); return this; }		// A + B	add
 Sym* Sym::div(Sym*o)	{ push(o); return this; }		// A / B	div
+
 Sym* Sym::ins(Sym*o)	{ push(o); return this; }		// A += B	insert
 
 // ================================================================= DIRECTIVE
@@ -167,8 +168,9 @@ File::~File() { if (fh) fclose(fh); }
 Sym* file(Sym*o) { return new File(o); }
 
 Sym* File::ins(Sym*o) {
+	push(o->str());
 	if (fh) fprintf(fh,"%s",o->str()->val.c_str());
-	return o; }
+	return this; }
 
 // ======================================================================= GUI
 Sym* message(Sym*o)	{ return new Message(o); }

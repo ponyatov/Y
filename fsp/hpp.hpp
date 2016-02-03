@@ -34,7 +34,10 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // ----------------------------------------------------------------- operators	
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
+	virtual Sym* str();					// str(A)	to string representation
 	virtual Sym* add(Sym*);				// A + B	add
+	virtual Sym* div(Sym*);				// A / B	div
+	virtual Sym* ins(Sym*);				// A += B	insert
 };
 
 extern void W(Sym*);								// \ ==== writers ====
@@ -46,10 +49,11 @@ extern Sym* Wr;										// write mode
 
 // =================================================================== SCALARS
 struct Str:Sym { Str(string); string tagval();		// string
-	Sym*eq(Sym*); };
+	Sym*eq(Sym*); Sym* add(Sym*); };
 
 // ================================================================ COMPOSITES
-struct List:Sym { List(); };						// [list]
+struct List:Sym { List();							// [list]
+	Sym*str(); Sym*div(Sym*); };
 
 // =============================================================== FUNCTIONALS
 // =================================================== operator
@@ -63,7 +67,8 @@ struct Fn:Sym { Fn(string,FN); FN fn; Sym* at(Sym*); };// internal function
 struct Dir:Sym { Dir(Sym*); Sym* add(Sym*); };
 extern Sym* dir(Sym*);
 // =================================================== file
-struct File:Sym { File(Sym*); FILE *fh; ~File(); };
+struct File:Sym { File(Sym*); FILE *fh; ~File();
+	Sym* ins(Sym*); };
 extern Sym* file(Sym*);
 
 // =============================================================== OS SPECIFIC
