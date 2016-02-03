@@ -13,6 +13,7 @@ string LexString;											// string buffer
 '				{BEGIN(lexstring); LexString=""; }
 <lexstring>'	{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }
 <lexstring>\\n	{LexString+='\n';}
+<lexstring>\n	{LexString+='\n';}
 <lexstring>.	{LexString+=yytext[0];}
 															/* docstring */
 \"				{BEGIN(docstring); LexString=""; }

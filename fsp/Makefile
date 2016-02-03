@@ -16,4 +16,5 @@ lex.yy.c: lpp.lpp
 .PHONY: upgrade
 upgrade:
 	cp next/README.md ./
+	cp next/meta.hpp ./
 #	cp next/bat.bat ./

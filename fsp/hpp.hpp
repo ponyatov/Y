@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
+#include <algorithm>
 #include <vector>
 #include <map>
 using namespace std;

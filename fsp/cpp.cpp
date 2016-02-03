@@ -68,6 +68,11 @@ Str::Str(string V):Sym("str",V) {}
 string Str::tagval() { return tagstr(); }
 Sym* Str::eq(Sym*o) { yyerror("immutable"); }
 Sym* Str::add(Sym*o) { return new Str(val+o->str()->val); }
+Sym* upcase(Sym*o) { 
+	string S = o->str()->val;
+	transform(S.begin(),S.end(),S.begin(),::toupper);
+	return new Str(S);
+}
 
 // ================================================================ COMPOSITES
 
@@ -144,6 +149,8 @@ void env_init() {									// init env{} on startup
 	// ----------------------------------------------- specials
 	env["R"]		= Rd;
 	env["W"]		= Wr;
+	// ----------------------------------------------- string
+	env["upcase"]	= new Fn("upcase",upcase);
 	// ----------------------------------------------- fileio
 	env["dir"]		= new Fn("dir",dir);
 	env["file"]		= new Fn("file",file);

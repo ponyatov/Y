@@ -18,10 +18,25 @@ readme += '\n### ![warning](https://github.com/ponyatov/icons/raw/master/'
 readme += 'warning64x64.png) '
 readme += 'Powered by bI language system\n'
 
+# meta.hpp
+
+meta	= next+file@'meta.hpp'		# metainfo defines (AUTHOR,TITLE,..)
+meta += '#ifndef _H_META
+										// ==== metainformation ====
+#define _H_META\n'
+meta += '
+#define TITLE "'+TITLE+'"
+#define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
+#define LICENSE "http://www.gnu.org/copyleft/lesser.html"
+#define GITHUB "https://github.com/ponyatov/Y/tree/dev"
+#define AUTOGEN "/***** DO NOT EDIT: this file was autogened by bI *****/"
+#define LOGO "'+LOGO+'"
+#define ABOUT "'+ABOUT+'"\n'
+meta += '\n#endif // _H_META'
+
 # FILES
 
 allfiles = [
-		meta	= next+file@'meta.hpp'		# metainfo defines (AUTHOR,TITLE,..)
 		readme
 	files = [
 		bi		= next+file@'fsp.bI'		" source "
@@ -31,6 +46,7 @@ allfiles = [
 		hpp		= next+file@'hpp.hpp'		" headers "
 		cpp		= next+file@'cpp.cpp'		" c++ core "
 		make	= next+file@'Makefile'		" project management scripts "
+		meta
 		bat		= next+file@'bat.bat'		# (g)vim helper /win32/
 	]
 		gitignore = next+file@'.gitignore'	# ignore files in git repository
