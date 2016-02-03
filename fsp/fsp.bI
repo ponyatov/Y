@@ -5,10 +5,16 @@ ABOUT	= 'tiny portable declarative programming translator'
 
 next = (dir "mkdir")@'next' "generation"
 
-		readme	= next+file@'README.md'		" README "
+# README.md
+
+readme	= next+file@'README.md'		" README "
+
+next readme
+
+# FILES
 
 allfiles = [
-		readme	= next+file@'README.md'		" README "
+		readme
 	files = [
 		bi		= next+file@'fsp.bI'		# source
 		log		= next+file@'fsp.blog'		# log

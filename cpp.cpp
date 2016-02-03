@@ -155,10 +155,9 @@ Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
 // ======================================================= directory
 Sym* dir(Sym*o) { return new Dir(o); }
 Sym* Dir::add(Sym*o) {
-//	File* F = new File(val+'/'+o->val);
 	o->partag(Wr); o->partag(this); push(o);
-	assert (o->tag=="file");
-	assert( dynamic_cast<File*>(o)->fh = fopen( (val+'/'+o->val).c_str(),"w") );
+	assert(o->tag=="file");
+	assert(dynamic_cast<File*>(o)->fh=fopen((val+'/'+o->val).c_str(),"w"));
 	return o; }
 // ===================================================
 
@@ -191,6 +190,8 @@ void env_init() {									// init env{} on startup
 	env["LOGO"]		= new Str(LOGO);				// bI logo (w/o file extension)
 	// ----------------------------------------------- specials
 	env["nil"]		= nil;
+	env["R"]		= Rd;
+	env["W"]		= Wr;
 	// ----------------------------------------------- string
 	env["upcase"]	= new Fn("upcase",upcase);
 	// ----------------------------------------------- fileio

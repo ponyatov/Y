@@ -18,6 +18,9 @@ Sym::Sym(string V):Sym("sym",V)	{}						// token
 // ------------------------------------------------------- nest[]ed elements
 void Sym::push(Sym*o) { nest.push_back(o); }
 
+// ------------------------------------------------------- par{}ameters
+void Sym::partag(Sym*o) { par[o->tag]=o; }
+
 // ------------------------------------------------------- dumping
 string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
 string Sym::tagstr() { return "<"+tag+":'"+val+"'>"; }	// <T:'V'> header
@@ -48,6 +51,10 @@ Sym* Sym::eq(Sym*o)		{ env[val]=o; return o; }		// A = B	assignment
 Sym* Sym::at(Sym*o)		{ push(o); return this; }		// A @ B	apply
 
 Sym* Sym::add(Sym*o)	{ push(o); return this; }		// A + B	add
+
+// ================================================================== SPECIALS
+Sym* Rd = new Sym("mode","R");							// read mode
+Sym* Wr = new Sym("mode","W");							// write mode
 
 // =================================================================== SCALARS
 
@@ -84,7 +91,12 @@ Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
 
 // ======================================================= directory
 Sym* dir(Sym*o) { return new Dir(o); }
-
+Sym* Dir::add(Sym*o) {
+	o->partag(Wr); o->partag(this); push(o);
+	assert(o->tag=="file");
+	assert(dynamic_cast<File*>(o)->fh=fopen((val+'/'+o->val).c_str(),"w"));
+	return o; }
+	
 // ======================================================= file
 Sym* file(Sym*o) { return new File(o); }
 File::File(Sym*o):Sym("file",o->val) {}
@@ -94,6 +106,9 @@ map<string,Sym*> env;
 void env_init() {									// init env{} on startup
 	// ----------------------------------------------- metainfo constants
 	env["MODULE"]	= new Str(MODULE);				// module name (CFLAGS -DMODULE)
+	// ----------------------------------------------- specials
+	env["R"]		= Rd;
+	env["W"]		= Wr;
 	// ----------------------------------------------- fileio
 	env["dir"]		= new Fn("dir",dir);
 	env["file"]		= new Fn("file",file);

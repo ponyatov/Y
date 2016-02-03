@@ -5,6 +5,8 @@
 										// == std.includes ==
 #include <iostream>
 #include <cstdlib>
+#include <cstdio>
+#include <cassert>
 #include <vector>
 #include <map>
 using namespace std;
@@ -21,6 +23,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	void push(Sym*);
 // -------------------------------------------------------------- par{}ameters
 	map<string,Sym*> par;				// can be used as class slots
+	void partag(Sym*);					// par[tag]=obj
 // ------------------------------------------------------------------- dumping
 	virtual string dump(int depth=0);	// dump symbol object as text
 	virtual string tagval();			// <T:V> header string
@@ -36,6 +39,10 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 
 extern void W(Sym*);								// \ ==== writers ====
 extern void W(string);								// /
+
+// ================================================================== SPECIALS
+extern Sym* Rd;										// read mode
+extern Sym* Wr;										// write mode
 
 // =================================================================== SCALARS
 struct Str:Sym { Str(string); string tagval();		// string
@@ -53,7 +60,7 @@ struct Fn:Sym { Fn(string,FN); FN fn; Sym* at(Sym*); };// internal function
 
 // ==================================================================== FILEIO
 // =================================================== directory
-struct Dir:Sym { Dir(Sym*); };
+struct Dir:Sym { Dir(Sym*); Sym* add(Sym*); };
 extern Sym* dir(Sym*);
 // =================================================== file
 struct File:Sym { File(Sym*); FILE *fh; ~File(); };
