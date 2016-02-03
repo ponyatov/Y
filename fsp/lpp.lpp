@@ -12,6 +12,8 @@ string LexString;											// string buffer
 															/* string parser */
 '				{BEGIN(lexstring); LexString=""; }
 <lexstring>'	{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }
+<lexstring>\\\\	{LexString+='\\';}
+<lexstring>\\t	{LexString+='\t';}
 <lexstring>\\n	{LexString+='\n';}
 <lexstring>\n	{LexString+='\n';}
 <lexstring>.	{LexString+=yytext[0];}
