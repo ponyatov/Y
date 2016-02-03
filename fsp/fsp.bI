@@ -168,9 +168,8 @@ comment@x
 
 .sec Class subsystem
 
-.end
 X:Y
 X='zzz'
 X:Y
 
-
+#.end
