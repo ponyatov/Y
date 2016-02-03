@@ -22,8 +22,8 @@ readme += 'Powered by bI language system\n'
 
 allfiles = [
 		meta	= next+file@'meta.hpp'		# metainfo defines (AUTHOR,TITLE,..)
-	files = [
 		readme
+	files = [
 		bi		= next+file@'fsp.bI'		" source "
 		log		= next+file@'fsp.blog'		" log "
 		yacc	= next+file@'ypp.ypp'		" parser "
