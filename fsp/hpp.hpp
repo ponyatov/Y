@@ -61,7 +61,7 @@ extern Sym* file(Sym*);
 
 // =============================================================== OS SPECIFIC
 #ifdef __MINGW32__
-#include "win32.hpp"								// win32/MinGW
+#include "../win32.hpp"								// win32/MinGW
 #else
 #include "linux.hpp"								// linux/posix
 #endif

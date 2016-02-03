@@ -84,7 +84,6 @@ Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
 
 // ======================================================= directory
 Sym* dir(Sym*o) { return new Dir(o); }
-Dir::Dir(Sym*o):Sym("dir",o->val) {}
 
 // ======================================================= file
 Sym* file(Sym*o) { return new File(o); }
