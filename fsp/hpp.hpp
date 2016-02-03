@@ -19,6 +19,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // ------------------------------------------------------------------- dumping
 	virtual string dump(int depth=0);	// dump symbol object as text
 	virtual string tagval();			// <T:V> header string
+	string tagstr();					// <T:'V'> Str-like header string
 	string pad(int);					// padding with tree decorators
 };
 
@@ -26,7 +27,7 @@ extern void W(Sym*);								// \ ==== writers ====
 extern void W(string);								// /
 
 // =================================================================== SCALARS
-struct Str:Sym { Str(string); };					// string
+struct Str:Sym { Str(string); string tagval(); };	// string
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 extern map<string,Sym*> env;

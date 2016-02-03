@@ -1,11 +1,20 @@
 %{
 #include "hpp.hpp"
+string LexString;											// string buffer
 %}
 %option noyywrap
 %option yylineno
+%x lexstring
 %%
 #[^\n]*			{}											/* line comment */
+
+															/* string parser */
+'				{BEGIN(lexstring); LexString=""; }
+<lexstring>'	{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }
+<lexstring>.	{LexString+=yytext[0];}
+
 [a-zA-Z0-9_]+		TOC(Sym,SYM)							/* symbol */
+
 [ \t\r\n]+		{}									/* drop spaces */
 .				{}									/* drop undetected chars */
 %%

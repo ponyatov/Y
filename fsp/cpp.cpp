@@ -17,6 +17,7 @@ Sym::Sym(string V):Sym("sym",V)	{}						// token
 
 // ------------------------------------------------------- dumping
 string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
+string Sym::tagstr() { return "<"+tag+":'"+val+"'>"; }	// <T:'V'> header
 string Sym::pad(int n) { string S;						// pad as tree
 	//for(int i=0;i<n;i++) S+="\t"; return S; }
 	for(int i=0;i<n-1;i++) S+="|   ";
@@ -30,6 +31,7 @@ string Sym::dump(int depth) {							// dump as text
 
 // ======================================================= string
 Str::Str(string V):Sym("str",V) {}
+string Str::tagval() { return tagstr(); }
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 map<string,Sym*> env;
