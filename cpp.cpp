@@ -76,6 +76,9 @@ Directive::Directive(string V):Sym("",V) {
 	while (val.size() && (val[0]==' ' || val[0]=='\t')) {
 		               val.erase(0,1); }
 }
+Sym* Directive::eval() {
+	if (tag==".end") { W(this); W("\n"); exit(0); }
+	return this; }
 
 // ================================================================== SPECIALS
 Sym* nil = new Sym("nil","");							// nil/false

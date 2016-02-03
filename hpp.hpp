@@ -50,7 +50,7 @@ extern void W(Sym*);								// \ ==== writers ====
 extern void W(string);								// /
 
 // ================================================================= DIRECTIVE
-struct Directive:Sym { Directive(string); };
+struct Directive:Sym { Directive(string); Sym*eval(); };
 
 // ================================================================== SPECIALS
 extern Sym* nil;									// nil/false

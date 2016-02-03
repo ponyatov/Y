@@ -76,7 +76,7 @@ Directive::Directive(string V):Sym("",V) {
 		               val.erase(0,1); }
 }
 Sym* Directive::eval() {
-	if (tag==".env") { W(this); exit(0); }
+	if (tag==".end") { W(this); W("\n"); exit(0); }
 	return this; }
 
 // ================================================================== SPECIALS
