@@ -22,7 +22,7 @@ readme += 'Powered by bI language system\n'
 
 meta	= next+file@'meta.hpp'		# metainfo defines (AUTHOR,TITLE,..)
 meta += '#ifndef _H_META
-										// ==== metainformation ====
+													// ==== metainformation ====
 #define _H_META\n'
 meta += '
 #define TITLE "'+TITLE+'"

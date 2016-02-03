@@ -1,5 +1,5 @@
 #ifndef _H_META
-										// ==== metainformation ====
+													// ==== metainformation ====
 #define _H_META
 
 #define TITLE "Free Syntax Programming"
