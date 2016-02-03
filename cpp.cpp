@@ -99,6 +99,7 @@ string Num::tagval() {
 	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
 
 // ================================================================ COMPOSITES
+
 // ====================================================================== CONS
 Cons::Cons(Sym*X,Sym*Y):Sym("","") { A=X; D=Y; }		// classic Lisp cons
 string Cons::dump(int depth) {
@@ -129,10 +130,9 @@ Op::Op(string V):Sym("op",V) {}
 Op* doc = new Op("doc");								// "doc"string operator
 
 Sym* Op::eval() {
-	if (val=="=") {	assert(nest.size()==2);				// op:= don't eval A
-		return nest[0]->eq(nest[1]->eval()); }
 	Sym::eval();										// nest[]ed evaluate
 	if (nest.size()==2) {								// A op B bin.operator
+		if (val=="=")	return nest[0]->eq(nest[1]);
 		if (val=="doc")	return nest[0]->doc(nest[1]);
 		if (val=="@")	return nest[0]->at(nest[1]);
 		if (val=="+")	return nest[0]->add(nest[1]);
