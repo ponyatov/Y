@@ -3,6 +3,8 @@ MODULE	  "FSP skeleton"
 TITLE	= 'Free Syntax Programming'
 ABOUT	= 'tiny portable declarative programming translator'
 
+.sec Files
+
 next = (dir "mkdir")@'next' "generation"
 
 # README.md
@@ -142,8 +144,8 @@ lex.yy.c: lpp.lpp
 allfiles = [
 		readme
 	files = [
-		bi		= next+file@'fsp.bI'		" source "
-		log		= next+file@'fsp.blog'		" log "
+#		bi		= next+file@'fsp.bI'		" source "
+#		log		= next+file@'fsp.blog'		" log "
 		yacc lex hpp cpp make meta
 		bat		= next+file@'bat.bat'		# (g)vim helper /win32/
 	]
