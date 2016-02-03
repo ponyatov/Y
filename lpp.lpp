@@ -53,19 +53,18 @@ N [0-9]+
 \{					TOC(Op,LB)
 \}					TOC(Op,RB)
 															/* operators */
-\=					TOC(Op,EQ)
-\@					TOC(Op,AT)
-\:					TOC(Op,COLON)
-\.					TOC(Op,DOT)
-
-\+\=				TOC(Op,INS)
-\-\=				TOC(Op,DEL)
-
-\+					TOC(Op,ADD)								/* arithmetic */
+\=					TOC(Op,EQ)								/* assignment */
+\:					TOC(Op,COLON)							/* inheritance */
+\@					TOC(Op,AT)								/* apply */
+\.					TOC(Op,DOT)								/* index */
+\+					TOC(Op,ADD)								/* \ arithmetic */
 \-					TOC(Op,SUB)
 \*					TOC(Op,MUL)
 \/					TOC(Op,DIV)
-\^					TOC(Op,POW)
+\^					TOC(Op,POW)								/* / */
+\+\=				TOC(Op,INS)								/* ins \ composite */
+\-\=				TOC(Op,DEL)								/* del / */
+
 
 [ \t\r\n]+		{}									/* drop spaces */
 .				{}									/* drop undetected chars */
