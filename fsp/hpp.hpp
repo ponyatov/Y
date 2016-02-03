@@ -35,6 +35,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // ----------------------------------------------------------------- operators	
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
+	virtual Sym* inher(Sym*);			// A : B	inheritance
 	virtual Sym* str();					// str(A)	to string representation
 	virtual Sym* add(Sym*);				// A + B	add
 	virtual Sym* div(Sym*);				// A / B	div
@@ -47,6 +48,9 @@ extern void W(string);								// /
 // ================================================================== SPECIALS
 extern Sym* Rd;										// read mode
 extern Sym* Wr;										// write mode
+
+// ================================================================= DIRECTIVE
+struct Directive:Sym { Directive(string); Sym*eval(); };
 
 // =================================================================== SCALARS
 struct Str:Sym { Str(string); string tagval();		// string
@@ -69,7 +73,7 @@ struct Dir:Sym { Dir(Sym*); Sym* add(Sym*); };
 extern Sym* dir(Sym*);
 // =================================================== file
 struct File:Sym { File(Sym*); FILE *fh; ~File();
-	Sym* ins(Sym*); };
+	Sym* ins(Sym*); string tagval(); };
 extern Sym* file(Sym*);
 
 // =============================================================== OS SPECIFIC
@@ -78,6 +82,9 @@ extern Sym* file(Sym*);
 #else
 #include "linux.hpp"								// linux/posix
 #endif
+
+// =================================================================== OBJECTS
+struct Class:Sym { Class(string); Sym*inher(Sym*); };
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 extern map<string,Sym*> env;

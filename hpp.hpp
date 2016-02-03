@@ -39,6 +39,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // ----------------------------------------------------------------- operators	
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
+	virtual Sym* inher(Sym*);			// A : B	inheritance
 	virtual Sym* str();					// str(A)	to string representation
 	virtual Sym* add(Sym*);				// A + B	add
 	virtual Sym* div(Sym*);				// A / B	div

@@ -24,7 +24,15 @@ void Sym::parval(Sym*o) { par[o->val]=o; }
 
 // ------------------------------------------------------- dumping
 string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
-string Sym::tagstr() { return "<"+tag+":'"+val+"'>"; }	// <T:'V'> header
+string Sym::tagstr() {									// <T:'V'> header
+	string S = "<"+tag+":'";
+	for (int i=0;i<val.size();i++)
+		switch (val[i]) {
+			case '\n': S+="\\n"; break;
+			case '\t': S+="\\t"; break;
+			default: S+=val[i];
+		}
+	return S+"'>"; }
 string Sym::pad(int n) { string S;						// pad as tree
 	//for(int i=0;i<n;i++) S+="\t"; return S; }
 	for(int i=0;i<n-1;i++) S+="|   ";
@@ -51,6 +59,8 @@ Sym* Sym::eval() {
 	
 Sym* Sym::eq(Sym*o)		{ env[val]=o; return o; }		// A = B	assignment
 Sym* Sym::at(Sym*o)		{ push(o); return this; }		// A @ B	apply
+Sym* Sym::inher(Sym*o)	{								// A : B	inheritance
+	return new Sym(this->val,o->val); }
 
 Sym* Sym::str()			{ return new Str(val); }		// str(A)	as string
 

@@ -20,7 +20,7 @@
 %%
 REPL	: | REPL ex			{ W($2); W("\n------");					/* parsed */
 							W($2->eval()); W("\n=======\n"); } ;	/* evaled */
-scalar	: SYM | NUM | STR ;
+scalar	: SYM | NUM | STR | DIR ;
 binop	: COLON | DOT | SUB | MUL | POW | INS | DEL ;
 ex		: scalar
 		| ex DOC			{ $$=$1; $$->par["doc"]=$2; }

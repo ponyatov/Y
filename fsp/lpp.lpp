@@ -9,6 +9,8 @@ string LexString;											// string buffer
 %%
 #[^\n]*			{}											/* line comment */
 
+^\.[a-z]+[^\n]*	TOC(Directive,DIR)							/* .directive */
+
 															/* string parser */
 '				{BEGIN(lexstring); LexString=""; }
 <lexstring>'	{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }

@@ -23,7 +23,15 @@ void Sym::partag(Sym*o) { par[o->tag]=o; }
 
 // ------------------------------------------------------- dumping
 string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
-string Sym::tagstr() { return "<"+tag+":'"+val+"'>"; }	// <T:'V'> header
+string Sym::tagstr() {									// <T:'V'> header
+	string S = "<"+tag+":'";
+	for (int i=0;i<val.size();i++)
+		switch (val[i]) {
+			case '\n': S+="\\n"; break;
+			case '\t': S+="\\t"; break;
+			default: S+=val[i];
+		}
+	return S+"'>"; }
 string Sym::pad(int n) { string S;						// pad as tree
 	//for(int i=0;i<n;i++) S+="\t"; return S; }
 	for(int i=0;i<n-1;i++) S+="|   ";
@@ -37,6 +45,7 @@ string Sym::dump(int depth) {							// dump as text
 		S += (*it)->dump(depth+1);
 	return S; }
 
+
 // ------------------------------------------------------- evaluation
 
 Sym* Sym::eval() {
@@ -49,6 +58,8 @@ Sym* Sym::eval() {
 	
 Sym* Sym::eq(Sym*o)		{ env[val]=o; return o; }		// A = B	assignment
 Sym* Sym::at(Sym*o)		{ push(o); return this; }		// A @ B	apply
+Sym* Sym::inher(Sym*o)	{								// A : B	inheritance
+	return new Sym(this->val,o->val); }
 
 Sym* Sym::str()			{ return new Str(val); }		// str(A)	as string
 
@@ -56,6 +67,17 @@ Sym* Sym::add(Sym*o)	{ push(o); return this; }		// A + B	add
 Sym* Sym::div(Sym*o)	{ push(o); return this; }		// A / B	div
 
 Sym* Sym::ins(Sym*o)	{ push(o); return this; }		// A += B	insert
+
+// ================================================================= DIRECTIVE
+Directive::Directive(string V):Sym("",V) {
+	while (val.size() && (val[0]!=' ' && val[0]!='\t')) {
+		tag += val[0]; val.erase(0,1); }
+	while (val.size() && (val[0]==' ' || val[0]=='\t')) {
+		               val.erase(0,1); }
+}
+Sym* Directive::eval() {
+	if (tag==".env") { W(this); exit(0); }
+	return this; }
 
 // ================================================================== SPECIALS
 Sym* Rd = new Sym("mode","R");							// read mode
@@ -102,6 +124,7 @@ Sym* Op::eval() {
 	if (nest.size()==2) {								// A op B bin.operator
 		if (val=="=")	Result=nest[0]->eq(nest[1]);	// A = B
 		if (val=="@")	Result=nest[0]->at(nest[1]);	// A @ B
+		if (val==":")	Result=nest[0]->inher(nest[1]);	// A : B
 		if (val=="+")	Result=nest[0]->add(nest[1]);	// A + B
 		if (val=="/")	Result=nest[0]->div(nest[1]);	// A / B
 		if (val=="+=")	Result=nest[0]->ins(nest[1]);	// A += B
@@ -127,11 +150,20 @@ Sym* Dir::add(Sym*o) {
 Sym* file(Sym*o) { return new File(o); }
 File::File(Sym*o):Sym("file",o->val) {}
 File::~File() { if (fh) fclose(fh); }
+string File::tagval() { return tagstr(); }
 
 Sym* File::ins(Sym*o) {
 	push(o->str());
 	if (fh) fprintf(fh,"%s",o->str()->val.c_str());
 	return this; }
+
+// =================================================================== OBJECTS
+Class::Class(string V):Sym("class",V) {}
+Sym* Class::inher(Sym*o) {
+	string name = o->str()->val;
+	env[name] = new Class(name);
+	return env[name];
+}
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 map<string,Sym*> env;
@@ -154,5 +186,7 @@ void env_init() {									// init env{} on startup
 	// ----------------------------------------------- fileio
 	env["dir"]		= new Fn("dir",dir);
 	env["file"]		= new Fn("file",file);
+	// ----------------------------------------------- objects
+	env["class"]	= new Class("class");
 }
 
