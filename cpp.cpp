@@ -49,11 +49,10 @@ Sym* Sym::eval() {
 
 // ------------------------------------------------------- operators
 	
-Sym* Sym::str()			{ return new Str(val); }		// str(A)	as string
-Sym* Sym::doc(Sym*o)	{ par["doc"]=o; return this; }	// A "B"	docstring
-
 Sym* Sym::eq(Sym*o)		{ env[val]=o; return o; }		// A = B	assignment
 Sym* Sym::at(Sym*o)		{ push(o); return this; }		// A @ B	apply
+
+Sym* Sym::str()			{ return new Str(val); }		// str(A)	as string
 
 Sym* Sym::add(Sym*o)	{ push(o); return this; }		// A + B	add
 Sym* Sym::div(Sym*o)	{ push(o); return this; }		// A / B	div
@@ -77,6 +76,7 @@ Sym* Wr = new Sym("mode","W");							// write mode
 // ======================================================= string
 Str::Str(string V):Sym("str",V) {}
 string Str::tagval() { return tagstr(); }
+Sym* Str::eq(Sym*o) { yyerror("immutable"); }
 Sym* Str::add(Sym*o) { return new Str(val+o->str()->val); }
 Sym* upcase(Sym*o) { 
 	string S = o->str()->val;
@@ -127,19 +127,18 @@ Sym* List::div(Sym*o) {									// split elements
 
 // ======================================================= operator
 Op::Op(string V):Sym("op",V) {}
-Op* doc = new Op("doc");								// "doc"string operator
-
 Sym* Op::eval() {
 	Sym::eval();										// nest[]ed evaluate
+	Sym* Result=this;
 	if (nest.size()==2) {								// A op B bin.operator
-		if (val=="=")	return nest[0]->eq(nest[1]);
-		if (val=="doc")	return nest[0]->doc(nest[1]);
-		if (val=="@")	return nest[0]->at(nest[1]);
-		if (val=="+")	return nest[0]->add(nest[1]);
+		if (val=="=")	Result=nest[0]->eq(nest[1]);	// A = B
+		if (val=="@")	Result=nest[0]->at(nest[1]);	// A @ B
+		if (val=="+")	Result=nest[0]->add(nest[1]);	// A + B
 		if (val=="/")	return nest[0]->div(nest[1]);
 		if (val=="+=")	return nest[0]->ins(nest[1]);
 	}
-	return this; }
+	if (par.count("doc")) Result->par["doc"]=par["doc"];// copy par[doc]
+	return Result; }
 // ===================================================
 
 // ======================================================= function

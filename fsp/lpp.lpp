@@ -4,7 +4,8 @@ string LexString;											// string buffer
 %}
 %option noyywrap
 %option yylineno
-%x lexstring
+								/* extra lexer states: string/docstring parsing */
+%x lexstring docstring
 %%
 #[^\n]*			{}											/* line comment */
 
@@ -12,6 +13,10 @@ string LexString;											// string buffer
 '				{BEGIN(lexstring); LexString=""; }
 <lexstring>'	{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }
 <lexstring>.	{LexString+=yytext[0];}
+															/* docstring */
+\"				{BEGIN(docstring); LexString=""; }
+<docstring>\"	{BEGIN(INITIAL); yylval.o = new Str(LexString); return DOC; }
+<docstring>.	{LexString+=yytext[0];}
 
 [a-zA-Z0-9_]+		TOC(Sym,SYM)							/* symbol */
 
@@ -23,8 +28,8 @@ string LexString;											// string buffer
 \}					TOC(Op,RB)
 															/* operators */
 \=					TOC(Op,EQ)								/* assignment */
-\:					TOC(Op,COLON)							/* inheritance */
 \@					TOC(Op,AT)								/* apply */
+\:					TOC(Op,COLON)							/* inheritance */
 \.					TOC(Op,DOT)								/* index */
 \+					TOC(Op,ADD)								/* \ arithmetic */
 \-					TOC(Op,SUB)

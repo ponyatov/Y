@@ -37,10 +37,9 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // -------------------------------------------------------- compute (evaluate)
 	virtual Sym* eval();
 // ----------------------------------------------------------------- operators	
-	virtual Sym* str();					// str(A)	to string representation
-	virtual Sym* doc(Sym*);				// A "B"	docstring
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
+	virtual Sym* str();					// str(A)	to string representation
 	virtual Sym* add(Sym*);				// A + B	add
 	virtual Sym* div(Sym*);				// A / B	sub
 	virtual Sym* ins(Sym*);				// A += B	insert
@@ -63,7 +62,7 @@ extern Sym* Wr;										// write mode
 
 // =================================================================== SCALARS
 struct Str:Sym { Str(string); string tagval();		// string
-	Sym* add(Sym*); };
+	Sym*eq(Sym*); Sym* add(Sym*); };
 extern Sym* upcase(Sym*);
 
 struct Hex:Sym { Hex(string); };					// hexadecimal
@@ -82,7 +81,6 @@ struct List:Sym { List();							// [list]
 // =============================================================== FUNCTIONALS
 // =================================================== operator
 struct Op:Sym { Op(string); Sym* eval(); };
-extern Op* doc;										// "doc"string operator
 // =================================================== 
 
 struct Lambda:Sym { Lambda(); };					// {la:mbda}
