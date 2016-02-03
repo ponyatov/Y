@@ -1,0 +1,13 @@
+%{
+#include "hpp.hpp"
+%}
+%defines %union { Sym*o; }
+%token <o> SYM NUM STR 				/* scalars: symbol number 'string'	*/
+%token <o> L R LQ RQ LB RB			/* brackets:  ( ) [ ] { }			*/
+%type <o> ex scalar /* list lambda		/* expression scalar [list] {lambda} */
+%%
+REPL	: | REPL ex			{ W($2); W("\n------");	}				/* parsed */
+scalar	: SYM | NUM | STR ;
+ex		: scalar
+;
+%%
