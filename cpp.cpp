@@ -142,10 +142,11 @@ Sym* List::div(Sym*o) {									// split elements
 // ======================================================= operator
 Op::Op(string V):Sym("op",V) {}
 Sym* Op::eval() {
+	if (val=="=") return nest[0]->eq(nest[1]->eval());	// A = B
 	Sym::eval();										// nest[]ed evaluate
 	Sym* Result=this;
 	if (nest.size()==2) {								// A op B bin.operator
-		if (val=="=")	Result=nest[0]->eq(nest[1]);	// A = B
+//		if (val=="=")	Result=nest[0]->eq(nest[1]);	// A = B
 		if (val=="@")	Result=nest[0]->at(nest[1]);	// A @ B
 		if (val=="+")	Result=nest[0]->add(nest[1]);	// A + B
 		if (val=="/")	return nest[0]->div(nest[1]);
