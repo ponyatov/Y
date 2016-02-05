@@ -1,8 +1,3 @@
-
-TITLE	= '[Lo]w [L]evel Compiler'
-ABOUT	= 'LLVM wrapper'
-LOGO	= 'llvm'
-
-.inc files
+#.inc files
 
 empty = module @ 'empty'

@@ -1,3 +1,8 @@
+
+TITLE	= '[Lo]w [L]evel Compiler'
+ABOUT	= 'LLVM wrapper'
+LOGO	= 'llvm'
+
 .sec Files
 next = dir @ 'next'
 .inc ../lex/readme
