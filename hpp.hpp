@@ -1,7 +1,7 @@
 #ifndef _H_bI
 #define _H_bI
 
-#include "./meta.hpp"
+#include "meta.hpp"
 										// == std.includes ==
 #include <iostream>
 #include <sstream>
