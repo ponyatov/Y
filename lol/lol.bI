@@ -1,3 +1,3 @@
-#.inc files
+.inc files
 
 empty = module @ 'empty'

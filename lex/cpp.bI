@@ -7,4 +7,9 @@ cpp += '#include "hpp.hpp"\n'
 #void W(string s) { cout << s; }
 #void W(Sym*o) { W(o->dump()); }
 #'
-cpp += 'int main(int argc, char *argv[]) { return 0; }\n'
+cpp += '
+int main(int argc, char *argv[]) {
+	cerr << "\\n" << MODULE << " : " << TITLE << "\\n" << AUTHOR << "\\n\\n";
+	return 0;
+}
+'
