@@ -23,7 +23,7 @@ REPL	: | REPL ex			{ W($2); W("\n------");					/* parsed */
 							W($2->eval()); W("\n=======\n"); } ;	/* evaled */
 scalar	: SYM | NUM | STR ;
 ex		: scalar
-		| DIR ex			{ $$=$1; $$->push($2); }
+		| DIR
 		| ex DOC			{ $$=$1; $$->par["doc"]=$2; }
 		| L ex R			{ $$=$2; }
 		| LQ list RQ		{ $$=$2; }
