@@ -1,14 +1,8 @@
-# comment
-
-TITLE
 
 TITLE	= '[Lo]w [L]evel Compiler'
 ABOUT	= 'LLVM wrapper'
-LOGO	= 'tux64x64'
+LOGO	= 'llvm'
 
-next = dir @ 'next'
-
-.inc ../lex/meta.bI
-.inc ../lex/readme.bI
+.inc files
 
 empty = module @ 'empty'

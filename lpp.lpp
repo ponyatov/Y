@@ -2,7 +2,7 @@
 #include "../hpp.hpp"
 string LexString;											// string buffer
 void incLude(Sym*inc) {										// .inc processing
-	if (!(yyin = fopen(inc->val.c_str(),"r"))) yyerror("");	// open
+	if (!(yyin = fopen((inc->val+".bi").c_str(),"r"))) yyerror("");	// open
 	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));// push to lexer
 }
 %}
