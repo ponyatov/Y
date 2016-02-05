@@ -8,6 +8,6 @@
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"
 #define GITHUB "https://github.com/ponyatov/Y/tree/dev/"
 #define AUTOGEN "/***** DO NOT EDIT: this file was autogened by bI *****/"
-#define LOGO "tux64x64"
+#define LOGO "llvm"
 
 #endif // _H_META
