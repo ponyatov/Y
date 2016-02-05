@@ -131,9 +131,11 @@ Sym* List::str() {										// concatenate elements
 }
 Sym* List::div(Sym*o) {									// split elements
 	Sym* L = new List();
-	for (auto it=nest.begin(),e=nest.end();it!=e;it++) {
-		L->push((*it)); L->push(o); }
-	L->nest.pop_back();
+	if (nest.size()) {
+		for (auto it=nest.begin(),e=nest.end();it!=e;it++) {
+			L->push((*it)); L->push(o); }
+		L->nest.pop_back();
+	}
 	return L;
 }
 
