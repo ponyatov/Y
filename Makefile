@@ -20,8 +20,3 @@ res.res: rc.rc
 clean:
 	rm -rf ./$(MODULE)$(EXE) *.*log ypp.tab.?pp lex.yy.c res.res *~
 
-.PHONY: upgrade
-upgrade:
-	cp next/README.md ./
-	cp next/meta.hpp ./
-	cp next/bat.bat ./
