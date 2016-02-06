@@ -1,62 +1,49 @@
-/***** DO NOT EDIT: this file was autogened by bI *****/
 %{
-#include "hpp.hpp"
+#include "../hpp.hpp"
 %}
-%defines %union {			/* syntax tree types: char string AST-item */
-char c; sym *o; }	
+%defines %union { Sym*o; }
 
-							/* char $ ? */
-%token <c> CHAR SX QX
-							/* = [ ] ( ) < > { } : */
-%token <c> EQ LQ RQ LP RP
-%token <c> LL GG BL BR COLON
-							/* symbol 12.34 'string' (classic Lisp atoms) */
-%token <o> SYM NUM STR
-							/* directives with special processing */
-%token <o> DIRECTIVE
-%token <o> MODULE FFILE FEOF INC
-							/* nonterminal types: expression list vector block*/
-%type <o> ex list vector block
+%token <o> DOC DIR 					/* doc: "docstring" .directive		*/
+%token <o> SYM NUM STR 				/* scalars: symbol number 'string'	*/
+%token <o> L R LQ RQ LB RB			/* brackets:  ( ) [ ] { }			*/
+%token <o> EQ AT COLON DOT			/* operators: = @ : .				*/
+%token <o> ADD SUB MUL DIV POW		/* + - * / ^						*/
+%token <o> INS DEL 					/* += -=							*/
 
-												/* operators priority */
+%type <o> ex scalar list lambda		/* expression scalar [list] {lambda} */
+
 %left EQ
-%left COLON
-
+%left ADD SUB
+%left MUL DIV
+%left STR
+%left AT
+%left DOC
 %%
-bI:
-	| bI CHAR		{ W($2); }						/* any undetected char */
-	| bI MODULE		{ W($2,false); }
-	| bI FFILE CHAR	{ W($2,false); W($3,false); }	/* drop <.file:..>*/
-	| bI FEOF  CHAR	{ W($2,false); W($3,false); }	/* drop <.eof:..> */
-	| bI INC   		{ W($2,false); W("\n",false); }	/* drop <.inc:..> */
-	| bI DIRECTIVE 	{ W($2); }
-
-	| bI SX ex 		{ W($3->eval()->value); }		/* insert computed string */
-	| bI QX ex 		{ W($3);						/* dump AST and eval result */
-					  W("\n----------------");
-					  W($3->eval());
-					  W("\n============================\n"); }
+REPL	: | REPL ex			{ W($2); W("\n------");					/* parsed */
+							W($2->eval()); W("\n=======\n"); } ;	/* evaled */
+scalar	: SYM | NUM | STR ;
+ex		: scalar
+		| DIR
+		| ex DOC			{ $$=$1; $$->par["doc"]=$2; }
+		| L ex R			{ $$=$2; }
+		| LQ list RQ		{ $$=$2; }
+		| LB lambda RB		{ $$=$2; }
+		| ex EQ ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex AT ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex DOT ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex INS ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex DEL ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex ADD ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex SUB ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex MUL ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex DIV ex			{ $$=$2; $$->push($1); $$->push($3); }
 ;
-
-ex: SYM | NUM | STR								/* atoms (primary types)*/
-	| LP ex RP		{ $$ = $2; }				/* (parenthes)			*/
-  	| LQ list RQ	{ $$ = $2; }				/* [list]				*/
-  	| LL vector GG	{ $$ = $2; }				/* <vector>				*/
-	| BL block BR	{ $$ = $2; }				/* {block}				*/
-	| ex COLON ex	{ $$ = new Pair($1,$3); }	/* pa:ir				*/
-	| ex EQ ex		{ $$ = $1; $$->join($3); }	/* some = nested		*/
+list	:					{ $$=new List(); }
+		| list ex			{ $$=$1; $$->push($2); }
 ;
-
-list:				{ $$ = new List(); }		/* create new [list] */
-	| list ex		{ $$ = $1; $$->join($2); }	/* add next element */
+lambda	:					{ $$=new Lambda(); }
+		| lambda SYM COLON	{ $$=$1; $$->parval($2); }
+		| lambda ex			{ $$=$1; $$->push($2); }
 ;
-
-vector:				{ $$ = new Vector(); }		/* create new <vector> */
-	| vector ex		{ $$ = $1; $$->join($2); }	/* add next element */
-;
-
-block:				{ $$ = new Block(); }		/* create new {block} */
-	| block ex		{ $$ = $1; $$->join($2); }	/* add next element */
-;
-
 %%
+

@@ -1,9 +1,9 @@
 *~
 *.swp
-bI
-bI.exe
+*.exe
+*.elf
 *.*log
-*.tab.?pp
+ypp.tab.?pp
 lex.yy.c
-*.res
-2del/
+res.res
+next/

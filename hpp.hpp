@@ -1,109 +1,128 @@
-/***** DO NOT EDIT: this file was autogened by bI *****/
 #ifndef _H_bI
 #define _H_bI
 
-// metainfo constants
-
-#define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
-#define LICENSE "http://www.gnu.org/copyleft/lesser.html"
-#define GITHUB "https://github.com/ponyatov/bI"
-#define AUTOGEN "/***** DO NOT EDIT: this file was autogened by bI *****/"
-#define LOGO "logo64x64"
-#define LISP "warning64x64"
-
-// standart includes
-
+#include "meta.hpp"
+										// == std.includes ==
 #include <iostream>
 #include <sstream>
-#include <iomanip>
-#include <string>
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
-#ifdef __MINGW32__
-	#include <direct.h>
-#else
-	#include <sys/stat.h>
-#endif
+#include <string>
+#include <algorithm>
 #include <vector>
 #include <map>
 using namespace std;
 
-// generic AST-like dynamic object
-
-struct sym {
-	string tag;					// object class or data type
-	string value;				// object value in string form
-	sym(string,string);			// constructor from string form tag:value
-	vector<sym*> nest;			// nested objects tree
-	void join(sym*);			// add nested object
-	string pad(int);			// pad tagval with tabs
-	string tagval();			// <tag:value> string
-	string dump(int depth=0);	// dump object in string form
-	virtual sym* eval();		// evaluate (compute) object
-	// functions
-	sym* (*fn)(sym*);			// optional ptr to internal sym* fn(sym*)
-	// code generation
-	virtual string hpp(int depth=0);	// dump in C++ .hpp
+struct Sym {							// == Abstract Symbolic Type (AST) ==
+// ---------------------------------------------------------------------------
+	string tag;							// data type / class
+	string val;							// symbol value
+// -------------------------------------------------------------- constructors
+	Sym(string,string);					// <T:V>
+	Sym(string);						// token
+//	Sym(Sym*);							// copy
+// --------------------------------------------------------- nest[]ed elements
+	vector<Sym*> nest;
+	void push(Sym*);
+// -------------------------------------------------------------- par{}ameters
+	map<string,Sym*> par;				// can be used as class slots
+	void partag(Sym*);					// par[tag]=obj
+	void parval(Sym*);					// par[val]=obj
+// ------------------------------------------------------------------- dumping
+	virtual string dump(int depth=0);	// dump symbol object as text
+	virtual string tagval();			// <T:V> header string
+	string tagstr();					// <T:'V'> Str-like header string
+	string pad(int);					// padding with tree decorators
+// -------------------------------------------------------- compute (evaluate)
+	virtual Sym* eval();
+// ----------------------------------------------------------------- operators	
+	virtual Sym* eq(Sym*);				// A = B	assignment
+	virtual Sym* at(Sym*);				// A @ B	apply
+	virtual Sym* inher(Sym*);			// A : B	inheritance
+	virtual Sym* str();					// str(A)	to string representation
+	virtual Sym* add(Sym*);				// A + B	add
+	virtual Sym* div(Sym*);				// A / B	div
+	virtual Sym* ins(Sym*);				// A += B	insert
 };
-extern map<string,sym*> env;	// \\ global environment: objects registry
-extern void env_init();			// //
 
-// dynamic symbolic object subsystem
+extern void W(Sym*);								// \ ==== writers ====
+extern void W(string);								// /
 
-struct Directive:sym { Directive(string); };				// .directive
-struct Module:sym {											// .module
-	Module(string); ~Module();
-	static void CurrSet(Module*); };			
-extern Module *curr_module;									// current module
-struct File:sym {											// .file
-	File(string,string M="r"); ~File(); FILE *fh;
-	static void CurrSet(File*); };							// set curr_file
-extern File *curr_file;									// current output file
+// ================================================================= DIRECTIVE
+struct Directive:Sym { Directive(string); Sym*eval(); };
 
-struct Int:sym { Int(string); sym* eval(); };				// integer
-struct Hex:sym { Hex(string); sym* eval(); };				// hex
-struct Bin:sym { Bin(string); sym* eval(); };				// binary
-struct Num:sym { Num(string); sym* eval(); };				// float number
-struct Str:sym { Str(string); };							// string
+// ================================================================== SPECIALS
+extern Sym* nil;									// nil/false
+//extern Sym* T;							// true
+//extern Sym* F;							// false
+//extern Sym* E;							// error
+//extern Sym* D;							// default
+extern Sym* Rd;										// read mode
+extern Sym* Wr;										// write mode
 
-struct List:sym { List(); };								// [list]
-struct Vector:sym { Vector(); };							// <vector>
-struct Pair:sym { Pair(sym*,sym*); };						// pa:ir
-struct Block:sym { Block(); };								// {block}
+// =================================================================== SCALARS
+struct Str:Sym { Str(string); string tagval();		// string
+	Sym*eq(Sym*); Sym* add(Sym*); };
+extern Sym* upcase(Sym*);
 
-// class processing
+struct Hex:Sym { Hex(string); };					// hexadecimal
+struct Bin:Sym { Bin(string); };					// bit string
+struct Int:Sym { Int(string); Int(long);			// integer
+	string tagval(); long   val; };
+struct Num:Sym { Num(string); Num(double);			// floating number
+	string tagval(); double val; };
 
-struct Class:sym { Class(string); };						// class:def
-extern sym* classdef(sym*);									// class fn
+// ================================================================ COMPOSITES
+struct List:Sym { List();							// [list]
+	Sym*str(); Sym*div(Sym*); };
 
-// lexer/parser interface (flex/bison)
+// =============================================================== FUNCTIONALS
+// =================================================== operator
+struct Op:Sym { Op(string); Sym* eval(); };
+// =================================================== 
 
-extern int yylex();
-extern int yylineno;
-extern char* yytext;
-extern void incFile(sym*);
-extern int yyparse();
-extern void yyerror(string);
-#include "ypp.tab.hpp"
-#define TC(X)	{ yylval.c = yytext[0]; return X; }			/* char token */
-#define T1(X)	{ yylval.c = yytext[1]; return X; }			/* escaped char */
-#define TS(X)	{ yylval.s = new string(yytext); return X; }/* string tok */
-#define TO(C,X)	{ yylval.o = new sym(C,yytext); return X; }	/* generic sym */
-#define TX(C,X)	{ yylval.o = new C(yytext); return X; }		/* inherited sym */
+struct Lambda:Sym { Lambda(); };					// {la:mbda}
+// =================================================== function
+typedef Sym*(*FN)(Sym*);							// function ptr
+struct Fn:Sym { Fn(string,FN); FN fn; Sym* at(Sym*); };// internal function
 
-// writers
+// ==================================================================== FILEIO
+// =================================================== directory
+struct Dir:Sym { Dir(Sym*); Sym* add(Sym*); };
+extern Sym* dir(Sym*);
+// =================================================== file
+struct File:Sym { File(Sym*); FILE *fh; ~File();
+	Sym* ins(Sym*); };
+extern Sym* file(Sym*);
 
-void W(char   ,bool to_file=true);
-void W(string ,bool to_file=true);
-void W(string*,bool to_file=true);
-void W(sym*   ,bool to_file=true);
+// ======================================================================= GUI
+struct Message:Sym { Message(Sym*);	};				// message box/bar
+extern Sym* message(Sym*);
+struct Window:Sym { Window(Sym*); };				// window
+extern Sym* window(Sym*);
 
-// functions
+// =============================================================== OS SPECIFIC
+#ifdef __MINGW32__
+#include "win32.hpp"								// win32/MinGW
+#else
+#include "linux.hpp"								// linux/posix
+#endif
 
-typedef sym* (*FN)(sym*);									// ptr to fn()
-struct Fn:sym { Fn(string,FN); };							// function
+// ====================================================== GLOBAL ENV{}IRONMENT
+extern map<string,Sym*> env;
+extern void env_init();								// init env{} on startup
 
-extern sym* hpp(sym*);			// hpp
+// ========================================================== PARSER INTERFACE
+													// == lexer interface ==
+extern int yylex();									// parse next token
+extern int yylineno;								// current source line
+extern char* yytext;								// found token text
+extern void incLude(Sym*inc);						// .include file
+#define TOC(C,X) { yylval.o = new C(yytext); return X; }
+													// == parser interface ==
+extern int yyparse();								// run parser
+extern void yyerror(string);						// error callback
+#include "ypp.tab.hpp"								// token defines for lexer
 
 #endif // _H_bI
