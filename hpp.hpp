@@ -74,8 +74,6 @@ struct Num:Sym { Num(string); Num(double);			// floating number
 	string tagval(); double val; };
 
 // ================================================================ COMPOSITES
-//struct Cons:Sym { Cons(Sym*,Sym*); Sym*A; Sym*D; 	// classic Lisp cons
-//	string dump(int); Sym*eval(); };
 struct List:Sym { List();							// [list]
 	Sym*str(); Sym*div(Sym*); };
 

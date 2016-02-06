@@ -114,12 +114,6 @@ string Num::tagval() {
 
 // ================================================================ COMPOSITES
 
-// ====================================================================== CONS
-//Cons::Cons(Sym*X,Sym*Y):Sym("","") { A=X; D=Y; }		// classic Lisp cons
-//string Cons::dump(int depth) {
-//	return A->dump(depth+1)+D->dump(depth+1); }
-//Sym* Cons::eval() { return new Cons(A->eval(),D->eval()); }
-
 // ====================================================================== LIST
 List::List():Sym("[","]") {}							// [list]
 
