@@ -1,0 +1,11 @@
+%{
+#include <fstream>
+std::ofstream head("tmp/ypp.head");
+%}
+%option main
+%x xx
+%%
+\%\{		{BEGIN(xx);head<<yytext;}
+<xx>\%\}	{BEGIN(INITIAL);head<<yytext;}
+<xx>(\n|.)	{head<<yytext;}
+%%

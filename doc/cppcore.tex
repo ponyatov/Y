@@ -1,0 +1,25 @@
+\secrel{\cpp\ core}\label{cppcore}\secdown
+
+\cpp\ code described part by part over this manual in every
+symbolic type section.
+
+\lst{cpp.cpp}{tmp/cpp.hdr}{C++}
+
+\emph{Error callback}\ function: it will be called from parser on error.
+\verb|YYERR|\ macro used for doubling error message: to
+\verb|stdout|\ redirected to \verb|.blog|, and \verb|stderr| goes to \make\
+output log\note{and IDE report}.
+
+\lst{cpp.cpp}{tmp/cpp.err}{C++}
+
+\verb|main()|\ function: call global environment setup and parser:
+
+\lst{cpp.cpp}{tmp/cpp.main}{C++}
+
+\secrel{\file{mingw32.cpp}: win32/MinGW}
+
+OS/platform specifics \cpp\ code selected into separate files,
+
+\lst{mingw32.cpp}{../mingw32.cpp}{C++}
+
+\secup

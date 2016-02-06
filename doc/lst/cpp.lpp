@@ -1,0 +1,20 @@
+%{
+#include <fstream>
+std::ofstream hdr("tmp/cpp.hdr");
+std::ofstream wrt("tmp/cpp.wrt");
+std::ofstream err("tmp/cpp.err");
+std::ofstream mn("tmp/cpp.main");
+std::ofstream env("tmp/cpp.env");
+std::ofstream lst("tmp/cpp.list");
+std::ofstream pir("tmp/cpp.pair");
+std::ofstream vct("tmp/cpp.vector");
+std::ofstream tpl("tmp/cpp.tuple");
+%}
+%option main
+%%
+^#include.+\n	{hdr<<yytext;}
+^.+YYERR.+\n	{err<<yytext;}
+^.+main.+\n		{mn<<yytext;env<<yytext;}
+^.+env.+\n		{env<<yytext;}
+^.*\ W\(.*\n	{wrt<<yytext;}
+%%

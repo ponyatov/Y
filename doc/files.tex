@@ -1,0 +1,23 @@
+\secrel{Files}\label{files}\secdown
+
+\begin{tabular}{l l l}
+\file{ypp.ypp} & flex & parser \ref{parser}\\
+\file{lpp.lpp} & bison & lexer \ref{lexer}\\
+\file{hpp.hpp} & \cpp & headers \ref{headers}\\
+\file{cpp.cpp} & \cpp & core \ref{cppcore}\\
+\file{Makefile} & make & build script \ref{makes}\\
+\file{rc.rc} & windres & win32 resource description \\
+\file{bat.bat} & \vim & win32 start helper \\
+\file{filetype.vim} & \vim & \verb$.bI|.blog$\ file type processing \\
+\file{syntax.vim} & \vim & syntax coloring \\
+\file{doc/} & \LaTeX &\\
+\file{doc/Makefile} && \ref{makes}\\
+\file{doc/bI.pdf} && manual \\
+\end{tabular}
+
+\input{lexer}
+\input{parser}
+\input{headers}
+\input{cppcore}
+\input{makes}
+\secup

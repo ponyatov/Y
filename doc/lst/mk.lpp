@@ -1,0 +1,23 @@
+%{
+#include <fstream>
+std::ofstream mod("tmp/mk.mod");
+std::ofstream exec("tmp/mk.exec");
+std::ofstream clean("tmp/mk.clean");
+std::ofstream ch("tmp/mk.ch");
+std::ofstream cc("tmp/mk.cc");
+std::ofstream flex("tmp/mk.flex");
+std::ofstream yacc("tmp/mk.yacc");
+std::ofstream res("tmp/mk.res");
+%}
+%option main
+%%
+^.?MODULE\ =.+\n		{mod<<yytext;}
+^.*(exec|\.blog).*\n	{exec<<yytext;}
+^.*(clean|rm).*\n		{clean<<yytext;}
+^[CH]\ =.+\n			{ch<<yytext;}
+^.*\$\(C\).*\n			{cc<<yytext;}
+^.*CXX.*\n				{cc<<yytext;}
+^.*(bison|ypp).*\n		{yacc<<yytext;}
+^.*(flex|lpp).*\n		{flex<<yytext;}
+^.*(windres|rc).*\n		{res<<yytext;}
+%%

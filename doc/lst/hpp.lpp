@@ -1,0 +1,37 @@
+%{
+#include <fstream>
+std::ofstream once("tmp/hpp.once");
+std::ofstream lex("tmp/hpp.lex");
+std::ofstream pars("tmp/hpp.pars");
+std::ofstream meta("tmp/hpp.meta");
+std::ofstream inc("tmp/hpp.inc");
+std::ofstream ast("tmp/hpp.ast");
+std::ofstream wrt("tmp/hpp.wrt");
+std::ofstream env("tmp/hpp.env");
+std::ofstream lst("tmp/hpp.list");
+std::ofstream pir("tmp/hpp.pair");
+std::ofstream vct("tmp/hpp.vector");
+std::ofstream tpl("tmp/hpp.tuple");
+
+%}
+%option main
+%x AST
+%%
+^.+_H_.+\n					{once<<yytext;}
+^.*==\ lexer.*\n			{lex<<yytext;}
+^.*yy(lex|line|text).*\n	{lex<<yytext;}
+^.*==\ parser.*\n			{pars<<yytext;}
+^.*yy(parse|error).*\n		{pars<<yytext;}
+^#define\ [A-Z]+.+\n		{meta<<yytext;}
+^.*==\ std.inc.*\n			{inc<<yytext;}
+^using.*\n					{inc<<yytext;}
+^#include\ <.+\n			{inc<<yytext;}
+^.+\ W\(.+\n				{wrt<<yytext;}
+^.*env.*\n					{env<<yytext;}
+%%
+/*
+^struct\ Sym				{ast<<yytext; BEGIN(AST);}
+<Sym>\};\n					{ast<<yytext; BEGIN(INITIAL);}
+<Sym>\n						{ast<<yytext;}
+<Sym>.						{ast<<yytext;}
+*/

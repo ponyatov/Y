@@ -1,0 +1,22 @@
+\secrel{Headers}\label{headers}\secdown
+
+Header file contents wrapped by include-once preprocessor hint:
+
+\lst{hpp.hpp}{tmp/hpp.once}{C++}
+
+Some metainfo constants defined, including
+\verb|-DMODULE=$(CURDIR)|\ defined in \file{Makefile}:
+
+\lst{hpp.hpp}{tmp/hpp.meta}{C++}
+
+Standard \cpp\ includes used in core: 
+
+\lst{hpp.hpp}{tmp/hpp.inc}{C++}
+
+\secrel{\file{mingw32.hpp}: win32/MinGW}
+
+Some OS/platform specifics headers selected into separate files,
+
+\lst{mingw32.hpp}{../mingw32.hpp}{C++}
+
+\secup

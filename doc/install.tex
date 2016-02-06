@@ -1,0 +1,39 @@
+\secly{Installation}\label{install}
+
+GitHub: \url{https://github.com/ponyatov/Y}
+
+\emph{dev}\ branch: \url{https://github.com/ponyatov/Y/tree/dev/}
+
+\begin{verbatim}
+git clone -o gh https://github.com/ponyatov/Y/tree/master/ bI_stable
+cd bI_stable
+\end{verbatim}
+
+\bi\ system provided as source-only,
+and requires some development tools installed:
+
+\begin{itemize}
+\item host: \win
+\begin{description}
+\item{\prog{git-scm}} git client \url{https://git-scm.com/downloads}
+\item{\prog{MinGW}} GNU compiler toolchain
+ \url{http://www.mingw.org/download/installer?}
+\begin{itemize}[nosep]
+\item \prog{g++}\ \cpp\ compiler
+\item \prog{flex}\ lexer generator
+\item \prog{bison}\ parser generator
+\end{itemize}
+\item{[\ \vim\ ]} text editor
+\url{ftp://ftp.vim.org/pub/vim/pc/gvim74.exe} 
+\end{description}
+\begin{verbatim}
+mingw32-make EXE=.exe RES=res.res
+\end{verbatim}
+\item host: \lin, powered with LLVM dynamic compilation
+\begin{verbatim}
+apt install git make g++ flex bison llvm-3.5
+\end{verbatim}
+\begin{verbatim}
+make EXE= RES= LLVER=3.5
+\end{verbatim}
+\end{itemize}
