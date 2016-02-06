@@ -11,6 +11,7 @@ meta +=
 #define GITHUB "'+GITHUB+'"
 #define AUTOGEN "/***** DO NOT EDIT: this file was autogened by bI *****/"
 #define LOGO "'+LOGO+'"
+#define COLOR "'+COLOR+'"
 
 #endif // _H_META
 '
