@@ -37,6 +37,7 @@ ex		: scalar
 		| ex SUB ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex MUL ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex DIV ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex COLON ex		{ $$=$2; $$->push($1); $$->push($3); }
 ;
 list	:					{ $$=new List(); }
 		| list ex			{ $$=$1; $$->push($2); }

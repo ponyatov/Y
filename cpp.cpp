@@ -144,6 +144,7 @@ Sym* Op::eval() {
 	if (nest.size()==2) {								// A op B bin.operator
 //		if (val=="=")	Result=nest[0]->eq(nest[1]);	// A = B
 		if (val=="@")	Result=nest[0]->at(nest[1]);	// A @ B
+		if (val==":")	return nest[0]->inher(nest[1]);	// A : B
 		if (val=="+")	Result=nest[0]->add(nest[1]);	// A + B
 		if (val=="/")	return nest[0]->div(nest[1]);
 		if (val=="+=")	return nest[0]->ins(nest[1]);
@@ -160,6 +161,12 @@ Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
 // ======================================================= {lambda}
 Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
 // ===================================================
+
+// =================================================================== OBJECTS
+Class::Class(string V,Class*S):Sym("class",V) {			// class
+	if (S) super=S; else super=cls; }
+Class* cls = new Class("class");
+Sym* Class::inher(Sym*o) { return new Class(o->str()->val); }
 
 // ==================================================================== FILEIO
 
@@ -207,6 +214,8 @@ void env_init() {									// init env{} on startup
 	env["W"]		= Wr;
 	// ----------------------------------------------- string
 	env["upcase"]	= new Fn("upcase",upcase);
+	// ----------------------------------------------- objects
+	env["class"]	= cls;
 	// ----------------------------------------------- fileio
 	env["dir"]		= new Fn("dir",dir);
 	env["file"]		= new Fn("file",file);

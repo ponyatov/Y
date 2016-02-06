@@ -87,6 +87,11 @@ struct Lambda:Sym { Lambda(); };					// {la:mbda}
 typedef Sym*(*FN)(Sym*);							// function ptr
 struct Fn:Sym { Fn(string,FN); FN fn; Sym* at(Sym*); };// internal function
 
+// =================================================================== OBJECTS
+struct Class:Sym { Class(string,Class*s=NULL);		// class
+	Class* super; Sym*inher(Sym*); };
+extern Class* cls;
+
 // ==================================================================== FILEIO
 // =================================================== directory
 struct Dir:Sym { Dir(Sym*); Sym* add(Sym*); };

@@ -1,8 +1,15 @@
+rem = class:comment
+rem @ x
+
+.end
+
 
 TITLE = 'model'
 ABOUT = 'bI language system metamodel'
 LOGO = 'triangle'
 COLOR = 'peachpuff'
+
+.sec Files
 
 next		= dir @ 'next'					# module next generation
 
@@ -22,3 +29,4 @@ files = [
 ]
 
 .inc ../lex/bat
+
