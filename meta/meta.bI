@@ -1,10 +1,19 @@
-.module	MODULE
-.title	'bI next generation object metamodel'
-.author	AUTHOR
-.github	'https://github.com/ponyatov/Y/tree/dev/meta'
 
-.sec	'File tree'
+TITLE = 'model'
+ABOUT = 'bI language system metamodel'
+LOGO = 'triangle'
+COLOR = 'peachpuff'
 
-next = dir @ MODULE "directory for bI next generation files"
+next		= dir @ 'next'					# module next generation
 
-next += readme = file @ 'README.md'
+.inc ../lex/readme
+.inc ../lex/meta
+.inc ../lex/win32rc
+
+files = [
+	readme meta win32rc 'bat.bat'
+#	MODULE+'.bI' MODULE+'.blog'
+#	'../ypp.ypp' '../lpp.lpp' '../hpp.hpp' '../cpp.cpp' '../'+OS+'.cpp'
+]
+
+.inc ../lex/bat
