@@ -10,8 +10,13 @@ next		= dir @ 'next'					# module next generation
 .inc ../lex/meta
 .inc ../lex/win32rc
 
+.inc ../lex/hpp
+.inc ../lex/cpp
+.inc ../lex/make
+
 files = [
-	readme meta win32rc 'bat.bat'
+	bi log hpp cpp make
+	'bat.bat'
 #	MODULE+'.bI' MODULE+'.blog'
 #	'../ypp.ypp' '../lpp.lpp' '../hpp.hpp' '../cpp.cpp' '../'+OS+'.cpp'
 ]

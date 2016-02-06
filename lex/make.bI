@@ -1,7 +1,7 @@
-bi	= next + file @ ('next.bI')
-log	= next + file @ ('next.blog')
+bi	= next + file @ (MODULE+'.bI')
+log	= next + file @ (MODULE+'.blog')
 
-exe = './next.exe'
+exe = './'+MODULE+'.exe'
 
 CFILES = [ cpp ]/' ' # '../../'+OS+'.cpp' 'ypp.tab.cpp' 'lex.yy.c'
 HFILES = [ hpp 'meta.hpp' ]/' ' # '../../'+OS+'.hpp' 'ypp.tab.hpp'  ]/' '
