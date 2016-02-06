@@ -164,9 +164,9 @@ Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
 
 // =================================================================== OBJECTS
 Class::Class(string V,Class*S):Sym("class",V) {			// class
-	if (S) super=S; else super=cls; }
+	if (S) par["super"]=S; }
 Class* cls = new Class("class");
-Sym* Class::inher(Sym*o) { return new Class(o->str()->val); }
+Sym* Class::inher(Sym*o) { return new Class(o->str()->val,this); }
 
 // ==================================================================== FILEIO
 
