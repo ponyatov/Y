@@ -1,5 +1,9 @@
 class:comment
-comment @ 'this comment is object'
+% hpp
+
+.end
+
+comment @ 'this comment is object' .h
 .end
 
 

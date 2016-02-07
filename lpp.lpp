@@ -57,6 +57,7 @@ N [0-9]+
 \:					TOC(Op,COLON)							/* inheritance */
 \@					TOC(Op,AT)								/* apply */
 \.					TOC(Op,DOT)								/* index */
+\%					TOC(Op,PERC)							/* member */
 \+					TOC(Op,ADD)								/* \ arithmetic */
 \-					TOC(Op,SUB)
 \*					TOC(Op,MUL)
