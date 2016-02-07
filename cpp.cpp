@@ -61,6 +61,11 @@ Sym* Sym::eq(Sym*o)		{ env[val]=o; return o; }		// A = B	assignment
 Sym* Sym::at(Sym*o)		{ push(o); return this; }		// A @ B	apply
 Sym* Sym::inher(Sym*o)	{								// A : B	inheritance
 	return new Sym(this->val,o->val); }
+Sym* Sym::dot(Sym*o)	{ 								// A . B	index
+	if (o->val=="h") return h();				// .hpp
+	Sym*E=par[o->str()->val]; if (E) return E;	// par{}
+	push(o); return this;
+}	
 
 Sym* Sym::str()			{ return new Str(val); }		// str(A)	as string
 
@@ -68,6 +73,9 @@ Sym* Sym::add(Sym*o)	{ push(o); return this; }		// A + B	add
 Sym* Sym::div(Sym*o)	{ push(o); return this; }		// A / B	div
 
 Sym* Sym::ins(Sym*o)	{ push(o); return this; }		// A += B	insert
+
+// ------------------------------------------------------- translate
+Sym* Sym::h()			{ return new Str("extern "+tag+"("+val+");\n"); }
 
 // ================================================================= DIRECTIVE
 Directive::Directive(string V):Sym("",V) {
@@ -144,6 +152,7 @@ Sym* Op::eval() {
 	if (nest.size()==2) {								// A op B bin.operator
 //		if (val=="=")	Result=nest[0]->eq(nest[1]);	// A = B
 		if (val=="@")	Result=nest[0]->at(nest[1]);	// A @ B
+		if (val==".")	Result=nest[0]->dot(nest[1]);	// A . B
 		if (val==":")	return nest[0]->inher(nest[1]);	// A : B
 		if (val=="+")	Result=nest[0]->add(nest[1]);	// A + B
 		if (val=="/")	return nest[0]->div(nest[1]);
