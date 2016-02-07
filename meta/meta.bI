@@ -1,6 +1,5 @@
-rem = class:comment
-rem @ x
-
+class:comment
+comment @ 'this comment is object'
 .end
 
 

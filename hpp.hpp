@@ -89,8 +89,10 @@ struct Fn:Sym { Fn(string,FN); FN fn; Sym* at(Sym*); };// internal function
 
 // =================================================================== OBJECTS
 struct Class:Sym { Class(string,Class*s=NULL);		// class
-	Sym*inher(Sym*); };
+	Sym*inher(Sym*);								// inherit child class
+	Sym*at(Sym*); };								// apply -> instance
 extern Class* cls;
+struct Object:Sym { Object(Class*,Sym*); Sym*val; };// object (class instance)
 
 // ==================================================================== FILEIO
 // =================================================== directory
@@ -109,9 +111,9 @@ extern Sym* window(Sym*);
 
 // =============================================================== OS SPECIFIC
 #ifdef __MINGW32__
-#include "win32.hpp"								// win32/MinGW
+	#include "win32.hpp"							// win32/MinGW
 #else
-#include "linux.hpp"								// linux/posix
+	#include "linux.hpp"							// linux/posix
 #endif
 
 // ====================================================== GLOBAL ENV{}IRONMENT

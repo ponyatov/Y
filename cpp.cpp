@@ -164,9 +164,14 @@ Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
 
 // =================================================================== OBJECTS
 Class::Class(string V,Class*S):Sym("class",V) {			// class
-	if (S) par["super"]=S; }
+	if (S) { par["super"]=S;							// set superclass ptr
+	env[val] = this; }									// register constructor 
+}
 Class* cls = new Class("class");
 Sym* Class::inher(Sym*o) { return new Class(o->str()->val,this); }
+Object::Object(Class*C,Sym*V):Sym(C->str()->val,V->str()->val) { 
+	par["class"]=C; val=V; }
+Sym* Class::at(Sym*o) { return new Object(this,o); }
 
 // ==================================================================== FILEIO
 
