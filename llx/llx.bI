@@ -1,7 +1,8 @@
 
-TITLE = 'genmodule'
-ABOUT = 'script generates lexical skeleton (see genmodule.bat)'
+TITLE = 'LLVM shell'
+ABOUT = 'tiny LLVM assembly-like script'
 GITHUB = GITHUB+'/'+MODULE
+LOGO = 'triangle'
 COLOR = 'peachpuff'
 
 next		= dir @ 'next'					# module next generation
@@ -11,9 +12,13 @@ next		= dir @ 'next'					# module next generation
 .inc ../lex/win32rc
 .inc ../lex/make
 
+.inc ../lex/parser
+.inc ../lex/lexer
+
 files = [
 	MODULE+'.bI' MODULE+'.blog'
-	'../ypp.ypp' '../lpp.lpp' '../hpp.hpp' '../cpp.cpp' '../'+OS+'.cpp'
+	yacc lex 'hpp.hpp' 'cpp.cpp'
+	make meta
 ]
 
 .inc ../lex/bat
