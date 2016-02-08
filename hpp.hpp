@@ -83,11 +83,12 @@ struct Num:Sym { Num(string); Num(double);			// floating number
 // =================================================== [list]
 struct List:Sym { List(); Sym*str(); Sym*div(Sym*); };
 // =================================================== pa:ir
-struct Pair:Sym { Pair(Sym*,Sym*); };
+struct Pair:Sym { Pair(Sym*,Sym*); Sym*eq(Sym*); };
 
 // =============================================================== FUNCTIONALS
 // =================================================== operator
-struct Op:Sym { Op(string); Sym* eval(); };
+struct Op:Sym { Op(string); Sym* eval();
+	Sym*eq(Sym*); };								// used in computable lvalue
 // =================================================== 
 
 struct Lambda:Sym { Lambda(); };					// {la:mbda}

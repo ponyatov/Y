@@ -132,21 +132,29 @@ Sym* List::str() {										// concatenate elements
 	string S;
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
 		S += (*it)->str()->val;
-	return new Str(S);
-}
+	return new Str(S); }
+
 Sym* List::div(Sym*o) {									// split elements
 	Sym* L = new List();
 	if (nest.size()) {
 		for (auto it=nest.begin(),e=nest.end();it!=e;it++) {
 			L->push((*it)); L->push(o); }
-		L->nest.pop_back();
-	}
-	return L;
-}
+		L->nest.pop_back(); }
+	return L; }
 
 // ======================================================= pa:ir
 
 Pair::Pair(Sym*A,Sym*B):Sym("","") { push(A); push(B); }
+
+Sym* Pair::eq(Sym*o) {
+	return this;
+/*	
+	assert(nest.size()==2);
+	cout << "\n\nnest0 " << nest[0]->dump() << endl;
+	cout << "\n\nnest1 " << nest[1]->dump() << endl;
+	return nest[0];
+	*/
+}
 
 // =============================================================== FUNCTIONALS
 
@@ -168,6 +176,8 @@ Sym* Op::eval() {
 	}
 	if (par.count("doc")) Result->par["doc"]=par["doc"];// copy par[doc]
 	return Result; }
+
+Sym* Op::eq(Sym*o) { return this->eval()->eq(o); }		// compute lvalue
 // ===================================================
 
 // ======================================================= function
