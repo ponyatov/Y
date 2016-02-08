@@ -1,7 +1,5 @@
 comment = class:'comment'
-comment.hpp
 comment.hpp = {'//'}
-comment.hpp
 
 #% hpp+={'//'}
 #% cpp+={'/**/'}

@@ -43,8 +43,8 @@ string Sym::dump(int depth) {							// dump as text
 	string S = "\n" + pad(depth) + tagval();
 	for (auto pr=par.begin(),e=par.end();pr!=e;pr++)	// par{}ameters
 		S += ","+pr->first+":"+pr->second->tagval();
-//	for (auto mt=meth.begin(),e=meth.end();mt!=e;mt++)	// math{}ods
-//		S += "\n"+pad(depth+1)+mt->first+mt->second->dump(depth+2);
+	for (auto mt=meth.begin(),e=meth.end();mt!=e;mt++)	// math{}ods
+		S += "\n"+pad(depth+1)+mt->first+mt->second->dump(depth+2);
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// nest[]ed
 		S += (*it)->dump(depth+1);
 	return S; }
@@ -147,14 +147,9 @@ Sym* List::div(Sym*o) {									// split elements
 Pair::Pair(Sym*A,Sym*B):Sym("","") { push(A); push(B); }
 
 Sym* Pair::eq(Sym*o) {
-	return this;
-/*	
-	assert(nest.size()==2);
-	cout << "\n\nnest0 " << nest[0]->dump() << endl;
-	cout << "\n\nnest1 " << nest[1]->dump() << endl;
-	return nest[0];
-	*/
-}
+	Sym *R = nest[0]->eval();
+	R->meth[nest[1]->str()->val]=o;
+	return R; }
 
 // =============================================================== FUNCTIONALS
 
