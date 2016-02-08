@@ -20,7 +20,7 @@ make += 'lex.yy.c: lpp.lpp\n\tflex $<\n'
 make += '
 .PHONY: upgrade
 upgrade:
-	cp next/Makefile ./
+#	cp next/Makefile ./
 	cp next/README.md ./
 	cp next/meta.hpp ./
 '

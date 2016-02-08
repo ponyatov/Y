@@ -11,9 +11,13 @@ next		= dir @ 'next'					# module next generation
 .inc ../lex/win32rc
 .inc ../lex/make
 
+.inc ../lex/parser
+.inc ../lex/lexer
+
 files = [
 	MODULE+'.bI' MODULE+'.blog'
-	'../ypp.ypp' '../lpp.lpp' '../hpp.hpp' '../cpp.cpp' '../'+OS+'.cpp'
+	yacc lex 'hpp.hpp' 'cpp.cpp'
+	make meta
 ]
 
 .inc ../lex/bat
