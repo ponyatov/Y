@@ -1,3 +1,7 @@
+MODULE
+'MODULE'
+1 2.3
+
 comment = class:'comment'
 comment.hpp = {'//'}
 

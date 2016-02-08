@@ -96,8 +96,11 @@ Sym* Wr = new Sym("mode","W");							// write mode
 
 // =================================================================== SCALARS
 
+Scalar::Scalar(string T,string V):Sym(T,V) {};
+Sym* Scalar::eval() { return this; }					// block env[] lookup
+
 // ======================================================= string
-Str::Str(string V):Sym("str",V) {}
+Str::Str(string V):Scalar("str",V) {}
 string Str::tagval() { return tagstr(); }
 Sym* Str::eq(Sym*o) { yyerror("immutable"); }
 Sym* Str::add(Sym*o) { return new Str(val+o->str()->val); }
@@ -108,16 +111,16 @@ Sym* upcase(Sym*o) {
 }
 
 // ======================================================= machine numbers
-Hex::Hex(string V):Sym("hex",V) {}						// hexadecimal
-Bin::Bin(string V):Sym("bin",V)	{}						// binary string
+Hex::Hex(string V):Scalar("hex",V) {}					// hexadecimal
+Bin::Bin(string V):Scalar("bin",V)	{}					// binary string
 
 // ======================================================= integer
-Int::Int(string V):Sym("int","") { val = atoi(V.c_str()); }
+Int::Int(string V):Scalar("int","") { val = atoi(V.c_str()); }
 string Int::tagval() {
 	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
 
 // ======================================================= floating number
-Num::Num(string V):Sym("num","") { val = atof(V.c_str()); }
+Num::Num(string V):Scalar("num","") { val = atof(V.c_str()); }
 string Num::tagval() {
 	ostringstream os; os<<"<"<<tag<<":"<<val<<">"; return os.str(); }
 

@@ -68,15 +68,17 @@ extern Sym* Rd;										// read mode
 extern Sym* Wr;										// write mode
 
 // =================================================================== SCALARS
-struct Str:Sym { Str(string); string tagval();		// string
+struct Scalar:Sym { Scalar(string,string);			// scalars common class
+	Sym*eval(); };									// block env[] lookup
+struct Str:Scalar { Str(string); string tagval();	// string
 	Sym*eq(Sym*); Sym* add(Sym*); };
 extern Sym* upcase(Sym*);
 
-struct Hex:Sym { Hex(string); };					// hexadecimal
-struct Bin:Sym { Bin(string); };					// bit string
-struct Int:Sym { Int(string); Int(long);			// integer
+struct Hex:Scalar { Hex(string); };					// hexadecimal
+struct Bin:Scalar { Bin(string); };					// bit string
+struct Int:Scalar { Int(string); Int(long);			// integer
 	string tagval(); long   val; };
-struct Num:Sym { Num(string); Num(double);			// floating number
+struct Num:Scalar { Num(string); Num(double);			// floating number
 	string tagval(); double val; };
 
 // ================================================================ COMPOSITES
