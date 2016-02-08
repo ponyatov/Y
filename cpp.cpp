@@ -43,6 +43,8 @@ string Sym::dump(int depth) {							// dump as text
 	string S = "\n" + pad(depth) + tagval();
 	for (auto pr=par.begin(),e=par.end();pr!=e;pr++)	// par{}ameters
 		S += ","+pr->first+":"+pr->second->tagval();
+//	for (auto mt=meth.begin(),e=meth.end();mt!=e;mt++)	// math{}ods
+//		S += "\n"+pad(depth+1)+mt->first+mt->second->dump(depth+2);
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// nest[]ed
 		S += (*it)->dump(depth+1);
 	return S; }
@@ -61,11 +63,10 @@ Sym* Sym::eq(Sym*o)		{ env[val]=o; return o; }		// A = B	assignment
 Sym* Sym::at(Sym*o)		{ push(o); return this; }		// A @ B	apply
 Sym* Sym::inher(Sym*o)	{								// A : B	inheritance
 	return new Sym(this->val,o->val); }
-Sym* Sym::dot(Sym*o)	{ 								// A . B	index
-	if (o->val=="h") return h();				// .hpp
-	Sym*E=par[o->str()->val]; if (E) return E;	// par{}
-	push(o); return this;
-}	
+Sym* Sym::dot(Sym*o)	{ return new Pair(this,o); }	// A . B	pair
+
+Sym* Sym::member(Sym*o)	{								// A % B	class member
+	meth[o->str()->val]=o->nest[0]; return this; }
 
 Sym* Sym::str()			{ return new Str(val); }		// str(A)	as string
 
@@ -123,7 +124,9 @@ string Num::tagval() {
 // ================================================================ COMPOSITES
 
 // ====================================================================== LIST
-List::List():Sym("[","]") {}							// [list]
+// ======================================================= [list]
+
+List::List():Sym("[","]") {}
 
 Sym* List::str() {										// concatenate elements
 	string S;
@@ -141,6 +144,10 @@ Sym* List::div(Sym*o) {									// split elements
 	return L;
 }
 
+// ======================================================= pa:ir
+
+Pair::Pair(Sym*A,Sym*B):Sym("","") { push(A); push(B); }
+
 // =============================================================== FUNCTIONALS
 
 // ======================================================= operator
@@ -153,6 +160,7 @@ Sym* Op::eval() {
 //		if (val=="=")	Result=nest[0]->eq(nest[1]);	// A = B
 		if (val=="@")	Result=nest[0]->at(nest[1]);	// A @ B
 		if (val==".")	Result=nest[0]->dot(nest[1]);	// A . B
+		if (val=="%")	Result=nest[0]->member(nest[1]);// A % B -> A
 		if (val==":")	return nest[0]->inher(nest[1]);	// A : B
 		if (val=="+")	Result=nest[0]->add(nest[1]);	// A + B
 		if (val=="/")	return nest[0]->div(nest[1]);

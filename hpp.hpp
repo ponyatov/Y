@@ -29,6 +29,8 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	map<string,Sym*> par;				// can be used as class slots
 	void partag(Sym*);					// par[tag]=obj
 	void parval(Sym*);					// par[val]=obj
+// ------------------------------------------------------------------- methods
+	map<string,Sym*> meth;
 // ------------------------------------------------------------------- dumping
 	virtual string dump(int depth=0);	// dump symbol object as text
 	virtual string tagval();			// <T:V> header string
@@ -40,7 +42,8 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
 	virtual Sym* inher(Sym*);			// A : B	inheritance
-	virtual Sym* dot(Sym*);				// A . B	index
+	virtual Sym* dot(Sym*);				// A . B	pair
+	virtual Sym* member(Sym*);			// A % B -> A class member
 	virtual Sym* str();					// str(A)	to string representation
 	virtual Sym* add(Sym*);				// A + B	add
 	virtual Sym* div(Sym*);				// A / B	div
@@ -77,8 +80,10 @@ struct Num:Sym { Num(string); Num(double);			// floating number
 	string tagval(); double val; };
 
 // ================================================================ COMPOSITES
-struct List:Sym { List();							// [list]
-	Sym*str(); Sym*div(Sym*); };
+// =================================================== [list]
+struct List:Sym { List(); Sym*str(); Sym*div(Sym*); };
+// =================================================== pa:ir
+struct Pair:Sym { Pair(Sym*,Sym*); };
 
 // =============================================================== FUNCTIONALS
 // =================================================== operator

@@ -1,9 +1,12 @@
-class:comment
-% hpp
+comment = class:'comment'
+comment.hpp
+comment.hpp = {'//'}
+comment.hpp
 
-.end
+#% hpp+={'//'}
+#% cpp+={'/**/'}
 
-comment @ 'this comment is object' .h
+#comment @ 'this comment is object' #.hpp
 .end
 
 

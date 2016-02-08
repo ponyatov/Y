@@ -13,8 +13,8 @@
 %type <o> ex scalar list lambda		/* expression scalar [list] {lambda} */
 
 %left PERC
-%left COLON
 %left EQ
+%left COLON
 %left ADD SUB
 %left MUL DIV
 %left STR

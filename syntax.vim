@@ -27,6 +27,6 @@ syntax match Constant	"\vMODULE|OS|LOGO|COLOR"
 syntax match Constant	"\vTITLE|ABOUT|AUTHOR|GITHUB|LICENSE"
 syntax match Constant	"\v(doc|dir|file|str)"
 syntax match Keyword	"\v(\.|nil)"
-syntax match Todo		"\v\.[a-z]+.*"
+syntax match Todo		"\v^\.[a-z]+.*"
 
 let b:current_syntax = "bI"
