@@ -7,8 +7,8 @@ COLOR = 'peachpuff'
 .sec Objects
 
 objects = [
-'struct Sym {}'
-'struct Scalar: Sym { Sym*eval(); };'
+'struct Sym {};'
+'struct Scalar: Sym {};'
 'struct Str: Scalar {};'
 'struct Int: Scalar {};'
 'struct Num: Scalar {};'
@@ -38,6 +38,7 @@ hpp += '
 //#include <map>
 using namespace std;
 '
+hpp += objects/'\n'+'\n'
 hpp += '#endif // _H_'+upcase@MODULE+'\n'
 
 #.inc ../lex/cpp
