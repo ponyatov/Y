@@ -1,0 +1,33 @@
+%{
+#include "hpp.hpp"
+string LexString;											// string buffer
+%}
+%option noyywrap
+%option yylineno
+%x lexstring
+S [\+\-]?
+N [0-9]+
+%%
+#[^\n]*			{}											/* line comment */
+
+															/* string parser */
+'				{BEGIN(lexstring); LexString=""; }
+<lexstring>'	{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }
+<lexstring>.	{LexString+=yytext[0];}
+
+															/* == numbers == */
+{S}{N}				TOC(Int,NUM)							/* integer */
+{S}{N}\.{N}			TOC(Num,NUM)							/* float */
+{S}{N}[eE]{S}{N}	TOC(Num,NUM)							/* exponential */
+
+[a-zA-Z0-9_]+		TOC(Sym,SYM)							/* symbol */
+
+\(					TOC(Op,L)								/* brackets */
+\)					TOC(Op,R)
+															/* operators */
+\=					TOC(Op,EQ)								/* assignment */
+\+					TOC(Op,ADD)								/* \ arithmetic */
+
+[ \t\r\n]+		{}									/* drop spaces */
+.				{}									/* drop undetected chars */
+%%

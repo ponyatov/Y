@@ -1,0 +1,18 @@
+%{
+#include "hpp.hpp"
+%}
+%defines %union { Sym*o; }
+%token <o> SYM NUM STR 				/* scalars: symbol number 'string'	*/
+%token <o> L R LQ RQ LB RB			/* brackets:  ( ) [ ] { }			*/
+%token <o> EQ AT COLON DOT PERC		/* operators: = @ : . %				*/
+%token <o> ADD SUB MUL DIV POW		/* + - * / ^						*/
+%type <o> ex scalar
+%%
+REPL	: | REPL ex			{ W($2); W("\n------");					/* parsed */
+							W($2->eval()); W("\n=======\n"); } ;	/* evaled */
+ex		: scalar
+		| ex EQ ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex ADD ex			{ $$=$2; $$->push($1); $$->push($3); }
+;
+scalar	: SYM | NUM | STR ;
+%%
