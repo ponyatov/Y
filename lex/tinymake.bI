@@ -14,6 +14,6 @@ make += 'MODULE = '+MODULE+'\n'
 make += '.PHONY: exec\nexec: '+exe+'\n\t'+exe+'\n'
 make += 'C = '+CFILES+'\n'
 make += 'H = '+HFILES+'\n'
-make += 'CXXFLAGS += -I. -std=gnu++11 -DMODULE="'+MODULE+'"\n'
+make += 'CXXFLAGS += -I. -std=gnu++11 -DMODULE=\"'+MODULE+'\"\n'
 make += exe+': $(C) $(H)\n\t$(CXX) $(CXXFLAGS) -o $@ $(C)\n'
 
