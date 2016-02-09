@@ -3,6 +3,7 @@ TITLE = 'PIJ sample'
 ABOUT = 'computing core for http://ikp.ssau.ru project: test bI metafunctions'
 GITHUB = 'https://github.com/ponyatov/Y/tree/dev/pij/'
 COLOR = 'peachpuff'
+LOGO = 'tux64x64'
 
 .sec Objects
 
