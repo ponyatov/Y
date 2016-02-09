@@ -52,6 +52,9 @@ Sym* Sym::eval() {
 Sym* Sym::eq(Sym*o)		{ env[val]=o; return o; }		// A = B	assignment
 Sym* Sym::add(Sym*o)	{ push(o); return this; }		// A + B	add
 
+// ------------------------------------------------------ compile to LLVM code
+Sym* Sym::llvm() { return new LL("@"+val); }
+
 // =================================================================== SCALARS
 
 Scalar::Scalar(string T,string V):Sym(T,V) {};
@@ -61,7 +64,14 @@ Sym* Scalar::eval() { return this; }					// block env[] lookup
 Str::Str(string V):Scalar("str",V) {}
 string Str::tagval() { return tagstr(); }
 Sym* Str::add(Sym*o) { return new Str(val+o->val); }
+Sym* Str::llvm() {
+	ostringstream os;
+	os<<"global ["<<val.length()+1<<" x i8] c\""<<val<<"\\00\",align 16";
+	return new LL(os.str()); }
 
+LL::LL(string V):Sym("ll",V) {}
+string LL::tagval() { return tagstr(); }
+	
 // ======================================================= integer
 Int::Int(string V):Scalar("int",V) {}
 // ======================================================= floating number
@@ -80,6 +90,12 @@ Sym* Op::eval() {
 	}
 	return Result; }
 
+Sym* Op::llvm() {
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// recursive eval()
+		(*it) = (*it)->llvm();							// with objects replace
+	if (val=="=") return new LL(nest[0]->val+" = "+nest[1]->val);
+	return this; }
+	
 // ====================================================== GLOBAL ENV{}IRONMENT
 map<string,Sym*> env;
 void env_init() {									// init env{} on startup
@@ -96,3 +112,6 @@ void env_init() {									// init env{} on startup
 	env["LOGO"]		= new Str(LOGO);				// bI logo (w/o file extension)
 	env["COLOR"]	= new Str(COLOR);				// editor color theme
 }
+
+ofstream llfile("ll.ll");
+

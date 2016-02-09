@@ -28,6 +28,8 @@ N [0-9]+
 \=					TOC(Op,EQ)								/* assignment */
 \+					TOC(Op,ADD)								/* \ arithmetic */
 
+\$					TOC(Op,LLVM)							/* LLVM-compile */
+
 [ \t\r\n]+		{}									/* drop spaces */
 .				{}									/* drop undetected chars */
 %%

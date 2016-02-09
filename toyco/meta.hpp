@@ -2,7 +2,7 @@
 													// ==== metainformation ====
 #define _H_META
 
-#define TITLE "Writing Your Own Toy Compiler Using Flex, Bison and LLVM"
+#define TITLE "TITLE"
 #define ABOUT "http://gnuu.org/2009/09/18/writing-your-own-toy-compiler/"
 #define AUTHOR "(c) Dmitry Ponyatov <dponyatov@gmail.com>, all rights reserved"
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"

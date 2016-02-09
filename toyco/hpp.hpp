@@ -3,10 +3,16 @@
 #include "meta.hpp"
 										// == std.includes ==
 #include <iostream>
+#include <sstream>
+#include <fstream>
 #include <cstdlib>
+#include <cstdio>
+#include <cassert>
 #include <vector>
 #include <map>
 using namespace std;
+
+extern ofstream llfile;
 
 struct Sym {							// == Abstract Symbolic Type (AST) ==
 // ---------------------------------------------------------------------------
@@ -28,23 +34,28 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // ----------------------------------------------------------------- operators	
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* add(Sym*);				// A + B	add
+// ------------------------------------------------------ compile to LLVM code
+	virtual Sym* llvm();
 };
 
-extern void W(Sym*);								// \ ==== writers ====
-extern void W(string);								// /
+extern void W(Sym*);					// \ ==== writers ====
+extern void W(string);					// /
 
 // =================================================================== SCALARS
 struct Scalar:Sym { Scalar(string,string);			// scalars common class
 	Sym*eval(); };									// block env[] lookup
 
-struct Str:Scalar { Str(string); string tagval(); Sym*add(Sym*); };
+struct Str:Scalar { Str(string); string tagval();
+	Sym*add(Sym*); Sym* llvm(); };
+
+struct LL:Sym { LL(string); string tagval(); };
 
 struct Int:Scalar { Int(string); };
 struct Num:Scalar { Num(string); };
 
 // =============================================================== FUNCTIONALS
 // =================================================== operator
-struct Op:Sym { Op(string); Sym* eval(); };
+struct Op:Sym { Op(string); Sym* eval(); Sym*llvm(); };
 
 // ====================================================== GLOBAL ENV{}IRONMENT
 extern map<string,Sym*> env;
