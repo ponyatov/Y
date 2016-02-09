@@ -6,8 +6,8 @@ exe = './'+MODULE+'.exe'
 #cpp = next+file@'cpp.cpp'
 #hpp = next+file@'hpp.hpp'
 
-CFILES = [ cpp ]
-HFILES = [ hpp meta.hpp ]
+CFILES = [ cpp ]/' '
+HFILES = [ hpp meta ]/' '
 
 make = next + file @ 'Makefile'
 make += 'MODULE = '+MODULE+'\n'
