@@ -16,6 +16,9 @@ objects_hpp = [
 // --------------------------------------- nest[]ed elements
 	vector<Sym*> nest;
 	void push(Sym*);
+// --------------------------------------- par{}ameters
+	map<string,Sym*> par;
+	void parval(Sym*);
 // --------------------------------------- dumping
 	virtual string dump(int depth=0);	// dump object to string
 	virtual string tagval();			// <T:V>
@@ -46,6 +49,7 @@ struct Tuple: Sym { Tuple(Sym*,Sym*); };
 '
 '
 struct Op: Sym { Op(string); };
+struct Lambda: Sym { Lambda(); };
 '
 ]
 
@@ -58,12 +62,16 @@ void W(string s) { cout<<s; }
 Sym::Sym(string T,string V) { tag=T; val=V; }
 Sym::Sym(string V):Sym("",V) {}
 string Sym::dump(int depth) { string S = "\\n"+pad(depth)+tagval();
-	for (auto it=nest.begin(),e=nest.end();it!=e;it++) S+= (*it)->dump(depth+1);
+	for (auto pr=par.begin(),e=par.end();pr!=e;pr++)
+		S+= ","+pr->first+":"+pr->second->tagval();
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
+		S+= (*it)->dump(depth+1);
 	return S; }
 string Sym::tagval()	{ return "<"+tag+":"+val+">"; }
 string Sym::tagstr()	{ return "<"+tag+":\'"+val+"\'>"; }
 string Sym::pad(int n)	{ string S; for (int i=0;i<n;i++) S+=\'\\t\'; return S; }
 void Sym::push(Sym*o)	{ nest.push_back(o); }
+void Sym::parval(Sym*o)	{ par[o->val]=o; }
 //Sym* Sym::eval() { return this; }
 Sym* Sym::pfxplus()		{ val="+"+val; return this; }
 Sym* Sym::pfxminus()	{ val="-"+val; return this; }
@@ -99,6 +107,9 @@ Tuple::Tuple(Sym*A,Sym*B):Sym("","") { push(A); push(B); }
 '// ------------------------------------------------------- operator
 Op::Op(string V):Sym("op",V) {}
 '
+'// ------------------------------------------------------- {lambda}
+Lambda::Lambda():Sym("^","^") {}
+'
 ]
 
 .sec Files
@@ -117,17 +128,21 @@ yacc += '%defines %union { Sym*o; }\t\t/* syntax tree element sturcture */\n'
 yacc += '
 %token <o> SYM NUM STR				/* scalars:  symbol number \'string\' */
 %token <o> L R LQ RQ LB RB			/* brackets: ( ) [ ] { } */
-%token <o> EQ AT DOT COMMA COLON	/* operators: = @ . , : */
+%token <o> EQ AT DOT COMMA 			/* operators: = @ . , */
+%token <o> COLON PERC				/* operators: : % */
 %token <o> ADD SUB MUL DIV POW		/* operators: + - * / ^ */
 
-%type <o> ex scalar list tuple	/* expression scalar [list] tu,ple */
+%type <o> ex scalar 				/* expression scalar */
+%type <o> list tuple lambda			/* [list] tu,ple {lambda} */
 
 %left ADD SUB
 %left MUL DIV
 %left POW
 %left PFX
-%left COMMA 
+%left PERC
 %left COLON
+%left EQ
+%left COMMA 
 '
 #%type <o> tuple				/* tu,ple */
 yacc += '%%\n'
@@ -138,18 +153,22 @@ scalar	: SYM | NUM | STR ;
 yacc += '
 ex		: scalar
 		| tuple
-		| SYM L ex R		{ $$=$1; $$->push($3); }
+		| SYM L ex R		{ $$=new Op("@"); $$->push($1); $$->push($3); }
+		| ex AT ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex COLON ex		{ $$=new Sym($1->val,$3->val); }
 		| L ex R			{ $$=$2; }
-		| LB list RB		{ $$=$2; }
+		| LQ list RQ		{ $$=$2; }
+		| LB lambda RB		{ $$=$2; }
 		| ADD ex %prec PFX	{ $$=$2->pfxplus(); }
 		| SUB ex %prec PFX	{ $$=$2->pfxminus(); }
+		| ex EQ ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex ADD ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex SUB ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex MUL ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex DIV ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex POW ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex DOT ex			{ $$=$2; $$->push($1); $$->push($3); }
+		| ex PERC ex		{ $$=$1; $$->push($3); }
 ;\n'
 yacc += '
 list	:					{ $$ = new List(); }
@@ -158,6 +177,11 @@ list	:					{ $$ = new List(); }
 yacc += '
 tuple	: ex COMMA ex		{ $$ = new Tuple($1,$3); }
 		| tuple COMMA ex	{ $$=$1; $$->push($3); } ;
+'
+yacc += '
+lambda	:					{ $$ = new Lambda(); }
+		| lambda SYM COLON	{ $$ = $1; $$->parval($2); }
+		| lambda ex			{ $$=$1; $$->push($2); } ;
 '
 yacc += '%%\n'
 
@@ -198,16 +222,18 @@ lex += '
 lex += '
 \\(					TOC(Op,L)			/* brackets */
 \\)					TOC(Op,R)
-\\[					TOC(Op,LB)
-\\]					TOC(Op,RB)
-\\{					TOC(Op,LQ)
-\\}					TOC(Op,RQ)
+\\[					TOC(Op,LQ)
+\\]					TOC(Op,RQ)
+\\{					TOC(Op,LB)
+\\}					TOC(Op,RB)
 '
 lex += '
 \\=					TOC(Op,EQ)			/* operators */
+\\@					TOC(Op,AT)
 \\.					TOC(Op,DOT)
 \\,					TOC(Op,COMMA)
 \\:					TOC(Op,COLON)
+\\%					TOC(Op,PERC)
 \\+					TOC(Op,ADD)
 \\-					TOC(Op,SUB)
 \\*					TOC(Op,MUL)
@@ -262,7 +288,7 @@ cpp += objects_cpp/'\n'+'\n'
 
 .sec Makefile
 
-bi	= '../meta.bI'
+bi	= '../../meta/meta.bI'
 log	= 'meta.blog'
 
 .inc ../lex/tinymake
