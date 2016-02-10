@@ -5,5 +5,5 @@
 #define LICENSE "http://www.gnu.org/copyleft/lesser.html"
 #define GITHUB "https://github.com/ponyatov/Y/tree/dev/model/"
 #define AUTOGEN "/***** DO NOT EDIT: this file was autogened by bI *****/"
-#define LOGO "warning"
+#define LOGO "warning64x64"
 #define COLOR "peachpuff"
