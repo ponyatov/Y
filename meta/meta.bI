@@ -179,15 +179,15 @@ protocol:DNS
 protocol:DHCP
 protocol:SSL
 
-extension:DBMS		%doc:'RDBMS interfaces'
-DBMS:MySQL
-DBMS:SqLite
-DBMS:query
-DBMS:cursor
-DBMS:database
-DBMS:table
-DBMS:user
-DBMS:trigger
+extension:DB		%doc:'RDBMS interfaces'
+DB:MySQL
+DB:SqLite
+DB:query
+DB:cursor
+DB:database
+DB:table
+DB:user
+DB:trigger
 
 extension:CAD		%doc:'CAD spectific tools'
 CAD:EDA
