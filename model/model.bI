@@ -113,12 +113,12 @@ next		= dir @ 'next'					# module next generation
 
 yacc = next + file @ 'ypp.ypp'
 yacc += '%{\n#include "hpp.hpp"\n%}\n'
-yacc += '%defines %union { Sym*o; }\n'
+yacc += '%defines %union { Sym*o; }\t\t/* syntax tree element sturcture */\n'
 yacc += '
-%token <o> SYM NUM STR			/* scalars:  symbol number \'string\' */
-%token <o> L R LQ RQ LB RB		/* brackets: ( ) [ ] { } */
-%token <o> EQ AT DOT COMMA		/* operators: = @ . , */
-%token <o> ADD SUB MUL DIV POW	/* operators: + - * / ^ */
+%token <o> SYM NUM STR				/* scalars:  symbol number \'string\' */
+%token <o> L R LQ RQ LB RB			/* brackets: ( ) [ ] { } */
+%token <o> EQ AT DOT COMMA COLON	/* operators: = @ . , : */
+%token <o> ADD SUB MUL DIV POW		/* operators: + - * / ^ */
 
 %type <o> ex scalar list tuple	/* expression scalar [list] tu,ple */
 
@@ -126,6 +126,8 @@ yacc += '
 %left MUL DIV
 %left POW
 %left PFX
+%left COMMA 
+%left COLON
 '
 #%type <o> tuple				/* tu,ple */
 yacc += '%%\n'
@@ -137,6 +139,7 @@ yacc += '
 ex		: scalar
 		| tuple
 		| SYM L ex R		{ $$=$1; $$->push($3); }
+		| ex COLON ex		{ $$=new Sym($1->val,$3->val); }
 		| L ex R			{ $$=$2; }
 		| LB list RB		{ $$=$2; }
 		| ADD ex %prec PFX	{ $$=$2->pfxplus(); }
@@ -147,7 +150,7 @@ ex		: scalar
 		| ex DIV ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex POW ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex DOT ex			{ $$=$2; $$->push($1); $$->push($3); }
-;'
+;\n'
 yacc += '
 list	:					{ $$ = new List(); }
 		| list ex			{ $$=$1; $$->push($2); } ;
@@ -172,8 +175,8 @@ lex += '%option noyywrap\n%option yylineno\n'
 lex += 'S [\\+\\-]?\nN [0-9]+\n'
 lex += '%x lexstring\n'
 lex += '%%\n'
-lex += '#[^\\n]*\t\t\t{}\t\t\t\t/* comment */\n'
-lex += '\n\t\t\t\t\t\t\t\t/* string parser */
+lex += '#[^\\n]*\t\t\t\t{}\t\t\t\t\t/* comment */\n'
+lex += '\n\t\t\t\t\t\t\t\t\t\t/* string parser */
 \'				{ BEGIN(lexstring); LexString=""; }
 <lexstring>\'	{ BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }
 <lexstring>\\\\t	{ LexString+=\'\\t\'; }
@@ -182,34 +185,37 @@ lex += '\n\t\t\t\t\t\t\t\t/* string parser */
 <lexstring>.	{ LexString+=yytext[0]; }
 '
 lex += '
-\t\t\t\t\t\t\t\t/* numbers */
-{N}\t\t\t\tTOC(Int,NUM)\t/* integer */
-0b[01]+\t\t\tTOC(Bin,NUM)\t/* binary */
-0x[0-9A-F]+\t\tTOC(Hex,NUM)\t/* hexadecimal */
-{N}\.{N}\t\tTOC(Num,NUM)\t/* float */
-{N}[eE]{S}{N}\tTOC(Num,NUM)\t/* exponential */
+										/* numbers */
+{S}{N}				TOC(Int,NUM)		/* integer */
+0b[01]+				TOC(Bin,NUM)		/* binary */
+0x[0-9A-F]+			TOC(Hex,NUM)		/* hexadecimal */
+{S}{N}\.{N}			TOC(Num,NUM)		/* float */
+{S}{N}[eE]{S}{N}	TOC(Num,NUM)		/* exponential */
 \n'
-lex += '[a-zA-Z0-9_]+\tTOC(Sym,SYM)\t/* symbol */\n'
 lex += '
-\\(				TOC(Op,L)		/* brackets */
-\\)				TOC(Op,R)
-\\[				TOC(Op,LB)
-\\]				TOC(Op,RB)
-\\{				TOC(Op,LQ)
-\\}				TOC(Op,RQ)
+[a-zA-Z0-9_]+		TOC(Sym,SYM)		/* symbol */
 '
 lex += '
-\\=				TOC(Op,EQ)		/* operators */
-\\.				TOC(Op,DOT)
-\\,				TOC(Op,COMMA)
-\\+				TOC(Op,ADD)
-\\-				TOC(Op,SUB)
-\\*				TOC(Op,MUL)
-\\/				TOC(Op,DIV)
-\\^				TOC(Op,POW)
+\\(					TOC(Op,L)			/* brackets */
+\\)					TOC(Op,R)
+\\[					TOC(Op,LB)
+\\]					TOC(Op,RB)
+\\{					TOC(Op,LQ)
+\\}					TOC(Op,RQ)
 '
-lex += '\n[ \\t\\r\\n]+\t\t{}\t\t\t\t/* drop spaces */\n'
-lex += '.\t\t\t\t{}\t\t\t\t/* drop undetected */\n'
+lex += '
+\\=					TOC(Op,EQ)			/* operators */
+\\.					TOC(Op,DOT)
+\\,					TOC(Op,COMMA)
+\\:					TOC(Op,COLON)
+\\+					TOC(Op,ADD)
+\\-					TOC(Op,SUB)
+\\*					TOC(Op,MUL)
+\\/					TOC(Op,DIV)
+\\^					TOC(Op,POW)
+'
+lex += '\n[ \\t\\r\\n]+\t\t\t{}\t\t\t\t\t/* drop spaces */\n'
+lex += '.\t\t\t\t\t{}\t\t\t\t\t/* drop undetected */\n'
 lex += '%%\n'
 
 lex_hpp = [
@@ -256,14 +262,11 @@ cpp += objects_cpp/'\n'+'\n'
 
 .sec Makefile
 
+bi	= '../meta.bI'
+log	= 'meta.blog'
+
 .inc ../lex/tinymake
 
-bi += '# '+MODULE+':'+TITLE+'\t'+ABOUT+'\n'
-bi += '
-file(\'log\',\'w\').writeln(
-	[ 01+-2.3/sin(Pi)^e*ln(-5e+06) [ 0b1101 0x12AF] ]
-)
-'
 
 .sec (g)vim helper
 

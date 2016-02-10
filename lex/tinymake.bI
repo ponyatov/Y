@@ -1,5 +1,5 @@
-bi	= next + file @ (MODULE+'.bI')
-log	= next + file @ (MODULE+'.blog')
+#bi	= '../meta.bI'#next + file @ (MODULE+'.bI')
+#log	= 'meta.blog'#next + file @ (MODULE+'.blog')
 
 exe = './'+MODULE+'.exe'
 
