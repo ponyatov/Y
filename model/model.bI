@@ -135,13 +135,13 @@ yacc += '
 %type <o> ex scalar 				/* expression scalar */
 %type <o> list tuple lambda			/* [list] tu,ple {lambda} */
 
+%left PFX
+%left PERC
+%left EQ
 %left ADD SUB
 %left MUL DIV
 %left POW
-%left PFX
-%left PERC
 %left COLON
-%left EQ
 %left COMMA 
 '
 #%type <o> tuple				/* tu,ple */
