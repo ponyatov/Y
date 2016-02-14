@@ -21,6 +21,7 @@ syntax region Special	start="\"" end="\""					" "docstring"
 
 syntax match  Keyword	"\v[+\-/]"							" operator
 syntax match  Type		"\v[{}()[\]<>:=]"						" brackets
+syntax match  Type		"[~]"
 syntax match  Keyword	"\v[`@%]"							" lambda coloring
 
 syntax match Constant	"\v<(MODULE|OS|LOGO|COLOR)>"
