@@ -6,7 +6,7 @@ exec: ./$(MODULE)$(EXE) $(MODULE).bI
 C += ../cpp.cpp ../$(OS).cpp ypp.tab.cpp lex.yy.c
 H += ../hpp.hpp ../$(OS).hpp ypp.tab.hpp meta.hpp
 L += 
-CXXFLAGS += -I.. -I. -std=gnu++11 -DMODULE=\"$(MODULE)\" -DOS=\"$(OS)\"
+CXXFLAGS += -I. -std=gnu++11 -DMODULE=\"$(MODULE)\" -DOS=\"$(OS)\"
 ./$(MODULE)$(EXE): $(C) $(H) $(RES) ../Makefile
 	$(CXX) $(CXXFLAGS) -o $@ $(C) $(L) $(RES)
 ypp.tab.cpp: ../ypp.ypp

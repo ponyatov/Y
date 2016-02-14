@@ -1,21 +1,12 @@
+[1 [2 3] 4 [] 5 ]
 
-TITLE = 'Lisp engine realization in bI'
+files = [ bi blog yacc lex hpp cpp make bat gitignore readme ]
 
-.inc ../meta/files.bI
+bi = [ file [ MODULE + '.bI' ] ]
+bi
 
+[1 2 3 4]
 
-#readme += '# ' + MODULE +'\n'
-#readme += '### ' + TITLE + '\n'
-#readme += '\n' + AUTHOR +'\n'
-#readme += '\nlicence: '+LICENSE+ '\n'
-#readme += '\nGitHub: '+GITHUB+'/'+MODULE+'\n'
-
-#[ 0 file 'ypp.ypp' ] "parser"
-#[ dir 'next' ] "next generation dir"
-#MODULE OS
-#[ file 'ypp.ypp' ] "parser" 
-#[ file 'lpp.lpp' ] "lexer"
-#( file 'hpp.hpp' )
-#( file 'cpp.cpp' )
-#( file 'Makefile' )
-#( file 'bat.bat' )
+MODULE+'.bi'
+#MODULE+'.bI' 
+#[ file MODULE+'.bI' ]
