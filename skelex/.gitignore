@@ -1,6 +1,7 @@
 *~
 *.swp
-exe.exe
+skelex.exe
+skelex
 log.log
 ypp.tab.?pp
 lex.yy.c
