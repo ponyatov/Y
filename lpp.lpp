@@ -1,5 +1,5 @@
 %{
-#include "../hpp.hpp"
+#include "hpp.hpp"
 string LexString;											// string buffer
 void incLude(Sym*inc) {										// .inc processing
 	if (!(yyin = fopen((inc->val+".bi").c_str(),"r"))) yyerror("");	// open

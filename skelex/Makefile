@@ -4,7 +4,7 @@ log.log: src.src ./exe.exe
 C = cpp.cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp ypp.tab.hpp
 ./exe.exe: $(C) $(H) Makefile
-	$(CXX) -std=gnu++11 -o $@ $(C)
+	$(CXX) -I. -std=gnu++11 -o $@ $(C)
 ypp.tab.cpp: ypp.ypp
 	bison $<
 lex.yy.c: lpp.lpp
