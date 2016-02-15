@@ -10,8 +10,22 @@
 #include <map>
 using namespace std;
 
-struct Env;
-struct Sym {							// == Abstract Symbolic Type (AST) ==
+// ====================================================== GLOBAL ENV{}IRONMENT
+struct Sym;
+struct Env {							// == Environment ==
+	Env* next;							// linked list to parent env
+	Env(Env*);							// constructor (link to parent/NULL)
+	map<string,Sym*> iron;				// data
+	Sym* lookup(Sym*);					// search over all env.chain
+	void par(Sym*);						// add object to local env
+	void set(string,Sym*);				// A = B to local env
+	string dump();						// dump env / used in Sym.dump() /
+};
+extern Env glob_env;					// global environment
+extern void glob_init();				// init glob_env
+
+// ============================================== ABSTRACT SYMBOLIC TYPE (AST)
+struct Sym {
 // ---------------------------------------------------------------------------
 	string tag;							// data type / class
 	string val;							// symbol value
@@ -31,7 +45,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	string tagstr();					// <T:'V'> Str-like header string
 	string pad(int);					// padding with tree decorators
 // -------------------------------------------------------- compute (evaluate)
-	virtual Sym* eval();
+	virtual Sym* eval(Env*EE=&glob_env);
 // ----------------------------------------------------------------- operators	
 	virtual Sym* str();					// str(A)	to string representation
 	virtual Sym* eq(Sym*);				// A = B	assignment
@@ -41,18 +55,6 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 	virtual Sym* ins(Sym*);				// A += B	insert
 };
 
-// ====================================================== GLOBAL ENV{}IRONMENT
-struct Env {							// == Environment ==
-	Env* next;							// linked list to parent env
-	Env(Env*);							// constructor (link to parent/NULL)
-	map<string,Sym*> iron;				// data
-	Sym* lookup(Sym*);					// search over all env.chain
-	void par(Sym*);						// add object to local env
-	void set(string,Sym*);				// A = B to local env
-	string dump();						// dump env / used in Sym.dump() /
-};
-extern Env glob_env;					// global environment
-extern void glob_init();				// init glob_env
 
 extern void W(Sym*);								// \ ==== writers ====
 extern void W(string);								// /
@@ -84,7 +86,7 @@ struct Fn:Sym { Fn(string,FN); FN fn; Sym*at(Sym*); };// internal function
 // ==================================================================== FILEIO
 // =================================================== file
 struct File:Sym { File(Sym*); static Sym*file(Sym*);
-	Sym*eq(Sym*); };//FILE *fh; ~File(); };
+	Sym*eq(Sym*); FILE *fh; ~File(); };
 
 // ========================================================== PARSER INTERFACE
 													// == lexer interface ==

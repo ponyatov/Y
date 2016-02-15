@@ -47,17 +47,17 @@ string Sym::dump(int depth) {							// dump as text
 
 // ------------------------------------------------------- evaluation
 
-Sym* Sym::eval() {
-	Sym* E = env->lookup(this); if (E) return E;		// lookup in env{}
+Sym* Sym::eval(Env*EE) {
+	Sym* E = EE->lookup(this); if (E) return E;			// lookup in env{}
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// recursive eval()
-		(*it) = (*it)->eval();							// with objects replace
+		(*it) = (*it)->eval(EE);						// with objects replace
 	return this; }
 
 // ------------------------------------------------------- operators
 
 Sym* Sym::str()			{ return new Str(val); }		// str(A)	as string
 
-Sym* Sym::eq(Sym*o)		{ env->next->set(val,o);		// A = B	assignment
+Sym* Sym::eq(Sym*o)		{ glob_env.set(val,o);			// A = B	assignment
 	return o; }
 Sym* Sym::at(Sym*o)		{ push(o); return this; }		// A @ B	apply
 
@@ -136,18 +136,19 @@ Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
 // =================================================== {la:mbda}
 Lambda::Lambda():Sym("^","^") {}
 Sym* Lambda::at(Sym*o) {
-	Sym* R = new Sym(this); Env*X = R->env; R->env = new Env(X);
-	auto P = X->iron.begin(); // first param in env
-	R->env->set(P->first,o);
-	cerr << R->env->lookup(o) << " " << X->lookup(o);
-	return R->eval(); }
+	push(o); return this; }
+//	Sym* R = new Sym(this); Env*X = R->env; R->env = new Env(X);
+//	auto P = X->iron.begin(); // first param in env
+//	R->env->set(P->first,o);
+//	cerr << R->env->lookup(o) << " " << X->lookup(o);
+//	return R->eval(); }
 
 // ==================================================================== FILEIO
 
 // ======================================================= file
 File::File(Sym*o):Sym("file",o->val) {}
 Sym* File::file(Sym*o) { return new File(o); }
-//File::~File() { if (fh) fclose(fh); }
+File::~File() { if (fh) fclose(fh); }
 Sym* File::eq(Sym*o) { yyerror(tagval()+"="+o->tagval()); }
 
 // ====================================================== GLOBAL ENV{}IRONMENT
@@ -170,6 +171,7 @@ void glob_init() {									// init env{} on startup
 	// ----------------------------------------------- metainfo constants
 	glob_env.iron["MODULE"]	= new Str(MODULE);		// module name
 	glob_env.iron["OS"]		= new Str(OS);			// target os
+	glob_env.iron["EXE"]		= new Str(EXE);		// executable file suffix
 	// ----------------------------------------------- string
 	glob_env.iron["upcase"]	= new Fn("upcase",Str::upcase);
 	// ----------------------------------------------- fileio
