@@ -1,11 +1,14 @@
-.PHONY: log.log
-log.log: src.src ./exe.exe
-	./exe.exe < $< > $@ && tail $(TAIL) $@
+## make parameters : OS=win32|linux EXE=.exe| TAIL=-n17|-n7
+MODULE = $(notdir $(CURDIR))
+.PHONY: $(MODULE).blog
+$(MODULE).blog: $(MODULE).bI ./$(MODULE)$(EXE)
+	./$(MODULE)$(EXE) < $< > $@ && tail $(TAIL) $@
 C = ../cpp.cpp ypp.tab.cpp lex.yy.c
 H = ../hpp.hpp ypp.tab.hpp
-F = -I.. -I. -std=gnu++11 -DMODULE=\"$(notdir $(CURDIR))\"
-./exe.exe: $(C) $(H) ../Makefile
-	$(CXX) $(F) -o $@ $(C)
+L = 
+CXXFLAGS += -I.. -I. -std=gnu++11 -DMODULE=\"MODULE\" -DOS=\"$(OS)\"
+./$(MODULE)$(EXE): $(C) $(H) ../Makefile
+	$(CXX) $(CXXFLAGS) -o $@ $(C) $(L)
 ypp.tab.cpp: ../ypp.ypp
 	bison $<
 lex.yy.c: ../lpp.lpp

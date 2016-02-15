@@ -1,9 +1,10 @@
-#ifndef _H_SKELEX
-#define _H_SKELEX
-
+#ifndef _H_bI
+#define _H_bI
 										// == std.includes ==
 #include <iostream>
 #include <cstdlib>
+#include <cstdio>
+#include <cassert>
 #include <algorithm>
 #include <vector>
 #include <map>
@@ -17,6 +18,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // -------------------------------------------------------------- constructors
 	Sym(string,string);					// <T:V>
 	Sym(string);						// token
+//	Sym(Sym*);							// copy
 // --------------------------------------------------------- nest[]ed elements
 	vector<Sym*> nest;
 	void push(Sym*);
@@ -55,6 +57,9 @@ extern void glob_init();				// init glob_env
 extern void W(Sym*);								// \ ==== writers ====
 extern void W(string);								// /
 
+// ================================================================= DIRECTIVE
+struct Directive:Sym { Directive(string); Sym*eval(); string tagval(); };
+
 // =================================================================== SCALARS
 struct Scalar:Sym { Scalar(string,string);			// scalars common class
 	Sym*eval(); };									// block env[] lookup
@@ -86,11 +91,11 @@ struct File:Sym { File(Sym*); static Sym*file(Sym*);
 extern int yylex();									// parse next token
 extern int yylineno;								// current source line
 extern char* yytext;								// found token text
-//extern void incLude(Sym*inc);						// .include file
+extern void incLude(Sym*inc);						// .include file
 #define TOC(C,X) { yylval.o = new C(yytext); return X; }
 													// == parser interface ==
 extern int yyparse();								// run parser
 extern void yyerror(string);						// error callback
 #include "ypp.tab.hpp"								// token defines for lexer
 
-#endif // _H_SKELEX
+#endif // _H_bI

@@ -1,4 +1,4 @@
-#include "hpp.hpp"
+#include <hpp.hpp>
 // ======================================================= error callback
 #define YYERR "\n\n"<<yylineno<<":"<<msg<<"["<<yytext<<"]\n\n"
 void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
@@ -19,12 +19,20 @@ Sym::Sym(string V):Sym("",V)	{}						// token
 // ------------------------------------------------------- nest[]ed elements
 void Sym::push(Sym*o) { nest.push_back(o); }
 
-// ------------------------------------------------------- env[]irnoment
+// ------------------------------------------------------- env{}irnoment
 void Sym::par(Sym*o) { env->par(o); }
 
 // ------------------------------------------------------- dumping
 string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
-string Sym::tagstr() { return "<"+tag+":'"+val+"'>"; }	// <T:'V'> header
+string Sym::tagstr() {									// <T:'V'> header
+	string S = "<"+tag+":'";
+	for (int i=0;i<val.size();i++)
+		switch (val[i]) {
+			case '\n': S+="\\n"; break;
+			case '\t': S+="\\t"; break;
+			default: S+=val[i];
+		}
+	return S+"'>"; }
 string Sym::pad(int n) { string S; for (int i=0;i<n;i++) S+='\t'; return S; }
 string Sym::dump(int depth) {							// dump as text
 	string S = "\n" + pad(depth) + tagval() + env->dump();
@@ -35,7 +43,7 @@ string Sym::dump(int depth) {							// dump as text
 // ------------------------------------------------------- evaluation
 
 Sym* Sym::eval() {
-	Sym* E = env->lookup(this); if (E) return E;		// lookup in env[]
+	Sym* E = env->lookup(this); if (E) return E;		// lookup in env{}
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// recursive eval()
 		(*it) = (*it)->eval();							// with objects replace
 	return this; }
@@ -54,6 +62,18 @@ Sym* Sym::div(Sym*o) { Sym* R = new Op("/");			// A / B	div
 	R->push(this); R->push(o); return R; }
 
 Sym* Sym::ins(Sym*o)	{ push(o); return this; }		// A += B	insert
+
+// ================================================================= DIRECTIVE
+Directive::Directive(string V):Sym("",V) {
+	while (val.size() && (val[0]!=' ' && val[0]!='\t')) {
+		tag += val[0]; val.erase(0,1); }
+	while (val.size() && (val[0]==' ' || val[0]=='\t')) {
+		               val.erase(0,1); }
+}
+string Directive::tagval() { return tagstr(); }
+Sym* Directive::eval() {
+	if (tag==".end") { W(this); W("\n"); exit(0); }
+	return this; }
 
 // =================================================================== SCALARS
 
@@ -137,6 +157,7 @@ Env glob_env(NULL);
 void glob_init() {									// init env{} on startup
 	// ----------------------------------------------- metainfo constants
 	glob_env.iron["MODULE"]	= new Str(MODULE);		// module name
+	glob_env.iron["OS"]		= new Str(OS);			// target os
 	// ----------------------------------------------- string
 	glob_env.iron["upcase"]	= new Fn("upcase",Str::upcase);
 	// ----------------------------------------------- fileio

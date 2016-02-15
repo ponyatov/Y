@@ -1,47 +1,69 @@
 %{
 #include <hpp.hpp>
-string LexString;
+string LexString;											// string buffer
+void incLude(Sym*inc) {										// .inc processing
+	if (!(yyin = fopen((inc->val+".bI").c_str(),"r"))) yyerror("");// open
+	yypush_buffer_state(yy_create_buffer(yyin,YY_BUF_SIZE));// push to lexer
+}
 %}
 %option noyywrap
 %option yylineno
-%x lexstring
+								/* extra lexer states: string/docstring parsing */
+%x lexstring docstring
+								/* optional sign in numbers */
 S [\+\-]?
+								/* decimal number digit(s) */
 N [0-9]+
 %%
-#[^\n]*				{}
+#[^\n]*				{}								/* line comment */
 
-{S}{N}				TOC(Sym,NUM)
-{S}{N}\.{N}			TOC(Sym,NUM)
-{S}{N}[eE]{S}{N}	TOC(Sym,NUM)
+^\.inc[ \t]+[^\n]+	{incLude(new Directive(yytext));}	/* .include */
+^\.[a-z]+[^\n]*		TOC(Directive,DIR)					/* .directive */
 
+														/* string parser */
 '					{BEGIN(lexstring); LexString="";}
 <lexstring>'		{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR;}
+<lexstring>\\t		{LexString+='\t';}
+<lexstring>\\n		{LexString+='\n';}
+<lexstring>\\\\		{LexString+='\\';}
+<lexstring>\\'		{LexString+='\'';}
+<lexstring>\n		{LexString+='\n';}
 <lexstring>.		{LexString+=yytext[0];}
+													/* numbers */
+{S}{N}				TOC(Sym,NUM)							/* integer */
+{S}{N}\.{N}			TOC(Sym,NUM)							/* float */
+{S}{N}[eE]{S}{N}	TOC(Sym,NUM)							/* exponential */
+0x[0-9A-F]+			TOC(Sym,NUM)							/* hexadecimal */
+0b[01]+				TOC(Sym,NUM)							/* bit string */
 
-[a-zA-Z0-9_.]+		TOC(Sym,SYM)
+[a-zA-Z0-9_.]+		TOC(Sym,SYM)					/* symbol */
 
-\(					TOC(Sym,L)
+\(					TOC(Sym,L)						/* brackets */
 \)					TOC(Sym,R)
 \[					TOC(Sym,LQ)
 \]					TOC(Sym,RQ)
 \{					TOC(Sym,LB)
 \}					TOC(Sym,RB)
 
-\=					TOC(Op,EQ)
-\@					TOC(Op,AT)
-\:					TOC(Op,COLON)
-\~					TOC(Op,TILD)
-\%					TOC(Op,PERC)
+													/* operators */
+\=					TOC(Op,EQ)								/* assignment */
+\@					TOC(Op,AT)								/* apply */
+\:					TOC(Op,COLON)							/* inheritance */
+\~					TOC(Op,TILD)							/* quote */
+\%					TOC(Op,PERC)							/* member */
 
-\+					TOC(Op,ADD)
+\+					TOC(Op,ADD)								/* arithmetic */
 \-					TOC(Op,SUB)
 \*					TOC(Op,MUL)
 \/					TOC(Op,DIV)
 \^					TOC(Op,POW)
 
-\+\=				TOC(Op,INS)
-\-\=				TOC(Op,DEL)
+\+\=				TOC(Op,INS)								/* insert */
+\-\=				TOC(Op,DEL)								/* delete */
 
-[ \t\r\n]+			{}
+[ \t\r\n]+			{}								/* drop spaces */
 
+<<EOF>>			{ yypop_buffer_state();				/* end of .inluded file */
+				if (!YY_CURRENT_BUFFER) yyterminate();}
 %%
+

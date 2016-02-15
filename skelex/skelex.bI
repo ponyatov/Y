@@ -1,11 +1,16 @@
 
+bi = MODULE+'.bI'
+blog = MODULE+'.blog'
+
+.inc make
+
 skelex = [
 	files = [
-		src.src log.log
+		bi blog
 		ypp.ypp lpp.lpp hpp.hpp cpp.cpp Makefile
 	]
 	bat = file@bat.bat
-	.gitignore = [ '*~' '*.swp' exe.exe log.log 'ypp.tab.?pp' lex.yy.c ]
+	.gitignore = [ '*~' '*.swp' exe blog 'ypp.tab.?pp' lex.yy.c ]
 ]
 
 bat
@@ -20,3 +25,5 @@ hpp.hpp = [
 x.x = { EX: [ EX . EX ] }
 
 x.x@x
+
+Makefile

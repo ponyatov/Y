@@ -1,2 +1,2 @@
 @start .
-@gvim -p src.src log.log ../ypp.ypp ../lpp.lpp ../hpp.hpp ../cpp.cpp ../Makefile bat.bat .gitignore 
+@gvim -p skelex.bI skelex.blog ../ypp.ypp ../lpp.lpp ../hpp.hpp ../cpp.cpp ../Makefile bat.bat .gitignore 

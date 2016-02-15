@@ -2,6 +2,7 @@
 #include <hpp.hpp>
 %}
 %defines %union { Sym*o; }			/* AST: symbolic type parse tree		*/
+%token <o> DOC DIR					/* "docstring" .directive				*/
 %token <o> SYM NUM STR				/* scalar: symbol number 'string'		*/
 %token <o> L R LQ RQ LB RB			/* bracket: ( ) [ ] { }					*/
 %token <o> EQ AT COLON TILD PERC	/* operator: = @ : ~ %					*/
@@ -20,6 +21,7 @@
 REPL	: | REPL ex			{ W($2->eval()); W("\n"); } ;
 scalar	: SYM | NUM | STR ;
 ex		: scalar
+		| DIR
 		| L ex R			{ $$=$2; }
 		| LQ list RQ		{ $$=$2; }
 		| LB lambda RB		{ $$=$2; }
