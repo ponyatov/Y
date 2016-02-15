@@ -10,9 +10,9 @@
 %type <o> ex scalar list lambda
 
 %left EQ INS
-%left AT
 %left ADD
 %left DIV
+%left AT
 %left OP
 %left TILD
 %%

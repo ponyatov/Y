@@ -14,6 +14,7 @@
 #include <map>
 using namespace std;
 
+struct Env;
 struct Sym {							// == Abstract Symbolic Type (AST) ==
 // ---------------------------------------------------------------------------
 	string tag;							// data type / class
@@ -25,12 +26,15 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // --------------------------------------------------------- nest[]ed elements
 	vector<Sym*> nest;
 	void push(Sym*);
+// ------------------------------------------------------------- env[]ironment	
+	Env* env;
+	void par(Sym*);						// add paramater to local Sym's env[]
+//// ------------------------------------------------------------------- methods
+//	map<string,Sym*> meth;
 // -------------------------------------------------------------- par{}ameters
 	map<string,Sym*> par;				// can be used as class slots
 	void partag(Sym*);					// par[tag]=obj
 	void parval(Sym*);					// par[val]=obj
-// ------------------------------------------------------------------- methods
-	map<string,Sym*> meth;
 // ------------------------------------------------------------------- dumping
 	virtual string dump(int depth=0);	// dump symbol object as text
 	virtual string tagval();			// <T:V> header string
@@ -39,18 +43,31 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // -------------------------------------------------------- compute (evaluate)
 	virtual Sym* eval();
 // ----------------------------------------------------------------- operators	
+	virtual Sym* str();					// str(A)	to string representation
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
 	virtual Sym* inher(Sym*);			// A : B	inheritance
 	virtual Sym* dot(Sym*);				// A . B	pair
 	virtual Sym* member(Sym*);			// A % B -> A class member
-	virtual Sym* str();					// str(A)	to string representation
 	virtual Sym* add(Sym*);				// A + B	add
 	virtual Sym* div(Sym*);				// A / B	div
 	virtual Sym* ins(Sym*);				// A += B	insert
 // ----------------------------------------------------------------- translate
 	virtual Sym* h();					// .hpp repr
 };
+
+// ====================================================== GLOBAL ENV{}IRONMENT
+struct Env {							// == Environment ==
+	Env* next;							// linked list to parent env
+	Env(Env*);							// constructor (link to parent/NULL)
+	map<string,Sym*> iron;				// data
+	Sym* lookup(Sym*);					// search over all env.chain
+	void par(Sym*);						// add object to local env
+	void set(string,Sym*);				// A = B to local env
+	string dump();						// dump env / used in Sym.dump() /
+};
+extern Env glob_env;					// global environment
+extern void glob_init();				// init glob_env
 
 extern void W(Sym*);								// \ ==== writers ====
 extern void W(string);								// /
@@ -70,9 +87,10 @@ extern Sym* Wr;										// write mode
 // =================================================================== SCALARS
 struct Scalar:Sym { Scalar(string,string);			// scalars common class
 	Sym*eval(); };									// block env[] lookup
+
 struct Str:Scalar { Str(string); string tagval();	// string
-	Sym*eq(Sym*); Sym* add(Sym*); };
-extern Sym* upcase(Sym*);
+	Sym*eq(Sym*); Sym* add(Sym*);
+	static Sym* upcase(Sym*); };					// to UPCASE
 
 struct Hex:Scalar { Hex(string); };					// hexadecimal
 struct Bin:Scalar { Bin(string); };					// bit string
@@ -89,14 +107,12 @@ struct Pair:Sym { Pair(Sym*,Sym*); Sym*eq(Sym*); };
 
 // =============================================================== FUNCTIONALS
 // =================================================== operator
-struct Op:Sym { Op(string); Sym* eval();
-	Sym*eq(Sym*); };								// used in computable lvalue
-// =================================================== 
-
-struct Lambda:Sym { Lambda(); };					// {la:mbda}
+struct Op:Sym { Op(string); Sym*eval(); };
+// =================================================== {la:mbda}
+struct Lambda:Sym { Lambda(); };
 // =================================================== function
 typedef Sym*(*FN)(Sym*);							// function ptr
-struct Fn:Sym { Fn(string,FN); FN fn; Sym* at(Sym*); };// internal function
+struct Fn:Sym { Fn(string,FN); FN fn; Sym*at(Sym*); };// internal function
 
 // =================================================================== OBJECTS
 struct Class:Sym { Class(string,Class*s=NULL);		// class
@@ -110,9 +126,8 @@ struct Object:Sym { Object(Class*,Sym*); Sym*val; };// object (class instance)
 struct Dir:Sym { Dir(Sym*); Sym* add(Sym*); };
 extern Sym* dir(Sym*);
 // =================================================== file
-struct File:Sym { File(Sym*); FILE *fh; ~File();
-	Sym* ins(Sym*); };
-extern Sym* file(Sym*);
+struct File:Sym { File(Sym*); static Sym*file(Sym*);
+	Sym*eq(Sym*); };//FILE *fh; ~File(); };
 
 // ======================================================================= GUI
 struct Message:Sym { Message(Sym*);	};				// message box/bar
@@ -127,7 +142,6 @@ extern Sym* window(Sym*);
 	#include "linux.hpp"							// linux/posix
 #endif
 
-// ====================================================== GLOBAL ENV{}IRONMENT
 extern map<string,Sym*> env;
 extern void env_init();								// init env{} on startup
 

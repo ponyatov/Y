@@ -12,6 +12,11 @@ bat
 += '@start .'
 += 'gvim -p '+files/' '
 
+hpp.hpp = [
+	[ '#ifndef _H_'+upcase@MODULE '#define _H_'+upcase@MODULE ]
+	'#endif // _H_'+upcase@MODULE
+]
+
 x.x = { EX: [ EX . EX ] }
 
 x.x@x

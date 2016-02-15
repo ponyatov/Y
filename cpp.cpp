@@ -1,9 +1,9 @@
-#include "../hpp.hpp"
+#include "hpp.hpp"
 // ======================================================= error callback
 #define YYERR "\n\n"<<yylineno<<":"<<msg<<"["<<yytext<<"]\n\n"
 void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
 // ======================================================= main()
-int main() { env_init(); return yyparse(); }
+int main() { glob_init(); return yyparse(); }
 
 // ======================================================= writers
 void W(Sym* o)		{ cout << o->dump(); }
@@ -12,11 +12,15 @@ void W(string s)	{ cout << s; }
 // ============================================== Abstract Symbolic Type (AST)
 
 // ------------------------------------------------------- constructors
-Sym::Sym(string T,string V) { tag=T; val=V; };			// <T:V>
-Sym::Sym(string V):Sym("sym",V)	{}						// token
+Sym::Sym(string T,string V) { tag=T; val=V; 			// <T:V>
+	env = new Env(&glob_env); }
+Sym::Sym(string V):Sym("",V)	{}						// token
 
 // ------------------------------------------------------- nest[]ed elements
 void Sym::push(Sym*o) { nest.push_back(o); }
+
+// ------------------------------------------------------- env[]irnoment
+void Sym::par(Sym*o) { env->par(o); }
 
 // ------------------------------------------------------- par{}ameters
 void Sym::partag(Sym*o) { par[o->tag]=o; }
@@ -24,6 +28,7 @@ void Sym::parval(Sym*o) { par[o->val]=o; }
 
 // ------------------------------------------------------- dumping
 string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
+//string Sym::tagstr() { return "<"+tag+":'"+val+"'>"; }	// <T:'V'> header
 string Sym::tagstr() {									// <T:'V'> header
 	string S = "<"+tag+":'";
 	for (int i=0;i<val.size();i++)
@@ -33,18 +38,17 @@ string Sym::tagstr() {									// <T:'V'> header
 			default: S+=val[i];
 		}
 	return S+"'>"; }
+//string Sym::pad(int n) { string S; for (int i=0;i<n;i++) S+='\t'; return S; }
 string Sym::pad(int n) { string S;						// pad as tree
-	//for(int i=0;i<n;i++) S+="\t"; return S; }
 	for(int i=0;i<n-1;i++) S+="|   ";
 	if (n) S+="\\___";
 	return S; }
-
 string Sym::dump(int depth) {							// dump as text
-	string S = "\n" + pad(depth) + tagval();
-	for (auto pr=par.begin(),e=par.end();pr!=e;pr++)	// par{}ameters
-		S += ","+pr->first+":"+pr->second->tagval();
-	for (auto mt=meth.begin(),e=meth.end();mt!=e;mt++)	// math{}ods
-		S += "\n"+pad(depth+1)+mt->first+mt->second->dump(depth+2);
+	string S = "\n" + pad(depth) + tagval() + env->dump();
+//	for (auto pr=par.begin(),e=par.end();pr!=e;pr++)	// par{}ameters
+//		S += ","+pr->first+":"+pr->second->tagval();
+//	for (auto mt=meth.begin(),e=meth.end();mt!=e;mt++)	// math{}ods
+//		S += "\n"+pad(depth+1)+mt->first+mt->second->dump(depth+2);
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// nest[]ed
 		S += (*it)->dump(depth+1);
 	return S; }
@@ -52,15 +56,19 @@ string Sym::dump(int depth) {							// dump as text
 // ------------------------------------------------------- evaluation
 
 Sym* Sym::eval() {
-	Sym*E = env[val]; if (E) return E;					// lookup in glob.env[]
+	Sym* E = env->lookup(this); if (E) return E;		// lookup in env[]
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// recursive eval()
 		(*it) = (*it)->eval();							// with objects replace
 	return this; }
 
 // ------------------------------------------------------- operators
 	
-Sym* Sym::eq(Sym*o)		{ env[val]=o; return o; }		// A = B	assignment
+Sym* Sym::str()			{ return new Str(val); }		// str(A)	as string
+
+Sym* Sym::eq(Sym*o)		{ env->next->set(val,o);		// A = B	assignment
+	return o; }
 Sym* Sym::at(Sym*o)		{ push(o); return this; }		// A @ B	apply
+
 Sym* Sym::inher(Sym*o)	{								// A : B	inheritance
 	return new Sym(this->val,o->val); }
 Sym* Sym::dot(Sym*o)	{ return new Pair(this,o); }	// A . B	pair
@@ -68,10 +76,10 @@ Sym* Sym::dot(Sym*o)	{ return new Pair(this,o); }	// A . B	pair
 Sym* Sym::member(Sym*o)	{								// A % B	class member
 	meth[o->str()->val]=o->nest[0]; return this; }
 
-Sym* Sym::str()			{ return new Str(val); }		// str(A)	as string
-
-Sym* Sym::add(Sym*o)	{ push(o); return this; }		// A + B	add
-Sym* Sym::div(Sym*o)	{ push(o); return this; }		// A / B	div
+Sym* Sym::add(Sym*o) { Sym* R = new Op("+");			// A + B	add
+	R->push(this); R->push(o); return R; }
+Sym* Sym::div(Sym*o) { Sym* R = new Op("/");			// A / B	div
+	R->push(this); R->push(o); return R; }
 
 Sym* Sym::ins(Sym*o)	{ push(o); return this; }		// A += B	insert
 
@@ -104,11 +112,10 @@ Str::Str(string V):Scalar("str",V) {}
 string Str::tagval() { return tagstr(); }
 Sym* Str::eq(Sym*o) { yyerror("immutable"); }
 Sym* Str::add(Sym*o) { return new Str(val+o->str()->val); }
-Sym* upcase(Sym*o) { 
+Sym* Str::upcase(Sym*o) {								// to UPCASE
 	string S = o->str()->val;
 	transform(S.begin(),S.end(),S.begin(),::toupper);
-	return new Str(S);
-}
+	return new Str(S); }
 
 // ======================================================= machine numbers
 Hex::Hex(string V):Scalar("hex",V) {}					// hexadecimal
@@ -228,6 +235,8 @@ Sym* window(Sym*o)	{ return new Window(o); }
 map<string,Sym*> env;
 void env_init() {									// init env{} on startup
 	// ----------------------------------------------- metainfo constants
+	glob_env.iron["MODULE"]	= new Str(MODULE);		// module name
+	// ----------------------------------------------- metainfo constants
 	env["OS"]		= new Str(OS);					// host OS
 	env["MODULE"]	= new Str(MODULE);				// module name (CFLAGS -DMODULE)
 	env["TITLE"]	= new Str(TITLE);				// module title
@@ -243,12 +252,12 @@ void env_init() {									// init env{} on startup
 	env["R"]		= Rd;
 	env["W"]		= Wr;
 	// ----------------------------------------------- string
-	env["upcase"]	= new Fn("upcase",upcase);
+	glob_env.iron["upcase"]	= new Fn("upcase",Str::upcase);
 	// ----------------------------------------------- objects
 	env["class"]	= cls;
 	// ----------------------------------------------- fileio
-	env["dir"]		= new Fn("dir",dir);
-	env["file"]		= new Fn("file",file);
+	glob_env.iron["dir"]	= new Fn("fn",File::file);
+	glob_env.iron["file"]	= new Fn("fn",File::file);
 	// ----------------------------------------------- GUI
 	env["message"]	= new Fn("message",message);
 	env["window"]	= new Fn("window",window);

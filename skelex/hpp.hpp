@@ -1,59 +1,96 @@
 #ifndef _H_SKELEX
 #define _H_SKELEX
 
+										// == std.includes ==
 #include <iostream>
 #include <cstdlib>
+#include <algorithm>
 #include <vector>
 #include <map>
 using namespace std;
 
 struct Env;
-struct Sym {
-	string tag;
-	string val;
-	Sym(string,string); Sym(string);
-	vector<Sym*> nest; void push(Sym*);
-	Env* env; void par(Sym*);
-	string dump(int depth=0); string pad(int);
-	virtual string tagval(); string tagstr();
-	virtual Sym* str();
+struct Sym {							// == Abstract Symbolic Type (AST) ==
+// ---------------------------------------------------------------------------
+	string tag;							// data type / class
+	string val;							// symbol value
+// -------------------------------------------------------------- constructors
+	Sym(string,string);					// <T:V>
+	Sym(string);						// token
+// --------------------------------------------------------- nest[]ed elements
+	vector<Sym*> nest;
+	void push(Sym*);
+// ------------------------------------------------------------- env[]ironment	
+	Env* env;
+	void par(Sym*);						// add paramater to local Sym's env[]
+// ------------------------------------------------------------------- dumping
+	virtual string dump(int depth=0);	// dump symbol object as text
+	virtual string tagval();			// <T:V> header string
+	string tagstr();					// <T:'V'> Str-like header string
+	string pad(int);					// padding with tree decorators
+// -------------------------------------------------------- compute (evaluate)
 	virtual Sym* eval();
-	virtual Sym* eq(Sym*);
-	virtual Sym* at(Sym*);
-	virtual Sym* add(Sym*);
-	virtual Sym* div(Sym*);
-	virtual Sym* ins(Sym*);
+// ----------------------------------------------------------------- operators	
+	virtual Sym* str();					// str(A)	to string representation
+	virtual Sym* eq(Sym*);				// A = B	assignment
+	virtual Sym* at(Sym*);				// A @ B	apply
+	virtual Sym* add(Sym*);				// A + B	add
+	virtual Sym* div(Sym*);				// A / B	div
+	virtual Sym* ins(Sym*);				// A += B	insert
 };
-struct Env {
-	Env(Env*); Env* next;
-	map<string,Sym*> iron; Sym* lookup(Sym*);
-	void par(Sym*); void set(string,Sym*);
-	string dump();
+
+// ====================================================== GLOBAL ENV{}IRONMENT
+struct Env {							// == Environment ==
+	Env* next;							// linked list to parent env
+	Env(Env*);							// constructor (link to parent/NULL)
+	map<string,Sym*> iron;				// data
+	Sym* lookup(Sym*);					// search over all env.chain
+	void par(Sym*);						// add object to local env
+	void set(string,Sym*);				// A = B to local env
+	string dump();						// dump env / used in Sym.dump() /
 };
-extern Env glob_env;
-extern void glob_init();
+extern Env glob_env;					// global environment
+extern void glob_init();				// init glob_env
 
-extern void W(Sym*);
-extern void W(string);
+extern void W(Sym*);								// \ ==== writers ====
+extern void W(string);								// /
 
-struct Str:Sym { Str(string); string tagval(); Sym*eval(); Sym*add(Sym*); };
+// =================================================================== SCALARS
+struct Scalar:Sym { Scalar(string,string);			// scalars common class
+	Sym*eval(); };									// block env[] lookup
 
-struct List:Sym { List(); Sym*div(Sym*); Sym*str(); };
+struct Str:Scalar { Str(string); string tagval();	// string
+	Sym*eq(Sym*); Sym* add(Sym*);
+	static Sym* upcase(Sym*); };					// to UPCASE
 
+// ================================================================ COMPOSITES
+// =================================================== [list]
+struct List:Sym { List(); Sym*str(); Sym*div(Sym*); };
+
+// =============================================================== FUNCTIONALS
+// =================================================== operator
 struct Op:Sym { Op(string); Sym*eval(); };
+// =================================================== {la:mbda}
+struct Lambda:Sym { Lambda(); };
+// =================================================== function
+typedef Sym*(*FN)(Sym*);							// function ptr
+struct Fn:Sym { Fn(string,FN); FN fn; Sym*at(Sym*); };// internal function
 
-typedef Sym*(*FN)(Sym*);
-struct Fn:Sym { Fn(string,FN F); FN fn; Sym*at(Sym*); };
-
+// ==================================================================== FILEIO
+// =================================================== file
 struct File:Sym { File(Sym*); static Sym*file(Sym*);
-	Sym*eq(Sym*); };
+	Sym*eq(Sym*); };//FILE *fh; ~File(); };
 
-extern int yylex();
-extern int yylineno;
-extern char* yytext;
+// ========================================================== PARSER INTERFACE
+													// == lexer interface ==
+extern int yylex();									// parse next token
+extern int yylineno;								// current source line
+extern char* yytext;								// found token text
+//extern void incLude(Sym*inc);						// .include file
 #define TOC(C,X) { yylval.o = new C(yytext); return X; }
-extern int yyparse();
-extern void yyerror(string);
-#include "ypp.tab.hpp"
+													// == parser interface ==
+extern int yyparse();								// run parser
+extern void yyerror(string);						// error callback
+#include "ypp.tab.hpp"								// token defines for lexer
 
 #endif // _H_SKELEX

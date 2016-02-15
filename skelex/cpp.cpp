@@ -1,45 +1,74 @@
 #include "hpp.hpp"
+// ======================================================= error callback
 #define YYERR "\n\n"<<yylineno<<":"<<msg<<"["<<yytext<<"]\n\n"
-void yyerror(string msg) { cout << YYERR; cerr << YYERR; exit(-1); }
+void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
+// ======================================================= main()
 int main() { glob_init(); return yyparse(); }
 
-void W(Sym*o) { cout << o->dump(); }
-void W(string s) { cout << s; }
+// ======================================================= writers
+void W(Sym* o)		{ cout << o->dump(); }
+void W(string s)	{ cout << s; }
 
-Sym::Sym(string T,string V) { tag=T; val=V; env = new Env(&glob_env); }
-Sym::Sym(string V):Sym("",V) {}
+// ============================================== Abstract Symbolic Type (AST)
+
+// ------------------------------------------------------- constructors
+Sym::Sym(string T,string V) { tag=T; val=V; 			// <T:V>
+	env = new Env(&glob_env); }
+Sym::Sym(string V):Sym("",V)	{}						// token
+
+// ------------------------------------------------------- nest[]ed elements
 void Sym::push(Sym*o) { nest.push_back(o); }
+
+// ------------------------------------------------------- env[]irnoment
 void Sym::par(Sym*o) { env->par(o); }
 
-string Sym::tagval() { return "<"+tag+":"+val+">"; }
-string Sym::tagstr() { return "<"+tag+":'"+val+"'>"; }
+// ------------------------------------------------------- dumping
+string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
+string Sym::tagstr() { return "<"+tag+":'"+val+"'>"; }	// <T:'V'> header
 string Sym::pad(int n) { string S; for (int i=0;i<n;i++) S+='\t'; return S; }
-string Sym::dump(int depth) { string S = "\n"+pad(depth)+tagval()+env->dump();
-	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
+string Sym::dump(int depth) {							// dump as text
+	string S = "\n" + pad(depth) + tagval() + env->dump();
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// nest[]ed
 		S += (*it)->dump(depth+1);
 	return S; }
 
+// ------------------------------------------------------- evaluation
+
 Sym* Sym::eval() {
-	Sym* E = env->lookup(this); if (E) return E;
-	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
-		(*it) = (*it)->eval();
+	Sym* E = env->lookup(this); if (E) return E;		// lookup in env[]
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// recursive eval()
+		(*it) = (*it)->eval();							// with objects replace
 	return this; }
 
-Sym* Sym::at(Sym*o) { push(o); return this; }
-Sym* Sym::eq(Sym*o) { env->next->set(val,o); return o; }
-Sym* Sym::str() { return new Str(val); }
+// ------------------------------------------------------- operators
 
-Sym* Sym::add(Sym*o) { Sym* R = new Op("+");
+Sym* Sym::str()			{ return new Str(val); }		// str(A)	as string
+
+Sym* Sym::eq(Sym*o)		{ env->next->set(val,o);		// A = B	assignment
+	return o; }
+Sym* Sym::at(Sym*o)		{ push(o); return this; }		// A @ B	apply
+
+Sym* Sym::add(Sym*o) { Sym* R = new Op("+");			// A + B	add
 	R->push(this); R->push(o); return R; }
-Sym* Sym::div(Sym*o) { Sym* R = new Op("/");
+Sym* Sym::div(Sym*o) { Sym* R = new Op("/");			// A / B	div
 	R->push(this); R->push(o); return R; }
 
-Sym* Sym::ins(Sym*o) { push(o); return this; }
+Sym* Sym::ins(Sym*o)	{ push(o); return this; }		// A += B	insert
 
-Str::Str(string V):Sym("str",V) {}
+// =================================================================== SCALARS
+
+Scalar::Scalar(string T,string V):Sym(T,V) {};
+Sym* Scalar::eval() { return this; }					// block env[] lookup
+
+// ======================================================= string
+Str::Str(string V):Scalar("str",V) {}
 string Str::tagval() { return tagstr(); }
-Sym* Str::eval() { return this; }
+Sym* Str::eq(Sym*o) { yyerror("immutable"); }
 Sym* Str::add(Sym*o) { return new Str(val+o->str()->val); }
+Sym* Str::upcase(Sym*o) {								// to UPCASE
+	string S = o->str()->val;
+	transform(S.begin(),S.end(),S.begin(),::toupper);
+	return new Str(S); }
 
 List::List():Sym("[","]") {}
 Sym* List::div(Sym*o) {
@@ -90,6 +119,11 @@ Sym* Env::lookup(Sym*o) {
 	return NULL;
 }
 void glob_init() {
-	glob_env.iron["file"] = new Fn("fn",File::file);
+	// ----------------------------------------------- metainfo constants
+	glob_env.iron["MODULE"]	= new Str(MODULE);		// module name
+	// ----------------------------------------------- string
+	glob_env.iron["upcase"]	= new Fn("upcase",Str::upcase);
+	// ----------------------------------------------- fileio
+	glob_env.iron["file"]	= new Fn("fn",File::file);
 }
 
