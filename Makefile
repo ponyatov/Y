@@ -6,7 +6,7 @@ $(MODULE).blog: $(MODULE).bI ./$(MODULE)$(EXE)
 C = ../cpp.cpp ypp.tab.cpp lex.yy.c
 H = ../hpp.hpp ypp.tab.hpp
 L = 
-CXXFLAGS += -I.. -I. -std=gnu++11 -DMODULE=\"MODULE\" -DOS=\"$(OS)\"
+CXXFLAGS += -I.. -I. -std=gnu++11 -DMODULE=\"$(MODULE)\" -DOS=\"$(OS)\"
 ./$(MODULE)$(EXE): $(C) $(H) ../Makefile
 	$(CXX) $(CXXFLAGS) -o $@ $(C) $(L)
 ypp.tab.cpp: ../ypp.ypp
