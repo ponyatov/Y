@@ -40,7 +40,7 @@ ex		: scalar
 list	: 					{ $$=new List(); }
 		| list ex			{ $$=$1; $$->push($2); }
 ;
-lambda	: 					{ $$=new Sym("^"); }
+lambda	: 					{ $$=new Lambda(); }
 		| lambda SYM COLON	{ $$=$1; $$->par($2); }
 		| lambda ex			{ $$=$1; $$->push($2); }
 ;

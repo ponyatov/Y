@@ -15,6 +15,11 @@ void W(string s)	{ cout << s; }
 Sym::Sym(string T,string V) { tag=T; val=V; 			// <T:V>
 	env = new Env(&glob_env); }
 Sym::Sym(string V):Sym("",V)	{}						// token
+Sym::Sym(Sym*o) {										// copy
+	tag=o->tag; val=o->val; env=o->env;
+	for (auto it=o->nest.begin(),e=o->nest.end();it!=e;it++)
+		push(new Sym(*it));
+}
 
 // ------------------------------------------------------- nest[]ed elements
 void Sym::push(Sym*o) { nest.push_back(o); }
@@ -68,17 +73,16 @@ Directive::Directive(string V):Sym("",V) {
 	while (val.size() && (val[0]!=' ' && val[0]!='\t')) {
 		tag += val[0]; val.erase(0,1); }
 	while (val.size() && (val[0]==' ' || val[0]=='\t')) {
-		               val.erase(0,1); }
-}
+		               val.erase(0,1); }				}
 string Directive::tagval() { return tagstr(); }
 Sym* Directive::eval() {
 	if (tag==".end") { W(this); W("\n"); exit(0); }
-	return this; }
+	else return this; }
 
 // =================================================================== SCALARS
 
 Scalar::Scalar(string T,string V):Sym(T,V) {};
-Sym* Scalar::eval() { return this; }					// block env[] lookup
+Sym* Scalar::eval() { return this; }					// block env{} lookup
 
 // ======================================================= string
 Str::Str(string V):Scalar("str",V) {}
@@ -92,7 +96,6 @@ Sym* Str::upcase(Sym*o) {								// to UPCASE
 
 // ================================================================ COMPOSITES
 
-// ====================================================================== LIST
 // ======================================================= [list]
 
 List::List():Sym("[","]") {}
@@ -130,6 +133,15 @@ Sym* Op::eval() {
 Fn::Fn(string V,FN F):Sym("fn",V) { fn=F; }
 Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
 
+// =================================================== {la:mbda}
+Lambda::Lambda():Sym("^","^") {}
+Sym* Lambda::at(Sym*o) {
+	Sym* R = new Sym(this); Env*X = R->env; R->env = new Env(X);
+	auto P = X->iron.begin(); // first param in env
+	R->env->set(P->first,o);
+	cerr << R->env->lookup(o) << " " << X->lookup(o);
+	return R->eval(); }
+
 // ==================================================================== FILEIO
 
 // ======================================================= file
@@ -163,4 +175,3 @@ void glob_init() {									// init env{} on startup
 	// ----------------------------------------------- fileio
 	glob_env.iron["file"]	= new Fn("fn",File::file);
 }
-

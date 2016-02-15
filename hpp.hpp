@@ -18,7 +18,7 @@ struct Sym {							// == Abstract Symbolic Type (AST) ==
 // -------------------------------------------------------------- constructors
 	Sym(string,string);					// <T:V>
 	Sym(string);						// token
-//	Sym(Sym*);							// copy
+	Sym(Sym*);							// copy
 // --------------------------------------------------------- nest[]ed elements
 	vector<Sym*> nest;
 	void push(Sym*);
@@ -76,7 +76,7 @@ struct List:Sym { List(); Sym*str(); Sym*div(Sym*); };
 // =================================================== operator
 struct Op:Sym { Op(string); Sym*eval(); };
 // =================================================== {la:mbda}
-struct Lambda:Sym { Lambda(); };
+struct Lambda:Sym { Lambda(); Sym*at(Sym*); };
 // =================================================== function
 typedef Sym*(*FN)(Sym*);							// function ptr
 struct Fn:Sym { Fn(string,FN); FN fn; Sym*at(Sym*); };// internal function

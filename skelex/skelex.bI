@@ -1,6 +1,6 @@
 
-bi = MODULE+'.bI'
-blog = MODULE+'.blog'
+bi		= MODULE + '.bI'
+blog	= MODULE + '.blog'
 
 .inc make
 
@@ -24,6 +24,6 @@ hpp.hpp = [
 
 x.x = { EX: [ EX . EX ] }
 
-x.x@x
-
-Makefile
+x.x
+x.x@y
+x.x
