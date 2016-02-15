@@ -70,55 +70,71 @@ Sym* Str::upcase(Sym*o) {								// to UPCASE
 	transform(S.begin(),S.end(),S.begin(),::toupper);
 	return new Str(S); }
 
+// ================================================================ COMPOSITES
+
+// ====================================================================== LIST
+// ======================================================= [list]
+
 List::List():Sym("[","]") {}
-Sym* List::div(Sym*o) {
-	List*L = new List();
-	if (nest.size()) {
-		for (auto it=nest.begin(),e=nest.end();it!=e;it++) {
-			L->push(*it); L->push(o); }
-		L->nest.pop_back();
-	}
-	return L;
-}
-Sym* List::str() { string S;
-	for (auto it=nest.begin(),e=nest.end();it!=e;it++) S += (*it)->str()->val;
+
+Sym* List::str() { string S;							// concatenate elements
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
+		S += (*it)->str()->val;
 	return new Str(S); }
 
+Sym* List::div(Sym*o) {									// split elements
+	Sym* L = new List();
+	if (nest.size()) {
+		for (auto it=nest.begin(),e=nest.end();it!=e;it++) {
+			L->push((*it)); L->push(o); }
+		L->nest.pop_back(); }
+	return L; }
+
+// =============================================================== FUNCTIONALS
+
+// ======================================================= operator
 Op::Op(string V):Sym("op",V) {}
 Sym* Op::eval() {
-	if (val=="~") return nest[0]; else Sym::eval();
-	if (nest.size()==2) {
-		if (val=="@") return nest[0]->at(nest[1]);
-		if (val=="=") return nest[0]->eq(nest[1]);
-		if (val=="+") return nest[0]->add(nest[1]);
-		if (val=="/") return nest[0]->div(nest[1]);
-		if (val=="+=") return nest[0]->ins(nest[1]);
+	if (val=="~") return nest[0];						// ~A	quote
+	else Sym::eval();									// nest[]ed evaluate
+	if (nest.size()==2) {								// A op B bin.operator
+		if (val=="=") return nest[0]->eq(nest[1]);		// A = B	assign
+		if (val=="@") return nest[0]->at(nest[1]);		// A @ B	apply
+		if (val=="+") return nest[0]->add(nest[1]);		// A + B	add
+		if (val=="/") return nest[0]->div(nest[1]);		// A / B	divide
+		if (val=="+=") return nest[0]->ins(nest[1]);	// A += B	insert
 	}
-	return this;
-}
+	return this; }
 
+// ======================================================= function
 Fn::Fn(string V,FN F):Sym("fn",V) { fn=F; }
-Sym* Fn::at(Sym*o) { return fn(o); }
+Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
 
+// ==================================================================== FILEIO
+
+// ======================================================= file
 File::File(Sym*o):Sym("file",o->val) {}
 Sym* File::file(Sym*o) { return new File(o); }
+//File::~File() { if (fh) fclose(fh); }
 Sym* File::eq(Sym*o) { yyerror(tagval()+"="+o->tagval()); }
+
+// ====================================================== GLOBAL ENV{}IRONMENT
 
 Env::Env(Env*X) { next=X; }
 void Env::par(Sym*o) { iron[o->val]=o; }
 void Env::set(string V,Sym*o) { iron[V]=o; }
+Sym* Env::lookup(Sym*o) {
+	auto it = iron.find(o->val); if (it!=iron.end()) return it->second;
+	if (next) return next->lookup(o);
+	return NULL;
+}
 string Env::dump() { string S;
 	for (auto it=iron.begin(),e=iron.end();it!=e;it++)
 		S += "," + it->first + ":" + it->second->tagval();
 	return S; }
 
 Env glob_env(NULL);
-Sym* Env::lookup(Sym*o) {
-	auto it = iron.find(o->val); if (it!=iron.end()) return it->second;
-	if (next) return next->lookup(o);
-	return NULL;
-}
-void glob_init() {
+void glob_init() {									// init env{} on startup
 	// ----------------------------------------------- metainfo constants
 	glob_env.iron["MODULE"]	= new Str(MODULE);		// module name
 	// ----------------------------------------------- string

@@ -138,8 +138,7 @@ string Num::tagval() {
 
 List::List():Sym("[","]") {}
 
-Sym* List::str() {										// concatenate elements
-	string S;
+Sym* List::str() { string S;							// concatenate elements
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
 		S += (*it)->str()->val;
 	return new Str(S); }
@@ -166,29 +165,26 @@ Sym* Pair::eq(Sym*o) {
 // ======================================================= operator
 Op::Op(string V):Sym("op",V) {}
 Sym* Op::eval() {
-	if (val=="=") return nest[0]->eq(nest[1]->eval());	// A = B
-	Sym::eval();										// nest[]ed evaluate
-	Sym* Result=this;
+	if (val=="~") return nest[0];						// ~A	quote
+	else Sym::eval();									// nest[]ed evaluate
 	if (nest.size()==2) {								// A op B bin.operator
-//		if (val=="=")	Result=nest[0]->eq(nest[1]);	// A = B
-		if (val=="@")	Result=nest[0]->at(nest[1]);	// A @ B
-		if (val==".")	Result=nest[0]->dot(nest[1]);	// A . B
+		if (val=="=") return nest[0]->eq(nest[1]);		// A = B	assign
+		if (val=="@") return nest[0]->at(nest[1]);		// A @ B	apply
+		if (val=="+") return nest[0]->add(nest[1]);		// A + B	add
+		if (val=="/") return nest[0]->div(nest[1]);		// A / B	divide
+		if (val=="+=") return nest[0]->ins(nest[1]);	// A += B	insert
+	}
+	return this; }
+/*		if (val==".")	Result=nest[0]->dot(nest[1]);	// A . B
 		if (val=="%")	Result=nest[0]->member(nest[1]);// A % B -> A
 		if (val==":")	return nest[0]->inher(nest[1]);	// A : B
-		if (val=="+")	Result=nest[0]->add(nest[1]);	// A + B
-		if (val=="/")	return nest[0]->div(nest[1]);
-		if (val=="+=")	return nest[0]->ins(nest[1]);
-	}
-	if (par.count("doc")) Result->par["doc"]=par["doc"];// copy par[doc]
-	return Result; }
+	if (par.count("doc")) Result->par["doc"]=par["doc"];// copy par[doc] */
 
-Sym* Op::eq(Sym*o) { return this->eval()->eq(o); }		// compute lvalue
-// ===================================================
+//Sym* Op::eq(Sym*o) { return this->eval()->eq(o); }		// compute lvalue
 
 // ======================================================= function
-Fn::Fn(string V, FN F):Sym("fn",V) { fn=F; }
+Fn::Fn(string V,FN F):Sym("fn",V) { fn=F; }
 Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
-// ===================================================
 
 // ======================================================= {lambda}
 Lambda::Lambda():Sym("^","^") {}						// {la:mbda}
@@ -218,13 +214,14 @@ Sym* Dir::add(Sym*o) {
 
 // ======================================================= file
 File::File(Sym*o):Sym("file",o->val) {}
-File::~File() { if (fh) fclose(fh); }
-Sym* file(Sym*o) { return new File(o); }
+Sym* File::file(Sym*o) { return new File(o); }
+//File::~File() { if (fh) fclose(fh); }
+Sym* File::eq(Sym*o) { yyerror(tagval()+"="+o->tagval()); }
 
-Sym* File::ins(Sym*o) {
+/*Sym* File::ins(Sym*o) {
 	push(o->str());
 	if (fh) fprintf(fh,"%s",o->str()->val.c_str());
-	return this; }
+	return this; }*/
 
 // ======================================================================= GUI
 Sym* message(Sym*o)	{ return new Message(o); }
@@ -232,7 +229,31 @@ Window::Window(Sym*o):Sym("window",o->val) {}
 Sym* window(Sym*o)	{ return new Window(o); }
 
 // ====================================================== GLOBAL ENV{}IRONMENT
-map<string,Sym*> env;
+
+Env::Env(Env*X) { next=X; }
+void Env::par(Sym*o) { iron[o->val]=o; }
+void Env::set(string V,Sym*o) { iron[V]=o; }
+Sym* Env::lookup(Sym*o) {
+	auto it = iron.find(o->val); if (it!=iron.end()) return it->second;
+	if (next) return next->lookup(o);
+	return NULL;
+}
+string Env::dump() { string S;
+	for (auto it=iron.begin(),e=iron.end();it!=e;it++)
+		S += "," + it->first + ":" + it->second->tagval();
+	return S; }
+
+Env glob_env(NULL);
+void glob_init() {									// init env{} on startup
+	// ----------------------------------------------- metainfo constants
+	glob_env.iron["MODULE"]	= new Str(MODULE);		// module name
+	// ----------------------------------------------- string
+	glob_env.iron["upcase"]	= new Fn("upcase",Str::upcase);
+	// ----------------------------------------------- fileio
+	glob_env.iron["file"]	= new Fn("fn",File::file);
+}
+
+/*map<string,Sym*> env;
 void env_init() {									// init env{} on startup
 	// ----------------------------------------------- metainfo constants
 	glob_env.iron["MODULE"]	= new Str(MODULE);		// module name
@@ -261,5 +282,5 @@ void env_init() {									// init env{} on startup
 	// ----------------------------------------------- GUI
 	env["message"]	= new Fn("message",message);
 	env["window"]	= new Fn("window",window);
-}
+}*/
 
