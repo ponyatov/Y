@@ -1,5 +1,5 @@
 %{
-#include "hpp.hpp"
+#include <hpp.hpp>
 string LexString;
 %}
 %option noyywrap
