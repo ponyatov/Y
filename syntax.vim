@@ -26,7 +26,7 @@ syntax match  Keyword	"\v[`@%]"							" lambda coloring
 
 syntax match Constant	"\v<(MODULE|OS|LOGO|COLOR)>"
 syntax match Constant	"\v<(TITLE|ABOUT|AUTHOR|GITHUB|LICENSE)>"
-syntax match Constant	"\v<(doc|dir|file|str)>"
+syntax match Constant	"\v<(doc|dir|file|str|fn|op)>"
 syntax match Function	"\v<(upcase)>"
 syntax match Keyword	"\v(\.|nil)"
 syntax match Todo		"\v^\.[a-z]+.*"
