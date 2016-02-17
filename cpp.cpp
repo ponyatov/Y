@@ -36,7 +36,7 @@ string Sym::pad(int n) { string S; for (int i=0;i<n;i++) S+='\t'; return S; }
 string Sym::dump(int depth) {							// dump as text
 	string S = "\n"+pad(depth)+tagval();				// <T:V>
 	for (auto pr=pars.begin(),e=pars.end();pr!=e;pr++)	// par{}ameters
-		S+="\n"+pad(depth+1)+pr->first+" __"+pr->second->tagval();		
+		S+="\n"+pad(depth+1)+"__ "+pr->first+pr->second->dump(depth+2);
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// nest[]ed
 		S+=(*it)->dump(depth+1);
 	return S; }

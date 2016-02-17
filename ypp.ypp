@@ -13,7 +13,7 @@
 
 %left PERC
 %left COLON
-%left COMMA
+%right COMMA
 %left EQ
 %left ADD SUB
 %left MUL DIV

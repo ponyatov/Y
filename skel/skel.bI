@@ -9,9 +9,10 @@ bat.bat		= [ '@start .' '@gvim -p '+files/' ' ]
 skeleton	= files + [ bat.bat .gitignore ]
 
 pp
-pp@'xx'
+pp@'xx' pp@yy
 
+1,2,3 
 class:object
-	%doc,'base metaclass'
+	%doc,'base metaclass',1,2,3
 	%init,{X}
 
