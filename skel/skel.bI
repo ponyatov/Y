@@ -9,3 +9,8 @@ skeleton	= files + [ bat.bat .gitignore ]
 
 pp
 pp@'xx'
+
+class:object
+	%doc,'base metaclass'
+	%init,{X}
+

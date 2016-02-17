@@ -48,9 +48,10 @@ N [0-9]+
 													/* operators */
 \=					TOC(Op,EQ)								/* assignment */
 \@					TOC(Op,AT)								/* apply */
-\:					TOC(Op,COLON)							/* inheritance */
 \~					TOC(Op,TILD)							/* quote */
+\:					TOC(Op,COLON)							/* inheritance */
 \%					TOC(Op,PERC)							/* member */
+\,					TOC(Op,COMMA)							/* tuple/pa:ir */
 
 \+					TOC(Op,ADD)								/* arithmetic */
 \-					TOC(Op,SUB)

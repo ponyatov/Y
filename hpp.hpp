@@ -39,6 +39,8 @@ struct Sym {
 // ----------------------------------------------------------------- operators	
 	virtual Sym* str();					// str(A)	string representation
 	virtual Sym* eq(Sym*);				// A = B	assignment
+	virtual Sym* inher(Sym*);			// A : B	inheritance
+	virtual Sym* member(Sym*);			// A % B,C	named member (class slot)
 	virtual Sym* at(Sym*);				// A @ B	apply
 	virtual Sym* add(Sym*);				// A + B	add
 	virtual Sym* div(Sym*);				// A / B	div
@@ -63,6 +65,8 @@ struct Str:Scalar { Str(string); string tagval();	// string
 	static Sym* upcase(Sym*); };					// to UPCASE
 
 // ================================================================ COMPOSITES
+// =================================================== co,ns (Lisp-like)
+struct Cons:Sym { Cons(Sym*,Sym*); };
 // =================================================== [list]
 struct List:Sym { List(); Sym*str(); Sym*div(Sym*); };
 
@@ -74,6 +78,8 @@ struct Lambda:Sym { Lambda(); Sym*eval(); Sym*at(Sym*); };
 // =================================================== internal function
 typedef Sym*(*FN)(Sym*);							// function ptr
 struct Fn:Sym { Fn(string,FN); FN fn; Sym*at(Sym*); };
+
+// =================================================================== OBJECTS
 
 // ==================================================================== FILEIO
 // =================================================== file

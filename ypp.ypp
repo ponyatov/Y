@@ -5,16 +5,21 @@
 %token <o> DOC DIR					/* "docstring" .directive				*/
 %token <o> SYM NUM STR				/* scalar: symbol number 'string'		*/
 %token <o> L R LQ RQ LB RB			/* bracket: ( ) [ ] { }					*/
-%token <o> EQ AT COLON TILD PERC	/* operator: = @ : ~ %					*/
+%token <o> EQ AT TILD COLON PERC	/* operator: = @ ~ : %					*/
+%token <o> COMMA					/* operator: , */
 %token <o> ADD SUB MUL DIV POW		/* operator: + - * / ^					*/
 %token <o> INS DEL MAP				/* operator: += -= |					*/
 %type <o> ex scalar list lambda		/* expression scalar [list] {lambda}	*/
 
-%left EQ INS
+%left PERC
+%left COLON
+%left COMMA
+%left EQ
 %left ADD SUB
 %left MUL DIV
 %left POW
 %left AT MAP
+%left INS
 %left TILD
 
 %%
@@ -25,11 +30,13 @@ ex		: scalar
 		| L ex R			{ $$=$2; }
 		| LQ list RQ		{ $$=$2; }
 		| LB lambda RB		{ $$=$2; }
+		| ex COMMA ex		{ $$=new Cons($1,$3); }
 		| TILD ex			{ $$=$1; $$->push($2); }
+		| ex COLON ex		{ $$=$2; $$->push($1); $$->push($3); }
+		| ex PERC ex		{ $$=$2; $$->push($1); $$->push($3); }
 		| ex EQ ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex AT ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex MAP ex			{ $$=$2; $$->push($1); $$->push($3); }
-		| ex PERC ex		{ $$=$2; $$->push($1); $$->push($3); }
 		| ex ADD ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex SUB ex			{ $$=$2; $$->push($1); $$->push($3); }
 		| ex MUL ex			{ $$=$2; $$->push($1); $$->push($3); }

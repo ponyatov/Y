@@ -34,9 +34,11 @@ string Sym::tagstr() {									// <T:'V'> header
 	return S+"'>"; }
 string Sym::pad(int n) { string S; for (int i=0;i<n;i++) S+='\t'; return S; }
 string Sym::dump(int depth) {							// dump as text
-	string S = "\n" + pad(depth) + tagval();
+	string S = "\n"+pad(depth)+tagval();				// <T:V>
+	for (auto pr=pars.begin(),e=pars.end();pr!=e;pr++)	// par{}ameters
+		S+="\n"+pad(depth+1)+pr->first+" -> "+pr->second->tagval();		
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// nest[]ed
-		S += (*it)->dump(depth+1);
+		S+=(*it)->dump(depth+1);
 	return S; }
 
 // ------------------------------------------------------- evaluation
@@ -90,6 +92,9 @@ Sym* Str::upcase(Sym*o) {								// to UPCASE
 
 // ================================================================ COMPOSITES
 
+// ======================================================= co,ns (Lisp-like)
+Cons::Cons(Sym*A,Sym*B):Sym("","") { push(A); push(B); }
+
 // ======================================================= [list]
 
 List::List():Sym("[","]") {}
@@ -116,7 +121,9 @@ Sym* Op::copy() { Sym* R = new Op(val);
 	return R; }
 Sym* Op::eval() {
 	if (val=="~") return nest[0];						// ~A	quote
-	else Sym::eval();									// nest[]ed evaluate
+	if (val=="%") return (nest[0]->eval())->member(nest[1]);// A % B	member
+	Sym::eval();										// nest[]ed evaluate
+	if (val==":") return nest[0]->inher(nest[1]);		// A : B	inheritance
 	if (val=="=") return nest[0]->eq(nest[1]);			// A = B	assign
 	if (val=="@") return nest[0]->at(nest[1]);			// A @ B	apply
 	if (val=="+") return nest[0]->add(nest[1]);			// A + B	add
@@ -158,6 +165,13 @@ Sym* Lambda::at(Sym*o) {								// lambda apply
 	if (R->nest.size()!=1) yyerror("multibody lambda:"+R->dump());
 	else return (R->nest[0])->eval(); } // with eval
 //	else return (R->nest[0])        ; } // as symbolic expression
+
+// =================================================================== OBJECTS
+
+Sym* Sym::inher(Sym*o) {
+	Sym*O=new Sym(val,o->val); O->pars["super"]=this; return O; }
+Sym* Sym::member(Sym*o) {
+	pars[o->nest[0]->str()->val]= o->nest[1]; return this; }
 
 // ==================================================================== FILEIO
 
