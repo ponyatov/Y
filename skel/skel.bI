@@ -1,3 +1,4 @@
+
 pp = { X: X+'pp' }
 x.x = { X: pp@X+'.'+pp@X }
 x.x@'y'
