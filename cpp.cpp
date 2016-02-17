@@ -3,7 +3,7 @@
 #define YYERR "\n\n"<<yylineno<<":"<<msg<<"["<<yytext<<"]\n\n"
 void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
 // ======================================================= main()
-int main() { glob_init(); return yyparse(); }
+int main() { env_init(); return yyparse(); }
 
 // ======================================================= writers
 void W(Sym* o)		{ cout << o->dump(); }
@@ -12,20 +12,14 @@ void W(string s)	{ cout << s; }
 // ============================================== Abstract Symbolic Type (AST)
 
 // ------------------------------------------------------- constructors
-Sym::Sym(string T,string V) { tag=T; val=V; 			// <T:V>
-	env = new Env(&glob_env); }
+Sym::Sym(string T,string V) { tag=T; val=V; }			// <T:V>
 Sym::Sym(string V):Sym("",V)	{}						// token
-Sym::Sym(Sym*o) {										// copy
-	tag=o->tag; val=o->val; env=o->env;
-	for (auto it=o->nest.begin(),e=o->nest.end();it!=e;it++)
-		push(new Sym(*it));
-}
 
 // ------------------------------------------------------- nest[]ed elements
 void Sym::push(Sym*o) { nest.push_back(o); }
 
-// ------------------------------------------------------- env{}irnoment
-void Sym::par(Sym*o) { env->par(o); }
+// ------------------------------------------------------- par{}ameters
+void Sym::par(Sym*o) { pars[o->str()->val]=o; }
 
 // ------------------------------------------------------- dumping
 string Sym::tagval() { return "<"+tag+":"+val+">"; }	// <T:V> header string
@@ -40,25 +34,26 @@ string Sym::tagstr() {									// <T:'V'> header
 	return S+"'>"; }
 string Sym::pad(int n) { string S; for (int i=0;i<n;i++) S+='\t'; return S; }
 string Sym::dump(int depth) {							// dump as text
-	string S = "\n" + pad(depth) + tagval() + env->dump();
+	string S = "\n" + pad(depth) + tagval();
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// nest[]ed
 		S += (*it)->dump(depth+1);
 	return S; }
 
 // ------------------------------------------------------- evaluation
 
-Sym* Sym::eval(Env*EE) {
-	Sym* E = EE->lookup(this); if (E) return E;			// lookup in env{}
+Sym* Sym::eval() {
+	auto E = glob.find(val);							// \ lookup in env{}
+	if (E!=glob.end()) return E->second;				// /
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// recursive eval()
-		(*it) = (*it)->eval(EE);						// with objects replace
+		(*it)=(*it)->eval();							// with objects replace
 	return this; }
 
 // ------------------------------------------------------- operators
 
 Sym* Sym::str()			{ return new Str(val); }		// str(A)	as string
 
-Sym* Sym::eq(Sym*o)		{ glob_env.set(val,o);			// A = B	assignment
-	return o; }
+Sym* Sym::eq(Sym*o)		{ glob[val]=o; return o; }		// A = B	assignment
+
 Sym* Sym::at(Sym*o)		{ push(o); return this; }		// A @ B	apply
 
 Sym* Sym::add(Sym*o) { Sym* R = new Op("+");			// A + B	add
@@ -75,9 +70,8 @@ Directive::Directive(string V):Sym("",V) {
 	while (val.size() && (val[0]==' ' || val[0]=='\t')) {
 		               val.erase(0,1); }				}
 string Directive::tagval() { return tagstr(); }
-Sym* Directive::eval() {
-	if (tag==".end") { W(this); W("\n"); exit(0); }
-	else return this; }
+Sym* Directive::eval() { return this; }
+//	if (tag==".end") { W(this); W("\n"); exit(0); }
 
 // =================================================================== SCALARS
 
@@ -117,31 +111,53 @@ Sym* List::div(Sym*o) {									// split elements
 
 // ======================================================= operator
 Op::Op(string V):Sym("op",V) {}
+Sym* Op::copy() { Sym* R = new Op(val);
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++) R->push(*it);
+	return R; }
 Sym* Op::eval() {
 	if (val=="~") return nest[0];						// ~A	quote
 	else Sym::eval();									// nest[]ed evaluate
-	if (nest.size()==2) {								// A op B bin.operator
-		if (val=="=") return nest[0]->eq(nest[1]);		// A = B	assign
-		if (val=="@") return nest[0]->at(nest[1]);		// A @ B	apply
-		if (val=="+") return nest[0]->add(nest[1]);		// A + B	add
-		if (val=="/") return nest[0]->div(nest[1]);		// A / B	divide
-		if (val=="+=") return nest[0]->ins(nest[1]);	// A += B	insert
-	}
+	if (val=="=") return nest[0]->eq(nest[1]);			// A = B	assign
+	if (val=="@") return nest[0]->at(nest[1]);			// A @ B	apply
+	if (val=="+") return nest[0]->add(nest[1]);			// A + B	add
+	if (val=="/") return nest[0]->div(nest[1]);			// A / B	divide
+	if (val=="+=") return nest[0]->ins(nest[1]);		// A += B	insert
 	return this; }
 
-// ======================================================= function
+// ======================================================= internal function
 Fn::Fn(string V,FN F):Sym("fn",V) { fn=F; }
 Sym* Fn::at(Sym*o) { return fn(o); }					// apply function
 
-// =================================================== {la:mbda}
+// ======================================================= {la:mbda}
 Lambda::Lambda():Sym("^","^") {}
-Sym* Lambda::at(Sym*o) {
-	push(o); return this; }
-//	Sym* R = new Sym(this); Env*X = R->env; R->env = new Env(X);
-//	auto P = X->iron.begin(); // first param in env
-//	R->env->set(P->first,o);
-//	cerr << R->env->lookup(o) << " " << X->lookup(o);
-//	return R->eval(); }
+Sym* Lambda::eval() { return this; }
+
+// ------------------------------------------------------ lambda via rewriting
+// f**ken magic: apply by rewrite, not apply by eval in environment
+// WARNING: RECURSION NOT APPLICABLE (???)
+
+Sym* Sym::copy() { Sym*C = new Sym(tag,val);			// copy
+	for (auto pr=pars.begin(),e=pars.end();pr!=e;pr++)	// par{}ameters
+		C->pars[pr->first]=pr->second;
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++)	// nest[]ed
+		C->push((*it)->copy());
+	return C; }
+
+bool Sym::match(Sym*o) { return o->str()->val==val; }	// match
+
+Sym* Sym::replace(Sym*A,Sym*B) {						// replace
+	if (match(A)) return B;
+	for (auto pr=pars.begin(),e=pars.end();pr!=e;pr++)
+		pars[pr->first]= pr->second->replace(A,B);
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
+		(*it) = (*it)->replace(A,B);
+	return this; }
+
+Sym* Lambda::at(Sym*o) {								// lambda apply
+	Sym* R = copy()->replace(pars.begin()->second,o);	// via rewrite
+	if (R->nest.size()!=1) yyerror("multibody lambda:"+R->dump());
+	else return (R->nest[0])->eval(); } // with eval
+//	else return (R->nest[0])        ; } // as symbolic expression
 
 // ==================================================================== FILEIO
 
@@ -152,28 +168,16 @@ File::~File() { if (fh) fclose(fh); }
 Sym* File::eq(Sym*o) { yyerror(tagval()+"="+o->tagval()); }
 
 // ====================================================== GLOBAL ENV{}IRONMENT
-
-Env::Env(Env*X) { next=X; }
-void Env::par(Sym*o) { iron[o->val]=o; }
-void Env::set(string V,Sym*o) { iron[V]=o; }
-Sym* Env::lookup(Sym*o) {
-	auto it = iron.find(o->val); if (it!=iron.end()) return it->second;
-	if (next) return next->lookup(o);
-	return NULL;
-}
-string Env::dump() { string S;
-	for (auto it=iron.begin(),e=iron.end();it!=e;it++)
-		S += "," + it->first + ":" + it->second->tagval();
-	return S; }
-
-Env glob_env(NULL);
-void glob_init() {									// init env{} on startup
+map<string,Sym*> glob;
+void env_init() {									// init env{} on startup
 	// ----------------------------------------------- metainfo constants
-	glob_env.iron["MODULE"]	= new Str(MODULE);		// module name
-	glob_env.iron["OS"]		= new Str(OS);			// target os
-	glob_env.iron["EXE"]		= new Str(EXE);		// executable file suffix
+	glob["MODULE"]		= new Str(MODULE);			// module name
+	glob["OS"]			= new Str(OS);				// target os
+	glob["EXE"]			= new Str(EXE);				// executable file suffix
+	#ifdef HAVE_META
+	#endif
 	// ----------------------------------------------- string
-	glob_env.iron["upcase"]	= new Fn("upcase",Str::upcase);
+	glob["upcase"]		= new Fn("upcase",Str::upcase);
 	// ----------------------------------------------- fileio
-	glob_env.iron["file"]	= new Fn("fn",File::file);
+	glob["file"]		= new Fn("fn",File::file);
 }

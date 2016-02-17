@@ -1,5 +1,6 @@
 #ifndef _H_bI
 #define _H_bI
+#include "meta.hpp"
 										// == std.includes ==
 #include <iostream>
 #include <cstdlib>
@@ -10,20 +11,6 @@
 #include <map>
 using namespace std;
 
-// ====================================================== GLOBAL ENV{}IRONMENT
-struct Sym;
-struct Env {							// == Environment ==
-	Env* next;							// linked list to parent env
-	Env(Env*);							// constructor (link to parent/NULL)
-	map<string,Sym*> iron;				// data
-	Sym* lookup(Sym*);					// search over all env.chain
-	void par(Sym*);						// add object to local env
-	void set(string,Sym*);				// A = B to local env
-	string dump();						// dump env / used in Sym.dump() /
-};
-extern Env glob_env;					// global environment
-extern void glob_init();				// init glob_env
-
 // ============================================== ABSTRACT SYMBOLIC TYPE (AST)
 struct Sym {
 // ---------------------------------------------------------------------------
@@ -32,29 +19,34 @@ struct Sym {
 // -------------------------------------------------------------- constructors
 	Sym(string,string);					// <T:V>
 	Sym(string);						// token
-	Sym(Sym*);							// copy
 // --------------------------------------------------------- nest[]ed elements
 	vector<Sym*> nest;
-	void push(Sym*);
-// ------------------------------------------------------------- env[]ironment	
-	Env* env;
-	void par(Sym*);						// add paramater to local Sym's env[]
+	void push(Sym*); void pop();
+// -------------------------------------------------------------- par{}ameters
+	map<string,Sym*> pars;
+	void par(Sym*);						// add parameter 
 // ------------------------------------------------------------------- dumping
 	virtual string dump(int depth=0);	// dump symbol object as text
 	virtual string tagval();			// <T:V> header string
 	string tagstr();					// <T:'V'> Str-like header string
 	string pad(int);					// padding with tree decorators
+// ------------------------------------------------------ lambda via rewriting
+	virtual Sym* copy();				// copy
+	virtual bool match(Sym*);			// pattern matching
+	Sym* replace(Sym*,Sym*);			// nested symbols overwrite
 // -------------------------------------------------------- compute (evaluate)
-	virtual Sym* eval(Env*EE=&glob_env);
+	virtual Sym* eval();
 // ----------------------------------------------------------------- operators	
-	virtual Sym* str();					// str(A)	to string representation
+	virtual Sym* str();					// str(A)	string representation
 	virtual Sym* eq(Sym*);				// A = B	assignment
 	virtual Sym* at(Sym*);				// A @ B	apply
 	virtual Sym* add(Sym*);				// A + B	add
 	virtual Sym* div(Sym*);				// A / B	div
 	virtual Sym* ins(Sym*);				// A += B	insert
 };
-
+// ====================================================== GLOBAL ENV{}IRONMENT
+extern map<string,Sym*> glob;						// global env{}
+extern void env_init();
 
 extern void W(Sym*);								// \ ==== writers ====
 extern void W(string);								// /
@@ -76,12 +68,12 @@ struct List:Sym { List(); Sym*str(); Sym*div(Sym*); };
 
 // =============================================================== FUNCTIONALS
 // =================================================== operator
-struct Op:Sym { Op(string); Sym*eval(); };
+struct Op:Sym { Op(string); Sym*eval(); Sym*copy(); };
 // =================================================== {la:mbda}
-struct Lambda:Sym { Lambda(); Sym*at(Sym*); };
-// =================================================== function
+struct Lambda:Sym { Lambda(); Sym*eval(); Sym*at(Sym*); };
+// =================================================== internal function
 typedef Sym*(*FN)(Sym*);							// function ptr
-struct Fn:Sym { Fn(string,FN); FN fn; Sym*at(Sym*); };// internal function
+struct Fn:Sym { Fn(string,FN); FN fn; Sym*at(Sym*); };
 
 // ==================================================================== FILEIO
 // =================================================== file

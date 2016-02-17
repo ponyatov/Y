@@ -4,7 +4,7 @@ MODULE = $(notdir $(CURDIR))
 $(MODULE).blog: $(MODULE).bI ./$(MODULE)$(EXE)
 	./$(MODULE)$(EXE) < $< > $@ && tail $(TAIL) $@
 C = ../cpp.cpp ypp.tab.cpp lex.yy.c
-H = ../hpp.hpp ypp.tab.hpp
+H = ../hpp.hpp ypp.tab.hpp meta.hpp
 L = 
 CXXFLAGS += -I.. -I. -std=gnu++11 \
 	-DMODULE=\"$(MODULE)\" -DOS=\"$(OS)\" -DEXE=\"$(EXE)\"

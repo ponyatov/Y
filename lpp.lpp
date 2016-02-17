@@ -8,15 +8,16 @@ void incLude(Sym*inc) {										// .inc processing
 %}
 %option noyywrap
 %option yylineno
-								/* extra lexer states: string/docstring parsing */
+							/* extra lexer states: string/docstring parsing */
 %x lexstring docstring
-								/* optional sign in numbers */
+							/* optional sign in numbers */
 S [\+\-]?
-								/* decimal number digit(s) */
+							/* decimal number digit(s) */
 N [0-9]+
 %%
 #[^\n]*				{}								/* line comment */
 
+^\.end				{yyterminate();}					/* .end */
 ^\.inc[ \t]+[^\n]+	{incLude(new Directive(yytext));}	/* .include */
 ^\.[a-z]+[^\n]*		TOC(Directive,DIR)					/* .directive */
 
@@ -44,7 +45,6 @@ N [0-9]+
 \]					TOC(Sym,RQ)
 \{					TOC(Sym,LB)
 \}					TOC(Sym,RB)
-
 													/* operators */
 \=					TOC(Op,EQ)								/* assignment */
 \@					TOC(Op,AT)								/* apply */
