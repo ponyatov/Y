@@ -1,5 +1,5 @@
 %{
-#include <hpp.hpp>
+#include "hpp.hpp"
 string LexString;											// string buffer
 void incLude(Sym*inc) {										// .inc processing
 	if (!(yyin = fopen((inc->val+".bI").c_str(),"r"))) yyerror("");// open
@@ -39,12 +39,12 @@ N [0-9]+
 
 [a-zA-Z0-9_.]+		TOC(Sym,SYM)					/* symbol */
 
-\(					TOC(Sym,L)						/* brackets */
-\)					TOC(Sym,R)
+\(					TOC(Sym,LB)						/* brackets */
+\)					TOC(Sym,RB)
 \[					TOC(Sym,LQ)
 \]					TOC(Sym,RQ)
-\{					TOC(Sym,LB)
-\}					TOC(Sym,RB)
+\{					TOC(Sym,LC)
+\}					TOC(Sym,RC)
 													/* operators */
 \=					TOC(Op,EQ)								/* assignment */
 \@					TOC(Op,AT)								/* apply */
